@@ -1,0 +1,45 @@
+{
+  "name": "gradejs",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "lint": "eslint",
+    "start": "webpack serve --open",
+    "build": "rm -rf dist && webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fingerprintjs/gradejs.git"
+  },
+  "author": "FingerprintJS Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fingerprintjs/gradejs/issues"
+  },
+  "homepage": "https://github.com/fingerprintjs/gradejs#readme",
+  "devDependencies": {
+    "@types/react": "^17.0.21",
+    "@types/react-dom": "^17.0.9",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.25.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "html-webpack-plugin": "^5.3.2",
+    "prettier": "^2.4.1",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3",
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.2.1"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
