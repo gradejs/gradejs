@@ -17,5 +17,17 @@ module.exports = {
   rules: {
     'no-use-before-define': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
+    'react/jsx-props-no-spreading': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+  },
+  settings: {
+    'import/resolver': 'webpack',
   },
 };
