@@ -1,0 +1,13 @@
+@import "~styles/responsive.scss";
+
+.container {
+  width: 100%;
+  max-width: 1024px;
+  padding: 34px;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  @include mobile {
+    padding: 24px;
+  }
+}

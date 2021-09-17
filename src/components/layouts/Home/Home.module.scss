@@ -1,0 +1,20 @@
+@import "~styles/responsive.scss";
+
+.address {
+  width: 496px;
+  max-width: 100%;
+  margin: 0 16px 16px 0;
+  box-sizing: border-box;
+
+  @include mobile {
+    margin-right: 0;
+  }
+}
+
+.submit {
+  width: 218px;
+
+  @include mobile {
+    width: 100%;
+  }
+}

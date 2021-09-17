@@ -1,0 +1,24 @@
+@import "~styles/responsive.scss";
+
+.input {
+  appearance: none;
+  border-radius: 6px;
+  outline: none;
+  padding: 19px 20px;
+  font-family: 'Sequel Sans', sans-serif;
+  font-weight: 400;
+  border: 1px solid #000;
+  color: #000;
+  font-size: 18px;
+  line-height: 28px;
+  margin: 0;
+
+  @include mobile {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  &::placeholder {
+    color: rgba($color: #000, $alpha: 0.4);
+  }
+}

@@ -28,6 +28,11 @@ module.exports = {
     ],
   },
   settings: {
-    'import/resolver': 'webpack',
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        paths: ['node-modules', './src'],
+      },
+    },
   },
 };

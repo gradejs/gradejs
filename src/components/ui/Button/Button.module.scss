@@ -1,3 +1,49 @@
+@import "~styles/responsive.scss";
+
 .button {
   appearance: none;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  line-height: 140%;
+  font-family: 'Sequel Sans', sans-serif;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+
+// Sizes
+.big {
+  padding: 20px 20px;
+  font-size: 18px;
+  line-height: 28px;
+
+  @include mobile {
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+.medium {
+  padding: 8px 10px 8px;
+  font-size: 14px;
+}
+
+// Variants
+.default {
+  background: #FFF;
+  border: 1px solid #000;
+  color: #000;
+}
+
+.black {
+  background: #000;
+  color: #FFF;
+}
+
+.action {
+  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat #000;
+  color: #FFF;
+  text-align: left;
+  padding-right: 60px;
 }

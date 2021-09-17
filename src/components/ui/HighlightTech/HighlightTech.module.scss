@@ -1,0 +1,28 @@
+@import '~styles/responsive.scss';
+
+.container {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.icon {
+  width: 56px;
+  height: 56px;
+}
+
+.info {
+  margin-left: 16px;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 140%;
+  color: #a5a5a5;
+}
+
+.title {
+  font-size: 20px;
+  line-height: 120%;
+  color: #0f0f0f;
+}

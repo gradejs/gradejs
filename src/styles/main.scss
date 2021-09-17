@@ -1,0 +1,14 @@
+@import "./responsive.scss";
+
+body {
+  font-family: 'Sequel Sans', sans-serif;
+}
+
+h1 {
+  font-size: 100px;
+  line-height: 100%;
+
+  @include mobile {
+    font-size: 64px;
+  }
+}

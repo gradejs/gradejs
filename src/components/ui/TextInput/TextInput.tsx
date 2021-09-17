@@ -1,0 +1,22 @@
+/* eslint-disable react/button-has-type */
+import React from 'react';
+import { UseFormRegister } from 'react-hook-form';
+import clsx from 'clsx';
+import styles from './TextInput.module.scss';
+
+export type Props = {
+  className?: string;
+  placeholder?: string;
+  register?: UseFormRegister<Record<string, unknown>>;
+  name?: string;
+};
+
+export default function TextInput({ className, placeholder, name, register }: Props) {
+  return (
+    <input
+      {...(name && register ? register(name) : {})}
+      className={clsx(styles.input, className)}
+      placeholder={placeholder}
+    />
+  );
+}
