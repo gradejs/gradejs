@@ -19,6 +19,10 @@ module.exports = (_, argv) => {
     module: {
       rules: [
         {
+          test: /\.(png|svg|jpg|jpeg|gif|woff(2)?|ttf|eot)$/i,
+          type: 'asset/resource',
+        },
+        {
           test: /\.(tsx|ts)?$/,
           use: 'ts-loader',
           exclude: '/node_modules/',
@@ -60,8 +64,8 @@ module.exports = (_, argv) => {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: isDevelopment ? '[name].css' : '[name].[hash].css',
-        chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css',
+        filename: isDevelopment ? '[name].css' : '[name].[fullhash].css',
+        chunkFilename: isDevelopment ? '[id].css' : '[id].[fullhash].css',
       }),
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'index.html'),
@@ -78,6 +82,7 @@ module.exports = (_, argv) => {
       filename: 'bundle.[fullhash].js',
       path: path.resolve(__dirname, distDir),
       publicPath: '/',
+      assetModuleFilename: 'static/[hash][ext]',
     },
   };
 };

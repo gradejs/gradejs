@@ -9,7 +9,7 @@ export default {
   },
 };
 
-export const Default = (args: Props<unknown>) => <TextInput {...args} />;
+export const Default = (args: Props) => <TextInput {...args} />;
 Default.args = {
   placeholder: 'placeholder',
 };

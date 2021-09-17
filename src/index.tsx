@@ -1,7 +1,7 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { Button } from 'components/ui'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from 'components/App';
+import 'styles/font.scss';
+import 'styles/global.scss';
 
-const App = () => <div>Hello World<Button>Test</Button></div>;
-
-ReactDOM.render(<App />, document.getElementById("app"));
+ReactDOM.render(<App />, document.getElementById('app'));
