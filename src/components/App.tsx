@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import webpackIcon from 'assets/icons/webpack.svg';
-import { Home, Loading, Website } from 'components/layouts';
+import { Error, Home, Loading, Website } from 'components/layouts';
 
 const baseUrl = 'https://staging-gradejs.fpjs.sh';
 
 export default function App() {
+  const [isFailed, setFailed] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [websiteData, setWebsiteData] = useState<Parameters<typeof Website>[0] | undefined>(
     undefined
@@ -12,6 +13,8 @@ export default function App() {
 
   const handleDetectStart = useCallback((data: { address: string }) => {
     setLoading(true);
+
+    const host = new URL(data.address).hostname;
 
     fetch(`${baseUrl}/detect`, {
       method: 'POST',
@@ -21,7 +24,7 @@ export default function App() {
       .then((response) => response.json())
       .then((response) => {
         const newData = {
-          host: new URL(data.address).hostname,
+          host,
           highlights: [
             {
               description: 'Source build system',
@@ -43,9 +46,14 @@ export default function App() {
       })
       .catch((e) => {
         console.error(e);
+        setFailed(host);
         setLoading(false);
       });
   }, []);
+
+  if (isFailed) {
+    return <Error host={isFailed} onRetry={() => setFailed('')} />;
+  }
 
   if (isLoading) {
     return <Loading />;
