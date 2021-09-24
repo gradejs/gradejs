@@ -1,4 +1,4 @@
-@import "~styles/responsive.scss";
+@import '~styles/responsive.scss';
 
 .input {
   appearance: none;
@@ -7,11 +7,17 @@
   padding: 19px 20px;
   font-family: 'Sequel Sans', sans-serif;
   font-weight: 400;
-  border: 1px solid #000;
-  color: #000;
+  border: 1px solid #e6e6e6;
+  color: #0f0f0f;
   font-size: 18px;
   line-height: 28px;
   margin: 0;
+  transition: border-color 0.3s ease-out;
+
+  &:focus,
+  &:hover {
+    border-color: #0f0f0f;
+  }
 
   @include mobile {
     font-size: 16px;
@@ -19,6 +25,10 @@
   }
 
   &::placeholder {
-    color: rgba($color: #000, $alpha: 0.4);
+    color: rgba($color: #0f0f0f, $alpha: 0.4);
   }
+}
+
+.error {
+  border-color: #ff3b30;
 }

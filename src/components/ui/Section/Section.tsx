@@ -1,4 +1,3 @@
-/* eslint-disable react/button-has-type */
 import clsx from 'clsx';
 import React from 'react';
 import styles from './Section.module.scss';

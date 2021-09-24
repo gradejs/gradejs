@@ -5,3 +5,4 @@ export { default as Logo } from './Logo/Logo';
 export { default as Section } from './Section/Section';
 export { default as TextInput } from './TextInput/TextInput';
 export { default as Package } from './Package/Package';
+export { default as Wrapper } from './Wrapper/Wrapper';

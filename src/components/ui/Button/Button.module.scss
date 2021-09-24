@@ -1,4 +1,4 @@
-@import "~styles/responsive.scss";
+@import '~styles/responsive.scss';
 
 .button {
   appearance: none;
@@ -25,25 +25,26 @@
 }
 
 .medium {
-  padding: 8px 10px 8px;
+  padding: 12px 10px 12px;
   font-size: 14px;
+  line-height: 18px;
 }
 
 // Variants
 .default {
-  background: #FFF;
-  border: 1px solid #000;
-  color: #000;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  color: #0f0f0f;
 }
 
 .black {
-  background: #000;
-  color: #FFF;
+  background: #0f0f0f;
+  color: #fff;
 }
 
 .action {
-  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat #000;
-  color: #FFF;
+  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat #0f0f0f;
+  color: #fff;
   text-align: left;
   padding-right: 60px;
 }

@@ -8,7 +8,7 @@
 }
 
 // variants
-.cell {
+.grid {
   border-bottom-width: 0;
   height: 150px;
   width: 260px;
@@ -24,13 +24,14 @@
   }
 }
 
-.row {
+.lines {
   height: 66px;
   width: 100%;
   flex-direction: row;
   align-items: center;
   border-left-width: 0;
   border-right-width: 0;
+  padding-left: 0;
 
   & .main {
     flex: 1;
@@ -52,7 +53,7 @@
   }
 
   & .size {
-    color: #000000;
+    color: #0f0f0f;
   }
 }
 

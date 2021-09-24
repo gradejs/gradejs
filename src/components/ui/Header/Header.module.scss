@@ -1,4 +1,4 @@
-@import "~styles/responsive.scss";
+@import '~styles/responsive.scss';
 
 .container {
   width: 100%;
@@ -12,5 +12,34 @@
 
   @include mobile {
     padding: 24px;
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.navLink {
+  font-size: 14px;
+  line-height: 18px;
+  color: #0f0f0f;
+  text-decoration: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 20px;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.githubButton {
+  background: url('~assets/icons/github.svg') 10px center / 25px 24px no-repeat #ffffff;
+  padding: 12px 10px 12px 45px;
+  border: 1px solid #e6e6e6;
+
+  @include mobile {
+    display: block;
   }
 }

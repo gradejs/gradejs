@@ -5,6 +5,18 @@
   text-decoration: none;
   cursor: pointer;
   font-family: 'Sequel Sans', sans-serif;
-  font-weight: 500;
-  color: #000;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.01em;
+  color: #0f0f0f;
+}
+
+.version {
+  font-size: 13px;
+  line-height: 140%;
+  letter-spacing: 0.01em;
+  vertical-align: top;
+  color: #a5a5a5;
+  margin-left: 4px;
 }

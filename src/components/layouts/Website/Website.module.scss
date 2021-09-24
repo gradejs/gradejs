@@ -2,6 +2,7 @@
 
 .heading {
   font-size: 44px;
+  margin: 0 0 32px;
 
   @include mobile {
     font-size: 28px;
@@ -15,29 +16,63 @@
 .packages {
   display: flex;
   flex-wrap: wrap;
-}
 
-.package {
-  width: 25%;
-  border-left-width: 0;
+  &.grid .package {
+    width: 25%;
+    border-left-width: 0;
 
-  @include mobile {
-    width: 50%;
+    @include mobile {
+      width: 50%;
 
-    &:nth-child(2n + 1) {
+      &:nth-child(2n + 1) {
+        padding-left: 0;
+      }
+
+      &:nth-child(2n) {
+        border-right-width: 0;
+      }
+    }
+
+    &:nth-child(4n + 1) {
       padding-left: 0;
     }
 
-    &:nth-child(2n) {
+    &:nth-child(4n) {
       border-right-width: 0;
     }
   }
 
-  &:nth-child(4n + 1) {
-    padding-left: 0;
+  &.lines .package {
+    width: 100%;
+    border-bottom-width: 0;
   }
+}
 
-  &:nth-child(4n) {
-    border-right-width: 0;
-  }
+.packagesHeading {
+  font-size: 16px;
+  line-height: 22px;
+  color: #0f0f0f;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.packagesTotal {
+  color: #a5a5a5;
+  margin-left: 8px;
+  flex: 1;
+}
+
+.viewSelect {
+  margin-left: 12px;
+  cursor: pointer;
+}
+
+.disclaimer {
+  background: url('~assets/icons/warn.svg') 16px 16px / 20px 20px no-repeat;
+  padding: 16px 16px 16px 52px;
+  border: 1px solid #ffcc00;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 24px;
 }

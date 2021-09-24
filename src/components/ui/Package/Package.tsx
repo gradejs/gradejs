@@ -5,14 +5,14 @@ import styles from './Package.module.scss';
 
 export type Props = {
   className?: string;
-  variant?: 'cell' | 'row';
+  variant?: 'grid' | 'lines';
   name: string;
   version: string;
   size?: number;
   bundleSize?: number;
 };
 
-export default function Package({ className, variant = 'cell', name, version }: Props) {
+export default function Package({ className, variant = 'grid', name, version }: Props) {
   return (
     <div className={clsx(styles.container, styles[variant], className)}>
       <div className={styles.main}>
