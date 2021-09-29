@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import webpackIcon from 'assets/icons/webpack.svg';
 import { Error, Home, Loading, Website } from 'components/layouts';
 
-const baseUrl = 'https://staging-gradejs.fpjs.sh';
+const baseUrl = process.env.API_ORIGIN;
 
 export default function App() {
   const [isFailed, setFailed] = useState('');

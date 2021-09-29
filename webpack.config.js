@@ -1,4 +1,6 @@
 const path = require('path');
+const dotenv = require('dotenv');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -70,6 +72,11 @@ module.exports = (_, argv) => {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'index.html'),
       }),
+      isDevelopment
+        ? new webpack.DefinePlugin({
+            'process.env': JSON.stringify(dotenv.config().parsed),
+          })
+        : new webpack.EnvironmentPlugin(['API_ORIGIN', 'GTM_ID']),
     ],
     devServer: {
       static: {
