@@ -4,6 +4,18 @@ import { Error, Home, Loading, Website } from 'components/layouts';
 
 const baseUrl = process.env.API_ORIGIN;
 
+type DetectionResponse = {
+  bundle: {
+    stats: {
+      bytes: number;
+      symbols: number;
+    };
+  };
+  packages: Array<{ name: string; versionRange: string; approxSymbolsSize: number; }>
+};
+
+const toFixedDigits = (value: number, digits: number) => parseFloat(value.toFixed(digits));
+
 export default function App() {
   const [isFailed, setFailed] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -22,7 +34,10 @@ export default function App() {
       headers: { 'Content-Type': 'application/json' },
     })
       .then((response) => response.json())
-      .then((response) => {
+      .then((response: DetectionResponse) => {
+        const relativeSymbolSizeDivider = response.bundle.stats.symbols * 100;
+        const absoluteKByteSizeMultiplier = (response.bundle.stats.bytes / response.bundle.stats.symbols) / 1024;
+
         const newData = {
           host,
           highlights: [
@@ -32,11 +47,13 @@ export default function App() {
               icon: webpackIcon,
             },
           ],
-          packages: response.detected.map((item: string) => {
-            const parts = item.split('@');
-            const version = parts.pop();
-
-            return { name: parts.join('@'), version };
+          packages: response.packages.map((pkg) => {
+            return {
+              name: pkg.name,
+              version: pkg.versionRange,
+              relativeSize: toFixedDigits(pkg.approxSymbolsSize / relativeSymbolSizeDivider, 2),
+              absoluteSize: toFixedDigits(pkg.approxSymbolsSize * absoluteKByteSizeMultiplier, 2),
+            };
           }),
         };
 
