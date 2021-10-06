@@ -35,7 +35,6 @@ export default function App() {
     })
       .then((response) => response.json())
       .then((response: DetectionResponse) => {
-        const relativeSymbolSizeDivider = response.bundle.stats.symbols * 100;
         const absoluteKByteSizeMultiplier = (response.bundle.stats.bytes / response.bundle.stats.symbols) / 1024;
 
         const newData = {
@@ -51,7 +50,7 @@ export default function App() {
             return {
               name: pkg.name,
               version: pkg.versionRange,
-              relativeSize: toFixedDigits(pkg.approxSymbolsSize / relativeSymbolSizeDivider, 2),
+              relativeSize: toFixedDigits((pkg.approxSymbolsSize / response.bundle.stats.symbols) * 100, 2),
               absoluteSize: toFixedDigits(pkg.approxSymbolsSize * absoluteKByteSizeMultiplier, 2),
             };
           }),
