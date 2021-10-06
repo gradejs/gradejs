@@ -12,6 +12,9 @@ export type Props = {
   absoluteSize?: number;
 };
 
+const EPSILON = 0.01;
+const formatNumericalValue = (value: number) => value < EPSILON ? '~0.01' : value;
+
 export default function Package({ className, variant = 'grid', name, version, relativeSize, absoluteSize }: Props) {
   return (
     <div className={clsx(styles.container, styles[variant], className)}>
@@ -20,11 +23,11 @@ export default function Package({ className, variant = 'grid', name, version, re
         <div className={styles.version}>{version}</div>
       </div>
       <div className={styles.meta}>
-        {absoluteSize && (
-          <span className={styles.size}>{absoluteSize}KB</span>
+        {typeof absoluteSize === 'number' && (
+          <span className={styles.size}>{formatNumericalValue(absoluteSize)}KB</span>
         )}
-        {relativeSize && (
-          <span className={styles.percent}>{relativeSize}%</span>
+        {typeof relativeSize === 'number' && (
+          <span className={styles.percent}>{formatNumericalValue(relativeSize)}%</span>
         )}
       </div>
     </div>
