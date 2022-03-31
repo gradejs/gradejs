@@ -1,67 +1,9 @@
 {
   "name": "gradejs",
-  "version": "0.0.1",
-  "description": "",
   "private": true,
-  "scripts": {
-    "lint": "eslint . --ext .ts,.tsx,.js",
-    "start": "webpack serve --open",
-    "storybook": "start-storybook -p 6006",
-    "build": "rm -rf dist && webpack --mode=production",
-    "build:storybook": "build-storybook -o dist/storybook"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fingerprintjs/gradejs.git"
-  },
   "author": "FingerprintJS, Inc (https://fingerprintjs.com)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/fingerprintjs/gradejs/issues"
-  },
-  "homepage": "https://github.com/fingerprintjs/gradejs#readme",
-  "devDependencies": {
-    "@babel/core": "^7.15.5",
-    "@storybook/addon-actions": "^6.3.8",
-    "@storybook/addon-essentials": "^6.3.8",
-    "@storybook/addon-links": "^6.3.8",
-    "@storybook/builder-webpack5": "^6.3.8",
-    "@storybook/manager-webpack5": "^6.3.8",
-    "@storybook/react": "^6.3.8",
-    "@types/react": "^17.0.21",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-gtm-module": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.31.1",
-    "@typescript-eslint/parser": "^4.31.1",
-    "babel-loader": "^8.2.2",
-    "css-loader": "^6.2.0",
-    "dotenv": "^10.0.0",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-webpack": "^0.13.1",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.25.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "html-webpack-plugin": "^5.3.2",
-    "mini-css-extract-plugin": "^2.3.0",
-    "node-sass": "^6.0.1",
-    "prettier": "^2.4.1",
-    "sass-loader": "^12.1.0",
-    "storybook": "^6.3.8",
-    "style-loader": "^3.2.1",
-    "ts-loader": "^9.2.5",
-    "typescript": "^4.4.3",
-    "webpack": "^5.52.1",
-    "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.2.1"
-  },
-  "dependencies": {
-    "clsx": "^1.1.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-gtm-module": "^2.0.11",
-    "react-hook-form": "^7.15.3"
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

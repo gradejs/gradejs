@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "./build",
+    "baseUrl": "./src"
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "**/*.test.ts"
+  ]
+}
