@@ -8,9 +8,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'website' })
-@Index(['hostname'], { unique: true })
-export class Website extends BaseEntity {
+@Entity({ name: 'web_page' })
+@Index(['url'], { unique: true })
+export class WebPage extends BaseEntity {
   @PrimaryColumn({ type: 'int', generated: 'increment' })
   id!: number;
 
@@ -18,10 +18,10 @@ export class Website extends BaseEntity {
   hostname!: string;
 
   @Column()
-  status!: Website.Status;
+  url!: string;
 
-  @Column({ type: 'jsonb' })
-  packages!: string[];
+  @Column()
+  status!: WebPage.Status;
 
   @UpdateDateColumn()
   updatedAt?: Date;
@@ -30,7 +30,7 @@ export class Website extends BaseEntity {
   createdAt!: Date;
 }
 
-export namespace Website {
+export namespace WebPage {
   export enum Status {
     Pending = 'pending',
     Processed = 'processed',

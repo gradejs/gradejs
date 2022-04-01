@@ -3,22 +3,34 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class Initial1648763750720 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      create table "website" (
+      create table "web_page" (
         "id" serial primary key,
         "hostname" text not null,
-        "status" varchar(255) not null,
-        "packages" jsonb not null default '[]',
+        "url" text not null,
+        "status" text not null,
         "updated_at" timestamp,
         "created_at" timestamp
       );
 
-      create unique index "website_hostname_index" on "website" ("hostname");
+      create unique index "web_page_url_index" on "web_page" ("url");
+
+      create table "web_page_package" (
+        "id" serial primary key,
+        "hostname" text not null,
+        "latest_url" text not null,
+        "package" text not null,
+        "updated_at" timestamp,
+        "created_at" timestamp
+      );
+
+      create unique index "web_page_package_hostname_package_index" on "web_page_package" ("hostname", "package");
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
-      drop table if exists website;
+      drop table if exists web_page;
+      drop table if exists web_page_package;
     `);
   }
 }

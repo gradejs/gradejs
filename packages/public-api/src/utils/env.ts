@@ -3,6 +3,9 @@ export enum Env {
   Node = 'NODE_ENV',
   Port = 'PORT',
   DatabaseUrl = 'DB_URL',
+
+  // Internal
+  InternalApiOrigin = 'INTERNAL_API_ORIGIN',
 }
 
 export const getNodeEnv = () => getEnvUnsafe(Env.Node) || 'development';
@@ -12,6 +15,8 @@ export const isProduction = () => getNodeEnv() === 'production';
 export const isStaging = () => getNodeEnv() === 'staging';
 export const isDevelopment = () => getNodeEnv() === 'development';
 export const isTest = () => getNodeEnv() === 'test';
+
+export const getInternalApiOrigin = () => getEnv(Env.InternalApiOrigin);
 
 export function getEnv(name: string, defaultValue?: string) {
   const value = process.env[name];

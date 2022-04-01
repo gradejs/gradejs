@@ -8,24 +8,8 @@ import j, { AnySchema, StringSchema } from 'joi';
  * const email = parseBody(req, 'email', joi.string().email())
  */
 export function parseBody(req: Request, param: string, schema: StringSchema): string;
-export function parseBody(req: Request, param: string, schema: AnySchema): unknown {
-  const extendedSchema = j
-    .object({
-      body: j
-        .object({
-          [param]: schema,
-        })
-        .unknown(true),
-    })
-    .unknown(true);
-
-  const { value, error } = extendedSchema.validate(req);
-
-  if (error) {
-    throw error;
-  }
-
-  return value.body[param];
+export function parseBody(req: Request, param: string, schema: AnySchema) {
+  return parse(req, 'body', param, schema);
 }
 
 /**
@@ -35,10 +19,25 @@ export function parseBody(req: Request, param: string, schema: AnySchema): unkno
  * const token = parseQuery(req, 'token', joi.string().email())
  */
 export function parseQuery(req: Request, param: string, schema: StringSchema): string;
-export function parseQuery(req: Request, param: string, schema: AnySchema): unknown {
+export function parseQuery(req: Request, param: string, schema: AnySchema) {
+  return parse(req, 'query', param, schema);
+}
+
+/**
+ * Usefull wrapper for better validation typing and good-looking code (slug)
+ * @example
+ * // GET /devices/:slug
+ * const slug = parseSlug(req, 'slug', joi.string().email())
+ */
+export function parseSlug(req: Request, param: string, schema: StringSchema): string;
+export function parseSlug(req: Request, param: string, schema: AnySchema) {
+  return parse(req, 'params', param, schema);
+}
+
+function parse(req: Request, where: string, param: string, schema: AnySchema): unknown {
   const extendedSchema = j
     .object({
-      query: j
+      [where]: j
         .object({
           [param]: schema,
         })
@@ -52,5 +51,5 @@ export function parseQuery(req: Request, param: string, schema: AnySchema): unkn
     throw error;
   }
 
-  return value.query[param];
+  return value[where][param];
 }

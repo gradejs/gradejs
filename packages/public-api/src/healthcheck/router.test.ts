@@ -3,8 +3,8 @@ import { createSupertestApi } from '../utils/testUtils';
 const api = createSupertestApi();
 
 describe('routes / heathCheck', () => {
-  it('should return valid response', () => {
-    api.get('/').send().expect(200);
+  it('should return valid response', async () => {
+    await api.get('/').send().expect(200);
   });
 
   it('should return not found error', async () => {

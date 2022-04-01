@@ -13209,6 +13209,11 @@ typeorm-naming-strategies@^4.1.0:
   resolved "https://registry.yarnpkg.com/typeorm-naming-strategies/-/typeorm-naming-strategies-4.1.0.tgz#1ec6eb296c8d7b69bb06764d5b9083ff80e814a9"
   integrity sha512-vPekJXzZOTZrdDvTl1YoM+w+sUIfQHG4kZTpbFYoTsufyv9NIBRe4Q+PdzhEAFA2std3D9LZHEb1EjE9zhRpiQ==
 
+typeorm-transactional-tests@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/typeorm-transactional-tests/-/typeorm-transactional-tests-1.1.5.tgz#ba187145bf3b5b77bcad8db775376aa6b9097501"
+  integrity sha512-/tX9K3ewNGkAL7WcuwWeAJ20nZ0H//IzAhr5jHKu3FJnqJ2DDfi6Cxyd9wooO6IvuxaA06gbp+p+wLpOvpcElg==
+
 typeorm@0.2.45:
   version "0.2.45"
   resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.45.tgz#e5bbb3af822dc4646bad96cfa48cd22fa4687cea"
