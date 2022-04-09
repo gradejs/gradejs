@@ -3,7 +3,7 @@ version: '3.7'
 services:
   db:
     restart: unless-stopped
-    image: postgres:12-alpine
+    image: public.ecr.aws/ubuntu/postgres:latest
     environment:
       POSTGRES_DB: 'gradejs-public'
       POSTGRES_USER: 'gradejs'

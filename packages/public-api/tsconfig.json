@@ -3,7 +3,8 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outDir": "./build"
+    "outDir": "./build",
+    "module": "commonjs"
   },
   "include": [
     "./src/**/*"
