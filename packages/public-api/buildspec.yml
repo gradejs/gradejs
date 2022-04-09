@@ -5,6 +5,7 @@ phases:
       nodejs: 14
   build:
     commands:
+      - cd packages/public-api/
       - n 16.14.2
       - docker-compose -f docker-compose.aws.yml up -d db
       - yarn install
