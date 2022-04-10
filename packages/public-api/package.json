@@ -10,13 +10,14 @@
     "migration:run": "ts-node scripts/migrateDatabase.ts",
     "migration:create": "typeorm migration:create -d src/database/migrations -n"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fingerprintjs/gradejs.git"
+  "engines": {
+    "node": "^16.14.2"
   },
   "author": "FingerprintJS, Inc (https://fingerprintjs.com)",
   "license": "MIT",
   "dependencies": {
+    "@types/cors": "^2.8.12",
+    "cors": "^2.8.5",
     "express": "^4.17.3",
     "joi": "^17.6.0",
     "pg": "^8.7.3",
