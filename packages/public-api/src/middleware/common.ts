@@ -1,7 +1,10 @@
 import { ValidationError } from 'joi';
+import createCorsMiddleware from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import { NotFoundError, respondWithError } from './response';
 
+// TODO: add whitelist origins
+export const cors = createCorsMiddleware({ maxAge: 1800 });
 export const parseJson = express.json();
 
 /**
