@@ -24,7 +24,7 @@ export default function Home({ onSubmit }: Props) {
   const validate = useCallback(
     (data: FormData) => {
       const { address } = data;
-      const re = /^https?:\/\/[a-zA-Z0-9][a-zA-Z0-9-.]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+      const re = /^https?:\/\/[a-zA-Z0-9][a-zA-Z0-9-.]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
 
       if (address.match(re)) {
         onSubmit(data);
