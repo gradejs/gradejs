@@ -1,3 +1,4 @@
+import fetch, { RequestInit } from 'node-fetch';
 import { getInternalApiOrigin } from '../utils/env';
 import { WebsiteInternal } from './types';
 
@@ -28,7 +29,7 @@ export async function fetchInternal<T>(
 
   return fetch(requestUrl.toString(), requestInit)
     .then((response) => response.json())
-    .then((json) => {
+    .then((json: any) => {
       if (!json.data) {
         throw new Error('Invalid response format');
       }
