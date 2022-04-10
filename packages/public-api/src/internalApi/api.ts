@@ -14,7 +14,7 @@ export async function fetchInternal<T>(
   endpoint: string,
   data?: Record<string, unknown>
 ) {
-  const requestUrl = new URL(getInternalApiOrigin(), endpoint);
+  const requestUrl = new URL(endpoint, getInternalApiOrigin());
   const requestInit: RequestInit = { method };
 
   if (method === 'POST') {
