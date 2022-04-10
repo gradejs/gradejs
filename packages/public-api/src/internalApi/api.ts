@@ -22,7 +22,7 @@ export async function fetchInternal<T>(
     requestInit.headers = { 'Content-Type': 'application/json' };
     requestInit.body = JSON.stringify(data);
   } else if (method === 'GET' && data) {
-    for (const key in Object.keys(data)) {
+    for (const key of Object.keys(data)) {
       requestUrl.searchParams.append(key, `${data[key]}`);
     }
   }
