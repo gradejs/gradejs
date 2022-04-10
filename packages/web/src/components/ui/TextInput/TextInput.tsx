@@ -7,7 +7,7 @@ import styles from './TextInput.module.scss';
 export type Props = {
   className?: string;
   placeholder?: string;
-  register?: UseFormRegister<Record<string, unknown>>;
+  register?: UseFormRegister<any>;
   name?: string;
   error?: FieldError;
 };

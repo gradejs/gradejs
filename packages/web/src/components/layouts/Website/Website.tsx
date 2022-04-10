@@ -13,8 +13,7 @@ export type Props = {
     icon: string;
   }>;
   packages: Array<{
-    name: string;
-    version: string;
+    package: string;
   }>;
 };
 
@@ -61,7 +60,12 @@ export default function Website({ host, highlights, packages }: Props) {
         </div>
         <div className={clsx(styles.packages, styles[view])}>
           {packages.map((data, index) => (
-            <Package key={index.toString()} variant={view} className={styles.package} {...data} />
+            <Package
+              key={index.toString()}
+              variant={view}
+              className={styles.package}
+              pkg={data.package}
+            />
           ))}
         </div>
       </Section>

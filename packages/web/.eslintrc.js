@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   env: {
     browser: true,
@@ -26,12 +28,14 @@ module.exports = {
         tsx: 'never',
       },
     ],
+    'react/require-default-props': [1, { ignoreFunctionalComponents: true }],
+    'react/no-array-index-key': 'off',
   },
   settings: {
     'import/resolver': {
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        paths: ['node-modules', 'src'],
+        paths: ['node-modules', path.resolve(__dirname, 'src')],
       },
     },
   },

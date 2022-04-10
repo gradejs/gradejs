@@ -83,6 +83,9 @@ module.exports = (_, argv) => {
         directory: path.join(__dirname, distDir),
       },
       compress: true,
+      historyApiFallback: {
+        disableDotRule: true,
+      },
       port: 3000,
     },
     output: {

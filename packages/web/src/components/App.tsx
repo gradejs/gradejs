@@ -1,67 +1,23 @@
-import React, { useCallback, useState } from 'react';
-import webpackIcon from 'assets/icons/webpack.svg';
-import { Error, Home, Loading, Website } from 'components/layouts';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import WebsiteHostnamePage from './pages/WebsiteHostnamePage';
 
-const baseUrl = process.env.API_ORIGIN;
-
+/**
+ * The App component has not any router wrapper because it uses both with tests, storybook and browser.
+ * Each environment should had a high order router component
+ *
+ * @example
+ * <BrowserRouter>
+ *   <App />
+ * </BrowserRouter>
+ */
 export default function App() {
-  const [isFailed, setFailed] = useState('');
-  const [isLoading, setLoading] = useState(false);
-  const [websiteData, setWebsiteData] = useState<Parameters<typeof Website>[0] | undefined>(
-    undefined
+  return (
+    <Routes>
+      <Route index element={<HomePage />} />
+      <Route path='/w/:hostname' element={<WebsiteHostnamePage />} />
+      <Route path='*' element={<Navigate replace to='/' />} />
+    </Routes>
   );
-
-  const handleDetectStart = useCallback((data: { address: string }) => {
-    setLoading(true);
-
-    const host = new URL(data.address).hostname;
-
-    fetch(`${baseUrl}/detect`, {
-      method: 'POST',
-      body: JSON.stringify({ url: data.address }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        const newData = {
-          host,
-          highlights: [
-            {
-              description: 'Source build system',
-              title: 'Webpack',
-              icon: webpackIcon,
-            },
-          ],
-          packages: response.detected.map((item: string) => {
-            const parts = item.split('@');
-            const version = parts.pop();
-
-            return { name: parts.join('@'), version };
-          }),
-        };
-
-        // console.log(newData);
-        setLoading(false);
-        setWebsiteData(newData);
-      })
-      .catch((e) => {
-        console.error(e);
-        setFailed(host);
-        setLoading(false);
-      });
-  }, []);
-
-  if (isFailed) {
-    return <Error host={isFailed} onRetry={() => setFailed('')} />;
-  }
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (websiteData) {
-    return <Website {...websiteData} />;
-  }
-
-  return <Home onSubmit={handleDetectStart} />;
 }
