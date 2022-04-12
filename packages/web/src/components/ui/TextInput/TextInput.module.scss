@@ -4,18 +4,18 @@
   appearance: none;
   border-radius: 6px;
   outline: none;
-  padding: 19px 20px;
-  font-family: 'Sequel Sans', sans-serif;
+  padding: 16px 20px;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   border: 1px solid #e6e6e6;
   color: #0f0f0f;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 28px;
   margin: 0;
-  transition: border-color 0.3s ease-out;
+  transition: border-color 0.2s;
 
-  &:focus,
-  &:hover {
+  &:enabled:focus,
+  &:enabled:hover {
     border-color: #0f0f0f;
   }
 

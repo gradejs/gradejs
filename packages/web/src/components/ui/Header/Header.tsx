@@ -10,12 +10,12 @@ export default function Header() {
       <Logo />
       <div className={styles.nav}>
         <a
-          href='https://github.com/fingerprintjs/gradejs'
+          href='https://github.com/fingerprintjs/gradejs/discussions'
           target='_blank'
           rel='norefferer noreferrer'
-          className={clsx(styles.navLink, styles.githubButton)}
+          className={styles.navLink}
         >
-          Source Code
+          About
         </a>
         <a
           href='https://github.com/fingerprintjs/gradejs/discussions'
@@ -24,6 +24,14 @@ export default function Header() {
           className={styles.navLink}
         >
           Community
+        </a>
+        <a
+          href='https://github.com/fingerprintjs/gradejs'
+          target='_blank'
+          rel='norefferer noreferrer'
+          className={clsx(styles.navLink, styles.githubButton)}
+        >
+          Source Code
         </a>
       </div>
     </header>

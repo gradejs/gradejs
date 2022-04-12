@@ -44,7 +44,6 @@
 
   &.lines .package {
     width: 100%;
-    border-bottom-width: 0;
   }
 }
 
@@ -52,12 +51,14 @@
   font-size: 16px;
   line-height: 22px;
   color: #0f0f0f;
+  font-weight: 700;
   margin-bottom: 24px;
   display: flex;
   align-items: center;
 }
 
 .packagesTotal {
+  font-weight: 400;
   color: #a5a5a5;
   margin-left: 8px;
   flex: 1;
@@ -71,8 +72,17 @@
 .disclaimer {
   background: url('~assets/icons/warn.svg') 16px 16px / 20px 20px no-repeat;
   padding: 16px 16px 16px 52px;
-  border: 1px solid #ffcc00;
+  border: 1px solid #e6e6e6;
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 24px;
+  border-radius: 4px;
+}
+
+.disclaimerLink {
+  color: #000;
+}
+
+.disclaimerLoading {
+  background: url('~assets/loader-black.svg') 12px 12px / 28px 28px no-repeat;
 }

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { Website, Loading } from 'components/layouts';
+import { Error as ErrorLayout, Website } from 'components/layouts';
 
 const baseUrl = process.env.API_ORIGIN;
 
 export default function WebsiteHostnamePage() {
   const { hostname } = useParams();
   const [packages, setPackages] = useState([]);
-  const [isReady, setReady] = useState(false);
+  const [webpages, setWebpages] = useState<{ status: string }[]>([]);
   const [isError, setError] = useState(false);
+
+  const isInvalidResult =
+    packages.length === 0 &&
+    webpages.length > 0 &&
+    !webpages.find((item) => item.status === 'pending');
 
   useEffect(() => {
     fetch(`${baseUrl}/website/${hostname}`)
@@ -21,28 +26,30 @@ export default function WebsiteHostnamePage() {
       })
       .then((response) => {
         setPackages(response.data.packages);
-        setReady(true);
+        setWebpages(response.data.webpages);
       })
       .catch(() => {
         setError(true);
       });
   }, []);
 
-  // if (isFailed) {
-  //   return <Error host={isFailed} onRetry={() => setFailed('')} />;
-  // }
-
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
-
   if (!hostname || isError) {
     return <Navigate replace to='/' />;
   }
 
-  if (isReady) {
-    return <Website packages={packages} host={hostname} highlights={[]} />;
+  if (isInvalidResult) {
+    return (
+      <ErrorLayout
+        message='It looks like the entered website is not built with Webpack.'
+        action='Would you like to try another URL or report an issue?'
+        actionTitle='Try another URL'
+        host={hostname}
+        onRetry={() => {
+          document.location = '/';
+        }}
+      />
+    );
   }
 
-  return <Loading />;
+  return <Website webpages={webpages} packages={packages} host={hostname} />;
 }

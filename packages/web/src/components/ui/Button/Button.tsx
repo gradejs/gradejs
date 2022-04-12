@@ -9,6 +9,7 @@ export type Props = {
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
   variant?: 'default' | 'black' | 'action';
   size?: 'medium' | 'big';
+  disabled?: boolean;
   onClick?: () => unknown;
 };
 
@@ -17,6 +18,7 @@ export default function Button({
   type = 'button',
   variant = 'default',
   size = 'big',
+  disabled,
   onClick,
   children,
 }: Props) {
@@ -25,6 +27,7 @@ export default function Button({
       className={clsx(styles.button, styles[variant], styles[size], className)}
       type={type}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>

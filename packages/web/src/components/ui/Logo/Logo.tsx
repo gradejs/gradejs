@@ -7,7 +7,7 @@ export default function Logo() {
   return (
     <a className={styles.logo} href='/'>
       GradeJS
-      <span className={styles.version}>Alpha</span>
+      <span className={styles.version}>Beta</span>
     </a>
   );
 }

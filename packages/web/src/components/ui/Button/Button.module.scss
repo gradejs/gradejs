@@ -7,7 +7,7 @@
   outline: none;
   cursor: pointer;
   line-height: 140%;
-  font-family: 'Sequel Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   box-sizing: border-box;
 }
@@ -15,7 +15,7 @@
 // Sizes
 .big {
   padding: 16px 16px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 28px;
 
   @include mobile {
@@ -35,16 +35,42 @@
   background: #fff;
   border: 1px solid #e6e6e6;
   color: #0f0f0f;
+  transition: border-color 0.2s;
+
+  &:enabled:hover {
+    border-color: #a5a5a5;
+  }
+
+  &:enabled:active {
+    border-color: #000000;
+  }
 }
 
 .black {
-  background: #0f0f0f;
   color: #fff;
 }
 
 .action {
-  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat #0f0f0f;
+  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat;
+  background-color: #0f0f0f;
   color: #fff;
   text-align: left;
   padding-right: 60px;
+}
+
+.black,
+.action {
+  transition: background-color 0.2s;
+
+  &:enabled:hover {
+    background-color: #666666;
+  }
+  &:enabled:active {
+    background-color: #a5a5a5;
+  }
+}
+
+.action:disabled {
+  background-color: #666666;
+  background-image: url('~assets/loader-white.svg');
 }

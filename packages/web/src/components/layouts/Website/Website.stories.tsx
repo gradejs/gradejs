@@ -1,5 +1,4 @@
 import React from 'react';
-import webpackIcon from 'assets/icons/webpack.svg';
 import Website, { Props } from './Website';
 
 export default {
@@ -10,64 +9,58 @@ export default {
   },
 };
 
-export const Default = (args: Props) => <Website {...args} />;
-Default.args = {
+export const Ready = (args: Props) => <Website {...args} />;
+Ready.args = {
   host: 'fingerprintjs.com',
-  highlights: [
-    {
-      description: 'Source build system',
-      title: 'Webpack',
-      icon: webpackIcon,
-    },
-  ],
+  webpages: [],
   packages: [
     {
-      name: 'react',
-      version: '17.0.2',
+      package: 'react@17.0.2',
     },
     {
-      name: 'react-dom',
-      version: '17.0.2',
+      package: 'react-dom@17.0.2',
     },
     {
-      name: 'react',
-      version: '17.0.2',
+      package: 'react@17.0.2',
     },
     {
-      name: 'react-dom',
-      version: '17.0.2',
+      package: 'react-dom@17.0.2',
     },
     {
-      name: 'react',
-      version: '17.0.2',
+      package: 'react@17.0.2',
     },
     {
-      name: 'react-dom',
-      version: '17.0.2',
+      package: 'react-dom@17.0.2',
     },
     {
-      name: 'react',
-      version: '17.0.2',
+      package: 'react@17.0.2',
     },
     {
-      name: 'react-dom',
-      version: '17.0.2',
+      package: 'react-dom@17.0.2',
     },
     {
-      name: 'react',
-      version: '17.0.2',
+      package: 'react@17.0.2',
     },
     {
-      name: 'react-dom',
-      version: '17.0.2',
-    },
-    {
-      name: 'react',
-      version: '17.0.2',
-    },
-    {
-      name: 'react-dom',
-      version: '17.0.2',
+      package: 'react-dom@17.0.2',
     },
   ],
+};
+
+export const Pending = (args: Props) => <Website {...args} />;
+Pending.args = {
+  host: 'fingerprintjs.com',
+  webpages: [
+    {
+      status: 'pending',
+    },
+  ],
+  packages: [],
+};
+
+export const Loading = (args: Props) => <Website {...args} />;
+Loading.args = {
+  host: 'fingerprintjs.com',
+  webpages: [],
+  packages: [],
 };

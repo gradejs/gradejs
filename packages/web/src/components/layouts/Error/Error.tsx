@@ -5,21 +5,32 @@ import styles from './Error.module.scss';
 
 export type Props = {
   host: string;
+  message?: string;
+  action?: string;
+  actionTitle?: string;
   onRetry: () => unknown;
 };
 
-export default function Error({ host, onRetry }: Props) {
+export default function Error({
+  host,
+  onRetry,
+  message = 'Unfortunately, something went wrong.',
+  action = 'Would you like to retry or report an issue?',
+  actionTitle = 'Try again',
+}: Props) {
   return (
     <>
       <Header />
       <Section>
         <h1 className={styles.heading}>{host}</h1>
-        <p className={styles.primary}>Unfortunately, we couldn’t detect any NPM packages</p>
-        <p className={styles.secondary}>Would you like to send an error report to us?</p>
-        <Button onClick={onRetry}>Retry</Button>
+        <p className={styles.primary}>{message}</p>
+        <p className={styles.secondary}>{action}</p>
+        <Button onClick={onRetry} className={styles.retry}>
+          {actionTitle}
+        </Button>
         <a href='https://github.com/fingerprintjs/gradejs/issues' target='_blank' rel='noreferrer'>
           <Button className={styles.button} variant='action'>
-            Send
+            Report an issue
           </Button>
         </a>
       </Section>

@@ -1,0 +1,32 @@
+@import '~styles/responsive.scss';
+
+.container {
+  border: 1px solid #e6e6e6;
+  padding: 16px;
+  display: flex;
+  box-sizing: border-box;
+  height: 150px;
+
+  // dirty trick
+  // TODO: fix later
+  & + & + & + & + & {
+    margin-top: -1px;
+  }
+}
+
+.name {
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  width: 180px;
+  max-width: 100%;
+  height: 24px;
+}
+
+.version {
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  width: 90px;
+  max-width: 100%;
+  height: 24px;
+  margin-top: 4px;
+}

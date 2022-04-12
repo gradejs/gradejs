@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Error, Home, Loading } from 'components/layouts';
+import { Error, Home } from 'components/layouts';
 
 const baseUrl = process.env.API_ORIGIN;
 
@@ -24,8 +24,7 @@ export default function HomePage() {
         setLoading(false);
         setHostname(host);
       })
-      .catch((e) => {
-        console.error(e);
+      .catch(() => {
         setFailed(host);
         setLoading(false);
       });
@@ -34,13 +33,10 @@ export default function HomePage() {
   if (hostname) {
     return <Navigate replace to={`/w/${hostname}`} />;
   }
+
   if (isFailed) {
     return <Error host={isFailed} onRetry={() => setFailed('')} />;
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  return <Home onSubmit={handleDetectStart} />;
+  return <Home onSubmit={handleDetectStart} isLoading={isLoading} />;
 }

@@ -1,4 +1,3 @@
-import '../src/styles/font.scss';
 import '../src/styles/global.scss';
 
 export const parameters = {

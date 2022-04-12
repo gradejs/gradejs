@@ -12,8 +12,7 @@ export default {
 export const Cell = (args: Props) => <Package {...args} />;
 Cell.args = {
   variant: 'cell',
-  name: 'react',
-  version: '17.0.2',
+  pkg: 'react@17.0.2',
 };
 
 export const Row = (args: Props) => (
@@ -23,6 +22,5 @@ export const Row = (args: Props) => (
 );
 Row.args = {
   variant: 'row',
-  name: 'react',
-  version: '17.0.2',
+  pkg: 'react@17.0.2',
 };

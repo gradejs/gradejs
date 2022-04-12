@@ -38,8 +38,13 @@
   background: url('~assets/icons/github.svg') 10px center / 25px 24px no-repeat #ffffff;
   padding: 12px 10px 12px 45px;
   border: 1px solid #e6e6e6;
+  transition: border-color 0.2s;
 
   @include mobile {
     display: block;
+  }
+
+  &:hover {
+    border-color: #a5a5a5;
   }
 }

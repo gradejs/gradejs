@@ -11,9 +11,10 @@ type FormData = {
 
 export type Props = {
   onSubmit: SubmitHandler<FormData>;
+  isLoading?: boolean;
 };
 
-export default function Home({ onSubmit }: Props) {
+export default function Home({ onSubmit, isLoading }: Props) {
   const {
     register,
     handleSubmit,
@@ -41,23 +42,36 @@ export default function Home({ onSubmit }: Props) {
     <Wrapper className={styles.wrapper}>
       <Header />
       <Section className={styles.content}>
-        <h1>Analyze your webpack bundle</h1>
+        <h1>Analyze webpack production bundle</h1>
         <form onSubmit={handleSubmit(validate)}>
           <TextInput
             className={styles.address}
-            placeholder='Enter your website address'
+            placeholder='Enter a website URL'
             name='address'
             register={register}
             error={errors.address}
+            disabled={isLoading}
           />
-          <Button className={styles.submit} variant='action' type='submit'>
+          <Button className={styles.submit} variant='action' type='submit' disabled={isLoading}>
             Start
           </Button>
-          <p className={clsx(styles.disclaimer, { [styles.error]: !!error?.message })}>
-            {error?.message ||
-              `This is an early-alpha version so the output result may be incorrect. Help us improve
-            the solution by submitting a bug.`}
-          </p>
+
+          {error?.message ? (
+            <p className={clsx(styles.disclaimer, styles.error)}>{error.message}</p>
+          ) : (
+            <p className={clsx(styles.disclaimer)}>
+              GradeJS will analyze production JavaScript files and match webpack bundled modules to
+              1,826 indexed NPM libraries over 54,735 releases.{' '}
+              <a
+                href='https://github.com/fingerprintjs/gradejs'
+                target='_blank'
+                rel='norefferer noreferrer'
+                className={clsx(styles.learnMore)}
+              >
+                Learn more
+              </a>
+            </p>
+          )}
         </form>
       </Section>
     </Wrapper>
