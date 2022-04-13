@@ -1,5 +1,5 @@
 # GradeJS
-GradeJS (currently in beta) allows you to analyze JavaScript bundles without the necessity of access to the source code of the website. GradeJS analyzes the content of the bundles and returns the list of the used packages with detailed packages' information. The tool can detect packages even in minified and tree-shaken bundles.
+GradeJS (currently in beta) allows you to analyze JavaScript bundles without having access to the source code of the website. GradeJS analyzes the content of the bundles and returns the list of the used packages with detailed packages' information. The tool can detect packages even in minified and tree-shaken bundles.
 
 [//]: # (TODO: Add a gif later)
 
