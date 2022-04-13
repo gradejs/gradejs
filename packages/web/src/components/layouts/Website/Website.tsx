@@ -35,13 +35,12 @@ export default function Website({ host, packages, webpages }: Props) {
           (isPending ? (
             <div className={clsx(styles.disclaimer, styles.disclaimerLoading)}>
               GradeJS is currently processing this website. <br />
-              Processing time may take a few minutes and depends on the number of JavaScript files
-              and its size.
+              It may take a few minutes and depends on the number of JavaScript files and its size.
             </div>
           ) : (
             <div className={styles.disclaimer}>
               The <strong>beta</strong> version of GradeJS is able to detect only 1,826 popular
-              packages with around 85% accuracy.
+              packages with up to 85% accuracy.
               <br />
               <a
                 href='https://github.com/fingerprintjs/gradejs/discussions/8'
