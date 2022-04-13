@@ -24,14 +24,23 @@ export default function Home({ onSubmit, isLoading }: Props) {
 
   const validate = useCallback(
     (data: FormData) => {
-      const { address } = data;
-      const re = /^https?:\/\/[a-zA-Z0-9][a-zA-Z0-9-.]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
+      let { address } = data;
 
-      if (address.match(re)) {
-        onSubmit(data);
-      } else {
+      if (!address.startsWith('http')) {
+        address = `https://${address}`;
+      }
+
+      try {
+        address = new URL(address).toString(); // normalize
+        onSubmit({ address });
+      } catch (e) {
         setError('address', { message: 'Invalid origin format. Should be: https://example.com' });
       }
+
+      // if (address.match(re)) {
+      // } else {
+      //   setError('address', { message: 'Invalid origin format. Should be: https://example.com' });
+      // }
     },
     [setError]
   );
