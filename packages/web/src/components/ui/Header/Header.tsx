@@ -10,7 +10,7 @@ export default function Header() {
       <Logo />
       <div className={styles.nav}>
         <a
-          href='https://github.com/fingerprintjs/gradejs/discussions'
+          href='https://github.com/fingerprintjs/gradejs/discussions/6'
           target='_blank'
           rel='norefferer noreferrer'
           className={styles.navLink}

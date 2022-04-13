@@ -44,7 +44,7 @@ export default function Website({ host, packages, webpages }: Props) {
               packages with around 85% accuracy.
               <br />
               <a
-                href='https://github.com/fingerprintjs/gradejs/issues'
+                href='https://github.com/fingerprintjs/gradejs/discussions/8'
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.disclaimerLink}
