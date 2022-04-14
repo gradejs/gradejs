@@ -1,0 +1,42 @@
+@import '~styles/responsive.scss';
+
+.heading {
+  font-size: 44px;
+  margin: 0 0 32px;
+
+  @include mobile {
+    font-size: 28px;
+  }
+}
+
+.primary {
+  margin: 0 0 16px;
+  font-size: 20px;
+  line-height: 135%;
+  color: #0f0f0f;
+}
+
+.secondary {
+  font-size: 14px;
+  line-height: 140%;
+  color: #666666;
+  margin: 0 0 24px;
+}
+
+.button {
+  width: 212px;
+  margin-left: 12px;
+
+  @include mobile {
+    margin-top: 12px;
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+.retry {
+  @include mobile {
+    width: 100%;
+    text-align: left;
+  }
+}

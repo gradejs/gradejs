@@ -1,0 +1,76 @@
+@import '~styles/responsive.scss';
+
+.button {
+  appearance: none;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  line-height: 140%;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+
+// Sizes
+.big {
+  padding: 16px 16px;
+  font-size: 16px;
+  line-height: 28px;
+
+  @include mobile {
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+.medium {
+  padding: 12px 10px 12px;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+// Variants
+.default {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  color: #0f0f0f;
+  transition: border-color 0.2s;
+
+  &:enabled:hover {
+    border-color: #a5a5a5;
+  }
+
+  &:enabled:active {
+    border-color: #000000;
+  }
+}
+
+.black {
+  color: #fff;
+}
+
+.action {
+  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat;
+  background-color: #0f0f0f;
+  color: #fff;
+  text-align: left;
+  padding-right: 60px;
+}
+
+.black,
+.action {
+  transition: background-color 0.2s;
+
+  &:enabled:hover {
+    background-color: #666666;
+  }
+  &:enabled:active {
+    background-color: #a5a5a5;
+  }
+}
+
+.action:disabled {
+  background-color: #666666;
+  background-image: url('~assets/loader-white.svg');
+}

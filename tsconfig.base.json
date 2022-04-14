@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "strict": true,
+    "strictFunctionTypes": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noErrorTruncation": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "lib": ["es2015", "dom"]
+  }
+}

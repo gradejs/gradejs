@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import './responsive.scss';
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 100px;
+  line-height: 100%;
+  margin: 0 0 80px;
+
+  @include mobile {
+    font-size: 60px;
+    margin-bottom: 64px;
+  }
+}
+
+#root,
+#app,
+html,
+body {
+  height: 100%;
+}

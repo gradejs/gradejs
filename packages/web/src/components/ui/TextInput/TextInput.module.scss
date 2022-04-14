@@ -1,0 +1,34 @@
+@import '~styles/responsive.scss';
+
+.input {
+  appearance: none;
+  border-radius: 6px;
+  outline: none;
+  padding: 16px 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  border: 1px solid #e6e6e6;
+  color: #0f0f0f;
+  font-size: 16px;
+  line-height: 28px;
+  margin: 0;
+  transition: border-color 0.2s;
+
+  &:enabled:focus,
+  &:enabled:hover {
+    border-color: #0f0f0f;
+  }
+
+  @include mobile {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  &::placeholder {
+    color: rgba($color: #0f0f0f, $alpha: 0.4);
+  }
+}
+
+.error {
+  border-color: #ff3b30;
+}

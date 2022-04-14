@@ -1,0 +1,93 @@
+@import '~styles/responsive.scss';
+
+.container {
+  border: 1px solid #e6e6e6;
+  padding: 16px;
+  display: flex;
+  box-sizing: border-box;
+}
+
+// variants
+.grid {
+  border-collapse: collapse;
+  border-bottom-width: 1px;
+  height: 150px;
+  width: 260px;
+  flex-direction: column;
+  justify-content: space-between;
+
+  // dirty trick
+  // TODO: fix later
+  & + & + & + & + & {
+    margin-top: -1px;
+  }
+
+  & .main {
+    flex: 1 50%;
+  }
+
+  & .name {
+    margin-bottom: 2px;
+  }
+}
+
+.lines {
+  height: 66px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  border-left-width: 0;
+  border-right-width: 0;
+  padding-left: 0;
+
+  & .main {
+    flex: 1;
+    display: flex;
+  }
+
+  & .name {
+    margin-right: 8px;
+  }
+
+  & .version {
+    font-size: 13px;
+    line-height: 140%;
+    color: #a5a5a5;
+  }
+
+  & .meta {
+    flex: 1;
+  }
+
+  & .size {
+    color: #0f0f0f;
+  }
+}
+
+.name {
+  font-size: 20px;
+  line-height: 120%;
+  color: #0f0f0f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.version {
+  font-size: 14px;
+  line-height: 140%;
+  color: #666666;
+}
+
+.size {
+  font-size: 13px;
+  line-height: 140%;
+  color: #666666;
+  margin-right: 8px;
+}
+
+.percent {
+  font-size: 13px;
+  line-height: 140%;
+  color: #a5a5a5;
+}

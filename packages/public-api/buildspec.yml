@@ -1,0 +1,20 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+  build:
+    commands:
+      - cd packages/public-api/
+      - n 16.14.2
+      - docker-compose -f docker-compose.aws.yml up -d db
+      - yarn install
+      - yarn build
+      - yarn migration:run
+      - yarn test
+      - docker-compose -f docker-compose.aws.yml down --volumes
+artifacts:
+  base-directory: packages/public-api
+  files:
+    - build/**/*
+    - package.json
