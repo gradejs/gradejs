@@ -10,7 +10,7 @@ More info:
 
 
 ## How to use
-Go to the [https://gradejs.com/](https://gradejs.com/) and enter a site in the `https://example.com` format. An analysis is performed server-side. Once the bundle is analyzed, the package name, version, size, and relative percentage size of the packages are returned.
+Go to the [https://gradejs.com/](https://gradejs.com/) (password: gradejs) and enter a site in the `https://example.com` format. An analysis is performed server-side. Once the bundle is analyzed, the package name, version, size, and relative percentage size of the packages are returned.
 
 ## Supported bundlers & packages
 Currently it supports [webpack](https://webpack.js.org/) from 3 to 5 and have indexed 1,826 most popular NPM libraries over 54,735 releases. The complete list of indexed packages can be found [here](https://docs.google.com/spreadsheets/d/1x_D4KsG-Q1bzej2zisqM7I0FOLJaDfRXCwH_cFOFRwQ/preview).
