@@ -3,6 +3,9 @@
   "private": true,
   "author": "FingerprintJS, Inc (https://fingerprintjs.com)",
   "license": "MIT",
+  "engines": {
+    "node": "^16.14.2"
+  },
   "workspaces": [
     "packages/*"
   ]
