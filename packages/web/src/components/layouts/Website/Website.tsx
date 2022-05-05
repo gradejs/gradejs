@@ -35,7 +35,7 @@ export default function Website({ host, packages, webpages }: Props) {
           (isPending ? (
             <div className={clsx(styles.disclaimer, styles.disclaimerLoading)}>
               GradeJS is currently processing this website. <br />
-              It may take a few minutes and depends on the number of JavaScript files and its size.
+              It may take a few minutes and depends on the number of JavaScript files and their size.
             </div>
           ) : (
             <div className={styles.disclaimer}>
