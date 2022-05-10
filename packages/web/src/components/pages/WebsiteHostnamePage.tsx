@@ -70,7 +70,7 @@ export default function WebsiteHostnamePage() {
   if (isProtected) {
     return (
         <ErrorLayout
-            message="It looks like the entered website is protected with anti-fraud, so we couldn't get script content."
+            message="The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions."
             action='Would you like to try another URL or report an issue?'
             actionTitle='Try another URL'
             host={hostname}
