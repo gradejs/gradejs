@@ -1,16 +1,16 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { getInternalApiOrigin } from '../utils/env';
-import { WebsiteInternal } from './types';
+import { Internal } from './types';
 
-export async function initiateUrlProcessingInternal(url: string) {
-  return fetchInternal<WebsiteInternal>('POST', '/website/parse', { url });
+export async function initiateUrlProcessing(url: string) {
+  return fetchEndpoint<Internal.Website>('POST', '/website/parse', { url });
 }
 
 export async function fetchUrlPackages(url: string) {
-  return fetchInternal<WebsiteInternal>('GET', '/website', { url });
+  return fetchEndpoint<Internal.Website>('GET', '/website', { url });
 }
 
-export async function fetchInternal<T>(
+export async function fetchEndpoint<T>(
   method: 'GET' | 'POST',
   endpoint: string,
   data?: Record<string, unknown>

@@ -1,5 +1,5 @@
 {
-  "name": "@gradejs/public-api",
+  "name": "@gradejs-public/public-api",
   "version": "0.1.0",
   "private": true,
   "scripts": {

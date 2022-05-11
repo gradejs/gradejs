@@ -2,10 +2,9 @@ import http from 'http';
 import supertest from 'supertest';
 import { Connection, getConnection } from 'typeorm';
 import { TransactionalTestContext } from 'typeorm-transactional-tests';
-import { createApp } from '../app';
 import { getDatabaseConnection } from '../database/connection';
 
-export function createSupertestApi() {
+export function createSupertestApi(createApp: Function) {
   const server = http.createServer(createApp());
   const api = supertest.agent(server);
 

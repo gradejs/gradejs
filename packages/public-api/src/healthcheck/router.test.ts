@@ -1,6 +1,7 @@
-import { createSupertestApi } from '../utils/testUtils';
+import { createSupertestApi } from '@gradejs-public/shared';
+import { createApp } from '../app';
 
-const api = createSupertestApi();
+const api = createSupertestApi(createApp);
 
 describe('routes / heathCheck', () => {
   it('should return valid response', async () => {

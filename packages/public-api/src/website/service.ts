@@ -1,13 +1,10 @@
 import { getRepository } from 'typeorm';
-import { WebPage } from '../database/entities/webPage';
-import { WebsiteStatusInternal } from '../internalApi/types';
-import { fetchUrlPackages, initiateUrlProcessingInternal } from '../internalApi/api';
-import { WebPagePackage } from '../database/entities/webPagePackage';
+import { WebPage, WebPagePackage, internalApi, Internal } from '@gradejs-public/shared';
 
 export async function requestWebPageParse(url: string) {
   const [cached, internal] = await Promise.all([
     getRepository(WebPage).findOne({ url }),
-    initiateUrlProcessingInternal(url),
+    internalApi.initiateUrlProcessing(url),
   ]);
 
   // Insert or update database entry
@@ -25,7 +22,7 @@ export async function syncWebPage(webpage: WebPage) {
     return;
   }
 
-  const internal = await fetchUrlPackages(webpage.url);
+  const internal = await internalApi.fetchUrlPackages(webpage.url);
   const nextStatus = mapInternalWebsiteStatus(internal.status);
 
   // Save updated status if changed
@@ -55,11 +52,11 @@ export function getPackagesByHostname(hostname: string) {
   return getRepository(WebPagePackage).find({ hostname });
 }
 
-function mapInternalWebsiteStatus(status: WebsiteStatusInternal) {
+function mapInternalWebsiteStatus(status: Internal.WebsiteStatus) {
   switch (status) {
-    case WebsiteStatusInternal.Invalid:
+    case Internal.WebsiteStatus.Invalid:
       return WebPage.Status.Unsupported;
-    case WebsiteStatusInternal.InProgress:
+    case Internal.WebsiteStatus.InProgress:
       return WebPage.Status.Pending;
     default:
       return WebPage.Status.Processed;
