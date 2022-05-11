@@ -5,6 +5,8 @@ export async function requestWebPageParse(url: string) {
   const [cached, internal] = await Promise.all([
     getRepository(WebPage).findOne({ url }),
     internalApi.initiateUrlProcessing(url),
+    // Clear cached results
+    getRepository(WebPagePackage).delete({ hostname: getHostnameFromUrl(url) }),
   ]);
 
   // Insert or update database entry
