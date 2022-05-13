@@ -19,6 +19,7 @@ export default function WebsiteHostnamePage() {
   const [packages, setPackages] = useState([]);
   const [webpages, setWebpages] = useState<{ status: string }[]>([]);
   const [isError, setError] = useState(false);
+  const [isProtected, setProtected] = useState(false);
 
   const isInvalidResult =
     packages.length === 0 &&
@@ -31,6 +32,9 @@ export default function WebsiteHostnamePage() {
         .then((response) => {
           setPackages(response.data.packages);
           setWebpages(response.data.webpages);
+          if (response.data.status === 'protected') { // TODO: move website statuses to shared?
+            setProtected(true);
+          }
         })
         .catch(() => {
           setError(true);
@@ -63,7 +67,19 @@ export default function WebsiteHostnamePage() {
     return <Navigate replace to='/' />;
   }
 
-  if (isInvalidResult) {
+  if (isProtected) {
+    return (
+        <ErrorLayout
+            message="The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions."
+            action='Would you like to try another URL or report an issue?'
+            actionTitle='Try another URL'
+            host={hostname}
+            onRetry={() => {
+              document.location = '/';
+            }}
+        />
+    );
+  } else if (isInvalidResult) {
     return (
       <ErrorLayout
         message='It looks like the entered website is not built with Webpack.'
