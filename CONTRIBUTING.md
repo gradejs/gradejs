@@ -22,7 +22,7 @@ Create a docker container with a local PostgreSQL instance by running this comma
 docker-compose up -d db
 
 # Create all required tables.
-yarn --cwd packages/public-api migration:run
+yarn --cwd packages/shared migration:run
 ```
 
 ```bash

@@ -1,3 +1,5 @@
+import { Internal } from '../internalApi/types';
+
 export type WorkerTask = {
   [Key in WorkerTaskType]: {
     type: Key;
@@ -13,4 +15,6 @@ export type WorkerTaskType = keyof WorkerTaskPayloadMap;
 
 export type WorkerTaskPayloadMap = {
   pollNpmRegistryUpdates: undefined;
+  syncPackageIndex: undefined;
+  syncPackageIndexBatch: Internal.Package[];
 };

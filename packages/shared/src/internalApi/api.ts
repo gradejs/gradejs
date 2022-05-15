@@ -2,12 +2,35 @@ import fetch, { RequestInit } from 'node-fetch';
 import { getInternalApiOrigin } from '../utils/env';
 import { Internal } from './types';
 
+type Paginaton = {
+  offset: number;
+  limit: number;
+  total: number;
+};
+
 export async function initiateUrlProcessing(url: string) {
   return fetchEndpoint<Internal.Website>('POST', '/website/parse', { url });
 }
 
 export async function fetchUrlPackages(url: string) {
   return fetchEndpoint<Internal.Website>('GET', '/website', { url });
+}
+
+export async function fetchPackageIndex(offset = 0, limit = 0) {
+  return fetchEndpoint<{ pagination: Paginaton; packages: Internal.Package[] }>(
+    'GET',
+    '/package/index',
+    {
+      offset,
+      limit,
+    }
+  );
+}
+
+export async function requestPackageIndexing(packagesToIndex: string[]) {
+  return fetchEndpoint<boolean>('POST', '/package/index', {
+    packages: packagesToIndex,
+  });
 }
 
 export async function fetchEndpoint<T>(

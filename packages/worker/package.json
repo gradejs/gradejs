@@ -10,7 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "express": "^4.18.1"
+    "@aws-sdk/client-sqs": "^3.87.0",
+    "express": "^4.18.1",
+    "nano": "^10.0.0",
+    "semver": "^7.3.7"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/semver": "^7.3.9"
+  }
 }

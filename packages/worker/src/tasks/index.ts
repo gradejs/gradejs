@@ -1,1 +1,2 @@
-export * from './pollNpmRegistryUpdates';
+export * from './syncPackageIndex';
+export * from './syncPackageIndexBatch';

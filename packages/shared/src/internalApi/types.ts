@@ -15,4 +15,9 @@ export namespace Internal {
     Failed = 'failed',
     Invalid = 'invalid',
   }
+
+  export interface Package {
+    name: string;
+    latestVersion: string;
+  }
 }

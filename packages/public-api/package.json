@@ -6,9 +6,7 @@
     "build": "tsc --project tsconfig.json",
     "test": "jest",
     "lint": "prettier --check ./src",
-    "start": "node build/index.js",
-    "migration:run": "ts-node scripts/migrateDatabase.ts",
-    "migration:create": "typeorm migration:create -d src/database/migrations -n"
+    "start": "node build/index.js"
   },
   "engines": {
     "node": "^16.14.2"
