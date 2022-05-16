@@ -35,5 +35,6 @@ export namespace WebPage {
     Pending = 'pending',
     Processed = 'processed',
     Unsupported = 'unsupported',
+    Protected = 'protected',
   }
 }

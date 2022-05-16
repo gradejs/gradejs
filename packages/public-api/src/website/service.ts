@@ -63,6 +63,8 @@ function mapInternalWebsiteStatus(status: WebsiteStatusInternal) {
       return WebPage.Status.Unsupported;
     case WebsiteStatusInternal.InProgress:
       return WebPage.Status.Pending;
+    case WebsiteStatusInternal.Protected:
+      return WebPage.Status.Protected;
     default:
       return WebPage.Status.Processed;
   }
