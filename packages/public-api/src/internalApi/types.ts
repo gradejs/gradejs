@@ -13,4 +13,5 @@ export enum WebsiteStatusInternal {
   Ready = 'ready',
   Failed = 'failed',
   Invalid = 'invalid',
+  Protected = 'protected',
 }
