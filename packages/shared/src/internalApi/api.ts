@@ -1,13 +1,29 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { getInternalApiOrigin } from '../utils/env';
-import { Internal } from './types';
+
+export interface Website {
+  id: number;
+  url: string;
+  status: WebsiteStatus;
+  packages: string[];
+  updatedAt: string;
+  createdAt: string;
+}
+
+export enum WebsiteStatus {
+  Created = 'created',
+  InProgress = 'in-progress',
+  Ready = 'ready',
+  Failed = 'failed',
+  Invalid = 'invalid',
+}
 
 export async function initiateUrlProcessing(url: string) {
-  return fetchEndpoint<Internal.Website>('POST', '/website/parse', { url });
+  return fetchEndpoint<Website>('POST', '/website/parse', { url });
 }
 
 export async function fetchUrlPackages(url: string) {
-  return fetchEndpoint<Internal.Website>('GET', '/website', { url });
+  return fetchEndpoint<Website>('GET', '/website', { url });
 }
 
 export async function fetchEndpoint<T>(

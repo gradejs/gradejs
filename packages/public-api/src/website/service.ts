@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm';
-import { WebPage, WebPagePackage, internalApi, Internal } from '@gradejs-public/shared';
+import { WebPage, WebPagePackage, internalApi } from '@gradejs-public/shared';
 
 export async function requestWebPageParse(url: string) {
   const [cached, internal] = await Promise.all([
@@ -54,11 +54,11 @@ export function getPackagesByHostname(hostname: string) {
   return getRepository(WebPagePackage).find({ hostname });
 }
 
-function mapInternalWebsiteStatus(status: Internal.WebsiteStatus) {
+function mapInternalWebsiteStatus(status: internalApi.WebsiteStatus) {
   switch (status) {
-    case Internal.WebsiteStatus.Invalid:
+    case internalApi.WebsiteStatus.Invalid:
       return WebPage.Status.Unsupported;
-    case Internal.WebsiteStatus.InProgress:
+    case internalApi.WebsiteStatus.InProgress:
       return WebPage.Status.Pending;
     default:
       return WebPage.Status.Processed;

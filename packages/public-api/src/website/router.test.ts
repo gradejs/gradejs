@@ -2,7 +2,6 @@ import {
   createSupertestApi,
   useDatabaseConnection,
   useTransactionalTesting,
-  Internal,
   internalApi,
   WebPage,
   WebPagePackage,
@@ -25,7 +24,7 @@ describe('routes / website', () => {
       Promise.resolve({
         url,
         status: 'in-progress',
-      } as Internal.Website)
+      } as internalApi.Website)
     );
 
     const response = await api.post('/webpage').send({ url }).expect(200);
@@ -97,7 +96,7 @@ describe('routes / website', () => {
         url,
         status: 'ready',
         packages: ['react@17.0.2', 'object-assing@4.1.1'],
-      } as Internal.Website)
+      } as internalApi.Website)
     );
 
     const response = await api.get(`/website/${hostname}`).expect(200);
