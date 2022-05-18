@@ -1,4 +1,5 @@
-import { expectQueuedTasks, internalApi } from '@gradejs-public/shared';
+import { internalApi } from '@gradejs-public/shared';
+import { expectQueuedTasks } from '@gradejs-public/test-utils';
 import { syncPackageIndex } from './syncPackageIndex';
 
 jest.mock('@aws-sdk/client-sqs');

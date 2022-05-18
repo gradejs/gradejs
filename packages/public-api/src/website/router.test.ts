@@ -1,11 +1,9 @@
+import { internalApi, WebPage, WebPagePackage } from '@gradejs-public/shared';
 import {
   createSupertestApi,
   useDatabaseConnection,
   useTransactionalTesting,
-  internalApi,
-  WebPage,
-  WebPagePackage,
-} from '@gradejs-public/shared';
+} from '@gradejs-public/test-utils';
 import { getRepository } from 'typeorm';
 import { createApp } from '../app';
 

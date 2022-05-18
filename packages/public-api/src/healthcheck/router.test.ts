@@ -1,4 +1,4 @@
-import { createSupertestApi } from '@gradejs-public/shared';
+import { createSupertestApi } from '@gradejs-public/test-utils';
 import { createApp } from '../app';
 
 const api = createSupertestApi(createApp);
