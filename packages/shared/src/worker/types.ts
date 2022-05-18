@@ -1,3 +1,5 @@
+import * as internalApi from '../internalApi/api';
+
 export type WorkerTask = {
   [Key in WorkerTaskType]: {
     type: Key;
@@ -5,12 +7,9 @@ export type WorkerTask = {
   };
 }[WorkerTaskType];
 
-export type WorkerHandlers = {
-  [Key in WorkerTaskType]: (payload: WorkerTaskPayloadMap[Key]) => Promise<unknown>;
-};
-
 export type WorkerTaskType = keyof WorkerTaskPayloadMap;
 
 export type WorkerTaskPayloadMap = {
-  pollNpmRegistryUpdates: undefined;
+  syncPackageIndex: undefined;
+  syncPackageIndexBatch: internalApi.Package[];
 };

@@ -18,12 +18,36 @@ export enum WebsiteStatus {
   Invalid = 'invalid',
 }
 
+export interface Package {
+  name: string;
+  latestVersion: string;
+}
+
+type Paginaton = {
+  offset: number;
+  limit: number;
+  total: number;
+};
+
 export async function initiateUrlProcessing(url: string) {
   return fetchEndpoint<Website>('POST', '/website/parse', { url });
 }
 
 export async function fetchUrlPackages(url: string) {
   return fetchEndpoint<Website>('GET', '/website', { url });
+}
+
+export async function fetchPackageIndex(offset = 0, limit = 0) {
+  return fetchEndpoint<{ pagination: Paginaton; packages: Package[] }>('GET', '/package/index', {
+    offset,
+    limit,
+  });
+}
+
+export async function requestPackageIndexing(packagesToIndex: string[]) {
+  return fetchEndpoint<boolean>('POST', '/package/index', {
+    packages: packagesToIndex,
+  });
 }
 
 export async function fetchEndpoint<T>(

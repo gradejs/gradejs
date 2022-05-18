@@ -7,7 +7,9 @@
   "scripts": {
     "lint": "prettier --check ./src",
     "build": "tsc --project tsconfig.build.json",
-    "test": "jest"
+    "test": "jest",
+    "migration:run": "ts-node scripts/migrateDatabase.ts",
+    "migration:create": "typeorm migration:create -d src/database/migrations -n"
   },
   "dependencies": {
   },

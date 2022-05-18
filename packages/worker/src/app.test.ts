@@ -1,11 +1,11 @@
 import { createSupertestApi } from '@gradejs-public/shared';
 import { createWorker } from './app';
-import { pollNpmRegistryUpdates } from './tasks';
+import { syncPackageIndex } from './tasks';
 
 const api = createSupertestApi(createWorker);
 
 jest.mock('./tasks', () => ({
-  pollNpmRegistryUpdates: jest.fn().mockImplementation(() => Promise.resolve(true)),
+  syncPackageIndex: jest.fn().mockImplementation(() => Promise.resolve(true)),
 }));
 
 describe('worker / app', () => {
@@ -18,16 +18,13 @@ describe('worker / app', () => {
     await api.post('/').send({ type: 'unknownABC' }).expect(500);
   });
 
-  it('should execute task pollNpmRegistryUpdates', async () => {
+  it('should execute task syncPackageIndex', async () => {
     const payload = Math.random();
 
-    const response = await api
-      .post('/')
-      .send({ type: 'pollNpmRegistryUpdates', payload })
-      .expect(200);
+    const response = await api.post('/').send({ type: 'syncPackageIndex', payload }).expect(200);
 
-    expect(pollNpmRegistryUpdates).toHaveBeenCalledTimes(1);
-    expect(pollNpmRegistryUpdates).toHaveBeenCalledWith(payload);
+    expect(syncPackageIndex).toHaveBeenCalledTimes(1);
+    expect(syncPackageIndex).toHaveBeenCalledWith(payload);
     expect(response.body).toMatchObject({ ok: true });
   });
 });
