@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "prettier --check ./src",
     "build": "tsc --project tsconfig.build.json",
-    "test": "jest"
+    "test": "jest",
+    "start": "node build/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.87.0",

@@ -6,7 +6,12 @@ import {
   Env,
 } from '@gradejs-public/shared';
 
-checkRequiredEnvironmentVariables([Env.DatabaseUrl, Env.InternalApiOrigin]);
+checkRequiredEnvironmentVariables([
+  Env.AwsRegion,
+  Env.DatabaseUrl,
+  Env.SqsWorkerQueueUrl,
+  Env.InternalApiOrigin,
+]);
 
 const port = getPort(8080);
 
