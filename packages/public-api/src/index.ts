@@ -1,6 +1,10 @@
 import { createApp } from './app';
-import { initDatabase } from './database/connection';
-import { getPort, checkRequiredEnvironmentVariables, Env } from './utils/env';
+import {
+  initDatabase,
+  getPort,
+  checkRequiredEnvironmentVariables,
+  Env,
+} from '@gradejs-public/shared';
 
 checkRequiredEnvironmentVariables([Env.DatabaseUrl, Env.InternalApiOrigin]);
 

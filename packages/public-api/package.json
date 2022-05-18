@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.build.json",
     "test": "jest",
     "lint": "prettier --check ./src",
     "start": "node build/index.js"
@@ -14,6 +14,7 @@
   "author": "FingerprintJS, Inc (https://fingerprintjs.com)",
   "license": "MIT",
   "dependencies": {
+    "@gradejs-public/shared": "^0.1.0",
     "@types/cors": "^2.8.12",
     "cors": "^2.8.5",
     "express": "^4.17.3",
