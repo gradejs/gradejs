@@ -4,12 +4,12 @@
 case "$EB_START" in
   "api")
       echo "Starting public-api package"
-      yarn workspace @gradejs-public/public-api start
+      npm start --prefix packages/public-api
       ;;
 
   "worker")
       echo "Starting worker package"
-      yarn workspace @gradejs-public/worker start
+      npm start --prefix packages/worker
       ;;
 
   *)
