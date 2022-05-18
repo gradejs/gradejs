@@ -21,4 +21,4 @@ artifacts:
     - packages/shared/build/**/*
     - packages/shared/package.json
     - package.json
-    - eb-start.js
+    - eb-start.sh
