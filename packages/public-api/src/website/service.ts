@@ -1,13 +1,10 @@
 import { getRepository } from 'typeorm';
-import { WebPage } from '../database/entities/webPage';
-import { WebsiteStatusInternal } from '../internalApi/types';
-import { fetchUrlPackages, initiateUrlProcessingInternal } from '../internalApi/api';
-import { WebPagePackage } from '../database/entities/webPagePackage';
+import { WebPage, WebPagePackage, internalApi } from '@gradejs-public/shared';
 
 export async function requestWebPageParse(url: string) {
   const [cached, internal] = await Promise.all([
     getRepository(WebPage).findOne({ url }),
-    initiateUrlProcessingInternal(url),
+    internalApi.initiateUrlProcessing(url),
     // Clear cached results
     getRepository(WebPagePackage).delete({ hostname: getHostnameFromUrl(url) }),
   ]);
@@ -27,7 +24,7 @@ export async function syncWebPage(webpage: WebPage) {
     return;
   }
 
-  const internal = await fetchUrlPackages(webpage.url);
+  const internal = await internalApi.fetchUrlPackages(webpage.url);
   const nextStatus = mapInternalWebsiteStatus(internal.status);
 
   // Save updated status if changed
@@ -57,11 +54,11 @@ export function getPackagesByHostname(hostname: string) {
   return getRepository(WebPagePackage).find({ hostname });
 }
 
-function mapInternalWebsiteStatus(status: WebsiteStatusInternal) {
+function mapInternalWebsiteStatus(status: internalApi.WebsiteStatus) {
   switch (status) {
-    case WebsiteStatusInternal.Invalid:
+    case internalApi.WebsiteStatus.Invalid:
       return WebPage.Status.Unsupported;
-    case WebsiteStatusInternal.InProgress:
+    case internalApi.WebsiteStatus.InProgress:
       return WebPage.Status.Pending;
     default:
       return WebPage.Status.Processed;

@@ -11,6 +11,8 @@
     "noErrorTruncation": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": ["es2015", "dom"]
   }
 }

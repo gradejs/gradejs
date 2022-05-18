@@ -2,32 +2,29 @@ import {
   createSupertestApi,
   useDatabaseConnection,
   useTransactionalTesting,
-} from '../utils/testUtils';
-import * as internalApi from '../internalApi/api';
-import { WebsiteInternal } from '../internalApi/types';
+  internalApi,
+  WebPage,
+  WebPagePackage,
+} from '@gradejs-public/shared';
 import { getRepository } from 'typeorm';
-import { WebPage } from '../database/entities/webPage';
-import { WebPagePackage } from '../database/entities/webPagePackage';
+import { createApp } from '../app';
 
 useDatabaseConnection();
 useTransactionalTesting();
 
-const api = createSupertestApi();
+const api = createSupertestApi(createApp);
 
 describe('routes / website', () => {
   it('should initiate webpage parsing', async () => {
     const url = 'https://example.com/' + Math.random();
 
-    const initiateUrlProcessingInternalMock = jest.spyOn(
-      internalApi,
-      'initiateUrlProcessingInternal'
-    );
+    const initiateUrlProcessingInternalMock = jest.spyOn(internalApi, 'initiateUrlProcessing');
 
     initiateUrlProcessingInternalMock.mockImplementation((url) =>
       Promise.resolve({
         url,
         status: 'in-progress',
-      } as WebsiteInternal)
+      } as internalApi.Website)
     );
 
     const response = await api.post('/webpage').send({ url }).expect(200);
@@ -99,7 +96,7 @@ describe('routes / website', () => {
         url,
         status: 'ready',
         packages: ['react@17.0.2', 'object-assing@4.1.1'],
-      } as WebsiteInternal)
+      } as internalApi.Website)
     );
 
     const response = await api.get(`/website/${hostname}`).expect(200);
