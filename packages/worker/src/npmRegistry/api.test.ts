@@ -1,6 +1,9 @@
 import semver from 'semver';
 import { fetchPackageMetadata, fetchPackageDownloads } from './api';
 
+// Requesting the NPM registry may cause some delays
+jest.setTimeout(15000);
+
 describe('npmRegistry / api', () => {
   it('fetchPackageMetadata', async () => {
     const metadata = await fetchPackageMetadata('object-assign');
