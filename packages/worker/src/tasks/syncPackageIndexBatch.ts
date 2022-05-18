@@ -1,8 +1,8 @@
 import semver from 'semver';
-import { internalApi, Internal, PackageMetadata } from '@gradejs-public/shared';
+import { internalApi, PackageMetadata } from '@gradejs-public/shared';
 import { fetchPackageStatsAndMetadata } from '../npmRegistry/api';
 
-export async function syncPackageIndexBatch(payload: Internal.Package[]) {
+export async function syncPackageIndexBatch(payload: internalApi.Package[]) {
   // We do not need any concurrent limits here since the batch size
   // is controlled by the `syncPackageIndex` task.
   await Promise.all(payload.map((item) => syncPackage(item.name, item.latestVersion)));

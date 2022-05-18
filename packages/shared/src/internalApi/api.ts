@@ -1,6 +1,27 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { getInternalApiOrigin } from '../utils/env';
-import { Internal } from './types';
+
+export interface Website {
+  id: number;
+  url: string;
+  status: WebsiteStatus;
+  packages: string[];
+  updatedAt: string;
+  createdAt: string;
+}
+
+export enum WebsiteStatus {
+  Created = 'created',
+  InProgress = 'in-progress',
+  Ready = 'ready',
+  Failed = 'failed',
+  Invalid = 'invalid',
+}
+
+export interface Package {
+  name: string;
+  latestVersion: string;
+}
 
 type Paginaton = {
   offset: number;
@@ -9,22 +30,18 @@ type Paginaton = {
 };
 
 export async function initiateUrlProcessing(url: string) {
-  return fetchEndpoint<Internal.Website>('POST', '/website/parse', { url });
+  return fetchEndpoint<Website>('POST', '/website/parse', { url });
 }
 
 export async function fetchUrlPackages(url: string) {
-  return fetchEndpoint<Internal.Website>('GET', '/website', { url });
+  return fetchEndpoint<Website>('GET', '/website', { url });
 }
 
 export async function fetchPackageIndex(offset = 0, limit = 0) {
-  return fetchEndpoint<{ pagination: Paginaton; packages: Internal.Package[] }>(
-    'GET',
-    '/package/index',
-    {
-      offset,
-      limit,
-    }
-  );
+  return fetchEndpoint<{ pagination: Paginaton; packages: Package[] }>('GET', '/package/index', {
+    offset,
+    limit,
+  });
 }
 
 export async function requestPackageIndexing(packagesToIndex: string[]) {
