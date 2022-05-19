@@ -32,9 +32,7 @@ export default function WebsiteHostnamePage() {
         .then((response) => {
           setPackages(response.data.packages);
           setWebpages(response.data.webpages);
-          if (response.data.status === 'protected') { // TODO: move website statuses to shared?
-            setProtected(true);
-          }
+          setProtected(!!response.data.webpages.find((item: { status: string }) => item.status === 'protected'));
         })
         .catch(() => {
           setError(true);
