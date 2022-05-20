@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx,.js",
+    "test": "echo 'Not implemented yet'",
     "start": "webpack serve --open",
     "storybook": "start-storybook -p 6006",
     "build": "rm -rf dist && webpack --mode=production",
@@ -31,8 +32,8 @@
     "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
     "@types/react-gtm-module": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.31.1",
-    "@typescript-eslint/parser": "^4.31.1",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^6.2.0",
     "dotenv": "^10.0.0",
