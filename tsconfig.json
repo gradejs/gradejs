@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./packages",
+    "paths": {
+      "@gradejs-public/*": ["*/src"]
+    }
+  },
+  "ts-node": {
+    "files": true
+  }
+}

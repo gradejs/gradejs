@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { initiateUrlProcessingInternal, fetchUrlPackages } from './api';
+import { initiateUrlProcessing, fetchUrlPackages } from './api';
 
 jest.mock('node-fetch');
 process.env.INTERNAL_API_ORIGIN = 'https://mocked-domain.com/';
@@ -27,7 +27,7 @@ describe('internalApi', () => {
 
     fetchMode.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(response))));
 
-    const result = await initiateUrlProcessingInternal(url);
+    const result = await initiateUrlProcessing(url);
 
     expect(fetchMode).toBeCalledWith('https://mocked-domain.com/website/parse', {
       method: 'POST',

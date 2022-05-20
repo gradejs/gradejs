@@ -4,6 +4,10 @@ export enum Env {
   Port = 'PORT',
   DatabaseUrl = 'DB_URL',
 
+  // AWS
+  AwsRegion = 'AWS_REGION',
+  SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
+
   // Internal
   InternalApiOrigin = 'INTERNAL_API_ORIGIN',
 }

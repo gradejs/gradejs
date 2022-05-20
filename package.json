@@ -7,6 +7,18 @@
     "node": "^16.14.2"
   },
   "workspaces": [
-    "packages/*"
-  ]
+    "packages/shared",
+    "packages/public-api",
+    "packages/worker",
+    "packages/web"
+  ],
+  "scripts": {
+    "start": "bash ./eb-start.sh",
+    "lint": "yarn workspaces run lint",
+    "test": "yarn workspaces run test",
+    "build:shared": "yarn workspace @gradejs-public/shared run build",
+    "build:worker": "yarn workspace @gradejs-public/worker run build",
+    "build:public-api": "yarn workspace @gradejs-public/public-api run build",
+    "build:backend": "yarn build:shared && yarn build:public-api && yarn build:worker"
+  }
 }

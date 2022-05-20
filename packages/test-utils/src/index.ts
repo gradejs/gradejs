@@ -2,10 +2,10 @@ import http from 'http';
 import supertest from 'supertest';
 import { Connection, getConnection } from 'typeorm';
 import { TransactionalTestContext } from 'typeorm-transactional-tests';
-import { createApp } from '../app';
-import { getDatabaseConnection } from '../database/connection';
+import { SQSClient, SendMessageCommand, SendMessageBatchCommand } from '@aws-sdk/client-sqs';
+import { getDatabaseConnection, WorkerTask } from '@gradejs-public/shared';
 
-export function createSupertestApi() {
+export function createSupertestApi(createApp: Function) {
   const server = http.createServer(createApp());
   const api = supertest.agent(server);
 
@@ -63,4 +63,25 @@ export function useTransactionalTesting() {
   afterEach(async () => {
     await transactionalContext.finish();
   });
+}
+
+export function expectQueuedTasks(tasks: WorkerTask[]) {
+  const batchCalls = (SendMessageBatchCommand as jest.Mock).mock.calls;
+  const singleCalls = (SendMessageCommand as jest.Mock).mock.calls;
+
+  const expectedTasks = tasks.map((task) => JSON.stringify(task));
+  const scheduledTasks = [
+    ...batchCalls
+      .map((commandArgs) => commandArgs[0])
+      .flatMap((commandPayload) => commandPayload.Entries || [])
+      .map((entry: any) => entry.MessageBody),
+
+    ...singleCalls.map((commandArgs) => commandArgs[0]).map((entry: any) => entry.MessageBody),
+  ];
+
+  expect(scheduledTasks).toEqual(expectedTasks);
+
+  if (tasks.length > 0) {
+    expect(SQSClient.prototype.send).toHaveBeenCalled();
+  }
 }
