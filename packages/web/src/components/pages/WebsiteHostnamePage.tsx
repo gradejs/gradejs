@@ -32,7 +32,9 @@ export default function WebsiteHostnamePage() {
         .then((response) => {
           setPackages(response.data.packages);
           setWebpages(response.data.webpages);
-          setProtected(!!response.data.webpages.find((item: { status: string }) => item.status === 'protected'));
+          setProtected(
+            !!response.data.webpages.find((item: { status: string }) => item.status === 'protected')
+          );
         })
         .catch(() => {
           setError(true);
@@ -67,17 +69,19 @@ export default function WebsiteHostnamePage() {
 
   if (isProtected) {
     return (
-        <ErrorLayout
-            message="The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions."
-            action='Would you like to try another URL or report an issue?'
-            actionTitle='Try another URL'
-            host={hostname}
-            onRetry={() => {
-              document.location = '/';
-            }}
-        />
+      <ErrorLayout
+        message='The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions.'
+        action='Would you like to try another URL or report an issue?'
+        actionTitle='Try another URL'
+        host={hostname}
+        onRetry={() => {
+          document.location = '/';
+        }}
+      />
     );
-  } else if (isInvalidResult) {
+  }
+
+  if (isInvalidResult) {
     return (
       <ErrorLayout
         message='It looks like the entered website is not built with Webpack.'
