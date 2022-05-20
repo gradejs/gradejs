@@ -5,7 +5,6 @@ export * from './database/entities/packageMetadata';
 
 export * from './utils/aws';
 export * from './utils/env';
-export * from './utils/testUtils';
 
 export * as internalApi from './internalApi/api';
 

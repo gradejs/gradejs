@@ -3,8 +3,7 @@ import supertest from 'supertest';
 import { Connection, getConnection } from 'typeorm';
 import { TransactionalTestContext } from 'typeorm-transactional-tests';
 import { SQSClient, SendMessageCommand, SendMessageBatchCommand } from '@aws-sdk/client-sqs';
-import { getDatabaseConnection } from '../database/connection';
-import { WorkerTask } from '../worker/types';
+import { getDatabaseConnection, WorkerTask } from '@gradejs-public/shared';
 
 export function createSupertestApi(createApp: Function) {
   const server = http.createServer(createApp());

@@ -71,7 +71,14 @@ docker logs -f db
 - Open the [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) page, select the `Applications` section and click on the `Create a new application` button.
 - Enter or select the application name, for example `gradejs`.
 
-4. Create an [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) API environment:
+4. Create [Amazon SQS](https://us-east-2.console.aws.amazon.com/sqs/v2/home) worker queues:
+
+- Open the page and click on the `Create queue` button.
+- Select the standart queue option and specify the name `gradejs-public`.
+- Set the `visibility timeout` to 2 minutes.
+- Click on the `Create queue` button.
+
+5. Create an [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) API environment:
 
 - Open the [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) page and click on the `Create a new environment` button.
 - Select `Web server environment` option.
@@ -85,9 +92,26 @@ docker logs -f db
 - Specify the `AWS_REGION` environment variable. It should be the same as your current AWS environemnt. For example, `us-east-2`.
 - Specify the `DB_URL` environment variable. It should point to the newly created RDS database. For example: `postgres://postgres:<secret>@<hostname>/gradejs`.
 - Specify the `INTERNAL_API_ORIGIN` environment variable. Consider using our staging internal API origin: `http://fpjs-dev-gradejs-internal-api.eba-fybi4md5.us-east-1.elasticbeanstalk.com`
+- Specify the `SQS_WORKER_QUEUE_URL` queue. It should be a newly created `gradejs-backend` queue. For example `https://sqs.us-east-2.amazonaws.com/<account_id>/gradejs-backend`.
+- Specify the `AWS_REGION` environment variable. It should be the same as your current AWS environemnt. For example, `us-east-2`.
+- Specify the `EB_START` environment variable: `api`.
 - Click on the `Save` button and then click on the `Create environment` button.
 
-5. Setting up a `Continuous Deploy` pipeline:
+6. Create an [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) worker environment:
+
+- Select `Worker environment` option.
+- Type the newly created application name (`gradejs-public`).
+- Specify an environment name: `gradejs-public-worker`. Leave the domain and description name fileds blank.
+- Select the latest version of Node.js 16 managed platform on Amazon Linux 2. The version minimal required version is 5.5.1.
+- Use the sample application code and click on the `Configure more options` button.
+- Select the `Custom configuration` configuration preset.
+- In the `Software` section click on the `Edit` button.
+- Enable the `CloudWatch` log streaming with a 5 day retention.
+- Set the same `AWS_REGION`, `DB_URL`, `SQS_WORKER_QUEUE_URL` environment variables.
+- Set the `EB_START` environment variable to `worker`.
+- Click on the `Save` button and then click on the `Create environment` button.
+
+7. Setting up a `Continuous Deploy` pipeline:
 
 - Go to the [AWS CodePipeline](https://us-east-2.console.aws.amazon.com/codesuite/codepipeline/pipelines) page and click on the `Create pipeline` page.
 - Type a pipeline name `gradejs-public@production-deploy` and click on the `Next` button.
@@ -95,8 +119,12 @@ docker logs -f db
 - Click on the `Next` button.
 - Select the `AWS CodeBuild` build provider.
 - Create a `AWS CodeBuild` project. The name of a project should be `gradejs-public`. Select the `Ubuntu` operating system with the latest version of the `aws/codebuild/standart:5.0` image. Click on the `privileged` flag. Leave the rest as defaults and click on the `Continue to CodePipeline` button.
-- Set the buildspec name to `packages/public-api/buildspec.yml`
 - Click on the `Next` button on the build stage page.
 - Select the `AWS Elastic Beanstalk` deploy provider.
 - Select the `gradejs-public-api` environment name.
 - Click on `Next` button and then on the `Create pipeline` button.
+- Click on the `Edit` button in the newly created pipeline. Edit the `Deploy` stage and click on the `Add action group` button
+- Type the `deploy-public-worker` action name and select the `AWS CodeBuild` build provider.
+- Select the `BuildArtifact` as input artifact.
+- Select the `gradejs-public-worker` environment name.
+- Click on `Done` button and then on `Save` button.

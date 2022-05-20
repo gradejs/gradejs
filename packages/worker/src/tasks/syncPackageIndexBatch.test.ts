@@ -1,12 +1,8 @@
 import { getRepository } from 'typeorm';
 import { syncPackageIndexBatch } from './syncPackageIndexBatch';
 import * as npmRegistry from '../npmRegistry/api';
-import {
-  internalApi,
-  PackageMetadata,
-  useDatabaseConnection,
-  useTransactionalTesting,
-} from '@gradejs-public/shared';
+import { internalApi, PackageMetadata } from '@gradejs-public/shared';
+import { useDatabaseConnection, useTransactionalTesting } from '@gradejs-public/test-utils';
 
 useDatabaseConnection();
 useTransactionalTesting();

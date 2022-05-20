@@ -5,16 +5,20 @@ phases:
       nodejs: 14
   build:
     commands:
-      - cd packages/public-api/
       - n 16.14.2
       - docker-compose -f docker-compose.aws.yml up -d db
       - yarn install
-      - yarn build
-      - yarn migration:run
+      - yarn build:backend
+      - yarn workspace @gradejs-public/shared migration:run
       - yarn test
       - docker-compose -f docker-compose.aws.yml down --volumes
 artifacts:
-  base-directory: packages/public-api
   files:
-    - build/**/*
+    - packages/public-api/build/**/*
+    - packages/public-api/package.json
+    - packages/worker/build/**/*
+    - packages/worker/package.json
+    - packages/shared/build/**/*
+    - packages/shared/package.json
     - package.json
+    - eb-start.sh
