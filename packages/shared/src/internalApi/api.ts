@@ -16,6 +16,7 @@ export enum WebsiteStatus {
   Ready = 'ready',
   Failed = 'failed',
   Invalid = 'invalid',
+  Protected = 'protected',
 }
 
 export interface Package {
