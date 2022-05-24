@@ -24,11 +24,15 @@ export async function fetchPackageMetadata(name: string) {
   const document = await registry.get(name, { local_seq: true });
   const versionList = Object.keys(document.versions);
 
+  // Filter out intermediate versions such as X.Y.Z-dev-0 and include only stable ones
+  const versionListFiltered = versionList.filter(
+    (item: string) => item.search(/^(\d+\.)?(\d+\.)?(\d+)$/) > -1
+  );
   return {
     updateSeq: Number(document._local_seq),
     updatedAt: new Date(document.time.modified),
     latestVersion: document['dist-tags'].latest,
-    versionList,
+    versionList: versionListFiltered,
   };
 }
 
