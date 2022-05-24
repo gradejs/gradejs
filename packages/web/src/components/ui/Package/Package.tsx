@@ -3,28 +3,34 @@ import clsx from 'clsx';
 import React from 'react';
 import styles from './Package.module.scss';
 
+export type DetectedPackageData = {
+  packageName: string;
+  possiblePackageVersions: string[];
+  packageVersionRange: string;
+  packageMetadata?: {
+    approximateByteSize?: number;
+  };
+}
+
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
-  pkg: string;
-  // size?: number;
-  // bundleSize?: number;
+  pkg: DetectedPackageData;
 };
 
 export default function Package({ className, variant = 'grid', pkg }: Props) {
-  const idx = pkg.lastIndexOf('@');
-  const name = pkg.slice(0, idx);
-  const version = pkg.slice(idx + 1);
 
   return (
     <div className={clsx(styles.container, styles[variant], className)}>
       <div className={styles.main}>
-        <div className={styles.name}>{name}</div>
-        <div className={styles.version}>{version}</div>
+        <div className={styles.name}>{pkg.packageName}</div>
+        <div className={styles.version}>{pkg.packageVersionRange}</div>
       </div>
       <div className={styles.meta}>
-        {/* <span className={styles.size}>23B</span>
-        <span className={styles.percent}>23%</span> */}
+        {!!pkg.packageMetadata?.approximateByteSize && (
+          <span className={styles.size}>pkg.packageMetadata.approximateByteSizeB</span>
+        )}
+        {/* <span className={styles.percent}>23%</span> */}
       </div>
     </div>
   );

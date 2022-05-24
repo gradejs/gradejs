@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { Header, Package, Section, PackageSkeleton } from 'components/ui';
 import { Grid, Lines } from 'components/icons';
 import styles from './Website.module.scss';
+import type { DetectedPackageData } from '../../ui/Package/Package';
 
 export type Props = {
   host: string;
@@ -12,9 +13,7 @@ export type Props = {
   //   title: string;
   //   icon: string;
   // }>;
-  packages: Array<{
-    package: string;
-  }>;
+  packages: DetectedPackageData[];
   webpages: Array<{
     status: string;
   }>;
@@ -35,7 +34,8 @@ export default function Website({ host, packages, webpages }: Props) {
           (isPending ? (
             <div className={clsx(styles.disclaimer, styles.disclaimerLoading)}>
               GradeJS is currently processing this website. <br />
-              It may take a few minutes and depends on the number of JavaScript files and their size.
+              It may take a few minutes and depends on the number of JavaScript files and their
+              size.
             </div>
           ) : (
             <div className={styles.disclaimer}>
@@ -87,12 +87,7 @@ export default function Website({ host, packages, webpages }: Props) {
         )}
         <div className={clsx(styles.packages, styles[view])}>
           {packages.map((data, index) => (
-            <Package
-              key={index.toString()}
-              variant={view}
-              className={styles.package}
-              pkg={data.package}
-            />
+            <Package key={index.toString()} variant={view} className={styles.package} pkg={data} />
           ))}
           {isLoading && (
             <>

@@ -1,11 +1,18 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { getInternalApiOrigin } from '../utils/env';
 
+export type DetectedPackage = {
+  name: string;
+  possibleVersions: string[];
+  versionRange: string;
+  approximateSize: number | null;
+};
+
 export interface Website {
   id: number;
   url: string;
   status: WebsiteStatus;
-  packages: string[];
+  detectedPackages: DetectedPackage[];
   updatedAt: string;
   createdAt: string;
 }

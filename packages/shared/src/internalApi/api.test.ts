@@ -48,7 +48,14 @@ describe('internalApi', () => {
         id: 1,
         url,
         status: 'ready',
-        packages: ['react@17.0.2'],
+        detectedPackages: [
+          {
+            name: 'react',
+            possibleVersions: ['17.0.2'],
+            versionRange: '17.0.2',
+            approximateSize: 1337,
+          },
+        ],
         updatedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
       },
