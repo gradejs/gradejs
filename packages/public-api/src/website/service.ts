@@ -34,14 +34,19 @@ export async function syncWebPage(webpage: WebPage) {
   }
 
   // Save packages if ready
-  if (webpage.status === WebPage.Status.Processed && internal.packages.length > 0) {
+  if (webpage.status === WebPage.Status.Processed && internal.detectedPackages.length > 0) {
     await getRepository(WebPagePackage).upsert(
-      internal.packages.map((pkg) => ({
+      internal.detectedPackages.map((pkg) => ({
         latestUrl: internal.url,
         hostname: getHostnameFromUrl(internal.url),
-        package: pkg,
+        packageName: pkg.name,
+        possiblePackageVersions: pkg.possibleVersions,
+        packageVersionRange: pkg.versionRange,
+        packageMetadata: {
+          approximateByteSize: pkg.approximateSize ?? undefined,
+        },
       })),
-      ['hostname', 'package']
+      ['hostname', 'packageName']
     );
   }
 }

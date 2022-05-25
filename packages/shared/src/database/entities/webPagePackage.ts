@@ -8,8 +8,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+export type WebPagePackageMetadata = {
+  approximateByteSize?: number;
+};
+
 @Entity({ name: 'web_page_package' })
-@Index(['hostname', 'package'], { unique: true })
+@Index(['hostname', 'packageName'], { unique: true })
 export class WebPagePackage extends BaseEntity {
   @PrimaryColumn({ type: 'int', generated: 'increment' })
   id!: number;
@@ -21,7 +25,16 @@ export class WebPagePackage extends BaseEntity {
   latestUrl!: string;
 
   @Column()
-  package!: string;
+  packageName!: string;
+
+  @Column({ type: 'jsonb' })
+  possiblePackageVersions!: string[];
+
+  @Column()
+  packageVersionRange!: string;
+
+  @Column({ type: 'jsonb' })
+  packageMetadata?: WebPagePackageMetadata;
 
   @UpdateDateColumn()
   updatedAt?: Date;

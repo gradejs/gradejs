@@ -62,7 +62,9 @@ describe('routes / website', () => {
     const packageInsert = await getRepository(WebPagePackage).insert({
       latestUrl: url,
       hostname,
-      package: 'react@17.0.2',
+      packageName: 'react',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2',
     });
 
     const response = await api.get(`/website/${hostname}`).expect(200);
@@ -91,9 +93,25 @@ describe('routes / website', () => {
 
     fetchUrlPackagesMock.mockImplementation((url) =>
       Promise.resolve({
+        id: 0,
+        updatedAt: '1',
+        createdAt: '1',
         url,
         status: 'ready',
-        packages: ['react@17.0.2', 'object-assing@4.1.1'],
+        detectedPackages: [
+          {
+            name: 'react',
+            versionRange: '17.0.2',
+            possibleVersions: ['17.0.2'],
+            approximateSize: 1337,
+          },
+          {
+            name: 'object-assign',
+            versionRange: '4.1.0 - 4.1.1',
+            possibleVersions: ['4.1.0', '4.1.1'],
+            approximateSize: 42,
+          },
+        ],
       } as internalApi.Website)
     );
 
@@ -114,12 +132,22 @@ describe('routes / website', () => {
           {
             latestUrl: url,
             hostname,
-            package: 'react@17.0.2',
+            packageName: 'react',
+            possiblePackageVersions: ['17.0.2'],
+            packageVersionRange: '17.0.2',
+            packageMetadata: {
+              approximateByteSize: 1337,
+            },
           },
           {
             latestUrl: url,
             hostname,
-            package: 'object-assing@4.1.1',
+            packageName: 'object-assign',
+            possiblePackageVersions: ['4.1.0', '4.1.1'],
+            packageVersionRange: '4.1.0 - 4.1.1',
+            packageMetadata: {
+              approximateByteSize: 42,
+            },
           },
         ],
       },
