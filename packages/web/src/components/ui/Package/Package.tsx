@@ -8,7 +8,7 @@ export type DetectedPackageData = {
   possiblePackageVersions: string[];
   packageVersionRange: string;
   packageMetadata?: {
-    approximateByteSize?: number;
+    approximateByteSize: number | null;
   };
 }
 
@@ -28,7 +28,7 @@ export default function Package({ className, variant = 'grid', pkg }: Props) {
       </div>
       <div className={styles.meta}>
         {!!pkg.packageMetadata?.approximateByteSize && (
-          <span className={styles.size}>pkg.packageMetadata.approximateByteSizeB</span>
+          <span className={styles.size}>{pkg.packageMetadata.approximateByteSize}B</span>
         )}
         {/* <span className={styles.percent}>23%</span> */}
       </div>
