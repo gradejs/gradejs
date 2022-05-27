@@ -59,18 +59,18 @@ export async function fetchPackageIndex(offset = 0, limit = 0) {
 }
 
 export async function requestPackageIndexing(payload: PackageIndexRequest) {
-  return fetchEndpoint<boolean>('POST', '/package/index?mode=append', payload);
+  return fetchEndpoint<boolean>('PATCH', '/package/index', payload);
 }
 
 export async function fetchEndpoint<T>(
-  method: 'GET' | 'POST',
+  method: 'GET' | 'POST' | 'PATCH',
   endpoint: string,
   data?: Record<string, unknown>
 ) {
   const requestUrl = new URL(endpoint, getInternalApiOrigin());
   const requestInit: RequestInit = { method };
 
-  if (method === 'POST') {
+  if (method === 'POST' || method === 'PATCH') {
     requestInit.headers = { 'Content-Type': 'application/json' };
     requestInit.body = JSON.stringify(data);
   } else if (method === 'GET' && data) {
