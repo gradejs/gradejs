@@ -6,7 +6,10 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { PackageMetadata } from './packageMetadata';
 
 export type WebPagePackageMetadata = {
   approximateByteSize?: number;
@@ -41,4 +44,8 @@ export class WebPagePackage extends BaseEntity {
 
   @CreateDateColumn()
   createdAt!: Date;
+
+  @ManyToOne(() => PackageMetadata)
+  @JoinColumn({ name: 'package_name', referencedColumnName: 'name' })
+  registryMetadata?: PackageMetadata;
 }
