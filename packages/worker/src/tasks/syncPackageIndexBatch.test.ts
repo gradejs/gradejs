@@ -36,10 +36,10 @@ describe('task / syncPackageIndexBatch', () => {
 
     expect(npmApisFetchMock).toHaveBeenCalledTimes(1);
     expect(requestPackageIndexingMock).toHaveBeenCalledTimes(1);
-    expect(requestPackageIndexingMock).toHaveBeenCalledWith([
-      'any-fake-package@1.0.1',
-      'any-fake-package@1.1.0',
-    ]);
+    expect(requestPackageIndexingMock).toHaveBeenCalledWith({
+      name: 'any-fake-package',
+      versions: ['0.1.0', '1.0.0', '1.0.1', '1.1.0'],
+    });
 
     const savedPackage = await getRepository(PackageMetadata).findOne({ name: mockedPackage.name });
 
@@ -77,12 +77,12 @@ describe('task / syncPackageIndexBatch', () => {
     ]);
 
     expect(npmApisFetchMock).toHaveBeenCalledTimes(1);
-    expect(requestPackageIndexingMock).toHaveBeenCalledTimes(0);
+    expect(requestPackageIndexingMock).toHaveBeenCalledTimes(1);
 
     const updatedPackage = await getRepository(PackageMetadata).findOne({
       name: savedPackage.name,
     });
 
-    expect(savedPackage).toMatchObject(updatedPackage as any);
+    expect(updatedPackage).toMatchObject(savedPackage);
   });
 });
