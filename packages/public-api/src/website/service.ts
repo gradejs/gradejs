@@ -56,7 +56,10 @@ export function getWebPagesByHostname(hostname: string) {
 }
 
 export function getPackagesByHostname(hostname: string) {
-  return getRepository(WebPagePackage).find({ hostname });
+  return getRepository(WebPagePackage).find({
+    relations: ['registryMetadata'],
+    where: { hostname },
+  });
 }
 
 function mapInternalWebsiteStatus(status: internalApi.WebsiteStatus) {

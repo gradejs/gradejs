@@ -1,4 +1,4 @@
-import { internalApi, WebPage, WebPagePackage } from '@gradejs-public/shared';
+import { internalApi, PackageMetadata, WebPage, WebPagePackage } from '@gradejs-public/shared';
 import {
   createSupertestApi,
   useDatabaseConnection,
@@ -67,13 +67,26 @@ describe('routes / website', () => {
       packageVersionRange: '17.0.2',
     });
 
+    const packageMetadataInsert = await getRepository(PackageMetadata).insert({
+      name: 'react',
+      latestVersion: '18.0.0',
+      monthlyDownloads: 100,
+      updateSeq: 5,
+      license: 'MIT',
+    });
+
     const response = await api.get(`/website/${hostname}`).expect(200);
 
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(0);
     expect(response.body).toMatchObject({
       data: {
         webpages: webpageInsert.generatedMaps,
-        packages: packageInsert.generatedMaps,
+        packages: [
+          {
+            ...packageInsert.generatedMaps[0],
+            registryMetadata: packageMetadataInsert.generatedMaps[0],
+          },
+        ],
       },
     });
   });

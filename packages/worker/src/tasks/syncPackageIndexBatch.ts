@@ -1,11 +1,10 @@
-import semver from 'semver';
 import { internalApi, PackageMetadata } from '@gradejs-public/shared';
 import { fetchPackageStatsAndMetadata } from '../npmRegistry/api';
 
 export async function syncPackageIndexBatch(payload: internalApi.Package[]) {
   // We do not need any concurrent limits here since the batch size
   // is controlled by the `syncPackageIndex` task.
-  await Promise.all(payload.map((item) => syncPackage(item.name, item.latestVersion)));
+  await Promise.all(payload.map((item) => syncPackage(item.name)));
 }
 
 /**
@@ -19,27 +18,27 @@ export async function syncPackageIndexBatch(payload: internalApi.Package[]) {
  * and code readability, we've decided extract everthing into a single function, since
  * package sync happens rarely.
  */
-async function syncPackage(name: string, latestIndexedVersion?: string) {
+async function syncPackage(name: string) {
   const statsAndMetadata = await fetchPackageStatsAndMetadata(name);
 
-  if (latestIndexedVersion) {
-    const versionsUnsynced = statsAndMetadata.versionList.filter((version) =>
-      semver.gt(version, latestIndexedVersion)
-    );
-
-    if (versionsUnsynced.length > 0) {
-      const packagesToBeIndexed = versionsUnsynced.map((version) => `${name}@${version}`);
-      await internalApi.requestPackageIndexing(packagesToBeIndexed);
-    }
-  }
-
-  await PackageMetadata.upsert(
-    {
-      name: name,
-      latestVersion: statsAndMetadata.latestVersion,
-      updateSeq: statsAndMetadata.updateSeq,
-      updatedAt: statsAndMetadata.updatedAt,
-    },
-    ['name']
-  );
+  await Promise.all([
+    internalApi.requestPackageIndexing({
+      name,
+      versions: statsAndMetadata.versionList,
+    }),
+    PackageMetadata.upsert(
+      {
+        name: name,
+        latestVersion: statsAndMetadata.latestVersion,
+        description: statsAndMetadata.description,
+        homepageUrl: statsAndMetadata.homepageUrl,
+        repositoryUrl: statsAndMetadata.repositoryUrl,
+        license: statsAndMetadata.license,
+        monthlyDownloads: statsAndMetadata.downloads,
+        updateSeq: statsAndMetadata.updateSeq,
+        updatedAt: statsAndMetadata.updatedAt,
+      },
+      ['name']
+    ),
+  ]);
 }

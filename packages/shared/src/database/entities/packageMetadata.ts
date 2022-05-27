@@ -13,6 +13,21 @@ export class PackageMetadata extends BaseEntity {
   latestVersion!: string;
 
   @Column()
+  monthlyDownloads!: number;
+
+  @Column()
+  description?: string;
+
+  @Column()
+  homepageUrl?: string;
+
+  @Column()
+  repositoryUrl?: string;
+
+  @Column()
+  license?: string;
+
+  @Column()
   updateSeq!: number;
 
   @Column()

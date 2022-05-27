@@ -31,6 +31,12 @@ export interface Package {
   latestVersion: string;
 }
 
+export interface PackageIndexRequest {
+  name: string;
+  versions: string[];
+  [key: string]: unknown;
+}
+
 type Paginaton = {
   offset: number;
   limit: number;
@@ -52,21 +58,19 @@ export async function fetchPackageIndex(offset = 0, limit = 0) {
   });
 }
 
-export async function requestPackageIndexing(packagesToIndex: string[]) {
-  return fetchEndpoint<boolean>('POST', '/package/index', {
-    packages: packagesToIndex,
-  });
+export async function requestPackageIndexing(payload: PackageIndexRequest) {
+  return fetchEndpoint<boolean>('PATCH', '/package/index', payload);
 }
 
 export async function fetchEndpoint<T>(
-  method: 'GET' | 'POST',
+  method: 'GET' | 'POST' | 'PATCH',
   endpoint: string,
   data?: Record<string, unknown>
 ) {
   const requestUrl = new URL(endpoint, getInternalApiOrigin());
   const requestInit: RequestInit = { method };
 
-  if (method === 'POST') {
+  if (method === 'POST' || method === 'PATCH') {
     requestInit.headers = { 'Content-Type': 'application/json' };
     requestInit.body = JSON.stringify(data);
   } else if (method === 'GET' && data) {
