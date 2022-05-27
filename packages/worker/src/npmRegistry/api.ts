@@ -104,33 +104,36 @@ function isValidUrl(maybeUrl: string) {
 }
 
 export function getRepositoryUrl(repository?: string) {
-  let url;
-
   if (!repository) {
     return;
   }
 
+  let urlMatch;
+
   // (git+)https://github.com/facebook/react(.git)
-  if ((url = repository.match(/^(?:git\+)?(https?:.*?)(?:\.git)?$/))) {
-    return url[1];
+  if ((urlMatch = repository.match(/^(?:git\+)?(https?:.*?)(?:\.git)?$/))) {
+    const [, repoUrl] = urlMatch;
+    return repoUrl;
   }
 
   // git://github.com/auth0/lock(.git)
-  if ((url = repository.match(/^git:\/\/(.*?)(?:.git)?$/))) {
-    return `https://${url[1]}`;
+  if ((urlMatch = repository.match(/^git:\/\/(.*?)(?:.git)?$/))) {
+    const [, repoUrl] = urlMatch;
+    return `https://${repoUrl}`;
   }
 
   // github:user/repo
-  if ((url = repository.match(/^(\w+):([\w_\-\.]+)\/([\w_\-\.]+)$/))) {
-    switch (url[1]) {
+  if ((urlMatch = repository.match(/^(\w+):([\w_\-\.]+)\/([\w_\-\.]+)$/))) {
+    const [, repoType, repoUser, repoName] = urlMatch;
+    switch (repoType) {
       case 'github':
-        return `https://github.com/${url[2]}/${url[3]}`;
+        return `https://github.com/${repoUser}/${repoName}`;
 
       case 'gitlab':
-        return `https://gitlab.com/${url[2]}/${url[3]}`;
+        return `https://gitlab.com/${repoUser}/${repoName}`;
 
       case 'bitbucket':
-        return `https://bitbucket.org/${url[2]}/${url[3]}`;
+        return `https://bitbucket.org/${repoUser}/${repoName}`;
 
       default:
     }
