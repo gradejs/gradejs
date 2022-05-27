@@ -1,5 +1,5 @@
 import semver from 'semver';
-import { fetchPackageMetadata, fetchPackageDownloads } from './api';
+import { fetchPackageMetadata, fetchPackageDownloads, getRepositoryUrl } from './api';
 
 // Requesting the NPM registry may cause some delays
 jest.setTimeout(30000);
@@ -23,5 +23,18 @@ describe.skip('npmRegistry / api', () => {
     const stats = await fetchPackageDownloads('object-assign');
 
     expect(stats.downloads).toBeGreaterThan(1_000_000);
+  });
+});
+
+describe('npmRegistry / getRepositoryUrl', () => {
+  it.each([
+    ['git+https://github.com/facebook/react.git', 'https://github.com/facebook/react'],
+    ['https://github.com/facebook/react', 'https://github.com/facebook/react'],
+    ['git://github.com/auth0/lock', 'https://github.com/auth0/lock'],
+    ['github:foo/bar', 'https://github.com/foo/bar'],
+    ['gitlab:foo/bar', 'https://gitlab.com/foo/bar'],
+    ['bitbucket:foo/bar', 'https://bitbucket.org/foo/bar'],
+  ])('should give valid url', (target, result) => {
+    expect(getRepositoryUrl(target)).toEqual(result);
   });
 });

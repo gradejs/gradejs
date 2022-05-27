@@ -103,7 +103,7 @@ function isValidUrl(maybeUrl: string) {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
-function getRepositoryUrl(repository?: string) {
+export function getRepositoryUrl(repository?: string) {
   let url;
 
   if (!repository) {
@@ -111,13 +111,13 @@ function getRepositoryUrl(repository?: string) {
   }
 
   // (git+)https://github.com/facebook/react(.git)
-  if ((url = repository.match(/^(|git\+)(https?:.*?)(|.git)$/))) {
-    return url[2];
+  if ((url = repository.match(/^(?:git\+)?(https?:.*?)(?:\.git)?$/))) {
+    return url[1];
   }
 
   // git://github.com/auth0/lock(.git)
-  if ((url = repository.match(/^git:\/\/(.*?)(|.git)$/))) {
-    return `https://${url[2]}`;
+  if ((url = repository.match(/^git:\/\/(.*?)(?:.git)?$/))) {
+    return `https://${url[1]}`;
   }
 
   // github:user/repo
