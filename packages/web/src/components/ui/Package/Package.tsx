@@ -47,9 +47,9 @@ export default function Package({ className, variant = 'grid', pkg }: Props) {
               <Github />
             </a>
           )}{' '}
-          {homepageUrl && (
+          {homepageUrl && homepageUrl !== repositoryUrl && (
             <a
-              href={repositoryUrl}
+              href={homepageUrl}
               target='_blank'
               rel='noopener noreferrer'
               className={styles.externalLink}
