@@ -13,14 +13,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fingerprintjs/gradejs.git"
+    "url": "git+https://github.com/gradejs/gradejs.git"
   },
-  "author": "FingerprintJS, Inc (https://fingerprintjs.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fingerprintjs/gradejs/issues"
+    "url": "https://github.com/gradejs/gradejs/issues"
   },
-  "homepage": "https://github.com/fingerprintjs/gradejs#readme",
+  "homepage": "https://github.com/gradejs/gradejs#readme",
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@storybook/addon-actions": "^6.3.8",

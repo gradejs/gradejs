@@ -72,7 +72,7 @@ export default function Home({ onSubmit, isLoading }: Props) {
               GradeJS will analyze production JavaScript files and match webpack bundled modules to
               1,826 indexed NPM libraries over 54,735 releases.{' '}
               <a
-                href='https://github.com/fingerprintjs/gradejs/discussions/6'
+                href='https://github.com/gradejs/gradejs/discussions/6'
                 target='_blank'
                 rel='norefferer noreferrer'
                 className={clsx(styles.learnMore)}

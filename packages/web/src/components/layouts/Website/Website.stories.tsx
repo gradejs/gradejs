@@ -11,7 +11,7 @@ export default {
 
 export const Ready = (args: Props) => <Website {...args} />;
 Ready.args = {
-  host: 'fingerprintjs.com',
+  host: 'gradejs.com',
   webpages: [],
   packages: [
     {
@@ -49,7 +49,7 @@ Ready.args = {
 
 export const Pending = (args: Props) => <Website {...args} />;
 Pending.args = {
-  host: 'fingerprintjs.com',
+  host: 'gradejs.com',
   webpages: [
     {
       status: 'pending',
@@ -60,7 +60,7 @@ Pending.args = {
 
 export const Loading = (args: Props) => <Website {...args} />;
 Loading.args = {
-  host: 'fingerprintjs.com',
+  host: 'gradejs.com',
   webpages: [],
   packages: [],
 };

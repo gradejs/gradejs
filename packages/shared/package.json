@@ -1,7 +1,6 @@
 {
   "name": "@gradejs-public/shared",
   "version": "0.1.0",
-  "author": "FingerprintJS",
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
