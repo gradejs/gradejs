@@ -9,18 +9,14 @@ export default {
   },
 };
 
-export const Cell = (args: Props) => <Package {...args} />;
-Cell.args = {
-  variant: 'cell',
-  pkg: 'react@17.0.2',
-};
-
-export const Row = (args: Props) => (
-  <div style={{ width: '90vw' }}>
-    <Package {...args} />
-  </div>
-);
-Row.args = {
-  variant: 'row',
-  pkg: 'react@17.0.2',
+export const Default = (args: Props) => <Package {...args} />;
+Default.args = {
+  variant: 'grid',
+  pkg: {
+    packageName: 'react',
+    packageVersionRange: '17.0.0 - 17.0.2',
+    packageMetadata: {
+      approximateByteSize: 2352,
+    },
+  },
 };
