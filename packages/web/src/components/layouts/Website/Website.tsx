@@ -43,7 +43,7 @@ export default function Website({ host, packages, webpages }: Props) {
               packages with up to 85% accuracy.
               <br />
               <a
-                href='https://github.com/fingerprintjs/gradejs/discussions/8'
+                href='https://github.com/gradejs/gradejs/discussions/8'
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.disclaimerLink}
@@ -52,7 +52,7 @@ export default function Website({ host, packages, webpages }: Props) {
               </a>{' '}
               or{' '}
               <a
-                href='https://github.com/fingerprintjs/gradejs/issues'
+                href='https://github.com/gradejs/gradejs/issues'
                 target='_blank'
                 rel='noopener noreferrer'
                 className={styles.disclaimerLink}

@@ -28,7 +28,7 @@ export default function Error({
         <Button onClick={onRetry} className={styles.retry}>
           {actionTitle}
         </Button>
-        <a href='https://github.com/fingerprintjs/gradejs/issues' target='_blank' rel='noreferrer'>
+        <a href='https://github.com/gradejs/gradejs/issues' target='_blank' rel='noreferrer'>
           <Button className={styles.button} variant='action'>
             Report an issue
           </Button>
