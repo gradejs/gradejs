@@ -46,7 +46,7 @@ export default function Package({ className, variant = 'grid', pkg }: Props) {
             >
               <Github />
             </a>
-          )}{' '}
+          )}
           {homepageUrl && homepageUrl !== repositoryUrl && (
             <a
               href={homepageUrl}
@@ -91,12 +91,8 @@ function toReadableSize(size: number) {
     byteUnitIndex += 1;
   }
 
-  let readableSize = sizeInUnits.toFixed(1);
-  if (readableSize.slice(-2) === '.0') {
-    readableSize = readableSize.slice(0, -2);
-  }
-
-  return `${readableSize}${byteUnits[byteUnitIndex]}`;
+  // parseFloat(X.toFixed(1)) removes a zero fraction
+  return `${parseFloat(sizeInUnits.toFixed(1))}${byteUnits[byteUnitIndex]}`;
 }
 
 function toReadableVersion(version: string) {
