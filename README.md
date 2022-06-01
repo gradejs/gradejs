@@ -11,7 +11,7 @@ More info:
 
 ## How to use
 
-Go to the [https://gradejs.com/](https://gradejs.com/) (password: gradejs) and enter a site in the `https://example.com` format. An analysis is performed server-side. Once the bundle is analyzed, the package name, version, size, and relative percentage size of the packages are returned.
+Go to the [https://gradejs.com/](https://gradejs.com/) and enter a site in the `https://example.com` format. An analysis is performed server-side. Once the bundle is analyzed, the package name, version, size, and relative percentage size of the packages are returned.
 
 ## Supported bundlers & packages
 
