@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, {useEffect, useState, MouseEvent, MouseEventHandler} from 'react';
 import clsx from 'clsx';
-import styles from './Popup.module.scss';
+import styles from './Dropdown.module.scss';
 
 export type Props = {
   className?: string;
@@ -13,7 +13,7 @@ export type Props = {
   position: 'topleft' | 'topright';
 };
 
-export default function Popup({
+export default function Dropdown({
   className,
   TriggerComponent,
   triggerChildren,
@@ -26,11 +26,11 @@ export default function Popup({
   });
   return (<div style={{'position': 'relative'}}>
     <TriggerComponent onClick={(e: MouseEvent) => { e.stopPropagation(); setVisible(!visible); }}>{triggerChildren}</TriggerComponent>
-    {visible && <div
-      className={clsx(styles.basic, styles[position], className)}
+    <div
+      className={clsx(styles.basic, styles[position], className, { [styles.visible]: visible })}
       onClick={(e) => e.stopPropagation()}
     >
       {children}
-    </div>}
+    </div>
   </div>);
 }
