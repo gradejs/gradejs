@@ -6,7 +6,6 @@ export * from './database/entities/packageVulnerability';
 
 export * from './utils/aws';
 export * from './utils/env';
-export * from './utils/userAgent';
 
 export * as internalApi from './internalApi/api';
 

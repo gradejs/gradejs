@@ -8,7 +8,7 @@ export class PackageVulnerabilities1654089872517 implements MigrationInterface {
           "package_name" text not null,
           "package_version_range" text not null,
           "osv_id" text not null,
-          "osv_data" jsonb not null,
+          "osv_data" jsonb not null
       );
 
       create unique index "package_vulnerability_package_name_osv_id" on "package_vulnerability" ("package_name", "osv_id");

@@ -1,11 +1,18 @@
 import { fetchAdvisoryDbSnapshot } from '../githubAdvisoryDb/advisoryDb';
 import gunzip from 'gunzip-maybe';
-import * as tarStream from 'tar-stream';
-import * as Stream from 'node:stream';
+import TarStream from 'tar-stream';
+import Stream from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import { OpenSourceVulnerability, OSVAffectedRangeType, PackageVulnerability } from '@gradejs-public/shared';
+import {
+  OpenSourceVulnerability,
+  OSVAffectedRangeType,
+  PackageVulnerability,
+} from '@gradejs-public/shared';
 
-type PackageVulnerabilityData = Pick<PackageVulnerability, 'packageName' | 'packageVersionRange' | 'osvId' | 'osvData'>;
+type PackageVulnerabilityData = Pick<
+  PackageVulnerability,
+  'packageName' | 'packageVersionRange' | 'osvId' | 'osvData'
+>;
 
 async function drainStreamToBuffer(stream: Stream.Readable): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -36,7 +43,7 @@ function createPackageVulnerabilitySynchronizer(batchSize = 10) {
       return;
     }
 
-    const affectedEntries = osvData.affected?.filter(it => it.package.ecosystem === 'npm');
+    const affectedEntries = osvData.affected?.filter((it) => it.package.ecosystem === 'npm');
     if (!affectedEntries?.length) {
       return;
     }
@@ -44,15 +51,17 @@ function createPackageVulnerabilitySynchronizer(batchSize = 10) {
     const affectedRangesByPackage: Record<string, string[]> = {};
 
     for (const affectedEntry of affectedEntries) {
-      const affectedRanges = affectedEntry.ranges?.filter(it => it.type === OSVAffectedRangeType.ECOSYSTEM);
+      const affectedRanges = affectedEntry.ranges?.filter(
+        (it) => it.type === OSVAffectedRangeType.ECOSYSTEM
+      );
       if (!affectedRanges) {
         continue;
       }
 
       const affectedRangeParts = [];
       for (const range of affectedRanges) {
-        const introducedVer = range.events.find(it => !!it.introduced);
-        const fixedVer = range.events.find(it => !!it.fixed);
+        const introducedVer = range.events.find((it) => !!it.introduced);
+        const fixedVer = range.events.find((it) => !!it.fixed);
 
         if (introducedVer && fixedVer) {
           affectedRangeParts.push(`>=${introducedVer.introduced} <${fixedVer.fixed}`);
@@ -80,13 +89,12 @@ function createPackageVulnerabilitySynchronizer(batchSize = 10) {
     }
 
     entityBuffer = entityBuffer.concat(
-      Object.entries(affectedRangesByPackage)
-        .map(([packageName, affectedRanges]) => ({
-          packageName,
-          packageVersionRange: affectedRanges.join(', '),
-          osvId: osvData.id,
-          osvData: osvData,
-        })),
+      Object.entries(affectedRangesByPackage).map(([packageName, affectedRanges]) => ({
+        packageName,
+        packageVersionRange: affectedRanges.join(', '),
+        osvId: osvData.id,
+        osvData: osvData,
+      }))
     );
 
     if (entityBuffer.length >= batchSize) {
@@ -97,7 +105,7 @@ function createPackageVulnerabilitySynchronizer(batchSize = 10) {
 
 export async function syncPackageVulnerabilities() {
   const packageVulnerabilitySynchronizer = createPackageVulnerabilitySynchronizer();
-  const extractStream = tarStream.extract();
+  const extractStream = TarStream.extract();
 
   extractStream.on('entry', async (header, stream, next) => {
     // Example path: advisory-database-main/advisories/github-reviewed/2022/05/GHSA-23wx-cgxq-vpwx/GHSA-23wx-cgxq-vpwx.json
@@ -124,11 +132,7 @@ export async function syncPackageVulnerabilities() {
 
   const dbSnapshotStream = await fetchAdvisoryDbSnapshot();
 
-  const pipelineResult = pipeline(
-    dbSnapshotStream,
-    gunzip(),
-    extractStream,
-  );
+  const pipelineResult = await pipeline(dbSnapshotStream, gunzip(), extractStream);
 
   await packageVulnerabilitySynchronizer(null);
 

@@ -2,7 +2,8 @@ import { getGitHubAccessToken } from '@gradejs-public/shared';
 import { Octokit } from '@octokit/core';
 import fetch from 'node-fetch';
 
-const GITHUB_ADVISORY_DB_PUBLIC_TARBALL = 'https://github.com/github/advisory-database/archive/refs/heads/main.tar.gz';
+const GITHUB_ADVISORY_DB_PUBLIC_TARBALL =
+  'https://github.com/github/advisory-database/archive/refs/heads/main.tar.gz';
 
 const GITHUB_ADVISORY_DB_API_PARAMS = {
   owner: 'github',
@@ -17,7 +18,10 @@ export async function fetchAdvisoryDbSnapshot() {
 
   if (githubAccessToken) {
     const oktokit = new Octokit({ auth: githubAccessToken });
-    const response = await oktokit.request('GET /repos/{owner}/{repo}/tarball/{ref}', GITHUB_ADVISORY_DB_API_PARAMS);
+    const response = await oktokit.request(
+      'GET /repos/{owner}/{repo}/tarball/{ref}',
+      GITHUB_ADVISORY_DB_API_PARAMS
+    );
 
     tarballUrl = response.url;
   }
