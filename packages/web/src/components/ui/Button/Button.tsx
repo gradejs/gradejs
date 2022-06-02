@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import React from 'react';
+import React, {MouseEventHandler} from 'react';
 import clsx from 'clsx';
 import styles from './Button.module.scss';
 
@@ -10,7 +10,7 @@ export type Props = {
   variant?: 'default' | 'black' | 'action';
   size?: 'medium' | 'big';
   disabled?: boolean;
-  onClick?: () => unknown;
+  onClick?: MouseEventHandler;
 };
 
 export default function Button({
