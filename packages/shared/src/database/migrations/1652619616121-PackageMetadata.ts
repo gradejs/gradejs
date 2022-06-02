@@ -16,7 +16,7 @@ export class PackageMetadata1652619616121 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.query(`
+    await queryRunner.query(`
       drop table if exists package_metadata;
     `);
   }

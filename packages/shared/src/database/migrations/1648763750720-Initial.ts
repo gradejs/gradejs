@@ -28,7 +28,7 @@ export class Initial1648763750720 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.query(`
+    await queryRunner.query(`
       drop table if exists web_page;
       drop table if exists web_page_package;
     `);
