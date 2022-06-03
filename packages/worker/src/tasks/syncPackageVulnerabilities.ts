@@ -26,7 +26,7 @@ async function drainStreamToBuffer(stream: Stream.Readable): Promise<Buffer> {
   });
 }
 
-function createPackageVulnerabilitySynchronizer(batchSize = 10) {
+function createBatchingVulnerabilitySynchronizer(batchSize = 10) {
   let entityBuffer: PackageVulnerabilityData[] = [];
 
   const flush = async () => {
@@ -37,7 +37,7 @@ function createPackageVulnerabilitySynchronizer(batchSize = 10) {
     entityBuffer = [];
   };
 
-  return async (osvData: OpenSourceVulnerability | null) => {
+  const upsert = async (osvData: OpenSourceVulnerability | null) => {
     if (osvData === null) {
       await flush();
       return;
@@ -88,23 +88,27 @@ function createPackageVulnerabilitySynchronizer(batchSize = 10) {
       }
     }
 
-    entityBuffer = entityBuffer.concat(
-      Object.entries(affectedRangesByPackage).map(([packageName, affectedRanges]) => ({
+    const osvEntries = Object.entries(affectedRangesByPackage).map(
+      ([packageName, affectedRanges]) => ({
         packageName,
         packageVersionRange: affectedRanges.join(', '),
         osvId: osvData.id,
         osvData: osvData,
-      }))
+      })
     );
+
+    entityBuffer.push(...osvEntries);
 
     if (entityBuffer.length >= batchSize) {
       await flush();
     }
   };
+
+  return { upsert, flush };
 }
 
 export async function syncPackageVulnerabilities() {
-  const packageVulnerabilitySynchronizer = createPackageVulnerabilitySynchronizer();
+  const vulnerabilitySynchronizer = createBatchingVulnerabilitySynchronizer();
   const extractStream = TarStream.extract();
 
   extractStream.on('entry', async (header, stream, next) => {
@@ -125,16 +129,15 @@ export async function syncPackageVulnerabilities() {
 
     const osvData = JSON.parse(fileContents) as OpenSourceVulnerability;
 
-    await packageVulnerabilitySynchronizer(osvData);
+    await vulnerabilitySynchronizer.upsert(osvData);
 
     next();
   });
 
   const dbSnapshotStream = await fetchAdvisoryDbSnapshot();
-
   const pipelineResult = await pipeline(dbSnapshotStream, gunzip(), extractStream);
 
-  await packageVulnerabilitySynchronizer(null);
+  await vulnerabilitySynchronizer.flush(); // Flush the last batch
 
   return pipelineResult;
 }
