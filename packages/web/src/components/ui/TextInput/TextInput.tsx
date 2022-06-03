@@ -11,6 +11,7 @@ export type Props = {
   name?: string;
   error?: FieldError;
   disabled?: boolean;
+  size?: 'medium' | 'big';
 };
 
 export default function TextInput({
@@ -18,13 +19,14 @@ export default function TextInput({
   className,
   placeholder,
   name,
+  size = 'big',
   register,
   disabled,
 }: Props) {
   return (
     <input
       {...(name && register ? register(name) : {})}
-      className={clsx(styles.input, className, { [styles.error]: !!error })}
+      className={clsx(styles.input, className, styles[size], { [styles.error]: !!error })}
       placeholder={placeholder}
       disabled={disabled}
     />

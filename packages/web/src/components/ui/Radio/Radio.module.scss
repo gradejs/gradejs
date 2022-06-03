@@ -14,8 +14,8 @@
 
 .control::before {
   content: "";
-  width: 0.65em;
-  height: 0.65em;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   transform: scale(0);
   transition: 200ms transform ease-in-out;
@@ -28,6 +28,12 @@
 
 .labelContent {
   margin: 0 5px;
+}
+.labelLeft {
+  margin-left: 0;
+}
+.labelRight {
+  margin-right: 0;
 }
 
 .container {

@@ -1,7 +1,8 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {MouseEventHandler} from 'react';
+import React from 'react';
 import clsx from 'clsx';
+import { UseFormRegister } from "react-hook-form";
 import styles from './Radio.module.scss';
 
 export type Props = {
@@ -9,10 +10,12 @@ export type Props = {
   name: string;
   value: string;
   children: React.ReactNode;
+  register?: UseFormRegister<any>;
   disabled?: boolean;
   appearance: 'default' | 'justify';
   labelPosition?: 'left' | 'right';
-  onClick?: MouseEventHandler;
+  // eslint-disable-next-line no-unused-vars
+  onSelect?: (_value: string) => void;
 };
 
 export default function Radio({
@@ -21,21 +24,23 @@ export default function Radio({
   value,
   disabled,
   appearance,
+  register,
   labelPosition,
-  onClick,
+  onSelect,
   children,
 }: Props) {
   return (
     <label className={clsx(styles.container, styles[appearance])}>
-      {(!labelPosition || labelPosition === 'left') && <span className={styles.labelContent}>{children}</span>}
+      {(!labelPosition || labelPosition === 'left') && <span className={clsx(styles.labelContent, styles.labelLeft)}>{children}</span>}
       <input type='radio'
+        {...(name && register ? register(name) : {})}
+        onSelect={() => onSelect?.(value)}
         name={name}
         value={value}
         className={clsx(styles.control, styles[appearance], className)}
-        onClick={onClick}
         disabled={disabled}
       />
-      {(labelPosition && labelPosition === 'right') && <span className={styles.labelContent}>{children}</span>}
+      {(labelPosition && labelPosition === 'right') && <span className={clsx(styles.labelContent, styles.labelRight)}>{children}</span>}
     </label>
   );
 }
