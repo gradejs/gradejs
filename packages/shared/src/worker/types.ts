@@ -12,4 +12,5 @@ export type WorkerTaskType = keyof WorkerTaskPayloadMap;
 export type WorkerTaskPayloadMap = {
   syncPackageIndex: undefined;
   syncPackageIndexBatch: internalApi.Package[];
+  syncPackageVulnerabilities: undefined;
 };

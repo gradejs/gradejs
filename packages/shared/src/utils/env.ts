@@ -8,6 +8,9 @@ export enum Env {
   AwsRegion = 'AWS_REGION',
   SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
 
+  // GitHub
+  GitHubAccessToken = 'GITHUB_ACCESS_TOKEN',
+
   // Internal
   InternalApiOrigin = 'INTERNAL_API_ORIGIN',
 }
@@ -21,6 +24,8 @@ export const isDevelopment = () => getNodeEnv() === 'development';
 export const isTest = () => getNodeEnv() === 'test';
 
 export const getInternalApiOrigin = () => getEnv(Env.InternalApiOrigin);
+
+export const getGitHubAccessToken = () => getEnv(Env.GitHubAccessToken);
 
 export function getEnv(name: string, defaultValue?: string) {
   const value = process.env[name];
