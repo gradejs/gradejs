@@ -46,8 +46,8 @@ export async function getAffectingVulnerabilities(packages: WebPagePackage[]) {
   for (const vulnerability of vulnerabilitiesByPackage) {
     const relatedPackage = packagesByNames[vulnerability.packageName]!;
     const affectsReportedRange = semver.subset(
-      vulnerability.packageVersionRange,
       relatedPackage.packageVersionRange,
+      vulnerability.packageVersionRange,
       { loose: true }
     );
 
