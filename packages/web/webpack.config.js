@@ -18,6 +18,7 @@ module.exports = (_, argv) => {
       extensions: ['.ts', '.tsx', '.js'],
       modules: [path.resolve(__dirname, srcDir), 'node_modules'],
     },
+    devtool: isDevelopment ? 'eval-source-map' : false,
     module: {
       rules: [
         {
