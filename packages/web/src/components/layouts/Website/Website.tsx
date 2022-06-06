@@ -5,7 +5,7 @@ import { SubmitHandler } from "react-hook-form";
 import { Header, Package, Section, PackageSkeleton } from 'components/ui';
 import { Grid, Lines } from 'components/icons';
 import styles from './Website.module.scss';
-import type { DetectedPackageData } from '../../ui/Package/Package';
+import type { DetectedPackageData, PackageVulnerabilityData } from '../../ui/Package/Package';
 import Filters, { FormData } from "../Filters/Filters";
 
 export type Props = {
@@ -16,13 +16,14 @@ export type Props = {
   //   icon: string;
   // }>;
   packages: DetectedPackageData[];
+  vulnerabilities: Record<string, PackageVulnerabilityData[]>;
   webpages: Array<{
     status: string;
   }>;
   onFiltersApply: SubmitHandler<FormData>;
 };
 
-export default function Website({ host, packages, webpages, onFiltersApply }: Props) {
+export default function Website({ host, packages, webpages, vulnerabilities, onFiltersApply }: Props) {
   const [view, setView] = useState<'grid' | 'lines'>('grid');
   const isPending = !!webpages.find((item) => item.status === 'pending');
   const isLoading = packages.length === 0;
@@ -91,7 +92,13 @@ export default function Website({ host, packages, webpages, onFiltersApply }: Pr
         )}
         <div className={clsx(styles.packages, styles[view])}>
           {packages.map((data, index) => (
-            <Package key={index.toString()} variant={view} className={styles.package} pkg={data} />
+            <Package
+              key={index.toString()}
+              variant={view}
+              className={styles.package}
+              pkg={data}
+              vulnerabilities={vulnerabilities[data.packageName] || []}
+            />
           ))}
           {isLoading && (
             <>

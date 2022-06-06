@@ -21,6 +21,7 @@ async function fetchApi(hostname: string) {
 export default function WebsiteHostnamePage() {
   const { hostname } = useParams();
   const [packages, setPackages] = useState<DetectedPackageData[]>([]);
+  const [vulnerabilities, setVulnerabilities] = useState({});
   const [webpages, setWebpages] = useState<{ status: string }[]>([]);
   const [isError, setError] = useState(false);
   const [isProtected, setProtected] = useState(false);
@@ -97,6 +98,7 @@ export default function WebsiteHostnamePage() {
           setPackages(fetchedPackages);
           setPackagesFiltered(fetchedPackages);
           setWebpages(response.data.webpages);
+          setVulnerabilities(response.data.vulnerabilities);
           setProtected(
             !!response.data.webpages.find((item: { status: string }) => item.status === 'protected')
           );
@@ -166,6 +168,7 @@ export default function WebsiteHostnamePage() {
     webpages={webpages}
     packages={packagesFiltered}
     host={hostname}
+    vulnerabilities={vulnerabilities}
     onFiltersApply={applyFilters}
   />;
 }

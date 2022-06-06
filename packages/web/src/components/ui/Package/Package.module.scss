@@ -123,14 +123,22 @@
 .badge {
   display: inline-block;
   padding: 4px 9px 3px;
-  border: 1px solid #ffcc00;
   border-radius: 100px;
   text-transform: uppercase;
-  color: #ffcc00;
   font-size: 10px;
   line-height: 100%;
   font-weight: 600;
   letter-spacing: 0.5px;
+}
+
+.badgeWarning {
+  border: 1px solid #ffcc00;
+  color: #ffcc00;
+}
+
+.badgeCritical {
+  border: 1px solid #e0301e;
+  color: #e0301e;
 }
 
 .externalLink {

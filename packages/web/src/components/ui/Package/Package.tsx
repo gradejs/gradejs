@@ -21,22 +21,38 @@ export type DetectedPackageData = {
   };
 };
 
+export type PackageVulnerabilityData = {
+  affectedPackageName: string;
+  affectedVersionRange: string;
+  osvId: string;
+  detailsUrl: string;
+  summary?: string;
+  severity?: string;
+};
+
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
   pkg: DetectedPackageData;
+  vulnerabilities: PackageVulnerabilityData[];
 };
 
-export default function Package({ className, variant = 'grid', pkg }: Props) {
+export default function Package({ className, variant = 'grid', pkg, vulnerabilities }: Props) {
   const repositoryUrl = pkg.registryMetadata?.repositoryUrl;
   const homepageUrl = pkg.registryMetadata?.homepageUrl;
   const isOutdated =
     pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.packageVersionRange);
+  const isVulnerable = !!vulnerabilities?.length;
 
   return (
     <div className={clsx(styles.container, styles[variant], className)}>
       <div className={styles.registryMeta}>
-        {isOutdated && <div className={styles.badge}>Outdated</div>}
+        <div>
+          {isOutdated && <div className={clsx(styles.badge, styles.badgeWarning)}>Outdated</div>}
+          {isVulnerable && (
+            <div className={clsx(styles.badge, styles.badgeCritical)}>Vulnerable</div>
+          )}
+        </div>
         <div className={styles.externalLinks}>
           {repositoryUrl && (
             <a
