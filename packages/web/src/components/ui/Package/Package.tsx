@@ -17,6 +17,7 @@ export type DetectedPackageData = {
     description?: string;
     repositoryUrl?: string;
     homepageUrl?: string;
+    monthlyDownloads?: number;
   };
 };
 

@@ -26,14 +26,14 @@ export default function WebsiteHostnamePage() {
   const [isProtected, setProtected] = useState(false);
 
   const [packagesFiltered, setPackagesFiltered] = useState<DetectedPackageData[]>([]);
+  const sortByPopularity = (pkgs: DetectedPackageData[]) => [...pkgs].sort((left, right) => Math.sign(
+    (left.registryMetadata?.monthlyDownloads || 0) - (right.registryMetadata?.monthlyDownloads || 0)
+  ));
 
   const applyFilters: SubmitHandler<FormData> = (filters) => {
-    const packagesShallowCopy = [...packages];
+    let packagesShallowCopy = [...packages];
     switch (filters.sort) {
       case 'confidenceScore':
-        // TODO
-        break;
-      case 'packagePopularity':
         // TODO
         break;
       case 'importDepth':
@@ -48,7 +48,6 @@ export default function WebsiteHostnamePage() {
         )));
         break;
       case 'name':
-      default:
         // eslint-disable-next-line no-nested-ternary
         setPackages(packagesShallowCopy.sort((left, right) => (left.packageName.toLowerCase() < right.packageName.toLowerCase())
           ? -1
@@ -56,6 +55,10 @@ export default function WebsiteHostnamePage() {
             ? 1
             : 0
         ));
+        break;
+      case 'packagePopularity':
+      default:
+        setPackages(packagesShallowCopy = sortByPopularity(packagesShallowCopy));
     }
 
     switch (filters.filter) {
@@ -90,8 +93,9 @@ export default function WebsiteHostnamePage() {
     if (hostname) {
       fetchApi(hostname)
         .then((response) => {
-          setPackages(response.data.packages);
-          setPackagesFiltered(response.data.packages);
+          const fetchedPackages = sortByPopularity(response.data.packages as DetectedPackageData[]);
+          setPackages(fetchedPackages);
+          setPackagesFiltered(fetchedPackages);
           setWebpages(response.data.webpages);
           setProtected(
             !!response.data.webpages.find((item: { status: string }) => item.status === 'protected')
@@ -110,8 +114,9 @@ export default function WebsiteHostnamePage() {
       const timeoutId = setTimeout(() => {
         fetchApi(hostname)
           .then((response) => {
-            setPackages(response.data.packages);
-            setPackagesFiltered(response.data.packages);
+            const fetchedPackages = sortByPopularity(response.data.packages as DetectedPackageData[]);
+            setPackages(fetchedPackages);
+            setPackagesFiltered(fetchedPackages);
             setWebpages(response.data.webpages);
           })
           .catch(() => {

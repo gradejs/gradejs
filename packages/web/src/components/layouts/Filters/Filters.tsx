@@ -25,7 +25,7 @@ export default function Filters({
     handleSubmit,
     reset,
     watch
-  } = useForm<FormData>({ defaultValues: { filter: 'all', sort: 'name' }});
+  } = useForm<FormData>({ defaultValues: { filter: 'all', sort: 'packagePopularity' }});
   const watchFilterByName = watch('filter');
   let hideHandle: () => void;
   useEffect(() => {
@@ -51,11 +51,11 @@ export default function Filters({
           </fieldset>
           <fieldset className={styles.fields}>
             <legend>Sort</legend>
+            <Radio name='sort' value='packagePopularity' register={register} appearance='justify'>Package popularity</Radio>
             <Radio name='sort' value='name' register={register} appearance='justify'>Name</Radio>
             <Radio name='sort' value='size' register={register} appearance='justify'>Size</Radio>
             {/* <Radio name='sort' value='severity' register={register} appearance='justify'>Severity</Radio> */}
             {/* <Radio name='sort' value='importDepth' register={register} appearance='justify'>Import depth</Radio> */}
-            {/* <Radio name='sort' value='packagePopularity' register={register} appearance='justify'>Package popularity</Radio> */}
             {/* <Radio name='sort' value='confidenceScore' register={register} appearance='justify'>Confidence score</Radio> */}
           </fieldset>
           <div className={styles.controls}>
