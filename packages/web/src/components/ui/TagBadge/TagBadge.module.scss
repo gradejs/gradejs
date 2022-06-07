@@ -1,0 +1,27 @@
+.tagBadge {
+  display: inline-block;
+  padding: 4px 9px 3px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  font-size: 10px;
+  line-height: 100%;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.red {
+  border: 1px solid #e0301e;
+  color: #e0301e;
+}
+
+.yellow {
+  border: 1px solid #ffcc00;
+  color: #ffcc00;
+}
+
+.gray {
+  border: 1px solid #838383;
+  color: #838383;
+}
