@@ -52,8 +52,9 @@ export default function Home({ onSubmit, isLoading }: Props) {
       <Header />
       <Section className={styles.content}>
         <h1>Analyze webpack production bundle</h1>
-        <form onSubmit={handleSubmit(validate)}>
+        <form onSubmit={handleSubmit(validate)} noValidate>
           <TextInput
+            type='url'
             className={styles.address}
             placeholder='Enter a website URL'
             name='address'

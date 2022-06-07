@@ -15,34 +15,54 @@ Ready.args = {
   webpages: [],
   packages: [
     {
-      package: 'react@17.0.2',
+      packageName: 'react',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react-dom@17.0.2',
+      packageName: 'react-dom',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react@17.0.2',
+      packageName: 'react',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react-dom@17.0.2',
+      packageName: 'react-dom',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react@17.0.2',
+      packageName: 'react',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react-dom@17.0.2',
+      packageName: 'react-dom',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react@17.0.2',
+      packageName: 'react',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react-dom@17.0.2',
+      packageName: 'react-dom',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react@17.0.2',
+      packageName: 'react',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
     {
-      package: 'react-dom@17.0.2',
+      packageName: 'react-dom',
+      possiblePackageVersions: ['17.0.2'],
+      packageVersionRange: '17.0.2'
     },
   ],
 };

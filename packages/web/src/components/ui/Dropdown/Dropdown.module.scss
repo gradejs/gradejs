@@ -1,0 +1,28 @@
+.basic {
+  position: absolute;
+  width: max-content;
+  transition: opacity 200ms ease-in-out;
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  display: block;
+  z-index: 1;
+}
+
+.visible {
+  padding: 10px;
+  box-shadow: 2px 2px 3px 0 #e6e6e6;
+  border: 1px solid #e6e6e6;
+  border-radius: 2px;
+  height: auto;
+  opacity: 1;
+}
+
+.topleft {
+  left: 0;
+}
+
+.topright {
+  right: 0;
+}

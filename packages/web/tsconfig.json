@@ -3,6 +3,8 @@
   "compilerOptions": {
     "jsx": "react",
     "baseUrl": "./src",
+    "sourceMap": true,
+    "inlineSources": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false
   }

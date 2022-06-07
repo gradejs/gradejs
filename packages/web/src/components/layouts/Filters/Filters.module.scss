@@ -1,0 +1,39 @@
+@import '~styles/responsive.scss';
+
+.fields {
+  border: 0;
+}
+.fields legend {
+  color: #666;
+  padding: 0;
+}
+
+.dropdown {
+  background-color: #fff;
+  font-weight: normal;
+}
+
+.wider {
+  min-width: 300px;
+  @include mobile {
+    min-width: 200px;
+  }
+}
+
+.inputWider {
+  display: flex;
+}
+.inputWider > * {
+  flex: 1;
+}
+
+.form {
+  font-size: 13px;
+  line-height: 25px;
+  color: #0f0f0f;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}

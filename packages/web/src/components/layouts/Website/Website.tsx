@@ -1,10 +1,12 @@
 /* eslint-disable react/button-has-type */
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import { SubmitHandler } from "react-hook-form";
 import { Header, Package, Section, PackageSkeleton } from 'components/ui';
 import { Grid, Lines } from 'components/icons';
 import styles from './Website.module.scss';
 import type { DetectedPackageData } from '../../ui/Package/Package';
+import Filters, { FormData } from "../Filters/Filters";
 
 export type Props = {
   host: string;
@@ -17,9 +19,10 @@ export type Props = {
   webpages: Array<{
     status: string;
   }>;
+  onFiltersApply: SubmitHandler<FormData>;
 };
 
-export default function Website({ host, packages, webpages }: Props) {
+export default function Website({ host, packages, webpages, onFiltersApply }: Props) {
   const [view, setView] = useState<'grid' | 'lines'>('grid');
   const isPending = !!webpages.find((item) => item.status === 'pending');
   const isLoading = packages.length === 0;
@@ -73,6 +76,7 @@ export default function Website({ host, packages, webpages }: Props) {
           <div className={styles.packagesHeading}>
             NPM packages
             <span className={styles.packagesTotal}>({packages.length})</span>
+            <Filters onSubmit={onFiltersApply} />
             <Lines
               className={styles.viewSelect}
               color={view === 'lines' ? '#0F0F0F' : '#E6E6E6'}
