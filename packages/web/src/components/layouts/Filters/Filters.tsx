@@ -17,6 +17,11 @@ export type FormData = {
   filterPackageName?: string;
 };
 
+export const DefaultFiltersAndSorters: FormData = {
+  filter: 'all',
+  sort: 'severity',
+};
+
 export default function Filters({ onSubmit }: Props) {
   const { register, handleSubmit, reset, watch } = useForm<FormData>({
     defaultValues: { filter: 'all', sort: 'packagePopularity' },
@@ -54,7 +59,9 @@ export default function Filters({ onSubmit }: Props) {
             <Radio name='filter' value='outdated' register={register} appearance='justify'>
               Outdated packages
             </Radio>
-            {/* <Radio name='filter' value='vulnerable' register={register} appearance='justify'>Vulnerable packages</Radio> */}
+            <Radio name='filter' value='vulnerable' register={register} appearance='justify'>
+              Vulnerable packages
+            </Radio>
             <Radio name='filter' value='name' register={register} appearance='justify'>
               Package name
             </Radio>
@@ -80,7 +87,9 @@ export default function Filters({ onSubmit }: Props) {
             <Radio name='sort' value='size' register={register} appearance='justify'>
               Size
             </Radio>
-            {/* <Radio name='sort' value='severity' register={register} appearance='justify'>Severity</Radio> */}
+            <Radio name='sort' value='severity' register={register} appearance='justify'>
+              Vulnerability severity
+            </Radio>
             {/* <Radio name='sort' value='importDepth' register={register} appearance='justify'>Import depth</Radio> */}
             {/* <Radio name='sort' value='confidenceScore' register={register} appearance='justify'>Confidence score</Radio> */}
           </fieldset>

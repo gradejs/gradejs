@@ -8,7 +8,9 @@ import styles from './Website.module.scss';
 import { DetectedPackageData } from '../../ui/Package/Package';
 import { PackageVulnerabilityData } from '../../ui/Vulnerability/Vulnerability';
 import Filters, { FormData } from '../Filters/Filters';
+import TagBadge from '../../ui/TagBadge/TagBadge';
 
+// TODO: Add plashechka
 export type Props = {
   host: string;
   // highlights?: Array<{
@@ -73,6 +75,12 @@ export default function Website({
               .
             </div>
           ))}
+
+        <div className={styles.disclaimer}>
+          Packages that are known to be vulnerable are now highlighted with{' '}
+          <TagBadge color='red'>Vulnerable</TagBadge> badge. You can view detailed information on
+          these vulnerabilities by hovering over the badge.
+        </div>
 
         {/* <div className={styles.highlights}>
           {highlights.map((data, index) => (

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import semver from 'semver';
 import { useParams, Navigate } from 'react-router-dom';
 import { Error as ErrorLayout, Website } from 'components/layouts';
-import { SubmitHandler } from "react-hook-form";
-import { FormData } from "../layouts/Filters/Filters";
-import { DetectedPackageData } from "../ui/Package/Package";
+import { DefaultFiltersAndSorters } from '../layouts/Filters/Filters';
+import { DetectedPackageData } from '../ui/Package/Package';
+import { PackageVulnerabilityData, SeverityWeightMap } from '../ui/Vulnerability/Vulnerability';
 
 const baseUrl = process.env.API_ORIGIN;
 
@@ -18,20 +18,48 @@ async function fetchApi(hostname: string) {
   });
 }
 
+type DetectionResult = {
+  packages: DetectedPackageData[];
+  vulnerabilities: Record<string, PackageVulnerabilityData[]>;
+  webpages: Array<{ status: string }>;
+};
+
+const compareByPopularity = (left: DetectedPackageData, right: DetectedPackageData) =>
+  (right.registryMetadata?.monthlyDownloads || 0) - (left.registryMetadata?.monthlyDownloads || 0);
+
 export default function WebsiteHostnamePage() {
   const { hostname } = useParams();
-  const [packages, setPackages] = useState<DetectedPackageData[]>([]);
-  const [vulnerabilities, setVulnerabilities] = useState({});
-  const [webpages, setWebpages] = useState<{ status: string }[]>([]);
+  const [detectionResult, setDetectionResult] = useState<DetectionResult>({
+    packages: [],
+    vulnerabilities: {},
+    webpages: [],
+  });
   const [isError, setError] = useState(false);
-  const [isProtected, setProtected] = useState(false);
+  const [filters, setFilters] = useState(DefaultFiltersAndSorters);
 
-  const [packagesFiltered, setPackagesFiltered] = useState<DetectedPackageData[]>([]);
-  const sortByPopularity = (pkgs: DetectedPackageData[]) => [...pkgs].sort((left, right) => Math.sign(
-    (left.registryMetadata?.monthlyDownloads || 0) - (right.registryMetadata?.monthlyDownloads || 0)
-  ));
+  const { webpages, vulnerabilities, packages } = detectionResult;
 
-  const applyFilters: SubmitHandler<FormData> = (filters) => {
+  const isProtected = useMemo(
+    () => webpages.find((item: { status: string }) => item.status === 'protected'),
+    [webpages]
+  );
+
+  const pickHighestSeverity = useCallback(
+    (packageName: string) => {
+      const packageVulnerabilities = vulnerabilities[packageName] ?? [];
+
+      return packageVulnerabilities
+        .map((it) => it.severity)
+        .filter((it): it is string => !!it)
+        .reduce(
+          (acc, val) => (SeverityWeightMap[acc] > SeverityWeightMap[val] ? acc : val),
+          'UNKNOWN'
+        );
+    },
+    [vulnerabilities]
+  );
+
+  const packagesFiltered = useMemo(() => {
     let packagesShallowCopy = [...packages];
     switch (filters.sort) {
       case 'confidenceScore':
@@ -41,49 +69,62 @@ export default function WebsiteHostnamePage() {
         // TODO
         break;
       case 'severity':
-        // TODO
+        packagesShallowCopy = packagesShallowCopy.sort((left, right) => {
+          const leftSeverity = pickHighestSeverity(left.packageName);
+          const rightSeverity = pickHighestSeverity(right.packageName);
+
+          if (leftSeverity !== rightSeverity) {
+            return SeverityWeightMap[rightSeverity] - SeverityWeightMap[leftSeverity];
+          }
+
+          return compareByPopularity(left, right);
+        });
         break;
       case 'size':
-        setPackages(packagesShallowCopy.sort((left, right) => Math.sign(
-          (left.packageMetadata?.approximateByteSize || 0) - (right.packageMetadata?.approximateByteSize || 0)
-        )));
+        packagesShallowCopy = packagesShallowCopy.sort(
+          (left, right) =>
+            (right.packageMetadata?.approximateByteSize || 0) -
+            (left.packageMetadata?.approximateByteSize || 0)
+        );
         break;
       case 'name':
-        // eslint-disable-next-line no-nested-ternary
-        setPackages(packagesShallowCopy.sort((left, right) => (left.packageName.toLowerCase() < right.packageName.toLowerCase())
-          ? -1
-          : (left.packageName.toLowerCase() > right.packageName.toLowerCase())
-            ? 1
-            : 0
-        ));
+        packagesShallowCopy = packagesShallowCopy.sort((left, right) =>
+          left.packageName.localeCompare(right.packageName)
+        );
         break;
       case 'packagePopularity':
       default:
-        setPackages(packagesShallowCopy = sortByPopularity(packagesShallowCopy));
+        packagesShallowCopy = packagesShallowCopy.sort(compareByPopularity);
     }
 
     switch (filters.filter) {
       case 'name':
         if (filters.filterPackageName) {
-          setPackagesFiltered(packagesShallowCopy.filter((pkg) => pkg.packageName.includes(filters.filterPackageName || '')));
-        } else {
-          setPackagesFiltered(packagesShallowCopy);
+          packagesShallowCopy = packagesShallowCopy.filter((pkg) =>
+            pkg.packageName.includes(filters.filterPackageName || '')
+          );
         }
         break;
+
       case 'outdated':
-        setPackagesFiltered(packagesShallowCopy.filter((pkg) => (
-          pkg.registryMetadata &&
-          semver.gtr(pkg.registryMetadata.latestVersion, pkg.packageVersionRange))
-        ));
+        packagesShallowCopy = packagesShallowCopy.filter(
+          (pkg) =>
+            pkg.registryMetadata &&
+            semver.gtr(pkg.registryMetadata.latestVersion, pkg.packageVersionRange)
+        );
         break;
       case 'vulnerable':
-        // TODO
+        packagesShallowCopy = packagesShallowCopy.filter(
+          (pkg) => !!vulnerabilities[pkg.packageName]
+        );
         break;
       case 'all':
       default:
-        setPackagesFiltered(packagesShallowCopy);
+        break;
     }
-  };
+
+    return packagesShallowCopy;
+  }, [vulnerabilities, packages, filters]);
 
   const isInvalidResult =
     packages.length === 0 &&
@@ -94,14 +135,10 @@ export default function WebsiteHostnamePage() {
     if (hostname) {
       fetchApi(hostname)
         .then((response) => {
-          const fetchedPackages = sortByPopularity(response.data.packages as DetectedPackageData[]);
-          setPackages(fetchedPackages);
-          setPackagesFiltered(fetchedPackages);
-          setWebpages(response.data.webpages);
-          setVulnerabilities(response.data.vulnerabilities);
-          setProtected(
-            !!response.data.webpages.find((item: { status: string }) => item.status === 'protected')
-          );
+          setDetectionResult({
+            vulnerabilities: {},
+            ...response.data,
+          });
         })
         .catch(() => {
           setError(true);
@@ -116,10 +153,10 @@ export default function WebsiteHostnamePage() {
       const timeoutId = setTimeout(() => {
         fetchApi(hostname)
           .then((response) => {
-            const fetchedPackages = sortByPopularity(response.data.packages as DetectedPackageData[]);
-            setPackages(fetchedPackages);
-            setPackagesFiltered(fetchedPackages);
-            setWebpages(response.data.webpages);
+            setDetectionResult({
+              vulnerabilities: {},
+              ...response.data,
+            });
           })
           .catch(() => {
             setError(true);
@@ -164,11 +201,13 @@ export default function WebsiteHostnamePage() {
     );
   }
 
-  return <Website
-    webpages={webpages}
-    packages={packagesFiltered}
-    host={hostname}
-    vulnerabilities={vulnerabilities}
-    onFiltersApply={applyFilters}
-  />;
+  return (
+    <Website
+      webpages={webpages}
+      packages={packagesFiltered}
+      host={hostname}
+      vulnerabilities={vulnerabilities}
+      onFiltersApply={setFilters}
+    />
+  );
 }
