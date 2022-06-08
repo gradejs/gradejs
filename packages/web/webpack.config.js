@@ -73,11 +73,10 @@ module.exports = (_, argv) => {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'index.html'),
       }),
-      isDevelopment
-        ? new webpack.DefinePlugin({
-            'process.env': JSON.stringify(dotenv.config().parsed),
-          })
-        : new webpack.EnvironmentPlugin(['API_ORIGIN', 'GTM_ID']),
+      new webpack.DefinePlugin({
+        ...(isDevelopment ? { 'process.env': JSON.stringify(dotenv.config().parsed) } : {})
+      }),
+      ...(isDevelopment ? [] : [new webpack.EnvironmentPlugin(['API_ORIGIN', 'GA_ID', 'PLAUSIBLE_DOMAIN'])]),
     ],
     devServer: {
       static: {

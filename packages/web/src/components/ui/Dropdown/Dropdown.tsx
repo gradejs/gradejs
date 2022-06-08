@@ -16,6 +16,7 @@ export type Props = {
   position: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
   // eslint-disable-next-line no-unused-vars
   getHideHandle?: (_handle: () => void) => void;
+  onOpen?: () => void;
 };
 
 export default function Dropdown({
@@ -27,13 +28,21 @@ export default function Dropdown({
   position,
   triggerType = 'click',
   getHideHandle,
+  onOpen,
 }: Props) {
   const [visible, setVisible] = useState(false);
   getHideHandle?.(() => setVisible(false));
   return (
     <div
       style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={triggerType === 'hover' ? () => setVisible(true) : undefined}
+      onMouseEnter={
+        triggerType === 'hover'
+          ? () => {
+              setVisible(true);
+              onOpen?.();
+            }
+          : undefined
+      }
       onMouseLeave={triggerType === 'hover' ? () => setVisible(false) : undefined}
     >
       <TriggerComponent
@@ -42,6 +51,9 @@ export default function Dropdown({
           triggerType === 'click'
             ? (e: MouseEvent) => {
                 e.stopPropagation();
+                if (!visible) {
+                  onOpen?.();
+                }
                 setVisible(!visible);
               }
             : undefined

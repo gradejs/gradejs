@@ -6,6 +6,7 @@ import { Button, TextInput } from 'components/ui';
 import Dropdown from '../../ui/Dropdown/Dropdown';
 import Radio from '../../ui/Radio/Radio';
 import styles from './Filters.module.scss';
+import { trackCustomEvent } from '../../../services/analytics';
 
 export type Props = {
   onSubmit: SubmitHandler<FormData>;
@@ -43,11 +44,13 @@ export default function Filters({ onSubmit }: Props) {
         triggerChildren='Filter / Sort'
         triggerArgs={{ size: 'medium' }}
         position='topright'
+        onOpen={() => trackCustomEvent('Filters', 'OpenDropdown')}
       >
         <form
           className={styles.form}
           onSubmit={(e) => {
             hideHandle();
+            trackCustomEvent('Filters', 'Update');
             return handleSubmit(onSubmit)(e);
           }}
         >

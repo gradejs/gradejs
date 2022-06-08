@@ -50,9 +50,10 @@
   },
   "dependencies": {
     "clsx": "^1.1.1",
+    "plausible-tracker": "^0.3.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-gtm-module": "^2.0.11",
+    "react-ga": "^3.3.0",
     "react-hook-form": "^7.15.3",
     "react-router-dom": "^6.3.0",
     "semver": "^7.3.7"

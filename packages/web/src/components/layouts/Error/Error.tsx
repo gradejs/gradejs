@@ -9,11 +9,13 @@ export type Props = {
   action?: string;
   actionTitle?: string;
   onRetry: () => unknown;
+  onReport: () => unknown;
 };
 
 export default function Error({
   host,
   onRetry,
+  onReport,
   message = 'Unfortunately, something went wrong.',
   action = 'Would you like to retry or report an issue?',
   actionTitle = 'Try again',
@@ -28,7 +30,12 @@ export default function Error({
         <Button onClick={onRetry} className={styles.retry}>
           {actionTitle}
         </Button>
-        <a href='https://github.com/gradejs/gradejs/issues' target='_blank' rel='noreferrer'>
+        <a
+          href='https://github.com/gradejs/gradejs/issues'
+          target='_blank'
+          rel='noreferrer'
+          onClick={onReport}
+        >
           <Button className={styles.button} variant='action'>
             Report an issue
           </Button>
