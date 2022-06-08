@@ -1,13 +1,16 @@
 /* eslint-disable react/button-has-type */
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler } from 'react-hook-form';
 import { Header, Package, Section, PackageSkeleton } from 'components/ui';
 import { Grid, Lines } from 'components/icons';
 import styles from './Website.module.scss';
-import type { DetectedPackageData } from '../../ui/Package/Package';
-import Filters, { FormData } from "../Filters/Filters";
+import { DetectedPackageData } from '../../ui/Package/Package';
+import { PackageVulnerabilityData } from '../../ui/Vulnerability/Vulnerability';
+import Filters, { FormData } from '../Filters/Filters';
+import TagBadge from '../../ui/TagBadge/TagBadge';
 
+// TODO: Add plashechka
 export type Props = {
   host: string;
   // highlights?: Array<{
@@ -16,13 +19,20 @@ export type Props = {
   //   icon: string;
   // }>;
   packages: DetectedPackageData[];
+  vulnerabilities: Record<string, PackageVulnerabilityData[]>;
   webpages: Array<{
     status: string;
   }>;
   onFiltersApply: SubmitHandler<FormData>;
 };
 
-export default function Website({ host, packages, webpages, onFiltersApply }: Props) {
+export default function Website({
+  host,
+  packages,
+  webpages,
+  vulnerabilities,
+  onFiltersApply,
+}: Props) {
   const [view, setView] = useState<'grid' | 'lines'>('grid');
   const isPending = !!webpages.find((item) => item.status === 'pending');
   const isLoading = packages.length === 0;
@@ -66,6 +76,12 @@ export default function Website({ host, packages, webpages, onFiltersApply }: Pr
             </div>
           ))}
 
+        <div className={styles.disclaimer}>
+          Packages that are known to be vulnerable are now highlighted with{' '}
+          <TagBadge color='red'>Vulnerable</TagBadge> badge. You can view detailed information on
+          related vulnerabilities by hovering over the badge.
+        </div>
+
         {/* <div className={styles.highlights}>
           {highlights.map((data, index) => (
             <HighlightTech key={index.toString()} {...data} />
@@ -91,7 +107,13 @@ export default function Website({ host, packages, webpages, onFiltersApply }: Pr
         )}
         <div className={clsx(styles.packages, styles[view])}>
           {packages.map((data, index) => (
-            <Package key={index.toString()} variant={view} className={styles.package} pkg={data} />
+            <Package
+              key={index.toString()}
+              variant={view}
+              className={styles.package}
+              pkg={data}
+              vulnerabilities={vulnerabilities[data.packageName] || []}
+            />
           ))}
           {isLoading && (
             <>

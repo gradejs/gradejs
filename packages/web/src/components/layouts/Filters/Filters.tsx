@@ -1,10 +1,10 @@
 /* eslint-disable react/button-has-type */
-import React, {useEffect} from 'react';
-import clsx from "clsx";
-import { SubmitHandler, useForm } from "react-hook-form";
+import React, { useEffect } from 'react';
+import clsx from 'clsx';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, TextInput } from 'components/ui';
-import Dropdown from "../../ui/Dropdown/Dropdown";
-import Radio from "../../ui/Radio/Radio";
+import Dropdown from '../../ui/Dropdown/Dropdown';
+import Radio from '../../ui/Radio/Radio';
 import styles from './Filters.module.scss';
 
 export type Props = {
@@ -17,15 +17,15 @@ export type FormData = {
   filterPackageName?: string;
 };
 
-export default function Filters({
-  onSubmit
-}: Props) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch
-  } = useForm<FormData>({ defaultValues: { filter: 'all', sort: 'packagePopularity' }});
+export const DefaultFiltersAndSorters: FormData = {
+  filter: 'all',
+  sort: 'severity',
+};
+
+export default function Filters({ onSubmit }: Props) {
+  const { register, handleSubmit, reset, watch } = useForm<FormData>({
+    defaultValues: DefaultFiltersAndSorters,
+  });
   const watchFilterByName = watch('filter');
   let hideHandle: () => void;
   useEffect(() => {
@@ -34,33 +34,72 @@ export default function Filters({
 
   return (
     <>
-      <Dropdown getHideHandle={(handle) => { hideHandle = handle; }} className={clsx(styles.wider, styles.dropdown)} TriggerComponent={Button} triggerChildren='Filter / Sort' triggerArgs={{ size: 'medium' }} position='topright'>
-        <form className={styles.form} onSubmit={(e) => { hideHandle(); return handleSubmit(onSubmit)(e); }}>
+      <Dropdown
+        getHideHandle={(handle) => {
+          hideHandle = handle;
+        }}
+        className={clsx(styles.wider, styles.dropdown)}
+        TriggerComponent={Button}
+        triggerChildren='Filter / Sort'
+        triggerArgs={{ size: 'medium' }}
+        position='topright'
+      >
+        <form
+          className={styles.form}
+          onSubmit={(e) => {
+            hideHandle();
+            return handleSubmit(onSubmit)(e);
+          }}
+        >
           <fieldset className={styles.fields}>
             <legend>Filter</legend>
-            <Radio name='filter' value='all' register={register} appearance='justify'>All</Radio>
-            <Radio name='filter' value='outdated' register={register} appearance='justify'>Outdated packages</Radio>
-            {/* <Radio name='filter' value='vulnerable' register={register} appearance='justify'>Vulnerable packages</Radio> */}
-            <Radio name='filter' value='name' register={register} appearance='justify'>Package name</Radio>
-            {watchFilterByName === 'name' &&
-                <div className={styles.inputWider}>
-                    <TextInput name='filterPackageName' size='medium' register={register}
-                               placeholder='Enter package name'/>
-                </div>
-            }
+            <Radio name='filter' value='all' register={register} appearance='justify'>
+              All
+            </Radio>
+            <Radio name='filter' value='outdated' register={register} appearance='justify'>
+              Outdated packages
+            </Radio>
+            <Radio name='filter' value='vulnerable' register={register} appearance='justify'>
+              Vulnerable packages
+            </Radio>
+            <Radio name='filter' value='name' register={register} appearance='justify'>
+              Package name
+            </Radio>
+            {watchFilterByName === 'name' && (
+              <div className={styles.inputWider}>
+                <TextInput
+                  name='filterPackageName'
+                  size='medium'
+                  register={register}
+                  placeholder='Enter package name'
+                />
+              </div>
+            )}
           </fieldset>
           <fieldset className={styles.fields}>
             <legend>Sort</legend>
-            <Radio name='sort' value='packagePopularity' register={register} appearance='justify'>Package popularity</Radio>
-            <Radio name='sort' value='name' register={register} appearance='justify'>Name</Radio>
-            <Radio name='sort' value='size' register={register} appearance='justify'>Size</Radio>
-            {/* <Radio name='sort' value='severity' register={register} appearance='justify'>Severity</Radio> */}
+            <Radio name='sort' value='packagePopularity' register={register} appearance='justify'>
+              Package popularity
+            </Radio>
+            <Radio name='sort' value='name' register={register} appearance='justify'>
+              Name
+            </Radio>
+            <Radio name='sort' value='size' register={register} appearance='justify'>
+              Size
+            </Radio>
+            <Radio name='sort' value='severity' register={register} appearance='justify'>
+              Vulnerability severity
+            </Radio>
             {/* <Radio name='sort' value='importDepth' register={register} appearance='justify'>Import depth</Radio> */}
             {/* <Radio name='sort' value='confidenceScore' register={register} appearance='justify'>Confidence score</Radio> */}
           </fieldset>
           <div className={styles.controls}>
-            <Button onClick={() => reset()} type='submit' size='medium'>Reset filtering</Button>
-            <Button type='submit' size='medium' variant='black'>Apply</Button>
+            <Button onClick={() => reset()} type='submit' size='medium'>
+              Reset filtering
+            </Button>
+            <Button type='submit' size='medium' variant='black'>
+              Apply
+            </Button>
           </div>
         </form>
       </Dropdown>

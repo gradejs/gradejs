@@ -51,11 +51,11 @@ export async function syncWebPage(webpage: WebPage) {
   }
 }
 
-export function getWebPagesByHostname(hostname: string) {
+export async function getWebPagesByHostname(hostname: string) {
   return getRepository(WebPage).find({ hostname });
 }
 
-export function getPackagesByHostname(hostname: string) {
+export async function getPackagesByHostname(hostname: string) {
   return getRepository(WebPagePackage).find({
     relations: ['registryMetadata'],
     where: { hostname },

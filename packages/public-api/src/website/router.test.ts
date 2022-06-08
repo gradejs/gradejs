@@ -1,4 +1,10 @@
-import { internalApi, PackageMetadata, WebPage, WebPagePackage } from '@gradejs-public/shared';
+import {
+  internalApi,
+  PackageMetadata,
+  PackageVulnerability,
+  WebPage,
+  WebPagePackage,
+} from '@gradejs-public/shared';
 import {
   createSupertestApi,
   useDatabaseConnection,
@@ -75,6 +81,20 @@ describe('routes / website', () => {
       license: 'MIT',
     });
 
+    await getRepository(PackageVulnerability).insert({
+      packageName: 'react',
+      packageVersionRange: '>=17.0.0 <18.0.0',
+      osvId: 'GRJS-test-id',
+      osvData: {
+        schema_version: '1.2.0',
+        id: 'GRJS-test-id',
+        summary: 'Test summary',
+        database_specific: {
+          severity: 'HIGH',
+        },
+      },
+    });
+
     const response = await api.get(`/website/${hostname}`).expect(200);
 
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(0);
@@ -87,6 +107,18 @@ describe('routes / website', () => {
             registryMetadata: packageMetadataInsert.generatedMaps[0],
           },
         ],
+        vulnerabilities: {
+          react: [
+            {
+              affectedPackageName: 'react',
+              affectedVersionRange: '>=17.0.0 <18.0.0',
+              osvId: 'GRJS-test-id',
+              detailsUrl: `https://github.com/advisories/GRJS-test-id`,
+              summary: 'Test summary',
+              severity: 'HIGH',
+            },
+          ],
+        },
       },
     });
   });
@@ -163,6 +195,7 @@ describe('routes / website', () => {
             },
           },
         ],
+        vulnerabilities: {},
       },
     });
   });

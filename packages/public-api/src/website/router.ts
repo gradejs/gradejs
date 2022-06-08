@@ -9,6 +9,7 @@ import {
   requestWebPageParse,
   syncWebPage,
 } from './service';
+import { getAffectingVulnerabilities } from '../vulnerabilities/vulnerabilities';
 
 const router = Router();
 
@@ -26,8 +27,9 @@ router.get(
     await Promise.all(webpages.map((webpage) => syncWebPage(webpage)));
 
     const packages = await getPackagesByHostname(hostname);
+    const vulnerabilities = await getAffectingVulnerabilities(packages);
 
-    respond(res, { webpages, packages });
+    respond(res, { webpages, packages, vulnerabilities });
   })
 );
 

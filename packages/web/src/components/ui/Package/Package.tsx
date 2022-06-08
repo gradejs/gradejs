@@ -4,6 +4,9 @@ import { External, Github } from 'components/icons';
 import React from 'react';
 import semver from 'semver';
 import styles from './Package.module.scss';
+import Dropdown from '../Dropdown/Dropdown';
+import Vulnerability, { PackageVulnerabilityData } from '../Vulnerability/Vulnerability';
+import TagBadge from '../TagBadge/TagBadge';
 
 export type DetectedPackageData = {
   packageName: string;
@@ -25,18 +28,45 @@ export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
   pkg: DetectedPackageData;
+  vulnerabilities: PackageVulnerabilityData[];
 };
 
-export default function Package({ className, variant = 'grid', pkg }: Props) {
+export default function Package({ className, variant = 'grid', pkg, vulnerabilities }: Props) {
   const repositoryUrl = pkg.registryMetadata?.repositoryUrl;
   const homepageUrl = pkg.registryMetadata?.homepageUrl;
   const isOutdated =
     pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.packageVersionRange);
+  const isVulnerable = !!vulnerabilities?.length;
 
   return (
     <div className={clsx(styles.container, styles[variant], className)}>
       <div className={styles.registryMeta}>
-        {isOutdated && <div className={styles.badge}>Outdated</div>}
+        <div className={styles.packageTags}>
+          {isVulnerable && (
+            <Dropdown
+              TriggerComponent={(props) => (
+                <span className={styles.tagContainer}>
+                  <TagBadge color='red' {...props}>
+                    Vulnerable
+                  </TagBadge>
+                </span>
+              )}
+              triggerType='hover'
+              position='bottomleft'
+            >
+              <div className={styles.vulnerabilityTooltip}>
+                {vulnerabilities.map((it) => (
+                  <Vulnerability key={it.osvId} vulnerability={it} />
+                ))}
+              </div>
+            </Dropdown>
+          )}
+          {isOutdated && (
+            <span className={styles.tagContainer}>
+              <TagBadge color='yellow'>Outdated</TagBadge>
+            </span>
+          )}
+        </div>
         <div className={styles.externalLinks}>
           {repositoryUrl && (
             <a
