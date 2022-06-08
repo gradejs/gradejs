@@ -79,7 +79,7 @@ export default function Website({
         <div className={styles.disclaimer}>
           Packages that are known to be vulnerable are now highlighted with{' '}
           <TagBadge color='red'>Vulnerable</TagBadge> badge. You can view detailed information on
-          these vulnerabilities by hovering over the badge.
+          related vulnerabilities by hovering over the badge.
         </div>
 
         {/* <div className={styles.highlights}>

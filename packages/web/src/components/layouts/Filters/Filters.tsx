@@ -24,7 +24,7 @@ export const DefaultFiltersAndSorters: FormData = {
 
 export default function Filters({ onSubmit }: Props) {
   const { register, handleSubmit, reset, watch } = useForm<FormData>({
-    defaultValues: { filter: 'all', sort: 'packagePopularity' },
+    defaultValues: DefaultFiltersAndSorters,
   });
   const watchFilterByName = watch('filter');
   let hideHandle: () => void;
