@@ -14,23 +14,13 @@ module.exports = {
       version: 'detect',
     },
   },
-  plugins: ['react', '@typescript-eslint', 'unused-imports', 'import'],
+  plugins: ['react', '@typescript-eslint', 'unused-imports'],
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': [1, { ignoreFunctionalComponents: true }],
     'react/no-array-index-key': 'off',
     'unused-imports/no-unused-imports': 'error',
-    'import/extensions': [
-      'error',
-      {
-        ignorePackages: true,
-        ts: 'never',
-        tsx: 'never',
-        scss: 'always',
-      },
-    ],
-
     'array-callback-return': ['error'],
     'getter-return': ['error'],
     'no-async-promise-executor': ['error'],

@@ -1,5 +1,4 @@
 import React from 'react';
-// eslint-disable-next-line import/extensions
 import webpackIcon from 'assets/icons/webpack.svg';
 import HighlightTech, { Props } from './HighlightTech';
 
