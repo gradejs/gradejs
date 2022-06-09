@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./build",
-    "module": "commonjs",
-    "paths": {
-      "@gradejs-public/shared": ["../shared/src"]
-    }
+    "baseUrl": "./src"
   },
   "include": [
     "./src/**/*"

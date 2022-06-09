@@ -2,6 +2,7 @@
   "name": "@gradejs-public/shared",
   "version": "0.1.0",
   "main": "build/index.js",
+  "types": "src/index.ts",
   "license": "MIT",
   "scripts": {
     "prettier": "prettier --check ./src",
