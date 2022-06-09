@@ -3,6 +3,7 @@ import ReactGTM from 'react-gtm-module';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from 'components/App';
+// eslint-disable-next-line import/extensions
 import 'styles/global.scss';
 
 if (process.env.GTM_ID) {

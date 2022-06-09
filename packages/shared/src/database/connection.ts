@@ -23,14 +23,14 @@ export async function initDatabase({
   }
 }
 
-let connection: Connection | undefined;
+let dbConnection: Promise<Connection> | undefined;
 
 /**
  * Ref: https://typeorm.io/#/using-ormconfig
  */
 export async function getDatabaseConnection(databaseUrl: string = getEnv(Env.DatabaseUrl)) {
-  if (!connection) {
-    connection = await createConnection({
+  if (!dbConnection) {
+    dbConnection = createConnection({
       type: 'postgres',
       url: databaseUrl,
       namingStrategy: new NamingStrategy(),
@@ -41,7 +41,7 @@ export async function getDatabaseConnection(databaseUrl: string = getEnv(Env.Dat
     });
   }
 
-  return connection;
+  return dbConnection;
 }
 
 export async function getMigrationExecutor(connection: Connection) {

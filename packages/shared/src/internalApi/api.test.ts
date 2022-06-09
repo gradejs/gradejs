@@ -13,7 +13,7 @@ beforeEach(() => {
 
 describe('internalApi', () => {
   it('initiateUrlProcessingInternal', async () => {
-    const url = 'http://example.com/' + Math.random();
+    const url = 'http://example.com/' + Math.random().toString();
     const response = {
       data: {
         id: 1,

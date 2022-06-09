@@ -25,7 +25,7 @@ type DetectionResult = {
 };
 
 const compareByPopularity = (left: DetectedPackageData, right: DetectedPackageData) =>
-  (right.registryMetadata?.monthlyDownloads || 0) - (left.registryMetadata?.monthlyDownloads || 0);
+  (right.registryMetadata?.monthlyDownloads ?? 0) - (left.registryMetadata?.monthlyDownloads ?? 0);
 
 export default function WebsiteHostnamePage() {
   const { hostname } = useParams();
@@ -83,8 +83,8 @@ export default function WebsiteHostnamePage() {
       case 'size':
         packagesShallowCopy = packagesShallowCopy.sort(
           (left, right) =>
-            (right.packageMetadata?.approximateByteSize || 0) -
-            (left.packageMetadata?.approximateByteSize || 0)
+            (right.packageMetadata?.approximateByteSize ?? 0) -
+            (left.packageMetadata?.approximateByteSize ?? 0)
         );
         break;
       case 'name':
@@ -101,7 +101,7 @@ export default function WebsiteHostnamePage() {
       case 'name':
         if (filters.filterPackageName) {
           packagesShallowCopy = packagesShallowCopy.filter((pkg) =>
-            pkg.packageName.includes(filters.filterPackageName || '')
+            pkg.packageName.includes(filters.filterPackageName ?? '')
           );
         }
         break;

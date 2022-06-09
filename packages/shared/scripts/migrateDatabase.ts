@@ -8,7 +8,7 @@ import {
 } from '../src/database/connection';
 
 const databaseUrl =
-  process.env.DB_URL || 'postgres://gradejs:gradejs@localhost:5432/gradejs-public';
+  process.env.DB_URL ?? 'postgres://gradejs:gradejs@localhost:5432/gradejs-public';
 const action = process.argv[2];
 
 if (action === 'revert') {

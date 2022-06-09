@@ -4,7 +4,8 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier --check ./src",
+    "prettier": "prettier --check ./src",
+    "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "build": "tsc --project tsconfig.build.json",
     "test": "jest",
     "migration:run": "ts-node scripts/migrateDatabase.ts",
@@ -20,7 +21,6 @@
   "devDependencies": {
     "@types/jest": "^27.4.1",
     "jest": "^27.5.1",
-    "prettier": "^2.4.1",
     "ts-jest": "^27.1.4"
   }
 }

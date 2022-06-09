@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import React, {MouseEventHandler} from 'react';
+import React, { MouseEventHandler } from 'react';
 import clsx from 'clsx';
 import styles from './Button.module.scss';
 

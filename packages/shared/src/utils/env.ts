@@ -15,7 +15,7 @@ export enum Env {
   InternalApiOrigin = 'INTERNAL_API_ORIGIN',
 }
 
-export const getNodeEnv = () => getEnvUnsafe(Env.Node) || 'development';
+export const getNodeEnv = () => getEnvUnsafe(Env.Node) ?? 'development';
 export const getPort = (defaultPort: number) => Number(getEnv(Env.Port, defaultPort.toString()));
 
 export const isProduction = () => getNodeEnv() === 'production';
@@ -34,7 +34,7 @@ export function getEnv(name: string, defaultValue?: string) {
     throw new Error(`${name} environment variable is not defined`);
   }
 
-  return value || defaultValue || '';
+  return value ?? defaultValue ?? '';
 }
 
 export function getEnvUnsafe(name: string) {

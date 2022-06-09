@@ -8,6 +8,7 @@ import {
   OSVAffectedRangeType,
   PackageVulnerability,
 } from '@gradejs-public/shared';
+import { PipelineDestination } from 'stream';
 
 type PackageVulnerabilityData = Pick<
   PackageVulnerability,
@@ -27,14 +28,14 @@ async function drainStreamToBuffer(stream: Stream.Readable): Promise<Buffer> {
 }
 
 function createBatchingVulnerabilitySynchronizer(batchSize = 10) {
-  let entityBuffer: PackageVulnerabilityData[] = [];
+  const entityBuffer: PackageVulnerabilityData[] = [];
 
   const flush = async () => {
     await PackageVulnerability.upsert(entityBuffer, {
       skipUpdateIfNoValuesChanged: true,
       conflictPaths: ['packageName', 'osvId'],
     });
-    entityBuffer = [];
+    entityBuffer.splice(0, entityBuffer.length);
   };
 
   const upsert = async (osvData: OpenSourceVulnerability | null) => {
@@ -135,7 +136,11 @@ export async function syncPackageVulnerabilities() {
   });
 
   const dbSnapshotStream = await fetchAdvisoryDbSnapshot();
-  const pipelineResult = await pipeline(dbSnapshotStream, gunzip(), extractStream);
+  const pipelineResult = await pipeline(
+    dbSnapshotStream,
+    gunzip(),
+    extractStream as PipelineDestination<any, any> // explicit typing to select proper override
+  );
 
   await vulnerabilitySynchronizer.flush(); // Flush the last batch
 
