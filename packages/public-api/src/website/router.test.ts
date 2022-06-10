@@ -20,7 +20,7 @@ const api = createSupertestApi(createApp);
 
 describe('routes / website', () => {
   it('should initiate webpage parsing', async () => {
-    const url = 'https://example.com/' + Math.random();
+    const siteUrl = 'https://example.com/' + Math.random().toString();
 
     const initiateUrlProcessingInternalMock = jest.spyOn(internalApi, 'initiateUrlProcessing');
 
@@ -31,29 +31,29 @@ describe('routes / website', () => {
       } as internalApi.Website)
     );
 
-    const response = await api.post('/webpage').send({ url }).expect(200);
-    const webpage = await getRepository(WebPage).findOne({ url });
+    const response = await api.post('/webpage').send({ url: siteUrl }).expect(200);
+    const webpage = await getRepository(WebPage).findOne({ url: siteUrl });
 
     expect(initiateUrlProcessingInternalMock).toHaveBeenCalledTimes(1);
-    expect(initiateUrlProcessingInternalMock).toHaveBeenCalledWith(url);
+    expect(initiateUrlProcessingInternalMock).toHaveBeenCalledWith(siteUrl);
     expect(response.body).toMatchObject({
       data: {
         id: expect.anything(),
-        url,
+        url: siteUrl,
         hostname: 'example.com',
         status: 'pending',
       },
     });
 
     expect(webpage).toMatchObject({
-      url,
+      url: siteUrl,
       hostname: 'example.com',
       status: 'pending',
     });
   });
 
   it('should return cached website by a hostname', async () => {
-    const hostname = Math.random() + 'example.com';
+    const hostname = Math.random().toString() + 'example.com';
     const url = `https://${hostname}/`;
 
     const fetchUrlPackagesMock = jest.spyOn(internalApi, 'fetchUrlPackages');
@@ -124,12 +124,12 @@ describe('routes / website', () => {
   });
 
   it('should sync pending webpages', async () => {
-    const hostname = Math.random() + 'example.com';
-    const url = `https://${hostname}/`;
+    const hostname = Math.random().toString() + 'example.com';
+    const siteUrl = `https://${hostname}/`;
 
     // Populate
     const webpageInsert = await getRepository(WebPage).insert({
-      url,
+      url: siteUrl,
       hostname,
       status: WebPage.Status.Pending,
     });
@@ -162,7 +162,7 @@ describe('routes / website', () => {
 
     const response = await api.get(`/website/${hostname}`).expect(200);
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(1);
-    expect(fetchUrlPackagesMock).toHaveBeenCalledWith(url);
+    expect(fetchUrlPackagesMock).toHaveBeenCalledWith(siteUrl);
 
     expect(response.body).toMatchObject({
       data: {
@@ -175,7 +175,7 @@ describe('routes / website', () => {
         ],
         packages: [
           {
-            latestUrl: url,
+            latestUrl: siteUrl,
             hostname,
             packageName: 'react',
             possiblePackageVersions: ['17.0.2'],
@@ -185,7 +185,7 @@ describe('routes / website', () => {
             },
           },
           {
-            latestUrl: url,
+            latestUrl: siteUrl,
             hostname,
             packageName: 'object-assign',
             possiblePackageVersions: ['4.1.0', '4.1.1'],

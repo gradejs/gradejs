@@ -27,7 +27,7 @@ export default function TextInput({
 }: Props) {
   return (
     <input
-      type={type || 'text'}
+      type={type ?? 'text'}
       {...(name && register ? register(name) : {})}
       className={clsx(styles.input, className, styles[size], { [styles.error]: !!error })}
       placeholder={placeholder}

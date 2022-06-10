@@ -55,8 +55,8 @@ export async function fetchPackageMetadata(name: string) {
   // );
 
   return {
-    description: document.description || undefined,
-    license: document.license || undefined,
+    description: document.description ?? undefined,
+    license: document.license ?? undefined,
     homepageUrl,
     repositoryUrl,
     updateSeq: Number(document._local_seq),

@@ -48,7 +48,7 @@ export function useTransactionalTesting() {
     // any code and test changes we mock `Connection.transaction` function and create new transaction
     // if it is not started, or reuse existing one
     jest.spyOn(Connection.prototype, 'transaction').mockImplementation(
-      // @ts-ignore
+      // @ts-expect-error
       async (runInTransaction: (entityManager: EntityManager) => Promise<unknown>) => {
         const em = connection.createEntityManager();
         if (connection.createQueryRunner().isTransactionActive) {

@@ -4,8 +4,9 @@
   "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier --check ./src",
+    "prettier": "prettier --check ./src",
     "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "jest",
     "start": "node build/index.js"
   },
@@ -23,6 +24,9 @@
     "@types/gunzip-maybe": "^1.4.0",
     "@types/semver": "^7.3.9",
     "@types/tar-stream": "^2.2.2",
-    "@types/tiny-async-pool": "^1.0.1"
+    "@types/tiny-async-pool": "^1.0.1",
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4"
   }
 }

@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "lint": "prettier --check ./src"
+    "prettier": "prettier --check ./src",
+    "typecheck": "tsc --project tsconfig.build.json --noEmit"
   },
   "engines": {
     "node": "^16.14.2"
@@ -21,7 +22,6 @@
     "@types/jest": "^27.4.1",
     "@types/supertest": "^2.0.12",
     "jest": "^27.5.1",
-    "prettier": "^2.4.1",
     "ts-jest": "^27.1.4"
   }
 }

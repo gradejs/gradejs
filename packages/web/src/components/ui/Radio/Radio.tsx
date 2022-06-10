@@ -1,8 +1,7 @@
 /* eslint-disable react/button-has-type */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import clsx from 'clsx';
-import { UseFormRegister } from "react-hook-form";
+import { UseFormRegister } from 'react-hook-form';
 import styles from './Radio.module.scss';
 
 export type Props = {
@@ -31,8 +30,11 @@ export default function Radio({
 }: Props) {
   return (
     <label className={clsx(styles.container, styles[appearance])}>
-      {(!labelPosition || labelPosition === 'left') && <span className={clsx(styles.labelContent, styles.labelLeft)}>{children}</span>}
-      <input type='radio'
+      {(!labelPosition || labelPosition === 'left') && (
+        <span className={clsx(styles.labelContent, styles.labelLeft)}>{children}</span>
+      )}
+      <input
+        type='radio'
         {...(name && register ? register(name) : {})}
         onSelect={() => onSelect?.(value)}
         name={name}
@@ -40,7 +42,9 @@ export default function Radio({
         className={clsx(styles.control, styles[appearance], className)}
         disabled={disabled}
       />
-      {(labelPosition && labelPosition === 'right') && <span className={clsx(styles.labelContent, styles.labelRight)}>{children}</span>}
+      {labelPosition && labelPosition === 'right' && (
+        <span className={clsx(styles.labelContent, styles.labelRight)}>{children}</span>
+      )}
     </label>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown, { Props } from './Dropdown';
-import { Button } from "../index";
+import { Button } from '../index';
 
 export default {
   title: 'Interface / Dropdown',
@@ -10,13 +10,15 @@ export default {
   },
 };
 
-export const Default = (args: Props) => <Dropdown {...args}>
-  <div>some content</div>
-  <div>some content</div>
-  <div>some content</div>
-</Dropdown>;
+export const Default = (args: Props) => (
+  <Dropdown {...args}>
+    <div>some content</div>
+    <div>some content</div>
+    <div>some content</div>
+  </Dropdown>
+);
 Default.args = {
   children: 'Dropdown',
   TriggerComponent: Button,
-  triggerChildren: 'Filter'
+  triggerChildren: 'Filter',
 };
