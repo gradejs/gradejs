@@ -7,6 +7,7 @@ import styles from './Package.module.scss';
 import Dropdown from '../Dropdown/Dropdown';
 import Vulnerability, { PackageVulnerabilityData } from '../Vulnerability/Vulnerability';
 import TagBadge from '../TagBadge/TagBadge';
+import { trackCustomEvent } from '../../../services/analytics';
 
 export type DetectedPackageData = {
   packageName: string;
@@ -53,6 +54,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
               )}
               triggerType='hover'
               position='bottomleft'
+              onOpen={() => trackCustomEvent('Package', 'ShowVulnerabilitiesTooltip')}
             >
               <div className={styles.vulnerabilityTooltip}>
                 {vulnerabilities.map((it) => (
@@ -73,6 +75,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
               href={repositoryUrl}
               target='_blank'
               rel='noopener noreferrer'
+              onClick={() => trackCustomEvent('Package', 'ClickRepoUrl')}
               className={styles.externalLink}
             >
               <Github />
@@ -83,6 +86,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
               href={homepageUrl}
               target='_blank'
               rel='noopener noreferrer'
+              onClick={() => trackCustomEvent('Package', 'ClickHomepageUrl')}
               className={styles.externalLink}
             >
               <External />
@@ -99,6 +103,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
         // Browser won't break a line for '/' symbol, so we add the <wbr> specificaly
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: pkg.packageName.replace('/', '/<wbr>') }}
+        onClick={() => trackCustomEvent('Package', 'ClickPackageUrl')}
       />
       <div className={styles.meta}>
         <div className={styles.version}>{toReadableVersion(pkg.packageVersionRange)}</div>

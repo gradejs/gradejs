@@ -5,6 +5,7 @@ import { Error as ErrorLayout, Website } from 'components/layouts';
 import { DefaultFiltersAndSorters } from '../layouts/Filters/Filters';
 import { DetectedPackageData } from '../ui/Package/Package';
 import { PackageVulnerabilityData, SeverityWeightMap } from '../ui/Vulnerability/Vulnerability';
+import { trackCustomEvent } from '../../services/analytics';
 
 const baseUrl = process.env.API_ORIGIN;
 
@@ -26,6 +27,8 @@ type DetectionResult = {
 
 const compareByPopularity = (left: DetectedPackageData, right: DetectedPackageData) =>
   (right.registryMetadata?.monthlyDownloads ?? 0) - (left.registryMetadata?.monthlyDownloads ?? 0);
+
+let fetchStartTime: number | null = null;
 
 export default function WebsiteHostnamePage() {
   const { hostname } = useParams();
@@ -150,6 +153,9 @@ export default function WebsiteHostnamePage() {
     const hasPendingPages = !!webpages.find((item) => item.status === 'pending');
 
     if (hasPendingPages && hostname) {
+      if (fetchStartTime === null) {
+        fetchStartTime = Date.now();
+      }
       const timeoutId = setTimeout(() => {
         fetchApi(hostname)
           .then((response) => {
@@ -174,31 +180,50 @@ export default function WebsiteHostnamePage() {
   }
 
   if (isProtected) {
+    trackCustomEvent('HostnamePage', 'SiteProtected');
     return (
       <ErrorLayout
         message='The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions.'
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={hostname}
-        onRetry={() => {
+        onRetryClick={() => {
+          trackCustomEvent('HostnamePage', 'ClickRetry_Protected');
           document.location = '/';
+        }}
+        onReportClick={() => {
+          trackCustomEvent('HostnamePage', 'ClickReport_Protected');
         }}
       />
     );
   }
 
   if (isInvalidResult) {
+    trackCustomEvent('HostnamePage', 'SiteInvalid');
     return (
       <ErrorLayout
         message='It looks like the entered website is not built with Webpack.'
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={hostname}
-        onRetry={() => {
+        onRetryClick={() => {
+          trackCustomEvent('HostnamePage', 'ClickRetry_Invalid');
           document.location = '/';
+        }}
+        onReportClick={() => {
+          trackCustomEvent('HostnamePage', 'ClickReport_Invalid');
         }}
       />
     );
+  }
+
+  const isPending = webpages.length === 0 || webpages.find((item) => item.status === 'pending');
+
+  if (!isPending && fetchStartTime !== null) {
+    trackCustomEvent('HostnamePage', 'WebsiteLoaded', {
+      value: Date.now() - fetchStartTime,
+    });
+    fetchStartTime = null;
   }
 
   return (

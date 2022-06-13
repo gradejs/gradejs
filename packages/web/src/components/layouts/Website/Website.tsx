@@ -9,6 +9,7 @@ import { DetectedPackageData } from '../../ui/Package/Package';
 import { PackageVulnerabilityData } from '../../ui/Vulnerability/Vulnerability';
 import Filters, { FormData } from '../Filters/Filters';
 import TagBadge from '../../ui/TagBadge/TagBadge';
+import { trackCustomEvent } from '../../../services/analytics';
 
 // TODO: Add plashechka
 export type Props = {
@@ -96,12 +97,18 @@ export default function Website({
             <Lines
               className={styles.viewSelect}
               color={view === 'lines' ? '#0F0F0F' : '#E6E6E6'}
-              onClick={() => setView('lines')}
+              onClick={() => {
+                trackCustomEvent('HostnamePage', 'SetViewLines');
+                setView('lines');
+              }}
             />
             <Grid
               className={styles.viewSelect}
               color={view === 'grid' ? '#0F0F0F' : '#E6E6E6'}
-              onClick={() => setView('grid')}
+              onClick={() => {
+                trackCustomEvent('HostnamePage', 'SetViewGrid');
+                setView('grid');
+              }}
             />
           </div>
         )}
