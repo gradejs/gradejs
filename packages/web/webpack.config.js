@@ -79,12 +79,12 @@ module.exports = (_, argv) => {
       ...(isDevelopment
         ? []
         : [
-            new webpack.EnvironmentPlugin([
-              'API_ORIGIN',
-              'GA_ID',
-              'PLAUSIBLE_DOMAIN',
-              'DUMP_ANALYTICS',
-            ]),
+            new webpack.EnvironmentPlugin({
+              API_ORIGIN: 'https://staging.api.gradejs.com',
+              GA_ID: '',
+              PLAUSIBLE_DOMAIN: '',
+              DUMP_ANALYTICS: '',
+            }),
           ]),
     ],
     devServer: {
