@@ -8,36 +8,6 @@ export type CustomEventProperties = {
 
 let plausible: ReturnType<typeof Plausible>;
 
-function trackHistory() {
-  const trackPageView = (url?: string | URL | null) =>
-    pageView(
-      url ? (typeof url === 'string' ? url : url.pathname) : window.location.pathname,
-      window.location.pathname
-    );
-  const popstateListener = () => trackPageView();
-  const originalPushState = window.history.pushState;
-  const originalReplaceState = window.history.replaceState;
-  if (originalPushState) {
-    window.history.pushState = function (data, title, url) {
-      originalPushState.apply(this, [data, title, url]);
-      trackPageView(url);
-    };
-    window.history.replaceState = function (data, title, url) {
-      originalReplaceState.apply(this, [data, title, url]);
-      trackPageView(url);
-    };
-    window.addEventListener('popstate', popstateListener);
-  }
-  trackPageView();
-  return function cleanup() {
-    if (originalPushState) {
-      window.history.pushState = originalPushState;
-      window.history.replaceState = originalReplaceState;
-      window.removeEventListener('popstate', popstateListener);
-    }
-  };
-}
-
 export function initAnalytics() {
   if (process.env.PLAUSIBLE_DOMAIN) {
     plausible = Plausible({
@@ -51,7 +21,11 @@ export function initAnalytics() {
     ReactGA.initialize(process.env.GA_ID);
   }
 
-  return trackHistory();
+  return (url?: string | URL | null) =>
+    pageView(
+      url ? (typeof url === 'string' ? url : url.pathname) : window.location.pathname,
+      window.location.pathname
+    );
 }
 
 export function pageView(url: string = window.location.pathname, referrer?: string) {
