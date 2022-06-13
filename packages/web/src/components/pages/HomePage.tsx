@@ -12,7 +12,7 @@ export default function HomePage() {
 
   const handleDetectStart = useCallback((data: { address: string }) => {
     setLoading(true);
-    trackCustomEvent('HomePage', 'ClickStart');
+    trackCustomEvent('HomePage', 'WebsiteSubmitted');
 
     const host = new URL(data.address).hostname;
 
@@ -40,10 +40,10 @@ export default function HomePage() {
     return (
       <Error
         host={isFailed}
-        onReport={() => {
+        onReportClick={() => {
           trackCustomEvent('HomePage', 'ClickReport');
         }}
-        onRetry={() => {
+        onRetryClick={() => {
           trackCustomEvent('HomePage', 'ClickRetry');
           setFailed('');
         }}

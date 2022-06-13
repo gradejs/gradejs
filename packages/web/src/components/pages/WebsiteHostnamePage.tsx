@@ -187,11 +187,11 @@ export default function WebsiteHostnamePage() {
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={hostname}
-        onRetry={() => {
+        onRetryClick={() => {
           trackCustomEvent('HostnamePage', 'ClickRetry_Protected');
           document.location = '/';
         }}
-        onReport={() => {
+        onReportClick={() => {
           trackCustomEvent('HostnamePage', 'ClickReport_Protected');
         }}
       />
@@ -206,11 +206,11 @@ export default function WebsiteHostnamePage() {
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={hostname}
-        onRetry={() => {
+        onRetryClick={() => {
           trackCustomEvent('HostnamePage', 'ClickRetry_Invalid');
           document.location = '/';
         }}
-        onReport={() => {
+        onReportClick={() => {
           trackCustomEvent('HostnamePage', 'ClickReport_Invalid');
         }}
       />
@@ -220,7 +220,7 @@ export default function WebsiteHostnamePage() {
   const isPending = webpages.length === 0 || webpages.find((item) => item.status === 'pending');
 
   if (!isPending && fetchStartTime !== null) {
-    trackCustomEvent('HostnamePage', 'SiteProcessTime', {
+    trackCustomEvent('HostnamePage', 'WebsiteLoaded', {
       value: Date.now() - fetchStartTime,
     });
     fetchStartTime = null;

@@ -74,9 +74,18 @@ module.exports = (_, argv) => {
         template: path.join(__dirname, 'index.html'),
       }),
       new webpack.DefinePlugin({
-        ...(isDevelopment ? { 'process.env': JSON.stringify(dotenv.config().parsed) } : {})
+        ...(isDevelopment ? { 'process.env': JSON.stringify(dotenv.config().parsed) } : {}),
       }),
-      ...(isDevelopment ? [] : [new webpack.EnvironmentPlugin(['API_ORIGIN', 'GA_ID', 'PLAUSIBLE_DOMAIN'])]),
+      ...(isDevelopment
+        ? []
+        : [
+            new webpack.EnvironmentPlugin([
+              'API_ORIGIN',
+              'GA_ID',
+              'PLAUSIBLE_DOMAIN',
+              'DUMP_ANALYTICS',
+            ]),
+          ]),
     ],
     devServer: {
       static: {
