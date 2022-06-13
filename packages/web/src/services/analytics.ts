@@ -41,6 +41,7 @@ function trackHistory() {
 export function initAnalytics() {
   if (process.env.PLAUSIBLE_DOMAIN) {
     plausible = Plausible({
+      apiHost: window.location.origin,
       domain: process.env.PLAUSIBLE_DOMAIN,
       trackLocalhost: true,
     });
