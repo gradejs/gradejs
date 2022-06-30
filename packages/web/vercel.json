@@ -1,13 +1,11 @@
 {
-  "routes": [{
-      "src": "/api/event",
-      "dest": "https://plausible.io/api/event",
-      "status": 200
+  "rewrites": [{
+      "source": "/api/event",
+      "destination": "https://plausible.io/api/event"
     },
     {
-      "src": "/.+",
-      "dest": "/",
-      "status": 200
+      "source": "/*",
+      "destination": "/index.html"
     }
   ]
 }
