@@ -1,9 +1,0 @@
-[[redirects]]
-  from = "/api/event"
-  to = "https://plausible.io/api/event"
-  status = 200
-
-[[redirects]]
-  from = "*"
-  to = "/index.html"
-  status = 200
