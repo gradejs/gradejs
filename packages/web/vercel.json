@@ -1,0 +1,13 @@
+{
+  "routes": [{
+      "src": "/api/event",
+      "dest": "https://plausible.io/api/event",
+      "status": 200
+    },
+    {
+      "src": "/[^.]+",
+      "dest": "/",
+      "status": 200
+    }
+  ]
+}
