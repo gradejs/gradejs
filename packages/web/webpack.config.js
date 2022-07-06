@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const srcDir = 'src';
 const distDir = 'dist';
@@ -86,6 +87,12 @@ module.exports = (_, argv) => {
               DUMP_ANALYTICS: '',
             }),
           ]),
+      new CopyPlugin({
+        patterns: [
+          { from: 'robots.txt', to: 'robots.txt' },
+          { from: 'src/assets/sharing-image.png', to: 'static/sharing-image.png' },
+        ],
+      }),
     ],
     devServer: {
       static: {
