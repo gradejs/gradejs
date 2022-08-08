@@ -1,35 +1,29 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Error, Home } from 'components/layouts';
 import { trackCustomEvent } from '../../services/analytics';
-
-const baseUrl = process.env.API_ORIGIN;
+import { apiClientCtx } from '../../services/apiClient';
 
 export default function HomePage() {
   const [isFailed, setFailed] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [hostname, setHostname] = useState('');
+  const api = useContext(apiClientCtx);
 
-  const handleDetectStart = useCallback((data: { address: string }) => {
+  const handleDetectStart = useCallback(async (data: { address: string }) => {
     setLoading(true);
     trackCustomEvent('HomePage', 'WebsiteSubmitted');
 
     const host = new URL(data.address).hostname;
 
-    fetch(`${baseUrl}/webpage`, {
-      method: 'POST',
-      body: JSON.stringify({ url: data.address }),
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then((response) => response.json())
-      .then(() => {
-        setLoading(false);
-        setHostname(host);
-      })
-      .catch(() => {
-        setFailed(host);
-        setLoading(false);
-      });
+    try {
+      await api.mutation('requestParseWebsite', data.address);
+      setLoading(false);
+      setHostname(host);
+    } catch (e) {
+      setFailed(host);
+      setLoading(false);
+    }
   }, []);
 
   if (hostname) {

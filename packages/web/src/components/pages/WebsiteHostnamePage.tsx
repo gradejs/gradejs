@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import semver from 'semver';
 import { useParams, Navigate } from 'react-router-dom';
 import { Error as ErrorLayout, Website } from 'components/layouts';
@@ -6,18 +6,7 @@ import { DefaultFiltersAndSorters } from '../layouts/Filters/Filters';
 import { DetectedPackageData } from '../ui/Package/Package';
 import { PackageVulnerabilityData, SeverityWeightMap } from '../ui/Vulnerability/Vulnerability';
 import { trackCustomEvent } from '../../services/analytics';
-
-const baseUrl = process.env.API_ORIGIN;
-
-async function fetchApi(hostname: string) {
-  return fetch(`${baseUrl}/website/${hostname}`).then((response) => {
-    if (response.status !== 200) {
-      throw new Error();
-    } else {
-      return response.json();
-    }
-  });
-}
+import { apiClientCtx } from '../../services/apiClient';
 
 type DetectionResult = {
   packages: DetectedPackageData[];
@@ -32,6 +21,7 @@ let fetchStartTime: number | null = null;
 
 export default function WebsiteHostnamePage() {
   const { hostname } = useParams();
+  const api = useContext(apiClientCtx);
   const [detectionResult, setDetectionResult] = useState<DetectionResult>({
     packages: [],
     vulnerabilities: {},
@@ -136,16 +126,16 @@ export default function WebsiteHostnamePage() {
 
   useEffect(() => {
     if (hostname) {
-      fetchApi(hostname)
-        .then((response) => {
-          setDetectionResult({
-            vulnerabilities: {},
-            ...response.data,
-          });
-        })
-        .catch(() => {
-          setError(true);
-        });
+      api.mutation('syncWebsite', hostname).then(() =>
+        api
+          .query('getWebsite', hostname)
+          // TODO: proper typing in state management pr
+          // @ts-expect-error
+          .then(setDetectionResult)
+          .catch(() => {
+            setError(true);
+          })
+      );
     }
   }, []);
 
@@ -157,16 +147,16 @@ export default function WebsiteHostnamePage() {
         fetchStartTime = Date.now();
       }
       const timeoutId = setTimeout(() => {
-        fetchApi(hostname)
-          .then((response) => {
-            setDetectionResult({
-              vulnerabilities: {},
-              ...response.data,
-            });
-          })
-          .catch(() => {
-            setError(true);
-          });
+        api.mutation('syncWebsite', hostname).then(() =>
+          api
+            .query('getWebsite', hostname)
+            // TODO: proper typing in state management pr
+            // @ts-expect-error
+            .then(setDetectionResult)
+            .catch(() => {
+              setError(true);
+            })
+        );
       }, 5000);
 
       return () => clearTimeout(timeoutId);

@@ -50,6 +50,7 @@
     "webpack-dev-server": "^4.2.1"
   },
   "dependencies": {
+    "@trpc/client": "^9.27.0",
     "clsx": "^1.1.1",
     "plausible-tracker": "^0.3.8",
     "react": "^17.0.2",

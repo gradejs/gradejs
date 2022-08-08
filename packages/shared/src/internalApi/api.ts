@@ -79,6 +79,10 @@ export async function fetchEndpoint<T>(
     }
   }
 
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Request to internal API: ', requestUrl.toString(), requestInit);
+  }
+
   return fetch(requestUrl.toString(), requestInit)
     .then((response) => response.json())
     .then((json: any) => {

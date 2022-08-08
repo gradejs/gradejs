@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { ValidationError } from 'joi';
+import { ZodError } from 'zod';
 
 export type ApiResponse<TData = undefined> = { data: TData } | { error: ApiDetailedError };
 
@@ -32,11 +32,11 @@ export function respondWithError(res: Response, err: unknown) {
     error.message = err.message;
   }
 
-  if (err instanceof ValidationError) {
-    const details = err.details[0];
+  if (err instanceof ZodError) {
+    const details = err.errors[0];
     error.code = 400;
     error.message = details.message || err.message;
-    error.type = details.type;
+    error.type = details.code;
     error.param = details.path.join('.');
   }
 
