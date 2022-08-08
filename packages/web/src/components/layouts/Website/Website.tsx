@@ -5,11 +5,10 @@ import { SubmitHandler } from 'react-hook-form';
 import { Header, Package, Section, PackageSkeleton } from 'components/ui';
 import { Grid, Lines } from 'components/icons';
 import styles from './Website.module.scss';
-import { DetectedPackageData } from '../../ui/Package/Package';
-import { PackageVulnerabilityData } from '../../ui/Vulnerability/Vulnerability';
-import Filters, { FormData } from '../Filters/Filters';
+import Filters, { FiltersState } from '../Filters/Filters';
 import TagBadge from '../../ui/TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
+import { WebPage, WebPagePackage, PackageVulnerabilityData } from '@gradejs-public/shared';
 
 // TODO: Add plashechka
 export type Props = {
@@ -19,24 +18,24 @@ export type Props = {
   //   title: string;
   //   icon: string;
   // }>;
-  packages: DetectedPackageData[];
+  isLoading: boolean;
+  isPending: boolean;
+  packages: WebPagePackage[];
   vulnerabilities: Record<string, PackageVulnerabilityData[]>;
-  webpages: Array<{
-    status: string;
-  }>;
-  onFiltersApply: SubmitHandler<FormData>;
+  webpages: WebPage[];
+  onFiltersApply: SubmitHandler<FiltersState>;
 };
 
 export default function Website({
   host,
+  isLoading,
+  isPending,
   packages,
   webpages,
   vulnerabilities,
   onFiltersApply,
 }: Props) {
   const [view, setView] = useState<'grid' | 'lines'>('grid');
-  const isPending = !!webpages.find((item) => item.status === 'pending');
-  const isLoading = packages.length === 0;
 
   return (
     <>
@@ -44,14 +43,13 @@ export default function Website({
       <Section>
         <h1 className={styles.heading}>{host}</h1>
 
-        {webpages.length > 0 &&
-          (isPending ? (
-            <div className={clsx(styles.disclaimer, styles.disclaimerLoading)}>
-              GradeJS is currently processing this website. <br />
-              It may take a few minutes and depends on the number of JavaScript files and their
-              size.
-            </div>
-          ) : (
+        {isPending ? (
+          <div className={clsx(styles.disclaimer, styles.disclaimerLoading)}>
+            GradeJS is currently processing this website. <br />
+            It may take a few minutes and depends on the number of JavaScript files and their size.
+          </div>
+        ) : (
+          webpages.length > 0 && (
             <div className={styles.disclaimer}>
               The <strong>beta</strong> version of GradeJS is able to detect only 1,826 popular
               packages with up to 85% accuracy.
@@ -75,7 +73,8 @@ export default function Website({
               </a>
               .
             </div>
-          ))}
+          )
+        )}
 
         <div className={styles.disclaimer}>
           Packages that are known to be vulnerable are now highlighted with{' '}

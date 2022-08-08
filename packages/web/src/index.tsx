@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import App from 'components/App';
+import { store } from './store';
+import { App } from './components/App';
 import 'styles/global.scss';
-import { apiClientCtx, client } from 'services/apiClient';
 
 ReactDOM.render(
-  <apiClientCtx.Provider value={client}>
+  <Provider store={store}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </apiClientCtx.Provider>,
+  </Provider>,
   document.getElementById('app')
 );

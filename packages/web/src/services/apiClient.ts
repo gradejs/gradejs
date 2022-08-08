@@ -1,4 +1,3 @@
-import { createContext } from 'react';
 import { createTRPCClient } from '@trpc/client';
 import type { AppRouter } from '../../../public-api/src/router';
 
@@ -7,4 +6,3 @@ export const client = createTRPCClient<AppRouter>({
 });
 
 export type ApiClient = typeof client;
-export const apiClientCtx = createContext(client);

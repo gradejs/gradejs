@@ -5,30 +5,15 @@ import React from 'react';
 import semver from 'semver';
 import styles from './Package.module.scss';
 import Dropdown from '../Dropdown/Dropdown';
-import Vulnerability, { PackageVulnerabilityData } from '../Vulnerability/Vulnerability';
+import Vulnerability from '../Vulnerability/Vulnerability';
 import TagBadge from '../TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-
-export type DetectedPackageData = {
-  packageName: string;
-  possiblePackageVersions: string[];
-  packageVersionRange: string;
-  packageMetadata?: {
-    approximateByteSize: number | null;
-  };
-  registryMetadata?: {
-    latestVersion: string;
-    description?: string;
-    repositoryUrl?: string;
-    homepageUrl?: string;
-    monthlyDownloads?: number;
-  };
-};
+import { WebPagePackage, PackageVulnerabilityData } from '@gradejs-public/shared';
 
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
-  pkg: DetectedPackageData;
+  pkg: WebPagePackage;
   vulnerabilities: PackageVulnerabilityData[];
 };
 

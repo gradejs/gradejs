@@ -1,20 +1,11 @@
 import {
   GithubAdvisoryDatabaseSpecific,
-  GithubAdvisorySeverity,
+  PackageVulnerabilityData,
   PackageVulnerability,
   WebPagePackage,
 } from '@gradejs-public/shared';
 import { getRepository } from 'typeorm';
 import semver from 'semver';
-
-export type ApiPackageVulnerabilityData = {
-  affectedPackageName: string;
-  affectedVersionRange: string;
-  osvId: string;
-  detailsUrl: string;
-  summary?: string;
-  severity?: GithubAdvisorySeverity;
-};
 
 export async function getVulnerabilitiesByPackageNames(packageNames: string[]) {
   if (packageNames.length === 0) {
@@ -29,7 +20,7 @@ export async function getVulnerabilitiesByPackageNames(packageNames: string[]) {
 }
 
 export async function getAffectingVulnerabilities(packages: WebPagePackage[]) {
-  const affectingVulnerabilitiesByPackage: Record<string, ApiPackageVulnerabilityData[]> = {};
+  const affectingVulnerabilitiesByPackage: Record<string, PackageVulnerabilityData[]> = {};
   if (!packages.length) {
     return affectingVulnerabilitiesByPackage;
   }
