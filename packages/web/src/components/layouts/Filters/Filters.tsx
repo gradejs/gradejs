@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Button, TextInput } from 'components/ui';
+import { Button, TextInput } from '../../ui';
 import Dropdown from '../../ui/Dropdown/Dropdown';
 import Radio from '../../ui/Radio/Radio';
 import styles from './Filters.module.scss';
@@ -30,7 +30,9 @@ export default function Filters({ onSubmit }: Props) {
   const watchFilterByName = watch('filter');
   let hideHandle: () => void;
   useEffect(() => {
-    document.body.addEventListener('click', hideHandle);
+    if (typeof document !== 'undefined') {
+      document.body.addEventListener('click', hideHandle);
+    }
   });
 
   return (

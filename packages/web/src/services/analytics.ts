@@ -25,7 +25,15 @@ export function initAnalytics() {
     pageView(url ? (typeof url === 'string' ? url : url.pathname) : window.location.pathname);
 }
 
-export function pageView(url: string = window.location.pathname, referrer?: string) {
+export function pageView(url?: string, referrer?: string) {
+  if (!plausible) {
+    return;
+  }
+
+  if (!url) {
+    url = window.location.pathname;
+  }
+
   if (process.env.PLAUSIBLE_DOMAIN) {
     plausible.trackPageview({
       url: window.location.origin + url,
@@ -44,6 +52,10 @@ export function pageView(url: string = window.location.pathname, referrer?: stri
 }
 
 export function trackCustomEvent(category: string, action: string, props?: CustomEventProperties) {
+  if (!plausible) {
+    return;
+  }
+
   if (process.env.PLAUSIBLE_DOMAIN) {
     plausible.trackEvent(`${category}_${action}`, { props });
   }

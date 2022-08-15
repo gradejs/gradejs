@@ -2,8 +2,6 @@ import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HomePage } from './pages/Home';
 import { WebsiteResultsPage } from './pages/WebsiteResults';
-import { initAnalytics } from '../services/analytics';
-const locationChangeHandler = initAnalytics();
 
 /**
  * The App component has not any router wrapper because it uses both with tests, storybook and browser.
@@ -14,7 +12,11 @@ const locationChangeHandler = initAnalytics();
  *   <App />
  * </BrowserRouter>
  */
-export function App() {
+export function App({
+  locationChangeHandler,
+}: {
+  locationChangeHandler: (url?: string | URL) => void;
+}) {
   const location = useLocation();
   locationChangeHandler(location.pathname);
   return (

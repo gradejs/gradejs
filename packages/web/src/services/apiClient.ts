@@ -2,6 +2,9 @@ import { createTRPCClient } from '@trpc/client';
 import type { inferProcedureOutput } from '@trpc/server';
 import type { AppRouter, Api } from '../../../public-api/src/router';
 
+// polyfill fetch, trpc needs it
+import f from 'node-fetch';
+
 // Helper types
 export type TQuery = keyof AppRouter['_def']['queries'];
 export type TMutation = keyof AppRouter['_def']['mutations'];
@@ -18,6 +21,10 @@ if (!process.env.API_ORIGIN) {
 
 export const client = createTRPCClient<AppRouter>({
   url: process.env.API_ORIGIN,
+  fetch: typeof window === 'undefined' ? (f as any) : window.fetch.bind(window),
+  headers: {
+    Origin: process.env.CORS_ORIGIN,
+  },
 });
 
 export type SyncWebsiteOutput = InferMutationOutput<'syncWebsite'>;

@@ -7,10 +7,10 @@
     "prettier": "prettier --check ./src",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "test": "echo 'Not implemented yet'",
-    "start": "webpack serve --open",
     "storybook": "start-storybook -p 6006",
-    "build": "rm -rf dist && webpack --mode=production",
-    "build:storybook": "build-storybook -o dist/storybook"
+    "build:storybook": "build-storybook -o dist/storybook",
+    "build": "ts-node --swc webpack/build.ts --production",
+    "start": "./webpack/start_dev.sh"
   },
   "repository": {
     "type": "git",
@@ -40,6 +40,8 @@
     "html-webpack-plugin": "^5.3.2",
     "mini-css-extract-plugin": "^2.3.0",
     "node-sass": "^7.0.1",
+    "nodemon": "^2.0.19",
+    "null-loader": "^4.0.1",
     "sass-loader": "^12.1.0",
     "storybook": "^6.3.8",
     "style-loader": "^3.2.1",
@@ -55,6 +57,7 @@
     "@trpc/client": "^9.27.0",
     "@types/lodash.memoize": "^4.1.7",
     "clsx": "^1.1.1",
+    "express": "^4.18.1",
     "lodash.memoize": "^4.1.2",
     "plausible-tracker": "^0.3.8",
     "react": "^17.0.2",
