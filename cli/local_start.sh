@@ -40,6 +40,11 @@ AWS_REGION=test PORT=8084 DB_URL=postgres://gradejs:gradejs@localhost:5432/grade
   npm run debug --prefix packages/worker 2>&1 &
 WORKER_PID=$!
 
+echo "Starting queue puller script"
+AWS_REGION=test AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
+  ts-node --swc cli/localSqsPuller.ts 2>&1 &
+PULLER_PID=$!
+
 echo "Starting public api package"
 AWS_REGION=test PORT=8083 DB_URL=postgres://gradejs:gradejs@localhost:5432/gradejs-public \
   INTERNAL_API_ORIGIN=http://localhost:8082 SQS_WORKER_QUEUE_URL=/test/frontend-queue \
@@ -54,7 +59,7 @@ WEB_PID=$!
 # Some magic to shut down all services at once when requested
 
 TRAPPED_SIGNAL=false
-trap "TRAPPED_SIGNAL=true; kill -15 $ELASTICMQ_PID; kill -15 $WORKER_PID; kill -15 $API_PID; kill -15 $WEB_PID" SIGTERM SIGINT
+trap "TRAPPED_SIGNAL=true; kill -15 $ELASTICMQ_PID; kill -15 $WORKER_PID; kill -15 $PULLER_PID; kill -15 $API_PID; kill -15 $WEB_PID" SIGTERM SIGINT
 
 while :
 do
@@ -64,6 +69,9 @@ do
     kill -0 $WORKER_PID 2> /dev/null
     WORKER_STATUS=$?
 
+    kill -0 $PULLER_PID 2> /dev/null
+    PULLER_STATUS=$?
+
     kill -0 $API_PID 2> /dev/null
     API_STATUS=$?
 
@@ -71,7 +79,7 @@ do
     WEB_STATUS=$?
 
     if [ "$TRAPPED_SIGNAL" = "false" ]; then
-        if [ $ELASTICMQ_STATUS -ne 0 ] || [ $WORKER_STATUS -ne 0 ] || [ $API_STATUS -ne 0 ] || [ $WEB_STATUS -ne 0 ]; then
+        if [ $ELASTICMQ_STATUS -ne 0 ] || [ $WORKER_STATUS -ne 0 ] || [ $PULLER_STATUS -ne 0 ] || [ $API_STATUS -ne 0 ] || [ $WEB_STATUS -ne 0 ]; then
             if [ $ELASTICMQ_STATUS -eq 0 ]; then
                 kill -15 $ELASTICMQ_PID;
                 wait $ELASTICMQ_PID;
@@ -79,6 +87,10 @@ do
             if [ $WORKER_STATUS -eq 0 ]; then
                 kill -15 $WORKER_PID;
                 wait $WORKER_PID;
+            fi
+            if [ $PULLER_STATUS -eq 0 ]; then
+                kill -15 $PULLER_PID;
+                wait $PULLER_PID;
             fi
             if [ $API_STATUS -eq 0 ]; then
                 kill -15 $API_PID;
@@ -91,7 +103,7 @@ do
             exit 1;
         fi
     else
-       if [ $ELASTICMQ_STATUS -ne 0 ] && [ $WORKER_STATUS -ne 0 ] && [ $API_STATUS -ne 0 ] && [ $WEB_STATUS -ne 0 ]; then
+       if [ $ELASTICMQ_STATUS -ne 0 ] && [ $WORKER_STATUS -ne 0 ] && [ $PULLER_STATUS -ne 0 ] && [ $API_STATUS -ne 0 ] && [ $WEB_STATUS -ne 0 ]; then
             exit 0;
        fi
     fi
