@@ -1,6 +1,4 @@
 const path = require('path');
-const { readFileSync, existsSync } = require('fs');
-const dotenv = require('dotenv');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -9,15 +7,10 @@ const CopyPlugin = require('copy-webpack-plugin');
 const srcDir = 'src';
 const distDir = 'dist';
 
-const envDefaults = {
-  API_ORIGIN: 'https://staging.api.gradejs.com',
-  GA_ID: '',
-  PLAUSIBLE_DOMAIN: '',
-  DUMP_ANALYTICS: '',
-};
-const envPath = path.resolve(__dirname, '.env');
-const env = existsSync(envPath) ? dotenv.parse(readFileSync(envPath, { encoding: 'utf-8' })) : {};
-const getEnv = (key) => '"' + (process.env[key] || env[key] || envDefaults[key]) + '"';
+const env = ['API_ORIGIN', 'PLAUSIBLE_DOMAIN', 'GA_ID', 'DUMP_ANALYTICS'].reduce((acc, val) => {
+  acc[val] = `"${process.env[val]}"`;
+  return acc;
+}, {});
 
 module.exports = (_, argv) => {
   const { mode = 'development' } = argv;
@@ -88,14 +81,11 @@ module.exports = (_, argv) => {
       new webpack.DefinePlugin({
         ...(isDevelopment
           ? {
-              'process.env.API_ORIGIN': getEnv('API_ORIGIN'),
-              'process.env.PLAUSIBLE_DOMAIN': getEnv('PLAUSIBLE_DOMAIN'),
-              'process.env.GA_ID': getEnv('GA_ID'),
-              'process.env.DUMP_ANALYTICS': getEnv('DUMP_ANALYTICS'),
+              'process.env': env,
             }
           : {}),
       }),
-      ...(isDevelopment ? [] : [new webpack.EnvironmentPlugin(envDefaults)]),
+      ...(isDevelopment ? [] : [new webpack.EnvironmentPlugin(env)]),
       new CopyPlugin({
         patterns: [
           { from: 'robots.txt', to: 'robots.txt' },

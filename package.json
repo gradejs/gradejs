@@ -21,9 +21,9 @@
     "build:worker": "yarn workspace @gradejs-public/worker run build",
     "build:public-api": "yarn workspace @gradejs-public/public-api run build",
     "build:backend": "yarn build:shared && yarn build:public-api && yarn build:worker",
-    "dev": "bash cli/local_start.sh",
-    "worker:local:syncPackages": "curl -d '{\"type\":\"syncPackageIndex\"}' -H \"Content-Type: application/json\" -X POST http://localhost:8084",
-    "worker:local:syncVulnerabilities": "curl -d '{\"type\":\"syncPackageVulnerabilities\"}' -H \"Content-Type: application/json\" -X POST http://localhost:8084"
+    "dev:start": "bash cli/local_start.sh",
+    "dev:worker:syncPackages": "curl -d '{\"type\":\"syncPackageIndex\"}' -H \"Content-Type: application/json\" -X POST http://localhost:8084",
+    "dev:worker:syncVulnerabilities": "curl -d '{\"type\":\"syncPackageVulnerabilities\"}' -H \"Content-Type: application/json\" -X POST http://localhost:8084"
   },
   "devDependencies": {
     "@types/jsonpath": "^0.2.0",

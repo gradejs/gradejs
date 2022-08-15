@@ -13,6 +13,15 @@ echo "Note: nodejs debug server started, you can attach a client (e.g. chrome://
 echo "- Public api debugger on localhost:9201"
 echo "- Worker debugger on localhost:9202"
 
+# Save current env and values passed in CLI
+CURENV=$(declare -p -x)
+# Set local development envvars
+set -o allexport
+source cli/development.env
+set +o allexport
+# Overwrite development defaults with values passed in CLI
+eval "$CURENV"
+
 # Ensure we have all the packages
 yarn
 
