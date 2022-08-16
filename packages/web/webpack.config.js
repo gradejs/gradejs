@@ -78,14 +78,7 @@ module.exports = (_, argv) => {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'index.html'),
       }),
-      new webpack.DefinePlugin({
-        ...(isDevelopment
-          ? {
-              'process.env': env,
-            }
-          : {}),
-      }),
-      ...(isDevelopment ? [] : [new webpack.EnvironmentPlugin(env)]),
+      new webpack.EnvironmentPlugin(env),
       new CopyPlugin({
         patterns: [
           { from: 'robots.txt', to: 'robots.txt' },
