@@ -8,7 +8,7 @@ import styles from './Website.module.scss';
 import Filters, { FiltersState } from '../Filters/Filters';
 import TagBadge from '../../ui/TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-import { SyncWebsiteOutput } from '../../../services/apiClient';
+import { Api } from '../../../services/apiClient';
 
 // TODO: Add plashechka
 export type Props = {
@@ -20,9 +20,9 @@ export type Props = {
   // }>;
   isLoading: boolean;
   isPending: boolean;
-  packages: SyncWebsiteOutput['packages'];
-  vulnerabilities: SyncWebsiteOutput['vulnerabilities'];
-  webpages: SyncWebsiteOutput['webpages'];
+  packages: Api.WebPagePackage[];
+  vulnerabilities: Record<string, Api.Vulnerability[]>;
+  webpages: Api.WebPage[];
   onFiltersApply: SubmitHandler<FiltersState>;
 };
 

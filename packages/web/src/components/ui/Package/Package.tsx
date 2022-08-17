@@ -8,13 +8,13 @@ import Dropdown from '../Dropdown/Dropdown';
 import Vulnerability from '../Vulnerability/Vulnerability';
 import TagBadge from '../TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-import { SyncWebsiteOutput } from '../../../services/apiClient';
+import { Api } from '../../../services/apiClient';
 
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
-  pkg: SyncWebsiteOutput['packages'][number];
-  vulnerabilities: SyncWebsiteOutput['vulnerabilities'][string];
+  pkg: Api.WebPagePackage;
+  vulnerabilities: Api.Vulnerability[];
 };
 
 export default function Package({ className, variant = 'grid', pkg, vulnerabilities }: Props) {

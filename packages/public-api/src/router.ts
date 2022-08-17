@@ -10,7 +10,7 @@ import {
   syncWebPage,
 } from './website/service';
 import { getAffectingVulnerabilities } from './vulnerabilities/vulnerabilities';
-import { toSerializable } from '@gradejs-public/shared';
+import { SerializableEntity, toSerializable } from '@gradejs-public/shared';
 
 const hostnameRe =
   /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$/;
@@ -18,6 +18,21 @@ const hostnameRe =
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
 type Context = trpc.inferAsyncReturnType<typeof createContext>;
+
+export namespace Api {
+  export type WebPage = SerializableEntity<
+    Awaited<ReturnType<typeof getWebPagesByHostname>>[number]
+  >;
+  export type WebPagePackage = SerializableEntity<
+    Awaited<ReturnType<typeof getPackagesByHostname>>[number]
+  >;
+  export type WebSiteParseResult = SerializableEntity<
+    Awaited<ReturnType<typeof requestWebPageParse>>
+  >;
+  export type Vulnerability = SerializableEntity<
+    Awaited<ReturnType<typeof getAffectingVulnerabilities>>[string][number]
+  >;
+}
 
 export const appRouter = trpc
   .router<Context>()

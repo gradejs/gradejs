@@ -1,6 +1,6 @@
 import { createTRPCClient } from '@trpc/client';
 import type { inferProcedureOutput } from '@trpc/server';
-import type { AppRouter } from '../../../public-api/src/router';
+import type { AppRouter, Api } from '../../../public-api/src/router';
 
 // Helper types
 export type TQuery = keyof AppRouter['_def']['queries'];
@@ -23,4 +23,5 @@ export const client = createTRPCClient<AppRouter>({
 export type HealthcheckOutput = InferQueryOutput<'healthcheck'>;
 export type SyncWebsiteOutput = InferMutationOutput<'syncWebsite'>;
 export type RequestParseWebsiteOutput = InferMutationOutput<'requestParseWebsite'>;
+export type { Api };
 export type ApiClient = typeof client;
