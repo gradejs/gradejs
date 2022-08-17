@@ -25,28 +25,19 @@ export const appRouter = trpc
       return 'gradejs-public-api';
     },
   })
-  .query('getWebsite', {
-    input: z.string().regex(hostnameRe),
-    async resolve({ input: hostname }) {
-      const webpages = await getWebPagesByHostname(hostname);
-
-      if (webpages.length === 0) {
-        throw new NotFoundError();
-      }
-
-      const packages = await getPackagesByHostname(hostname);
-      const vulnerabilities = await getAffectingVulnerabilities(packages);
-
-      return { webpages, packages, vulnerabilities };
-    },
-  })
   .mutation('syncWebsite', {
     input: z.string().regex(hostnameRe),
     async resolve({ input: hostname }) {
       const webpages = await getWebPagesByHostname(hostname);
-      if (webpages.length > 0) {
-        await Promise.all(webpages.map(syncWebPage));
+      if (webpages.length === 0) {
+        throw new NotFoundError();
       }
+
+      await Promise.all(webpages.map(syncWebPage));
+      const packages = await getPackagesByHostname(hostname);
+      const vulnerabilities = await getAffectingVulnerabilities(packages);
+
+      return { webpages, packages, vulnerabilities };
     },
   })
   .mutation('requestParseWebsite', {

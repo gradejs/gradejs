@@ -17,25 +17,27 @@ export function WebsiteResultsPage() {
   const dispatch = useAppDispatch();
   const { webpages, vulnerabilities } = useAppSelector(selectors.default);
   const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
-  const isProtected = useAppSelector(selectors.isProtected);
-  const isPending = useAppSelector(selectors.isPending);
-  const isLoading = useAppSelector(selectors.isLoading);
-  const isError = useAppSelector(selectors.isFailed);
-  const isInvalidResult = useAppSelector(selectors.isInvalid);
+  const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
+    selectors.stateFlags
+  );
   const setFilters = (filters: FiltersState) => dispatch(applyFilters(filters));
 
   useEffect(() => {
     if (hostname && !isLoading && isPending) {
-      dispatch(getWebsite(hostname));
+      const promise = dispatch(getWebsite(hostname));
+      return function cleanup() {
+        promise.abort();
+      };
     }
-  });
+    return () => {};
+  }, [hostname]);
 
   // TODO: properly handle history/routing
   useEffect(() => {
-    if (!hostname || isError) {
+    if (!hostname || isFailed) {
       navigate('/', { replace: true });
     }
-  });
+  }, [hostname]);
 
   if (isProtected) {
     trackCustomEvent('HostnamePage', 'SiteProtected');
@@ -56,7 +58,7 @@ export function WebsiteResultsPage() {
     );
   }
 
-  if (isInvalidResult) {
+  if (isInvalid) {
     trackCustomEvent('HostnamePage', 'SiteInvalid');
     return (
       <ErrorLayout

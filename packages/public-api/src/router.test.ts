@@ -21,11 +21,15 @@ const api = createSupertestApi(createApp);
 
 describe('routes / heathCheck', () => {
   it('should return valid response', async () => {
-    await api.get('/healthcheck').send().expect(200);
+    await api.get('/healthcheck').set('Origin', 'http://localhost:3000').send().expect(200);
   });
 
   it('should return not found error', async () => {
-    const response = await api.get('/any-invalid-route').send().expect(404);
+    const response = await api
+      .get('/any-invalid-route')
+      .set('Origin', 'http://localhost:3000')
+      .send()
+      .expect(404);
 
     expect(response.body).toMatchObject({
       error: {
@@ -50,6 +54,7 @@ describe('routes / website', () => {
 
     const response = await api
       .post('/requestParseWebsite')
+      .set('Origin', 'http://localhost:3000')
       .send(JSON.stringify(siteUrl))
       .expect(200);
     const webpage = await getRepository(WebPage).findOne({ url: siteUrl });
@@ -118,8 +123,9 @@ describe('routes / website', () => {
     });
 
     const response = await api
-      .get(`/getWebsite`)
-      .query({ input: JSON.stringify(hostname) })
+      .post('/syncWebsite')
+      .set('Origin', 'http://localhost:3000')
+      .send(JSON.stringify(hostname))
       .expect(200);
 
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(0);
@@ -187,10 +193,10 @@ describe('routes / website', () => {
       } as internalApi.Website)
     );
 
-    await api.post('/syncWebsite').send(JSON.stringify(hostname)).expect(200);
     const response = await api
-      .get(`/getWebsite`)
-      .query({ input: JSON.stringify(hostname) })
+      .post('/syncWebsite')
+      .set('Origin', 'http://localhost:3000')
+      .send(JSON.stringify(hostname))
       .expect(200);
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(1);
     expect(fetchUrlPackagesMock).toHaveBeenCalledWith(siteUrl);

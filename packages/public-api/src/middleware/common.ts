@@ -3,9 +3,9 @@ import createCorsMiddleware from 'cors';
 import { Request, Response, NextFunction } from 'express';
 import { NotFoundError, respondWithError } from './response';
 
-const whitelist = {
+const originAllowList = {
   production: ['https://gradejs.com'],
-  staging: ['https://staging.gradejs.com'],
+  staging: ['https://staging.gradejs.com', 'http://localhost:3000'],
   development: ['http://localhost:3000'],
 };
 
@@ -22,7 +22,7 @@ const getNodeEnv = () => {
 export const cors = createCorsMiddleware({
   maxAge: 1800,
   origin: function (origin, callback) {
-    if (origin && whitelist[getNodeEnv()].includes(origin)) {
+    if (origin && originAllowList[getNodeEnv()].includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

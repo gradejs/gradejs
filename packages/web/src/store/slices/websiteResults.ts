@@ -27,12 +27,10 @@ const hasPendingPages = (result: DetectionResult) =>
 
 const getWebsite = createAsyncThunk('websiteResults/getWebsite', async (hostname: string) => {
   const loadStartTime = Date.now();
-  await client.mutation('syncWebsite', hostname);
-  let results = await client.query('getWebsite', hostname);
+  let results = await client.mutation('syncWebsite', hostname);
   while (hasPendingPages(results)) {
     await sleep(5000);
-    await client.mutation('syncWebsite', hostname);
-    results = await client.query('getWebsite', hostname);
+    results = await client.mutation('syncWebsite', hostname);
   }
   // TODO: not sure if this should be here
   trackCustomEvent('HostnamePage', 'WebsiteLoaded', {

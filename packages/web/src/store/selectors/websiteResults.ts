@@ -10,6 +10,10 @@ import { RootState } from '../';
 import { FiltersState } from '../../components/layouts/Filters/Filters';
 import { SeverityWeightMap } from '../../components/ui/Vulnerability/Vulnerability';
 
+const getFlags = (state: RootState) => ({
+  isLoading: state.webpageResults.isLoading,
+  isFailed: state.webpageResults.isFailed,
+});
 const getPackages = (state: RootState) => state.webpageResults.detectionResult.packages;
 const getWebpages = (state: RootState) => state.webpageResults.detectionResult.webpages;
 const getVulnerabilities = (state: RootState) =>
@@ -95,22 +99,15 @@ export const selectors = {
     webpages,
     vulnerabilities,
   })),
-  isLoading: (state: RootState) => state.webpageResults.isLoading,
-  isPending: createSelector(
-    [getWebpages],
-    (webpages) => webpages.length === 0 || webpages.some((item) => item.status === 'pending')
-  ),
-  isProtected: createSelector([getWebpages], (webpages) =>
-    webpages.some((item) => item.status === 'protected')
-  ),
-  isFailed: (state: RootState) => state.webpageResults.isFailed,
-  isInvalid: createSelector(
-    [getWebpages, getPackages],
-    (webpages, packages) =>
+  stateFlags: createSelector([getWebpages, getPackages, getFlags], (webpages, packages, flags) => ({
+    ...flags,
+    isInvalid:
       packages.length === 0 &&
       webpages.length > 0 &&
-      webpages.some((item) => item.status === 'pending')
-  ),
+      webpages.some((item) => item.status === 'pending'),
+    isPending: webpages.length === 0 || webpages.some((item) => item.status === 'pending'),
+    isProtected: webpages.some((item) => item.status === 'protected'),
+  })),
   packagesSortedAndFiltered: createSelector(
     [getPackages, getVulnerabilities, getSorting, getFilter, getPackageNameFilter],
     (packages, vulnerabilities, sorting, filter, packageNameFilter) =>
