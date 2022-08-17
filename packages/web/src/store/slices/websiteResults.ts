@@ -31,7 +31,7 @@ const getWebsite = createAsyncThunk('websiteResults/getWebsite', async (hostname
     await sleep(5000);
     results = await client.mutation('syncWebsite', hostname);
   }
-  // TODO: not sure if this should be here
+  // TODO: move to tracking middleware?
   trackCustomEvent('HostnamePage', 'WebsiteLoaded', {
     value: Date.now() - loadStartTime,
   });

@@ -40,6 +40,7 @@ export function WebsiteResultsPage() {
   }, [hostname]);
 
   if (isProtected) {
+    // TODO: move to tracking middleware?
     trackCustomEvent('HostnamePage', 'SiteProtected');
     return (
       <ErrorLayout
@@ -59,6 +60,7 @@ export function WebsiteResultsPage() {
   }
 
   if (isInvalid) {
+    // TODO: move to tracking middleware?
     trackCustomEvent('HostnamePage', 'SiteInvalid');
     return (
       <ErrorLayout
