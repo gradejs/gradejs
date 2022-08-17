@@ -7,6 +7,7 @@ export enum Env {
   // AWS
   AwsRegion = 'AWS_REGION',
   SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
+  SqsLocalPort = 'SQS_LOCAL_PORT',
 
   // GitHub
   GitHubAccessToken = 'GITHUB_ACCESS_TOKEN',
@@ -24,6 +25,7 @@ export const isDevelopment = () => getNodeEnv() === 'development';
 export const isTest = () => getNodeEnv() === 'test';
 
 export const getInternalApiOrigin = () => getEnv(Env.InternalApiOrigin);
+export const getSqsLocalPort = () => Number(getEnv(Env.SqsLocalPort, '0'));
 
 export const getGitHubAccessToken = () => getEnv(Env.GitHubAccessToken);
 

@@ -1,11 +1,23 @@
-import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
+import { SQSClient, SendMessageCommand, SQSClientConfig } from '@aws-sdk/client-sqs';
 import { WorkerTaskPayloadMap, WorkerTaskType } from '../worker/types';
-import { getEnv, Env } from './env';
+import { getEnv, Env, getSqsLocalPort } from './env';
 
 let sqsClient: SQSClient | undefined;
 function getSQSClient() {
   if (!sqsClient) {
-    sqsClient = new SQSClient({ region: getEnv(Env.AwsRegion) });
+    let config: SQSClientConfig = { region: getEnv(Env.AwsRegion) };
+    if (getSqsLocalPort() > 0) {
+      // Local development override
+      config = {
+        endpoint: {
+          protocol: 'http',
+          hostname: 'localhost',
+          port: getSqsLocalPort(),
+          path: '/',
+        },
+      };
+    }
+    sqsClient = new SQSClient(config);
   }
 
   return sqsClient;

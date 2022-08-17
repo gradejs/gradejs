@@ -1,5 +1,4 @@
 const path = require('path');
-const dotenv = require('dotenv');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -7,6 +6,11 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 const srcDir = 'src';
 const distDir = 'dist';
+
+const env = ['API_ORIGIN', 'PLAUSIBLE_DOMAIN', 'GA_ID', 'DUMP_ANALYTICS'].reduce((acc, val) => {
+  acc[val] = `"${process.env[val]}"`;
+  return acc;
+}, {});
 
 module.exports = (_, argv) => {
   const { mode = 'development' } = argv;
@@ -74,19 +78,7 @@ module.exports = (_, argv) => {
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'index.html'),
       }),
-      new webpack.DefinePlugin({
-        ...(isDevelopment ? { 'process.env': JSON.stringify(dotenv.config().parsed) } : {}),
-      }),
-      ...(isDevelopment
-        ? []
-        : [
-            new webpack.EnvironmentPlugin({
-              API_ORIGIN: 'https://staging.api.gradejs.com',
-              GA_ID: '',
-              PLAUSIBLE_DOMAIN: '',
-              DUMP_ANALYTICS: '',
-            }),
-          ]),
+      new webpack.EnvironmentPlugin(env),
       new CopyPlugin({
         patterns: [
           { from: 'robots.txt', to: 'robots.txt' },

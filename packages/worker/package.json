@@ -8,7 +8,8 @@
     "build": "tsc --project tsconfig.build.json",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "jest",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "debug": "node --inspect=9202 build/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.87.0",
