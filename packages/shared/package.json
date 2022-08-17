@@ -8,7 +8,7 @@
     "prettier": "prettier --check ./src",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "build": "tsc --project tsconfig.build.json",
-    "test": "jest",
+    "test": "CORS_ALLOWED_ORIGIN=http://localhost:3000 jest",
     "migration:run": "ts-node scripts/migrateDatabase.ts",
     "migration:create": "typeorm migration:create -d src/database/migrations -n"
   },

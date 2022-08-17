@@ -2,27 +2,13 @@ import { ZodError } from 'zod';
 import createCorsMiddleware from 'cors';
 import { Request, Response, NextFunction } from 'express';
 import { NotFoundError, respondWithError } from './response';
+import { getCorsAllowedOrigins } from '@gradejs-public/shared';
 
-const originAllowList = {
-  production: ['https://gradejs.com'],
-  staging: ['https://staging.gradejs.com', 'http://localhost:3000'],
-  development: ['http://localhost:3000'],
-};
-
-const getNodeEnv = () => {
-  if (
-    !process.env.NODE_ENV ||
-    !['production', 'staging', 'development'].includes(process.env.NODE_ENV)
-  ) {
-    return 'development';
-  }
-  return process.env.NODE_ENV as 'production' | 'staging' | 'development';
-};
-
+const originAllowList = getCorsAllowedOrigins();
 export const cors = createCorsMiddleware({
   maxAge: 1800,
   origin: function (origin, callback) {
-    if (origin && originAllowList[getNodeEnv()].includes(origin)) {
+    if (origin && originAllowList.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
