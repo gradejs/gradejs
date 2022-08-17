@@ -1,14 +1,11 @@
 import semver from 'semver';
 import memoize from 'lodash.memoize';
 import { createSelector } from '@reduxjs/toolkit';
-import {
-  GithubAdvisorySeverity,
-  WebPagePackage,
-  PackageVulnerabilityData,
-} from '@gradejs-public/shared';
+import { GithubAdvisorySeverity } from '@gradejs-public/shared';
 import { RootState } from '../';
 import { FiltersState } from '../../components/layouts/Filters/Filters';
 import { SeverityWeightMap } from '../../components/ui/Vulnerability/Vulnerability';
+import type { SyncWebsiteOutput } from '../../services/apiClient';
 
 const getFlags = (state: RootState) => ({
   isLoading: state.webpageResults.isLoading,
@@ -22,11 +19,12 @@ const getSorting = (state: RootState) => state.webpageResults.filters.sort;
 const getFilter = (state: RootState) => state.webpageResults.filters.filter;
 const getPackageNameFilter = (state: RootState) => state.webpageResults.filters.filterPackageName;
 
+type WebPagePackage = SyncWebsiteOutput['packages'][number];
 const compareByPopularity = (left: WebPagePackage, right: WebPagePackage) =>
   (right.registryMetadata?.monthlyDownloads ?? 0) - (left.registryMetadata?.monthlyDownloads ?? 0);
 
 const pickHighestSeverity = memoize(
-  (packageName: string, vulnerabilities: Record<string, PackageVulnerabilityData[]>) =>
+  (packageName: string, vulnerabilities: SyncWebsiteOutput['vulnerabilities']) =>
     (vulnerabilities[packageName] ?? [])
       .map((it) => it.severity)
       .filter((it): it is GithubAdvisorySeverity => !!it)
@@ -40,7 +38,7 @@ const sortingModes: Record<
   FiltersState['sort'],
   (
     packages: WebPagePackage[],
-    vulnerabilities: Record<string, PackageVulnerabilityData[]>
+    vulnerabilities: SyncWebsiteOutput['vulnerabilities']
   ) => WebPagePackage[]
 > = {
   // TODO
@@ -73,7 +71,7 @@ const filterModes: Record<
   FiltersState['filter'],
   (
     packages: WebPagePackage[],
-    vulnerabilities: Record<string, PackageVulnerabilityData[]>,
+    vulnerabilities: SyncWebsiteOutput['vulnerabilities'],
     packageName?: string
   ) => WebPagePackage[]
 > = {

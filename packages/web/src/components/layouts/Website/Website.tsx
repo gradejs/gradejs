@@ -8,7 +8,7 @@ import styles from './Website.module.scss';
 import Filters, { FiltersState } from '../Filters/Filters';
 import TagBadge from '../../ui/TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-import { WebPage, WebPagePackage, PackageVulnerabilityData } from '@gradejs-public/shared';
+import { SyncWebsiteOutput } from '../../../services/apiClient';
 
 // TODO: Add plashechka
 export type Props = {
@@ -20,9 +20,9 @@ export type Props = {
   // }>;
   isLoading: boolean;
   isPending: boolean;
-  packages: WebPagePackage[];
-  vulnerabilities: Record<string, PackageVulnerabilityData[]>;
-  webpages: WebPage[];
+  packages: SyncWebsiteOutput['packages'];
+  vulnerabilities: SyncWebsiteOutput['vulnerabilities'];
+  webpages: SyncWebsiteOutput['webpages'];
   onFiltersApply: SubmitHandler<FiltersState>;
 };
 

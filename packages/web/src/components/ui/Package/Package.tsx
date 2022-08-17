@@ -8,13 +8,13 @@ import Dropdown from '../Dropdown/Dropdown';
 import Vulnerability from '../Vulnerability/Vulnerability';
 import TagBadge from '../TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-import { WebPagePackage, PackageVulnerabilityData } from '@gradejs-public/shared';
+import { SyncWebsiteOutput } from '../../../services/apiClient';
 
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
-  pkg: WebPagePackage;
-  vulnerabilities: PackageVulnerabilityData[];
+  pkg: SyncWebsiteOutput['packages'][number];
+  vulnerabilities: SyncWebsiteOutput['vulnerabilities'][string];
 };
 
 export default function Package({ className, variant = 'grid', pkg, vulnerabilities }: Props) {

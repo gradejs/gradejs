@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { WebPage, WebPagePackage, PackageVulnerabilityData } from '@gradejs-public/shared';
 import { DefaultFiltersAndSorters, FiltersState } from '../../components/layouts/Filters/Filters';
-import { client } from '../../services/apiClient';
+import { client, SyncWebsiteOutput } from '../../services/apiClient';
 import { trackCustomEvent } from '../../services/analytics';
 
-const defaultDetectionResult = {
-  packages: [] as WebPagePackage[],
-  vulnerabilities: {} as Record<string, PackageVulnerabilityData[]>,
-  webpages: [] as WebPage[],
+const defaultDetectionResult: SyncWebsiteOutput = {
+  packages: [],
+  vulnerabilities: {},
+  webpages: [],
 };
 
 const initialState = {
