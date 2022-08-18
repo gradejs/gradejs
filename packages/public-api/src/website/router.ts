@@ -6,7 +6,7 @@ import {
   syncWebPage,
 } from './service';
 import { getAffectingVulnerabilities } from '../vulnerabilities/vulnerabilities';
-import { TypedRouter } from '../api';
+import { TypedRouter } from '../typed_router';
 
 const router = new TypedRouter();
 

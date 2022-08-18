@@ -10,6 +10,9 @@
     "start": "node build/index.js",
     "debug": "node --inspect=9201 build/index.js"
   },
+  "exports": {
+    "api": "./src/api.ts"
+  },
   "engines": {
     "node": "^16.14.2"
   },

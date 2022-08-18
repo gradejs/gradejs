@@ -1,8 +1,7 @@
 import { WebPage, WebPagePackage } from '@gradejs-public/shared';
-import { Router, Request, Response, NextFunction } from 'express';
 import { ApiPackageVulnerabilityData } from './vulnerabilities/vulnerabilities';
 
-type RouteDefinition = {
+export type RouteDefinition = {
   '/website/:hostname': {
     GET: {
       path: {
@@ -25,69 +24,27 @@ type RouteDefinition = {
   };
 };
 
-type Routes = keyof RouteDefinition;
-type GetRoutes = PickRoutesByMethod<'GET'>;
-type PostRoutes = PickRoutesByMethod<'POST'>;
+export type CommonRequestOptions = {
+  path?: Record<string, unknown>;
+  query?: Record<string, unknown>;
+  body?: Record<string, unknown>;
+};
+
+export type Routes = keyof RouteDefinition;
+export type GetRoutes = PickRoutesByMethod<'GET'>;
+export type PostRoutes = PickRoutesByMethod<'POST'>;
+
+// Server entities
+export { WebPage, WebPagePackage };
+
+export type RouteProperty<
+  Route extends Routes,
+  Method extends keyof RouteDefinition[Route],
+  PropName
+> = PropName extends keyof RouteDefinition[Route][Method]
+  ? RouteDefinition[Route][Method][PropName]
+  : never;
 
 type PickRoutesByMethod<Method> = {
   [Route in Routes]: keyof RouteDefinition[Route] extends Method ? Route : never;
 }[Routes];
-
-type RouteProperty<Route extends Routes, Method extends keyof RouteDefinition[Route], PropName> =
-  PropName extends keyof RouteDefinition[Route][Method]
-    ? RouteDefinition[Route][Method][PropName]
-    : never;
-
-type RouteRequest<Route extends Routes, Method> = Method extends keyof RouteDefinition[Route]
-  ? Request<
-      RouteProperty<Route, Method, 'path'>,
-      unknown,
-      RouteProperty<Route, Method, 'body'>,
-      RouteProperty<Route, Method, 'query'>
-    >
-  : Request;
-
-type RouteHandler<Route extends Routes, Method> = Method extends keyof RouteDefinition[Route]
-  ? (req: RouteRequest<Route, Method>) => Promise<RouteProperty<Route, Method, 'response'>>
-  : never;
-
-export class TypedRouter {
-  expressRouter: Router;
-
-  constructor() {
-    this.expressRouter = Router();
-  }
-
-  get<Route extends GetRoutes>(route: Route, handler: RouteHandler<Route, 'GET'>) {
-    this.handle('GET', route, handler);
-  }
-
-  post<Route extends PostRoutes>(route: Route, handler: RouteHandler<Route, 'POST'>) {
-    this.handle('POST', route, handler);
-  }
-
-  handle<Route extends Routes, Method extends keyof RouteDefinition[Route]>(
-    method: Method,
-    route: Route,
-    handler: RouteHandler<Route, Method>
-  ) {
-    const expressHandler = async (req: any, res: Response, next: NextFunction) => {
-      try {
-        const response = await handler(req);
-        res.json(response);
-      } catch (e) {
-        next(e);
-      }
-    };
-
-    switch (method.toString()) {
-      case 'GET':
-        this.expressRouter.get(route, expressHandler);
-        break;
-
-      case 'POST':
-        this.expressRouter.post(route, expressHandler);
-        break;
-    }
-  }
-}
