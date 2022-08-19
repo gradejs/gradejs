@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import WebsiteHostnamePage from './pages/WebsiteHostnamePage';
+import { HomePage } from './pages/Home';
+import { WebsiteResultsPage } from './pages/WebsiteResults';
 import { initAnalytics } from '../services/analytics';
 const locationChangeHandler = initAnalytics();
 
@@ -14,13 +14,13 @@ const locationChangeHandler = initAnalytics();
  *   <App />
  * </BrowserRouter>
  */
-export default function App() {
+export function App() {
   const location = useLocation();
   locationChangeHandler(location.pathname);
   return (
     <Routes>
       <Route index element={<HomePage />} />
-      <Route path='/w/:hostname' element={<WebsiteHostnamePage />} />
+      <Route path='/w/:hostname' element={<WebsiteResultsPage />} />
       <Route path='*' element={<Navigate replace to='/' />} />
     </Routes>
   );

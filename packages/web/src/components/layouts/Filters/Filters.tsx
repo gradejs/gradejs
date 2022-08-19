@@ -9,22 +9,22 @@ import styles from './Filters.module.scss';
 import { trackCustomEvent } from '../../../services/analytics';
 
 export type Props = {
-  onSubmit: SubmitHandler<FormData>;
+  onSubmit: SubmitHandler<FiltersState>;
 };
 
-export type FormData = {
+export type FiltersState = {
   filter: 'all' | 'outdated' | 'vulnerable' | 'name';
   sort: 'name' | 'size' | 'severity' | 'importDepth' | 'packagePopularity' | 'confidenceScore';
   filterPackageName?: string;
 };
 
-export const DefaultFiltersAndSorters: FormData = {
+export const DefaultFiltersAndSorters: FiltersState = {
   filter: 'all',
-  sort: 'severity',
+  sort: 'packagePopularity',
 };
 
 export default function Filters({ onSubmit }: Props) {
-  const { register, handleSubmit, reset, watch } = useForm<FormData>({
+  const { register, handleSubmit, reset, watch } = useForm<FiltersState>({
     defaultValues: DefaultFiltersAndSorters,
   });
   const watchFilterByName = watch('filter');

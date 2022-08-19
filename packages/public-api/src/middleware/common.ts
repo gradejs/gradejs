@@ -1,11 +1,20 @@
-import { ValidationError } from 'joi';
+import { ZodError } from 'zod';
 import createCorsMiddleware from 'cors';
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { NotFoundError, respondWithError } from './response';
+import { getCorsAllowedOrigins } from '@gradejs-public/shared';
 
-// TODO: add whitelist origins
-export const cors = createCorsMiddleware({ maxAge: 1800 });
-export const parseJson = express.json();
+const originAllowList = getCorsAllowedOrigins();
+export const cors = createCorsMiddleware({
+  maxAge: 1800,
+  origin: function (origin, callback) {
+    if (origin && originAllowList.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+});
 
 /**
  * Handles any unknown routes by default
@@ -25,20 +34,10 @@ export function errorHandlerMiddleware(
   _next: NextFunction
 ) {
   // Log only useful errors
-  if (!(error instanceof NotFoundError) && !(error instanceof ValidationError)) {
+  if (!(error instanceof NotFoundError) && !(error instanceof ZodError)) {
     // TODO: add logger
     console.error(error, req);
   }
 
   respondWithError(res, error);
-}
-
-export function wrapTryCatch(func: (req: Request, res: Response) => Promise<void>) {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await func(req, res);
-    } catch (error) {
-      next(error);
-    }
-  };
 }

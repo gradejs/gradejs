@@ -1,20 +1,19 @@
 import express from 'express';
-import {
-  endpointMissingMiddleware,
-  errorHandlerMiddleware,
-  parseJson,
-  cors,
-} from './middleware/common';
-import healthCheckRouter from './healthcheck/router';
-import websiteRouter from './website/router';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { endpointMissingMiddleware, errorHandlerMiddleware, cors } from './middleware/common';
+import { appRouter, createContext } from './router';
 
 export function createApp() {
   const app = express();
-
   app.use(cors);
-  app.use(parseJson);
-  app.use(healthCheckRouter);
-  app.use(websiteRouter);
+
+  app.use(
+    '/',
+    createExpressMiddleware({
+      router: appRouter,
+      createContext,
+    })
+  );
 
   // Error handling
   app.use(endpointMissingMiddleware);

@@ -5,31 +5,16 @@ import React from 'react';
 import semver from 'semver';
 import styles from './Package.module.scss';
 import Dropdown from '../Dropdown/Dropdown';
-import Vulnerability, { PackageVulnerabilityData } from '../Vulnerability/Vulnerability';
+import Vulnerability from '../Vulnerability/Vulnerability';
 import TagBadge from '../TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-
-export type DetectedPackageData = {
-  packageName: string;
-  possiblePackageVersions: string[];
-  packageVersionRange: string;
-  packageMetadata?: {
-    approximateByteSize: number | null;
-  };
-  registryMetadata?: {
-    latestVersion: string;
-    description?: string;
-    repositoryUrl?: string;
-    homepageUrl?: string;
-    monthlyDownloads?: number;
-  };
-};
+import { Api } from '../../../services/apiClient';
 
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
-  pkg: DetectedPackageData;
-  vulnerabilities: PackageVulnerabilityData[];
+  pkg: Api.WebPagePackage;
+  vulnerabilities: Api.Vulnerability[];
 };
 
 export default function Package({ className, variant = 'grid', pkg, vulnerabilities }: Props) {

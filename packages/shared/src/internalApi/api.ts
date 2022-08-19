@@ -79,6 +79,8 @@ export async function fetchEndpoint<T>(
     }
   }
 
+  // console.log('Request to internal API: ', requestUrl.toString(), requestInit);
+
   return fetch(requestUrl.toString(), requestInit)
     .then((response) => response.json())
     .then((json: any) => {

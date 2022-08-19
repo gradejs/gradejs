@@ -49,6 +49,7 @@ echo "Starting public api package"
 AWS_REGION=test PORT=8083 DB_URL=postgres://gradejs:gradejs@localhost:5432/gradejs-public \
   INTERNAL_API_ORIGIN=http://localhost:8082 SQS_WORKER_QUEUE_URL=/test/frontend-queue \
   SQS_LOCAL_PORT=29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
+  CORS_ALLOWED_ORIGIN=http://localhost:3000 \
   npm run debug --prefix packages/public-api 2>&1 &
 API_PID=$!
 

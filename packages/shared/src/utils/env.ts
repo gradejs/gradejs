@@ -14,9 +14,17 @@ export enum Env {
 
   // Internal
   InternalApiOrigin = 'INTERNAL_API_ORIGIN',
+
+  CorsAllowedOrigin = 'CORS_ALLOWED_ORIGIN',
 }
 
-export const getNodeEnv = () => getEnvUnsafe(Env.Node) ?? 'development';
+export const getNodeEnv = () => {
+  const env = getEnvUnsafe(Env.Node);
+  if (!env || !['production', 'staging', 'development', 'test'].includes(env)) {
+    return 'development';
+  }
+  return env as 'production' | 'staging' | 'development' | 'test';
+};
 export const getPort = (defaultPort: number) => Number(getEnv(Env.Port, defaultPort.toString()));
 
 export const isProduction = () => getNodeEnv() === 'production';
@@ -28,6 +36,15 @@ export const getInternalApiOrigin = () => getEnv(Env.InternalApiOrigin);
 export const getSqsLocalPort = () => Number(getEnv(Env.SqsLocalPort, '0'));
 
 export const getGitHubAccessToken = () => getEnv(Env.GitHubAccessToken);
+
+export const getCorsAllowedOrigins = () => {
+  const origins = getEnvUnsafe(Env.CorsAllowedOrigin);
+  if (!origins) {
+    return [];
+  }
+
+  return origins.split(',').map((origin) => origin.trim());
+};
 
 export function getEnv(name: string, defaultValue?: string) {
   const value = process.env[name];

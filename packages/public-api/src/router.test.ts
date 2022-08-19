@@ -1,3 +1,4 @@
+import { TRPC_ERROR_CODES_BY_KEY } from '@trpc/server/rpc';
 import {
   internalApi,
   PackageMetadata,
@@ -11,12 +12,32 @@ import {
   useTransactionalTesting,
 } from '@gradejs-public/test-utils';
 import { getRepository } from 'typeorm';
-import { createApp } from '../app';
+import { createApp } from './app';
 
 useDatabaseConnection();
 useTransactionalTesting();
 
 const api = createSupertestApi(createApp);
+
+describe('routes / heathCheck', () => {
+  it('should return valid response', async () => {
+    await api.get('/healthcheck').set('Origin', 'http://localhost:3000').send().expect(200);
+  });
+
+  it('should return not found error', async () => {
+    const response = await api
+      .get('/any-invalid-route')
+      .set('Origin', 'http://localhost:3000')
+      .send()
+      .expect(404);
+
+    expect(response.body).toMatchObject({
+      error: {
+        code: TRPC_ERROR_CODES_BY_KEY.NOT_FOUND,
+      },
+    });
+  });
+});
 
 describe('routes / website', () => {
   it('should initiate webpage parsing', async () => {
@@ -31,17 +52,23 @@ describe('routes / website', () => {
       } as internalApi.Website)
     );
 
-    const response = await api.post('/webpage').send({ url: siteUrl }).expect(200);
+    const response = await api
+      .post('/requestParseWebsite')
+      .set('Origin', 'http://localhost:3000')
+      .send(JSON.stringify(siteUrl))
+      .expect(200);
     const webpage = await getRepository(WebPage).findOne({ url: siteUrl });
 
     expect(initiateUrlProcessingInternalMock).toHaveBeenCalledTimes(1);
     expect(initiateUrlProcessingInternalMock).toHaveBeenCalledWith(siteUrl);
     expect(response.body).toMatchObject({
-      data: {
-        id: expect.anything(),
-        url: siteUrl,
-        hostname: 'example.com',
-        status: 'pending',
+      result: {
+        data: {
+          id: expect.anything(),
+          url: siteUrl,
+          hostname: 'example.com',
+          status: 'pending',
+        },
       },
     });
 
@@ -95,29 +122,35 @@ describe('routes / website', () => {
       },
     });
 
-    const response = await api.get(`/website/${hostname}`).expect(200);
+    const response = await api
+      .post('/syncWebsite')
+      .set('Origin', 'http://localhost:3000')
+      .send(JSON.stringify(hostname))
+      .expect(200);
 
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(0);
     expect(response.body).toMatchObject({
-      data: {
-        webpages: webpageInsert.generatedMaps,
-        packages: [
-          {
-            ...packageInsert.generatedMaps[0],
-            registryMetadata: packageMetadataInsert.generatedMaps[0],
-          },
-        ],
-        vulnerabilities: {
-          react: [
+      result: {
+        data: {
+          webpages: webpageInsert.generatedMaps,
+          packages: [
             {
-              affectedPackageName: 'react',
-              affectedVersionRange: '>=17.0.0 <18.0.0',
-              osvId: 'GRJS-test-id',
-              detailsUrl: `https://github.com/advisories/GRJS-test-id`,
-              summary: 'Test summary',
-              severity: 'HIGH',
+              ...packageInsert.generatedMaps[0],
+              registryMetadata: packageMetadataInsert.generatedMaps[0],
             },
           ],
+          vulnerabilities: {
+            react: [
+              {
+                affectedPackageName: 'react',
+                affectedVersionRange: '>=17.0.0 <18.0.0',
+                osvId: 'GRJS-test-id',
+                detailsUrl: `https://github.com/advisories/GRJS-test-id`,
+                summary: 'Test summary',
+                severity: 'HIGH',
+              },
+            ],
+          },
         },
       },
     });
@@ -160,42 +193,48 @@ describe('routes / website', () => {
       } as internalApi.Website)
     );
 
-    const response = await api.get(`/website/${hostname}`).expect(200);
+    const response = await api
+      .post('/syncWebsite')
+      .set('Origin', 'http://localhost:3000')
+      .send(JSON.stringify(hostname))
+      .expect(200);
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(1);
     expect(fetchUrlPackagesMock).toHaveBeenCalledWith(siteUrl);
 
     expect(response.body).toMatchObject({
-      data: {
-        webpages: [
-          {
-            ...webpageInsert.generatedMaps.at(0),
-            status: WebPage.Status.Processed,
-            updatedAt: expect.anything(),
-          },
-        ],
-        packages: [
-          {
-            latestUrl: siteUrl,
-            hostname,
-            packageName: 'react',
-            possiblePackageVersions: ['17.0.2'],
-            packageVersionRange: '17.0.2',
-            packageMetadata: {
-              approximateByteSize: 1337,
+      result: {
+        data: {
+          webpages: [
+            {
+              ...webpageInsert.generatedMaps.at(0),
+              status: WebPage.Status.Processed,
+              updatedAt: expect.anything(),
             },
-          },
-          {
-            latestUrl: siteUrl,
-            hostname,
-            packageName: 'object-assign',
-            possiblePackageVersions: ['4.1.0', '4.1.1'],
-            packageVersionRange: '4.1.0 - 4.1.1',
-            packageMetadata: {
-              approximateByteSize: 42,
+          ],
+          packages: [
+            {
+              latestUrl: siteUrl,
+              hostname,
+              packageName: 'react',
+              possiblePackageVersions: ['17.0.2'],
+              packageVersionRange: '17.0.2',
+              packageMetadata: {
+                approximateByteSize: 1337,
+              },
             },
-          },
-        ],
-        vulnerabilities: {},
+            {
+              latestUrl: siteUrl,
+              hostname,
+              packageName: 'object-assign',
+              possiblePackageVersions: ['4.1.0', '4.1.1'],
+              packageVersionRange: '4.1.0 - 4.1.1',
+              packageMetadata: {
+                approximateByteSize: 42,
+              },
+            },
+          ],
+          vulnerabilities: {},
+        },
       },
     });
   });
