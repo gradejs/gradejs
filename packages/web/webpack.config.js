@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const SpritePlugin = require('svg-sprite-loader/plugin');
 
 const srcDir = 'src';
 const distDir = 'dist';
@@ -28,7 +29,16 @@ module.exports = (_, argv) => {
       rules: [
         {
           test: /\.(png|svg|jpg|jpeg|gif|woff(2)?|ttf|eot)$/i,
+          exclude: /sprite\/([^\/]*)\.svg$/,
           type: 'asset/resource',
+        },
+        {
+          test: /sprite\/([^\/]*)\.svg$/,
+          loader: 'svg-sprite-loader',
+          options: {
+            extract: true,
+            spriteFilename: 'sprite.svg',
+          },
         },
         {
           test: /\.(tsx|ts)?$/,
@@ -85,6 +95,7 @@ module.exports = (_, argv) => {
           { from: 'src/assets/sharing-image.png', to: 'static/sharing-image.png' },
         ],
       }),
+      new SpritePlugin(),
     ],
     devServer: {
       static: {

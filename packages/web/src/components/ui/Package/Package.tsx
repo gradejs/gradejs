@@ -1,6 +1,5 @@
 /* eslint-disable react/button-has-type */
 import clsx from 'clsx';
-import { External, Github } from 'components/icons';
 import React from 'react';
 import semver from 'semver';
 import styles from './Package.module.scss';
@@ -9,6 +8,7 @@ import Vulnerability from '../Vulnerability/Vulnerability';
 import TagBadge from '../TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
 import { Api } from '../../../services/apiClient';
+import { Icon } from '../Icon/Icon';
 
 export type Props = {
   className?: string;
@@ -63,7 +63,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
               onClick={() => trackCustomEvent('Package', 'ClickRepoUrl')}
               className={styles.externalLink}
             >
-              <Github />
+              <Icon kind={'githubLogo'} width={19} height={19} />
             </a>
           )}
           {homepageUrl && homepageUrl !== repositoryUrl && (
@@ -74,7 +74,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
               onClick={() => trackCustomEvent('Package', 'ClickHomepageUrl')}
               className={styles.externalLink}
             >
-              <External />
+              <Icon kind={'external'} width={19} height={19} />
             </a>
           )}
         </div>

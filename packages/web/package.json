@@ -43,6 +43,7 @@
     "sass-loader": "^12.1.0",
     "storybook": "^6.3.8",
     "style-loader": "^3.2.1",
+    "svg-sprite-loader": "git+https://github.com/ctizen/svg-sprite-loader.git#f73ede9aa3e357b7d671d2fb89e9d8846c0aa2ba",
     "ts-loader": "^9.2.5",
     "typescript": "^4.6.4",
     "webpack": "^5.52.1",
