@@ -11,7 +11,8 @@
     "build:storybook": "build-storybook -o dist/storybook",
     "build": "ts-node --swc webpack/build.ts --production",
     "dev:start": "./webpack/start_dev.sh",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "dev:build": "ts-node --swc webpack/build.ts"
   },
   "repository": {
     "type": "git",

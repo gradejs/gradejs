@@ -9,5 +9,6 @@
   ],
   "exclude": [
     "**/*.test.ts"
-  ]
+  ],
+  "files": ["global.d.ts"]
 }

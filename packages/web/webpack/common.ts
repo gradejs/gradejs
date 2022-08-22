@@ -1,6 +1,8 @@
 import { resolve } from 'path';
 import { Configuration, EnvironmentPlugin, DefinePlugin } from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const SpritePlugin = require('svg-sprite-loader/plugin');
 
 export const env = [
   'API_ORIGIN',
@@ -33,4 +35,5 @@ export const pluginsCommon = (mode: string, isServer: boolean) => [
     filename: mode === 'development' ? '[name].css' : '[name].[fullhash].css',
     chunkFilename: mode === 'development' ? '[id].css' : '[id].[fullhash].css',
   }),
+  new SpritePlugin(),
 ];

@@ -17,7 +17,16 @@ export const clientConfig: (mode: 'development' | 'production', watch: boolean) 
     rules: [
       {
         test: /\.(png|svg|jpg|jpeg|gif|woff(2)?|ttf|eot)$/i,
+        exclude: /sprite\/([^\/]*)\.svg$/,
         type: 'asset/resource',
+      },
+      {
+        test: /sprite\/([^\/]*)\.svg$/,
+        loader: 'svg-sprite-loader',
+        options: {
+          extract: true,
+          spriteFilename: 'sprite.svg',
+        },
       },
       {
         test: /\.(tsx|ts)?$/,
