@@ -22,10 +22,7 @@ export function initAnalytics() {
   }
 
   return (url?: string | URL | null) =>
-    pageView(
-      url ? (typeof url === 'string' ? url : url.pathname) : window.location.pathname,
-      window.location.pathname
-    );
+    pageView(url ? (typeof url === 'string' ? url : url.pathname) : window.location.pathname);
 }
 
 export function pageView(url: string = window.location.pathname, referrer?: string) {
