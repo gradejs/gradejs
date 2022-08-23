@@ -58,7 +58,7 @@ docker logs -f db
 
 - Open the [AWS RDS](https://us-east-2.console.aws.amazon.com/rds/home) page.
 - In the database list click on the `Create Database` button.
-- Select the following parameters: Standart create, Amazon Aurora PostgreSQL-Compatible Edition version 13, Production template.
+- Select the following parameters: Standard create, Amazon Aurora PostgreSQL-Compatible Edition version 13, Production template.
 - Enter the database name, for example `gradejs-public`.
 - Select a burstable DB instance class: `db.t3.medium`
 - Select `Don't create an Aurora Replica` option.
@@ -74,7 +74,7 @@ docker logs -f db
 4. Create [Amazon SQS](https://us-east-2.console.aws.amazon.com/sqs/v2/home) worker queues:
 
 - Open the page and click on the `Create queue` button.
-- Select the standart queue option and specify the name `gradejs-public`.
+- Select the standard queue option and specify the name `gradejs-public`.
 - Set the `visibility timeout` to 2 minutes.
 - Click on the `Create queue` button.
 
@@ -83,17 +83,17 @@ docker logs -f db
 - Open the [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) page and click on the `Create a new environment` button.
 - Select `Web server environment` option.
 - Type the newly created application name (`gradejs`).
-- Specify an environment name, for example `gradejs-public-api`. Leave the domain and description name fileds blank.
+- Specify an environment name, for example `gradejs-public-api`. Leave the domain and description name fields blank.
 - Select the latest version of Node.js 16 managed platform on Amazon Linux 2. The version minimal required version is 5.5.1.
 - Use the sample application code and click on the `Configure more options` button.
 - Select the `Custom configuration` configuration preset.
 - In the `Software` section click on the `Edit` button.
 - Enable the `CloudWatch` log streaming with a 5 day retention.
-- Specify the `AWS_REGION` environment variable. It should be the same as your current AWS environemnt. For example, `us-east-2`.
+- Specify the `AWS_REGION` environment variable. It should be the same as your current AWS environment. For example, `us-east-2`.
 - Specify the `DB_URL` environment variable. It should point to the newly created RDS database. For example: `postgres://postgres:<secret>@<hostname>/gradejs`.
 - Specify the `INTERNAL_API_ORIGIN` environment variable. Consider using our staging internal API origin: `http://fpjs-dev-gradejs-internal-api.eba-fybi4md5.us-east-1.elasticbeanstalk.com`
 - Specify the `SQS_WORKER_QUEUE_URL` queue. It should be a newly created `gradejs-backend` queue. For example `https://sqs.us-east-2.amazonaws.com/<account_id>/gradejs-backend`.
-- Specify the `AWS_REGION` environment variable. It should be the same as your current AWS environemnt. For example, `us-east-2`.
+- Specify the `CORS_ALLOWED_ORIGIN` variable. Use comma-separated URLs your API will be talking to, for example: `http://localhost:3000,https://staging.gradejs.com`.
 - Specify the `EB_START` environment variable: `api`.
 - Click on the `Save` button and then click on the `Create environment` button.
 
@@ -101,7 +101,7 @@ docker logs -f db
 
 - Select `Worker environment` option.
 - Type the newly created application name (`gradejs-public`).
-- Specify an environment name: `gradejs-public-worker`. Leave the domain and description name fileds blank.
+- Specify an environment name: `gradejs-public-worker`. Leave the domain and description name fields blank.
 - Select the latest version of Node.js 16 managed platform on Amazon Linux 2. The version minimal required version is 5.5.1.
 - Use the sample application code and click on the `Configure more options` button.
 - Select the `Custom configuration` configuration preset.
@@ -111,7 +111,22 @@ docker logs -f db
 - Set the `EB_START` environment variable to `worker`.
 - Click on the `Save` button and then click on the `Create environment` button.
 
-7. Setting up a `Continuous Deploy` pipeline:
+7. Create an [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) web environment:
+
+- Open the [AWS Elastic Beanstalk](https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home) page and click on the `Create a new environment` button.
+- Select `Web server environment` option.
+- Type the newly created application name (`gradejs-web`).
+- Specify an environment name, for example `gradejs-public-web`. Leave the domain and description name fields blank.
+- Select the latest version of Node.js 16 managed platform on Amazon Linux 2. The version minimal required version is 5.5.1.
+- Use the sample application code and click on the `Configure more options` button.
+- Select the `Custom configuration` configuration preset.
+- In the `Software` section click on the `Edit` button.
+- Enable the `CloudWatch` log streaming with a 5 day retention.
+- Specify the `API_ORIGIN` environment variable. It should point to public API entrypoint you created in chapter 5.
+- Specify the `EB_START` environment variable: `web`.
+- Click on the `Save` button and then click on the `Create environment` button.
+
+8. Setting up a `Continuous Deploy` pipeline:
 
 - Go to the [AWS CodePipeline](https://us-east-2.console.aws.amazon.com/codesuite/codepipeline/pipelines) page and click on the `Create pipeline` page.
 - Type a pipeline name `gradejs-public@production-deploy` and click on the `Next` button.

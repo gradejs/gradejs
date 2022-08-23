@@ -10,7 +10,8 @@
     "storybook": "start-storybook -p 6006",
     "build:storybook": "build-storybook -o dist/storybook",
     "build": "ts-node --swc webpack/build.ts --production",
-    "start": "./webpack/start_dev.sh"
+    "dev:start": "./webpack/start_dev.sh",
+    "start": "node dist/main.js"
   },
   "repository": {
     "type": "git",

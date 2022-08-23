@@ -8,6 +8,7 @@ phases:
       - n 16.14.2
       - docker-compose -f docker-compose.aws.yml up -d db
       - yarn install
+      - yarn workspace @gradejs-public/web build
       - yarn build:backend
       - yarn workspace @gradejs-public/shared migration:run
       - yarn test
@@ -20,5 +21,7 @@ artifacts:
     - packages/worker/package.json
     - packages/shared/build/**/*
     - packages/shared/package.json
+    - packages/web/dist/**/*
+    - packages/web/package.json
     - package.json
     - eb-start.sh
