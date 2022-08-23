@@ -20,7 +20,7 @@ export type FiltersState = {
 
 export const DefaultFiltersAndSorters: FiltersState = {
   filter: 'all',
-  sort: 'packagePopularity',
+  sort: 'severity',
 };
 
 export default function Filters({ onSubmit }: Props) {
