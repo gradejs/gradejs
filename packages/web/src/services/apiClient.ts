@@ -1,27 +1,87 @@
-import { createTRPCClient } from '@trpc/client';
-import type { inferProcedureOutput } from '@trpc/server';
-import type { AppRouter, Api } from '../../../public-api/src/router';
+import type { API } from '../../../shared/src/index';
 
-// Helper types
-export type TQuery = keyof AppRouter['_def']['queries'];
-export type TMutation = keyof AppRouter['_def']['mutations'];
-export type InferMutationOutput<TRouteKey extends TMutation> = inferProcedureOutput<
-  AppRouter['_def']['mutations'][TRouteKey]
->;
-export type InferQueryOutput<TRouteKey extends TQuery> = inferProcedureOutput<
-  AppRouter['_def']['queries'][TRouteKey]
->;
+/**
+ * Server Entities
+ */
+export type WebPage = JsonSerialized<API.WebPage>;
+export type WebPagePackage = JsonSerialized<API.WebPagePackage>;
+export type PackageVulnerabilityData = JsonSerialized<API.PackageVulnerabilityData>;
 
-if (!process.env.API_ORIGIN) {
-  throw new Error('API_ORIGIN must be defined');
+/**
+ * Client
+ */
+export const apiClient = {
+  get<Route extends API.GetRoutes, Method extends keyof API.RouteMap[Route]>(
+    route: Route,
+    options: EndpointOptions<Route, Method>
+  ) {
+    return fetchEndpoint('GET', route, options);
+  },
+  post<Route extends API.PostRoutes, Method extends keyof API.RouteMap[Route]>(
+    route: Route,
+    options: EndpointOptions<Route, Method>
+  ) {
+    return fetchEndpoint('POST', route, options);
+  },
+};
+
+async function fetchEndpoint<Route extends API.Routes, Method extends keyof API.RouteMap[Route]>(
+  method: Method,
+  route: Route,
+  options: API.RequestOptions
+) {
+  const url = new URL(route, process.env.API_ORIGIN);
+  const requestInit: RequestInit = {
+    method: method as string,
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  if (options.params) {
+    for (const [key, value] of Object.entries(options.params)) {
+      url.pathname = url.pathname.replace(`:${key}`, String(value));
+    }
+  }
+  if (options.query) {
+    for (const [key, value] of Object.entries(options.query)) {
+      url.searchParams.set(key, String(value));
+    }
+  }
+
+  if (options.body) {
+    requestInit.body = JSON.stringify(options.body);
+  }
+
+  const response = await fetch(url.toString(), requestInit);
+  const body = await response.json();
+
+  if (response.status === 200) {
+    return body.data as EndpointResponse<Route, Method>;
+  } else {
+    throw body.error;
+  }
 }
 
-export const client = createTRPCClient<AppRouter>({
-  url: process.env.API_ORIGIN,
-});
+export type EndpointResponse<Route extends API.Routes, Method extends keyof API.RouteMap[Route]> =
+  Method extends keyof API.RouteMap[Route]
+    ? 'response' extends keyof API.RouteMap[Route][Method]
+      ? JsonSerialized<API.RouteMap[Route][Method]['response']>
+      : never
+    : never;
 
-export type HealthcheckOutput = InferQueryOutput<'healthcheck'>;
-export type SyncWebsiteOutput = InferMutationOutput<'syncWebsite'>;
-export type RequestParseWebsiteOutput = InferMutationOutput<'requestParseWebsite'>;
-export type { Api };
-export type ApiClient = typeof client;
+// Some data types in entities may be serialized within JSON
+type JsonSerialized<T> = {
+  [Key in keyof T as T[Key] extends Function ? never : Key]: T[Key] extends Record<string, unknown>
+    ? JsonSerialized<T[Key]>
+    : T[Key] extends (infer A)[]
+    ? JsonSerialized<A>[]
+    : T[Key] extends Date
+    ? string
+    : T[Key] extends Date | undefined
+    ? string | undefined
+    : T[Key];
+};
+
+type EndpointOptions<Route extends API.Routes, Method extends keyof API.RouteMap[Route]> = Omit<
+  API.RouteMap[Route][Method],
+  'response'
+>;

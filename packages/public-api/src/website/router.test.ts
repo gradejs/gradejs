@@ -1,4 +1,3 @@
-import { TRPC_ERROR_CODES_BY_KEY } from '@trpc/server/rpc';
 import {
   internalApi,
   PackageMetadata,
@@ -12,34 +11,31 @@ import {
   useTransactionalTesting,
 } from '@gradejs-public/test-utils';
 import { getRepository } from 'typeorm';
-import { createApp } from './app';
+import { createApp } from '../app';
 
 useDatabaseConnection();
 useTransactionalTesting();
 
 const api = createSupertestApi(createApp);
 
-describe('routes / heathCheck', () => {
-  it('should return valid response', async () => {
-    await api.get('/healthcheck').set('Origin', 'http://localhost:3000').send().expect(200);
-  });
-
-  it('should return not found error', async () => {
+describe('POST /website', () => {
+  it('should validate body', async () => {
     const response = await api
-      .get('/any-invalid-route')
-      .set('Origin', 'http://localhost:3000')
-      .send()
-      .expect(404);
+      .post('/webpage')
+      .set('Origin', 'http://test')
+      .send({ url: 'invalid url' })
+      .expect(400);
 
     expect(response.body).toMatchObject({
       error: {
-        code: TRPC_ERROR_CODES_BY_KEY.NOT_FOUND,
+        code: 400,
+        message: 'Invalid url',
+        type: 'invalid_string',
+        param: 'url',
       },
     });
   });
-});
 
-describe('routes / website', () => {
   it('should initiate webpage parsing', async () => {
     const siteUrl = 'https://example.com/' + Math.random().toString();
 
@@ -53,22 +49,20 @@ describe('routes / website', () => {
     );
 
     const response = await api
-      .post('/requestParseWebsite')
-      .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(siteUrl))
+      .post('/webpage')
+      .set('Origin', 'http://test')
+      .send({ url: siteUrl })
       .expect(200);
     const webpage = await getRepository(WebPage).findOne({ url: siteUrl });
 
     expect(initiateUrlProcessingInternalMock).toHaveBeenCalledTimes(1);
     expect(initiateUrlProcessingInternalMock).toHaveBeenCalledWith(siteUrl);
     expect(response.body).toMatchObject({
-      result: {
-        data: {
-          id: expect.anything(),
-          url: siteUrl,
-          hostname: 'example.com',
-          status: 'pending',
-        },
+      data: {
+        id: expect.anything(),
+        url: siteUrl,
+        hostname: 'example.com',
+        status: 'pending',
       },
     });
 
@@ -76,6 +70,25 @@ describe('routes / website', () => {
       url: siteUrl,
       hostname: 'example.com',
       status: 'pending',
+    });
+  });
+});
+
+describe('GET /website/:hostname', () => {
+  it('should validate params', async () => {
+    const response = await api
+      .get('/website/any:invalid')
+      .set('Origin', 'http://test')
+      .send()
+      .expect(400);
+
+    expect(response.body).toMatchObject({
+      error: {
+        code: 400,
+        message: 'Invalid',
+        type: 'invalid_string',
+        param: 'hostname',
+      },
     });
   });
 
@@ -122,35 +135,29 @@ describe('routes / website', () => {
       },
     });
 
-    const response = await api
-      .post('/syncWebsite')
-      .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(hostname))
-      .expect(200);
+    const response = await api.get(`/website/${hostname}`).set('Origin', 'http://test').expect(200);
 
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(0);
     expect(response.body).toMatchObject({
-      result: {
-        data: {
-          webpages: webpageInsert.generatedMaps,
-          packages: [
+      data: {
+        webpages: webpageInsert.generatedMaps,
+        packages: [
+          {
+            ...packageInsert.generatedMaps[0],
+            registryMetadata: packageMetadataInsert.generatedMaps[0],
+          },
+        ],
+        vulnerabilities: {
+          react: [
             {
-              ...packageInsert.generatedMaps[0],
-              registryMetadata: packageMetadataInsert.generatedMaps[0],
+              affectedPackageName: 'react',
+              affectedVersionRange: '>=17.0.0 <18.0.0',
+              osvId: 'GRJS-test-id',
+              detailsUrl: `https://github.com/advisories/GRJS-test-id`,
+              summary: 'Test summary',
+              severity: 'HIGH',
             },
           ],
-          vulnerabilities: {
-            react: [
-              {
-                affectedPackageName: 'react',
-                affectedVersionRange: '>=17.0.0 <18.0.0',
-                osvId: 'GRJS-test-id',
-                detailsUrl: `https://github.com/advisories/GRJS-test-id`,
-                summary: 'Test summary',
-                severity: 'HIGH',
-              },
-            ],
-          },
         },
       },
     });
@@ -193,48 +200,42 @@ describe('routes / website', () => {
       } as internalApi.Website)
     );
 
-    const response = await api
-      .post('/syncWebsite')
-      .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(hostname))
-      .expect(200);
+    const response = await api.get(`/website/${hostname}`).set('Origin', 'http://test').expect(200);
     expect(fetchUrlPackagesMock).toHaveBeenCalledTimes(1);
     expect(fetchUrlPackagesMock).toHaveBeenCalledWith(siteUrl);
 
     expect(response.body).toMatchObject({
-      result: {
-        data: {
-          webpages: [
-            {
-              ...webpageInsert.generatedMaps.at(0),
-              status: WebPage.Status.Processed,
-              updatedAt: expect.anything(),
+      data: {
+        webpages: [
+          {
+            ...webpageInsert.generatedMaps.at(0),
+            status: WebPage.Status.Processed,
+            updatedAt: expect.anything(),
+          },
+        ],
+        packages: [
+          {
+            latestUrl: siteUrl,
+            hostname,
+            packageName: 'react',
+            possiblePackageVersions: ['17.0.2'],
+            packageVersionRange: '17.0.2',
+            packageMetadata: {
+              approximateByteSize: 1337,
             },
-          ],
-          packages: [
-            {
-              latestUrl: siteUrl,
-              hostname,
-              packageName: 'react',
-              possiblePackageVersions: ['17.0.2'],
-              packageVersionRange: '17.0.2',
-              packageMetadata: {
-                approximateByteSize: 1337,
-              },
+          },
+          {
+            latestUrl: siteUrl,
+            hostname,
+            packageName: 'object-assign',
+            possiblePackageVersions: ['4.1.0', '4.1.1'],
+            packageVersionRange: '4.1.0 - 4.1.1',
+            packageMetadata: {
+              approximateByteSize: 42,
             },
-            {
-              latestUrl: siteUrl,
-              hostname,
-              packageName: 'object-assign',
-              possiblePackageVersions: ['4.1.0', '4.1.1'],
-              packageVersionRange: '4.1.0 - 4.1.1',
-              packageMetadata: {
-                approximateByteSize: 42,
-              },
-            },
-          ],
-          vulnerabilities: {},
-        },
+          },
+        ],
+        vulnerabilities: {},
       },
     });
   });
