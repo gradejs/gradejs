@@ -51,7 +51,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.3",
-    "@trpc/client": "^9.27.0",
     "@types/lodash.memoize": "^4.1.7",
     "clsx": "^1.1.1",
     "lodash.memoize": "^4.1.2",

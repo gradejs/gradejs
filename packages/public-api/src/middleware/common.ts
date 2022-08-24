@@ -3,6 +3,10 @@ import createCorsMiddleware from 'cors';
 import { Request, Response, NextFunction } from 'express';
 import { NotFoundError, respondWithError } from './response';
 import { getCorsAllowedOrigins } from '@gradejs-public/shared';
+export class CorsError extends Error {
+  code = 400;
+  message = 'Not allowed by CORS';
+}
 
 const originAllowList = getCorsAllowedOrigins();
 export const cors = createCorsMiddleware({
@@ -11,7 +15,7 @@ export const cors = createCorsMiddleware({
     if (origin && originAllowList.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new CorsError());
     }
   },
 });
@@ -34,7 +38,11 @@ export function errorHandlerMiddleware(
   _next: NextFunction
 ) {
   // Log only useful errors
-  if (!(error instanceof NotFoundError) && !(error instanceof ZodError)) {
+  if (
+    !(error instanceof NotFoundError) &&
+    !(error instanceof CorsError) &&
+    !(error instanceof ZodError)
+  ) {
     // TODO: add logger
     console.error(error, req);
   }

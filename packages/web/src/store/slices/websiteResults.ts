@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DefaultFiltersAndSorters, FiltersState } from '../../components/layouts/Filters/Filters';
-import { client, SyncWebsiteOutput } from '../../services/apiClient';
+import { apiClient, EndpointResponse } from '../../services/apiClient';
 import { trackCustomEvent } from '../../services/analytics';
 
-const defaultDetectionResult: SyncWebsiteOutput = {
+const defaultDetectionResult: EndpointResponse<'/website/:hostname', 'GET'> = {
   packages: [],
   vulnerabilities: {},
   webpages: [],
@@ -26,10 +26,10 @@ const hasPendingPages = (result: DetectionResult) =>
 
 const getWebsite = createAsyncThunk('websiteResults/getWebsite', async (hostname: string) => {
   const loadStartTime = Date.now();
-  let results = await client.mutation('syncWebsite', hostname);
+  let results = await apiClient.get('/website/:hostname', { params: { hostname } });
   while (hasPendingPages(results)) {
     await sleep(5000);
-    results = await client.mutation('syncWebsite', hostname);
+    results = await apiClient.get('/website/:hostname', { params: { hostname } });
   }
   // TODO: move to tracking middleware?
   trackCustomEvent('HostnamePage', 'WebsiteLoaded', {

@@ -6,7 +6,7 @@
     "prettier": "prettier --check ./src",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "build": "tsc --project tsconfig.build.json",
-    "test": "CORS_ALLOWED_ORIGIN=http://localhost:3000 jest",
+    "test": "CORS_ALLOWED_ORIGIN=http://test jest",
     "start": "node build/index.js",
     "debug": "node --inspect=9201 build/index.js"
   },
@@ -16,7 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "@gradejs-public/shared": "^0.1.0",
-    "@trpc/server": "^9.26.2",
     "@types/cors": "^2.8.12",
     "cors": "^2.8.5",
     "express": "^4.17.3",

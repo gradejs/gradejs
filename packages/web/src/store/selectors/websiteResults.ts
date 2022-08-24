@@ -5,7 +5,7 @@ import { GithubAdvisorySeverity } from '@gradejs-public/shared';
 import { RootState } from '../';
 import { FiltersState } from '../../components/layouts/Filters/Filters';
 import { SeverityWeightMap } from '../../components/ui/Vulnerability/Vulnerability';
-import type { Api } from '../../services/apiClient';
+import { PackageVulnerabilityData, WebPagePackage } from '../../services/apiClient';
 
 const getFlags = (state: RootState) => ({
   isLoading: state.webpageResults.isLoading,
@@ -19,11 +19,11 @@ const getSorting = (state: RootState) => state.webpageResults.filters.sort;
 const getFilter = (state: RootState) => state.webpageResults.filters.filter;
 const getPackageNameFilter = (state: RootState) => state.webpageResults.filters.filterPackageName;
 
-const compareByPopularity = (left: Api.WebPagePackage, right: Api.WebPagePackage) =>
+const compareByPopularity = (left: WebPagePackage, right: WebPagePackage) =>
   (right.registryMetadata?.monthlyDownloads ?? 0) - (left.registryMetadata?.monthlyDownloads ?? 0);
 
 const pickHighestSeverity = memoize(
-  (packageName: string, vulnerabilities: Record<string, Api.Vulnerability[]>) =>
+  (packageName: string, vulnerabilities: Record<string, PackageVulnerabilityData[]>) =>
     (vulnerabilities[packageName] ?? [])
       .map((it) => it.severity)
       .filter((it): it is GithubAdvisorySeverity => !!it)
@@ -36,9 +36,9 @@ const pickHighestSeverity = memoize(
 const sortingModes: Record<
   FiltersState['sort'],
   (
-    packages: Api.WebPagePackage[],
-    vulnerabilities: Record<string, Api.Vulnerability[]>
-  ) => Api.WebPagePackage[]
+    packages: WebPagePackage[],
+    vulnerabilities: Record<string, PackageVulnerabilityData[]>
+  ) => WebPagePackage[]
 > = {
   // TODO
   confidenceScore: (packages) => packages,
@@ -69,10 +69,10 @@ const sortingModes: Record<
 const filterModes: Record<
   FiltersState['filter'],
   (
-    packages: Api.WebPagePackage[],
-    vulnerabilities: Record<string, Api.Vulnerability[]>,
+    packages: WebPagePackage[],
+    vulnerabilities: Record<string, PackageVulnerabilityData[]>,
     packageName?: string
-  ) => Api.WebPagePackage[]
+  ) => WebPagePackage[]
 > = {
   name: (packages, vulnerabilities, packageName) => {
     if (!packageName) {

@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { client } from '../../services/apiClient';
+import { apiClient } from '../../services/apiClient';
 import { RootState } from '../';
 
 const parseWebsite = createAsyncThunk('home/submitWebsite', async (url: string) => {
-  await client.mutation('requestParseWebsite', url);
+  await apiClient.post('/webpage', { body: { url } });
 });
 
 const home = createSlice({

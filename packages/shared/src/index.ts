@@ -11,3 +11,5 @@ export * from './utils/types';
 export * as internalApi from './internalApi/api';
 
 export * from './worker/types';
+
+export * as API from './apiContract';
