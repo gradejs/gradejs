@@ -5,6 +5,7 @@ import { appRouter, createContext } from './router';
 
 export function createApp() {
   const app = express();
+  app.get('/', (_, res) => res.send('gradejs-public-api')); // healthcheck path
   app.use(cors);
 
   app.use(

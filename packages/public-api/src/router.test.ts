@@ -20,8 +20,8 @@ useTransactionalTesting();
 const api = createSupertestApi(createApp);
 
 describe('routes / heathCheck', () => {
-  it('should return valid response', async () => {
-    await api.get('/healthcheck').set('Origin', 'http://localhost:3000').send().expect(200);
+  it('should return valid response for healthcheck path', async () => {
+    await api.get('/').send().expect(200);
   });
 
   it('should return not found error', async () => {
