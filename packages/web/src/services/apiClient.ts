@@ -20,7 +20,6 @@ export const client = createTRPCClient<AppRouter>({
   url: process.env.API_ORIGIN,
 });
 
-export type HealthcheckOutput = InferQueryOutput<'healthcheck'>;
 export type SyncWebsiteOutput = InferMutationOutput<'syncWebsite'>;
 export type RequestParseWebsiteOutput = InferMutationOutput<'requestParseWebsite'>;
 export type { Api };

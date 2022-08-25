@@ -36,11 +36,6 @@ export namespace Api {
 
 export const appRouter = trpc
   .router<Context>()
-  .query('healthcheck', {
-    resolve() {
-      return 'gradejs-public-api';
-    },
-  })
   .mutation('syncWebsite', {
     input: z.string().regex(hostnameRe),
     async resolve({ input: hostname }) {
