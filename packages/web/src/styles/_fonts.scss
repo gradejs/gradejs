@@ -1,0 +1,20 @@
+@mixin font($font-family, $file-path, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-style: $style;
+    font-display: swap;
+    src: url('#{$file-path}.woff2') format('woff2'), url('#{$file-path}.woff') format('woff');
+  }
+}
+
+@include font('Onest', '~assets/fonts/Onest/OnestThin', 100);
+@include font('Onest', '~assets/fonts/Onest/OnestLight', 300);
+@include font('Onest', '~assets/fonts/Onest/OnestRegular');
+@include font('Onest', '~assets/fonts/Onest/OnestMedium', 500);
+@include font('Onest', '~assets/fonts/Onest/OnestBold', 700);
+@include font('Onest', '~assets/fonts/Onest/OnestExtraBold', 800);
+@include font('Onest', '~assets/fonts/Onest/OnestBlack', 900);
+
+@include font('Roboto', '~assets/fonts/RobotoMono/RobotoMono-Regular');
+@include font('Roboto', '~assets/fonts/RobotoMono/RobotoMono-Medium', 500);

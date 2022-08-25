@@ -1,20 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import './_vars.scss';
+@import './_fonts.scss';
 @import './responsive.scss';
 
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Inter', sans-serif;
+  margin: 0;
+  font-family: $font-sans-serif;
+  font-size: 1rem;
+  line-height: 1.62;
+  color: $black;
+  text-align: left;
+  background-color: $white;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @include mobile-and-tablet {
+    font-size: 0.875rem;
+    line-height: 1.57;
+  }
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: $font-monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 h1 {
-  font-size: 100px;
-  line-height: 100%;
-  margin: 0 0 80px;
+  font-size: 82px;
+  line-height: 92px;
 
-  @include mobile {
-    font-size: 60px;
-    margin-bottom: 64px;
+  @include mobile-and-tablet {
+    font-size: 36px;
+    line-height: 46px;
   }
+}
+
+h2 {
+  font-size: 48px;
+  line-height: 58px;
+
+  @include mobile-and-tablet {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+h3 {
+  font-size: 40px;
+  line-height: 50px;
+
+  @include mobile-and-tablet {
+    font-size: 24px;
+    line-height: 30px;
+  }
+}
+
+h4 {
+  font-size: 32px;
+  line-height: 50px;
+
+  @include mobile-and-tablet {
+    font-size: 22px;
+    line-height: 30px;
+  }
+}
+
+h5 {
+  font-size: 26px;
+  line-height: 40px;
+}
+
+h6 {
+  font-size: 19px;
+  line-height: 30px;
+}
+
+p {
+  margin-top: 0;
+}
+
+a {
+  color: $blue-accent;
+  text-decoration: none;
 }
 
 #root,

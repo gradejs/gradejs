@@ -1,0 +1,226 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: $shadow;
+  width: 100%;
+  max-width: 600px;
+  min-height: 248px;
+  display: flex;
+  flex-direction: column;
+
+  @include mobile-and-tablet {
+    min-height: 204px;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-right: 16px;
+  display: inline-flex;
+
+  img {
+    width: 100%;
+    max-width: 52px;
+    object-fit: cover;
+  }
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.54;
+
+  @include mobile-and-tablet {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+}
+
+.description {
+  margin-top: 4px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: $gray-text;
+}
+
+.tagsWrapper {
+  margin-top: 28px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  @include mobile-and-tablet {
+    margin-top: 20px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+
+  & > * {
+    margin-bottom: 0.5rem;
+  }
+
+  & > *:not(:last-child) {
+    margin-right: 0.75rem;
+  }
+}
+
+.sitesWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.sites {
+  display: flex;
+  align-items: center;
+}
+
+.sites-list {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: none;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+
+  & > * + * {
+    margin-left: -7px;
+  }
+}
+
+.sites-item {
+  width: 40px;
+  height: 40px;
+  border: 2px solid $white;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  margin-left: -7px;
+
+  &:last-child {
+    margin-left: 0;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @include mobile-and-tablet {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.sites-count {
+  white-space: nowrap;
+  font-size: 19px;
+  line-height: 30px;
+  margin-left: 16px;
+
+  @include mobile-and-tablet {
+    font-size: 16px;
+    line-height: 1.62;
+  }
+}
+
+.toAll {
+  background-color: $gray-surface;
+}
+
+.arrowBtn {
+  cursor: pointer;
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  bottom: 24px;
+  right: 24px;
+  background: $white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow;
+  border: none;
+  appearance: none;
+  padding: 0;
+}
+
+.vulnerable {
+  min-height: 136px;
+  justify-content: space-between;
+  max-width: initial;
+
+  .title {
+    font-size: 24px;
+
+    @include mobile-and-tablet {
+      font-size: 20px;
+    }
+  }
+
+  @include mobile-and-tablet {
+    min-height: 136px;
+  }
+}
+
+.vulnerableWrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  margin-right: -9px;
+}
+
+.vulnerablePackage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  line-height: 24px;
+  font-family: $font-monospace;
+  color: $red-accent;
+
+  @include mobile-and-tablet {
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
+.vulnerableIcon {
+  display: flex;
+  margin-right: 12px;
+}
+
+.vulnerableMore {
+  margin-left: 12px;
+}
+
+.vulnerableMoreText {
+  @include mobile-and-tablet {
+    display: none;
+  }
+}

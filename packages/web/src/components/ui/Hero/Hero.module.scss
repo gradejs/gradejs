@@ -1,0 +1,154 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.hero {
+  border-radius: 0 0 60px 60px;
+  background: url('~assets/hero-bg.png') 50% 100% no-repeat;
+  background-size: cover;
+  color: $white;
+  text-align: center;
+}
+
+.content {
+  padding-top: 24px;
+  padding-bottom: 100px;
+
+  @include mobile-and-tablet {
+    padding-top: 20px;
+    padding-bottom: 44px;
+  }
+}
+
+.title {
+  max-width: 884px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include mobile-and-tablet {
+    margin-bottom: 20px;
+  }
+}
+
+.subtitle {
+  max-width: 616px;
+  margin-left: auto;
+  margin-right: auto;
+  color: rgba($white, 0.5);
+  margin-bottom: 48px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 32px;
+  }
+}
+
+.search {
+  position: relative;
+  max-width: 758px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  height: 100px;
+  padding-left: 44px;
+  padding-right: 124px;
+  font-size: 26px;
+  font-family: inherit;
+  background: rgba($white, 0.16);
+  border: none;
+  outline: none;
+  // FIXME: not sure that non-empty input should have transparent text like placeholder
+  color: rgba($white, 0.5);
+  //color: $white;
+  border-radius: 50px;
+
+  @include mobile-and-tablet {
+    height: 64px;
+    padding-left: 28px;
+    padding-right: 92px;
+    font-size: 20px;
+  }
+
+  &::placeholder {
+    color: $white;
+    opacity: 0.5;
+  }
+}
+
+.submit {
+  cursor: pointer;
+  flex-shrink: 0;
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  right: 8px;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: rgba($white, 0.1);
+
+  @include mobile-and-tablet {
+    top: 4px;
+    right: 4px;
+    width: 56px;
+    height: 56px;
+  }
+}
+
+.submitIcon {
+  margin-left: 4px;
+
+  @include mobile-and-tablet {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.suggestions {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include mobile-and-tablet {
+    margin-top: 24px;
+  }
+
+  & > * {
+    margin: 0 4px;
+
+    @include mobile-and-tablet {
+      &:nth-child(n + 4) {
+        display: none;
+      }
+    }
+  }
+}
+
+.loader {
+  width: 32px;
+  height: 32px;
+  border: 4px solid #fff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,72 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.footer {
+  margin-top: 80px;
+  border-top: 1px solid rgba($gray-border, 0.5);
+  padding-top: 64px;
+  padding-bottom: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include mobile-and-tablet {
+    margin-top: 56px;
+    padding-top: 40px;
+    padding-bottom: 32px;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+}
+
+.copyright {
+  color: $gray-text;
+
+  @include mobile-and-tablet {
+    margin-top: 24px;
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+
+  @include mobile-and-tablet {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  & > * + * {
+    margin-left: 124px;
+
+    @include lg {
+      margin-left: 64px;
+    }
+
+    @include mobile-and-tablet {
+      margin-left: 0;
+      margin-top: 24px;
+    }
+  }
+}
+
+.links {
+  display: flex;
+  align-items: center;
+
+  & > * + * {
+    margin-left: 52px;
+
+    @include lg {
+      margin-left: 48px;
+    }
+  }
+}
+
+.link {
+  color: $black;
+
+  @include mobile-and-tablet {
+    font-size: 14px;
+  }
+}

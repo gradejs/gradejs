@@ -1,0 +1,42 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 42px 0;
+
+  @include mobile-and-tablet {
+    padding: 22px 0;
+  }
+}
+
+.logo {
+  @include mobile-and-tablet {
+    width: 82px;
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+
+  & > * + * {
+    margin-left: 40px;
+
+    @include mobile-and-tablet {
+      margin-left: 20px;
+    }
+  }
+}
+
+.navLink {
+  color: $white;
+}
+
+.githubIcon {
+  @include mobile-and-tablet {
+    width: 28px;
+  }
+}

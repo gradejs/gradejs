@@ -1,0 +1,47 @@
+@import '~styles/responsive.scss';
+
+$mobile-gutter: 32px;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-gap: 20px;
+
+  @include lg {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile-and-tablet {
+    padding-top: 35px;
+    padding-bottom: 52px;
+    margin-left: -24px;
+    margin-right: -24px;
+    display: grid;
+    grid-gap: $mobile-gutter / 2;
+    //grid-template-columns: 8px repeat(var(--total), calc(50% - #{$mobile-gutter} * 2)) 8px;
+    grid-template-columns: 8px repeat(var(--total), 312px) 8px;
+    grid-template-rows: minmax(204px, 1fr);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+
+    &::before,
+    &::after {
+      content: '';
+    }
+  }
+}
+
+.vertical {
+  @include mobile-and-tablet {
+    grid-template-columns: auto;
+    grid-template-rows: minmax(136px, 1fr);
+    overflow: initial;
+    margin-left: 0;
+    margin-right: 0;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
