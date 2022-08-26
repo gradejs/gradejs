@@ -2,35 +2,45 @@ import React from 'react';
 import styles from './Footer.module.scss';
 import Container from '../Container/Container';
 
-type FooterLink = {
-  to: string;
-  name: string;
-};
-
-export type FooterProps = {
-  centerLinks: FooterLink[];
-  rightLinks: FooterLink[];
-};
-
-export default function Footer({ centerLinks, rightLinks }: FooterProps) {
+export default function Footer() {
   return (
     <Container>
       <footer className={styles.footer}>
         <div className={styles.copyright}>© 2022 GradeJS. All rights reserved.</div>
         <div className={styles.wrapper}>
           <div className={styles.links}>
-            {centerLinks.map(({ to, name }) => (
-              <a key={name} href={to} className={styles.link}>
-                {name}
-              </a>
-            ))}
+            <a
+              href='https://github.com/gradejs/gradejs/discussions/6'
+              target='_blank'
+              rel='norefferer noreferrer'
+              className={styles.link}
+            >
+              About
+            </a>
+            <a
+              href='https://github.com/gradejs/gradejs/discussions'
+              target='_blank'
+              rel='norefferer noreferrer'
+              className={styles.link}
+            >
+              Community
+            </a>
+            <a
+              href='https://github.com/gradejs/gradejs'
+              target='_blank'
+              rel='norefferer noreferrer'
+              className={styles.link}
+            >
+              Github
+            </a>
           </div>
           <div className={styles.links}>
-            {rightLinks.map(({ to, name }) => (
-              <a key={name} href={to} className={styles.link}>
-                {name}
-              </a>
-            ))}
+            <a href='#' className={styles.link}>
+              Popular packages
+            </a>
+            <a href='#' className={styles.link}>
+              Go to search
+            </a>
           </div>
         </div>
       </footer>

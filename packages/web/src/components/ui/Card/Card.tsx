@@ -114,7 +114,8 @@ export default function Card({
           {vulnerablePackage.moreCount && (
             <span className={styles.vulnerableMore}>
               <Chip variant='secondary' size='medium'>
-                +{vulnerablePackage.moreCount}{' '}
+                +{vulnerablePackage.moreCount}
+                &nbsp;
                 <span className={styles.vulnerableMoreText}>more</span>
               </Chip>
             </span>

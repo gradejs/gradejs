@@ -8,12 +8,12 @@ $mobile-gutter: 32px;
   grid-gap: 20px;
 
   @include lg {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-gap: 16px;
   }
 
   @include mobile-and-tablet {
-    padding-top: 35px;
-    padding-bottom: 52px;
+    padding-top: 24px;
+    padding-bottom: 24px;
     margin-left: -24px;
     margin-right: -24px;
     display: grid;
@@ -23,6 +23,10 @@ $mobile-gutter: 32px;
     grid-template-rows: minmax(204px, 1fr);
     overflow-x: auto;
     scroll-snap-type: x proximity;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     &::before,
     &::after {

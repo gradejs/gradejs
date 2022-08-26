@@ -11,17 +11,4 @@ export default {
   },
 } as ComponentMeta<typeof Footer>;
 
-const Template: ComponentStory<typeof Footer> = (args) => <Footer {...args} />;
-
-export const Main = Template.bind({});
-Main.args = {
-  centerLinks: [
-    { to: '/about', name: 'About' },
-    { to: '/community', name: 'Community' },
-    { to: '/github', name: 'GitHub' },
-  ],
-  rightLinks: [
-    { to: '/popular', name: 'Popular packages' },
-    { to: '/search', name: 'Go to search' },
-  ],
-};
+export const Primary: ComponentStory<typeof Footer> = () => <Footer />;

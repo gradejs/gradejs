@@ -1,0 +1,18 @@
+@import '~styles/responsive.scss';
+
+.groups {
+  margin: 80px 0;
+
+  @include mobile-and-tablet {
+    margin-top: 56px;
+    margin-bottom: 32px;
+  }
+
+  & > * + * {
+    margin-top: 56px;
+
+    @include mobile-and-tablet {
+      margin-top: 32px;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+@import '~styles/responsive.scss';
+
+.title {
+  @include mobile-and-tablet {
+    margin-bottom: 0;
+  }
+}

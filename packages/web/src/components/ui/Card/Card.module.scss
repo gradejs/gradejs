@@ -13,8 +13,13 @@
   display: flex;
   flex-direction: column;
 
+  @include lg {
+    padding: 20px;
+  }
+
   @include mobile-and-tablet {
     min-height: 204px;
+    box-shadow: $shadow-small;
   }
 }
 
