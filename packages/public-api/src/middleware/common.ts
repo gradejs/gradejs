@@ -8,7 +8,7 @@ const originAllowList = getCorsAllowedOrigins();
 export const cors = createCorsMiddleware({
   maxAge: 1800,
   origin: function (origin, callback) {
-    if (origin && originAllowList.includes(origin)) {
+    if (originAllowList.length === 0 || (origin && originAllowList.includes(origin))) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
