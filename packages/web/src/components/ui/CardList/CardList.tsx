@@ -3,18 +3,16 @@ import styles from './CardList.module.scss';
 import Card, { CardProps } from '../Card/Card';
 import clsx from 'clsx';
 
-export type CardListProps = {
+type Props = {
   cards: CardProps[];
-  variant?: 'default' | 'vertical' | string;
+  variant?: 'default' | 'vertical';
 };
 
-export default function CardList({ cards, variant = 'default' }: CardListProps) {
-  const style = { '--total': cards.length } as React.CSSProperties;
-
+export default function CardList({ cards, variant = 'default' }: Props) {
   return (
-    <div className={clsx(styles.grid, styles[variant])} style={style}>
+    <div className={clsx(styles.grid, styles[variant])}>
       {cards.map((card) => (
-        <Card key={card.title} {...card} />
+        <Card key={card.id} {...card} />
       ))}
     </div>
   );

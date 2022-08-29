@@ -6,13 +6,16 @@ export default function Footer() {
   return (
     <Container>
       <footer className={styles.footer}>
-        <div className={styles.copyright}>© 2022 GradeJS. All rights reserved.</div>
+        <div className={styles.copyright}>
+          <span className={styles.copyrightItem}>© 2022 GradeJS. All rights reserved.</span>
+          <span className={styles.copyrightItem}>Designed by MAX</span>
+        </div>
         <div className={styles.wrapper}>
           <div className={styles.links}>
             <a
               href='https://github.com/gradejs/gradejs/discussions/6'
               target='_blank'
-              rel='norefferer noreferrer'
+              rel='noreferrer'
               className={styles.link}
             >
               About
@@ -20,7 +23,7 @@ export default function Footer() {
             <a
               href='https://github.com/gradejs/gradejs/discussions'
               target='_blank'
-              rel='norefferer noreferrer'
+              rel='noreferrer'
               className={styles.link}
             >
               Community
@@ -28,7 +31,7 @@ export default function Footer() {
             <a
               href='https://github.com/gradejs/gradejs'
               target='_blank'
-              rel='norefferer noreferrer'
+              rel='noreferrer'
               className={styles.link}
             >
               Github

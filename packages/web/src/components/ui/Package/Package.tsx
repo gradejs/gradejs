@@ -63,7 +63,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
               onClick={() => trackCustomEvent('Package', 'ClickRepoUrl')}
               className={styles.externalLink}
             >
-              <Icon kind={'githubLogo'} width={19} height={19} />
+              <Icon kind='githubLogo' width={19} height={19} />
             </a>
           )}
           {homepageUrl && homepageUrl !== repositoryUrl && (
@@ -74,7 +74,7 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
               onClick={() => trackCustomEvent('Package', 'ClickHomepageUrl')}
               className={styles.externalLink}
             >
-              <Icon kind={'external'} width={19} height={19} />
+              <Icon kind='external' width={19} height={19} />
             </a>
           )}
         </div>

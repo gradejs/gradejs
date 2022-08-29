@@ -1,0 +1,70 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.avatarsWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.avatars {
+  display: flex;
+  align-items: center;
+}
+
+.avatarGroup {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style: none;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+
+.avatarItem {
+  width: 40px;
+  height: 40px;
+  border: 2px solid $white;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  margin-left: -7px;
+
+  &:not(:first-child) {
+    margin-left: -7px;
+  }
+
+  &:last-child {
+    margin-left: 0;
+  }
+
+  @include mobile-and-tablet {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.counter {
+  white-space: nowrap;
+  font-size: 19px;
+  line-height: 30px;
+  margin-left: 16px;
+
+  @include mobile-and-tablet {
+    font-size: 16px;
+    line-height: 1.62;
+  }
+}

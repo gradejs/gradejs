@@ -7,6 +7,10 @@
   background-size: cover;
   color: $white;
   text-align: center;
+
+  @include mobile-and-tablet {
+    border-radius: 0 0 30px 30px;
+  }
 }
 
 .content {
@@ -107,8 +111,8 @@
   margin-left: 4px;
 
   @include mobile-and-tablet {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 18px;
   }
 }
 
@@ -142,6 +146,12 @@
   display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
+
+  @include mobile-and-tablet {
+    width: 24px;
+    height: 24px;
+    border-width: 2px;
+  }
 }
 
 @keyframes rotation {

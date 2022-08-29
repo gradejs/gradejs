@@ -1,19 +1,21 @@
 import React from 'react';
 import styles from './HeaderNew.module.scss';
 import Container from '../Container/Container';
-import { Github, Logo } from 'components/icons';
+import { Icon } from '../Icon/Icon';
 import { trackCustomEvent } from '../../../services/analytics';
 
 export default function HeaderNew() {
   return (
     <Container>
       <header className={styles.header}>
-        <Logo className={styles.logo} />
+        <a href='/' className={styles.logo}>
+          <Icon kind='logo' width={129} height={25} color='white' />
+        </a>
         <div className={styles.nav}>
           <a
             href='https://github.com/gradejs/gradejs/discussions/6'
             target='_blank'
-            rel='norefferer noreferrer'
+            rel='noreferrer'
             className={styles.navLink}
             onClick={() => trackCustomEvent('ClickExternalLink', 'About')}
           >
@@ -22,7 +24,7 @@ export default function HeaderNew() {
           <a
             href='https://github.com/gradejs/gradejs/discussions'
             target='_blank'
-            rel='norefferer noreferrer'
+            rel='noreferrer'
             className={styles.navLink}
             onClick={() => trackCustomEvent('ClickExternalLink', 'Community')}
           >
@@ -31,11 +33,17 @@ export default function HeaderNew() {
           <a
             href='https://github.com/gradejs/gradejs'
             target='_blank'
-            rel='norefferer noreferrer'
-            className={styles.githubLink}
+            rel='noreferrer'
+            className={styles.navLink}
             onClick={() => trackCustomEvent('ClickExternalLink', 'SourceCode')}
           >
-            <Github className={styles.githubIcon} width='32' height='32' color='#fff' />
+            <Icon
+              kind='githubLogo'
+              className={styles.githubIcon}
+              width={32}
+              height={32}
+              color='#fff'
+            />
           </a>
         </div>
       </header>

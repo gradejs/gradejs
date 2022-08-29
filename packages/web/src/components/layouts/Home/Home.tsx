@@ -75,7 +75,7 @@ export default function Home({ onSubmit, isLoading }: Props) {
               <a
                 href='https://github.com/gradejs/gradejs/discussions/6'
                 target='_blank'
-                rel='norefferer noreferrer'
+                rel='noreferrer'
                 className={clsx(styles.learnMore)}
               >
                 Learn more

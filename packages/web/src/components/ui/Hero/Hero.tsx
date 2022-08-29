@@ -2,8 +2,8 @@ import React from 'react';
 import styles from './Hero.module.scss';
 import Container from '../Container/Container';
 import Chip from '../Chip/Chip';
-import { Arrow } from '../../icons';
 import HeaderNew from '../HeaderNew/HeaderNew';
+import { Icon } from '../Icon/Icon';
 
 export type HeroProps = {
   inputText?: string;
@@ -34,7 +34,13 @@ export default function Hero({ inputText, suggestions, loading = false }: HeroPr
             <button type='submit' className={styles.submit}>
               {/* TODO: use SVG loading component */}
               {!loading ? (
-                <Arrow className={styles.submitIcon} width='32' height='32' color='#fff' />
+                <Icon
+                  kind='arrow'
+                  className={styles.submitIcon}
+                  width={32}
+                  height={32}
+                  color='#fff'
+                />
               ) : (
                 <span className={styles.loader} />
               )}

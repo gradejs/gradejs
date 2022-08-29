@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 42px 0;
+  padding: 44px 0;
 
   @include mobile-and-tablet {
     padding: 22px 0;
@@ -13,6 +13,9 @@
 }
 
 .logo {
+  display: flex;
+  width: 129px;
+
   @include mobile-and-tablet {
     width: 82px;
   }
@@ -32,11 +35,16 @@
 }
 
 .navLink {
+  display: flex;
   color: $white;
 }
 
 .githubIcon {
+  width: 32px;
+  height: 32px;
+
   @include mobile-and-tablet {
     width: 28px;
+    height: 28px;
   }
 }

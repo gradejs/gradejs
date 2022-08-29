@@ -3,8 +3,11 @@ import githubLogo from '../../../assets/icons/sprite/github.svg';
 import grid from '../../../assets/icons/sprite/grid.svg';
 import lines from '../../../assets/icons/sprite/lines.svg';
 import external from '../../../assets/icons/sprite/external.svg';
+import arrow from '../../../assets/icons/sprite/arrow.svg';
+import bug from '../../../assets/icons/sprite/bug.svg';
+import logo from '../../../assets/icons/sprite/logo.svg';
 
-const icons = { githubLogo, grid, lines, external };
+const icons = { githubLogo, grid, lines, external, arrow, bug, logo };
 
 export type IconProps = {
   kind: keyof typeof icons;

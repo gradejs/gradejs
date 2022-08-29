@@ -1,4 +1,5 @@
 import React from 'react';
+import { CardProps } from '../../ui/Card/Card';
 import Hero from '../../ui/Hero/Hero';
 import Container from 'components/ui/Container/Container';
 import CardList from '../../ui/CardList/CardList';
@@ -6,13 +7,14 @@ import CardGroups from '../../ui/CardGroups/CardGroups';
 import Footer from '../../ui/Footer/Footer';
 import CardGroup from '../../ui/CardGroup/CardGroup';
 
-export type HomeNewProps = {
+type Props = {
   suggestions: string[];
 };
 
-export default function HomeNew({ suggestions }: HomeNewProps) {
-  const popularCards = [
+export default function HomeNew({ suggestions }: Props) {
+  const popularCards: CardProps[] = [
     {
+      id: 'uExBVGuF',
       title: 'github.com',
       icon: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
       packageTags: {
@@ -21,6 +23,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       },
     },
     {
+      id: '1EkL1u5g',
       title: 'fingerprint.com',
       icon: 'https://avatars.githubusercontent.com/u/67208791?s=200&v=4',
       packageTags: {
@@ -29,6 +32,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       },
     },
     {
+      id: 'mhwO2bPM',
       title: 'facebook.com',
       icon: 'https://avatars.githubusercontent.com/u/69631?s=200&v=4',
       packageTags: {
@@ -38,8 +42,9 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
     },
   ];
 
-  const popularPackages = [
+  const popularPackages: CardProps[] = [
     {
+      id: 'FPsBcl8R',
       title: '@team-griffin/react-heading-section',
       description: "This package's job is to automatically determine...",
       featuredSites: {
@@ -52,6 +57,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       },
     },
     {
+      id: 'emtYcsUh',
       title: 'unist-util-generated',
       description: 'unist utility to check if a node is generated',
       featuredSites: {
@@ -64,6 +70,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       },
     },
     {
+      id: 'TYIwvAfy',
       title: 'react-smooth',
       description: 'is a animation library work on React',
       featuredSites: {
@@ -76,6 +83,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       },
     },
     {
+      id: 'Lq1pEEX7',
       title: 'unist-util-position',
       description: 'unist utility to get the positional info of nodes',
       featuredSites: {
@@ -88,6 +96,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       },
     },
     {
+      id: 'cWOgIbmp',
       title: 'vfile-message',
       description: 'Create vfile messages',
       featuredSites: {
@@ -100,13 +109,15 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       },
     },
     {
+      id: 'UT97Vpoi',
       title: 'Go to all Popular packages',
       variant: 'toAll',
     },
   ];
 
-  const vulnerablePackages = [
+  const vulnerablePackages: CardProps[] = [
     {
+      id: 'LnO9Xynn',
       title: 'disneyland.omsk.ru/signup',
       vulnerablePackage: {
         name: 'mdast-util-from-markdown',
@@ -114,6 +125,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       variant: 'vulnerable',
     },
     {
+      id: '-A74UAy8',
       title: 'disneyland.omsk.ru/signup',
       vulnerablePackage: {
         name: 'mdast-util-from-markdown',
@@ -122,6 +134,7 @@ export default function HomeNew({ suggestions }: HomeNewProps) {
       variant: 'vulnerable',
     },
     {
+      id: 'DPa05I2W',
       title: 'disneyland.omsk.ru/signup',
       vulnerablePackage: {
         name: 'mdast-util-from-markdown',

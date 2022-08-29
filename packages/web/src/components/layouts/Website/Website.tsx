@@ -94,7 +94,7 @@ export default function Website({
             <span className={styles.packagesTotal}>({packages.length})</span>
             <Filters onSubmit={onFiltersApply} />
             <Icon
-              kind={'lines'}
+              kind='lines'
               className={styles.viewSelect}
               color={view === 'lines' ? '#0F0F0F' : '#E6E6E6'}
               onClick={() => {
@@ -103,7 +103,7 @@ export default function Website({
               }}
             />
             <Icon
-              kind={'grid'}
+              kind='grid'
               className={styles.viewSelect}
               color={view === 'grid' ? '#0F0F0F' : '#E6E6E6'}
               onClick={() => {

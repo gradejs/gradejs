@@ -13,7 +13,7 @@ export default function Header() {
         <a
           href='https://github.com/gradejs/gradejs/discussions/6'
           target='_blank'
-          rel='norefferer noreferrer'
+          rel='noreferrer'
           className={styles.navLink}
           onClick={() => trackCustomEvent('ClickExternalLink', 'About')}
         >
@@ -22,7 +22,7 @@ export default function Header() {
         <a
           href='https://github.com/gradejs/gradejs/discussions'
           target='_blank'
-          rel='norefferer noreferrer'
+          rel='noreferrer'
           className={styles.navLink}
           onClick={() => trackCustomEvent('ClickExternalLink', 'Community')}
         >
@@ -31,7 +31,7 @@ export default function Header() {
         <a
           href='https://github.com/gradejs/gradejs'
           target='_blank'
-          rel='norefferer noreferrer'
+          rel='noreferrer'
           className={clsx(styles.navLink, styles.githubButton)}
           onClick={() => trackCustomEvent('ClickExternalLink', 'SourceCode')}
         >

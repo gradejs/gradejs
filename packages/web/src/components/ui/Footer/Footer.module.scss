@@ -20,10 +20,18 @@
 }
 
 .copyright {
+  display: flex;
+  flex-direction: column;
   color: $gray-text;
 
   @include mobile-and-tablet {
     margin-top: 24px;
+  }
+}
+
+.copyrightItem {
+  &:not(:last-child) {
+    margin-bottom: 4px;
   }
 }
 
