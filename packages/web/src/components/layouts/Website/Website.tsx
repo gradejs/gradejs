@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import { SubmitHandler } from 'react-hook-form';
 import { Header, Package, Section, PackageSkeleton } from 'components/ui';
-import { Grid, Lines } from 'components/icons';
 import styles from './Website.module.scss';
 import Filters, { FiltersState } from '../Filters/Filters';
 import TagBadge from '../../ui/TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
 import { Api } from '../../../services/apiClient';
+import { Icon } from '../../ui/Icon/Icon';
 
 // TODO: Add plashechka
 export type Props = {
@@ -93,7 +93,8 @@ export default function Website({
             NPM packages
             <span className={styles.packagesTotal}>({packages.length})</span>
             <Filters onSubmit={onFiltersApply} />
-            <Lines
+            <Icon
+              kind={'lines'}
               className={styles.viewSelect}
               color={view === 'lines' ? '#0F0F0F' : '#E6E6E6'}
               onClick={() => {
@@ -101,7 +102,8 @@ export default function Website({
                 setView('lines');
               }}
             />
-            <Grid
+            <Icon
+              kind={'grid'}
               className={styles.viewSelect}
               color={view === 'grid' ? '#0F0F0F' : '#E6E6E6'}
               onClick={() => {

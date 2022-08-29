@@ -4,6 +4,7 @@ declare module '*.scss' {
 }
 
 declare module '*.svg' {
-  const path: string;
+  import { SVGAttributes } from 'react';
+  const path: SVGAttributes<SVGElement>;
   export default path;
 }
