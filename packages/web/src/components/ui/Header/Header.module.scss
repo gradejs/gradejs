@@ -1,50 +1,62 @@
+@import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
-.container {
-  width: 100%;
-  max-width: 1024px;
-  padding: 34px;
+.header {
   display: flex;
-  box-sizing: border-box;
-  justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
+  justify-content: space-between;
+  padding: 32px 0;
 
-  @include mobile {
-    padding: 24px;
+  @include mobile-and-tablet {
+    padding: 22px 0;
+  }
+}
+
+.logo {
+  display: flex;
+  width: 129px;
+
+  @include mobile-and-tablet {
+    width: 82px;
   }
 }
 
 .nav {
   display: flex;
   align-items: center;
+
+  & > * + * {
+    margin-left: 40px;
+
+    @include mobile-and-tablet {
+      margin-left: 20px;
+    }
+  }
 }
 
 .navLink {
-  font-size: 14px;
-  line-height: 18px;
-  color: #0f0f0f;
-  text-decoration: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-left: 20px;
+  display: flex;
+  color: $black;
+}
 
-  @include mobile {
-    display: none;
+.githubIcon {
+  width: 32px;
+  height: 32px;
+
+  @include mobile-and-tablet {
+    width: 28px;
+    height: 28px;
   }
 }
 
-.githubButton {
-  background: url('~assets/icons/github.svg') 10px center / 25px 24px no-repeat #ffffff;
-  padding: 12px 10px 12px 45px;
-  border: 1px solid #e6e6e6;
-  transition: border-color 0.2s;
+.homepage {
+  padding: 44px 0;
 
-  @include mobile {
-    display: block;
+  @include mobile-and-tablet {
+    padding: 22px 0;
   }
 
-  &:hover {
-    border-color: #a5a5a5;
+  .navLink {
+    color: $white;
   }
 }

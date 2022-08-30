@@ -60,7 +60,7 @@ export default function Card({
 
       {packageTags && (
         <div className={styles.tagsWrapper}>
-          <ChipGroup chips={packageTags.featuredPackages}>
+          <ChipGroup chips={packageTags.featuredPackages} size='large'>
             <Chip className={styles.tag} variant='outlined' size='large'>
               +{packageTags.restPackages} packages
             </Chip>

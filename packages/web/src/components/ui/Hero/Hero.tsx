@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Hero.module.scss';
 import Container from '../Container/Container';
 import Chip from '../Chip/Chip';
-import HeaderNew from '../HeaderNew/HeaderNew';
+import Header from '../Header/Header';
 import { Icon } from '../Icon/Icon';
 
 export type HeroProps = {
@@ -14,7 +14,7 @@ export type HeroProps = {
 export default function Hero({ inputText, suggestions, loading = false }: HeroProps) {
   return (
     <section className={styles.hero}>
-      <HeaderNew />
+      <Header variant='homepage' />
 
       <Container>
         <div className={styles.content}>
