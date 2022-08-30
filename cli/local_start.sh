@@ -54,7 +54,7 @@ AWS_REGION=test PORT=8083 DB_URL=postgres://gradejs:gradejs@localhost:5432/grade
 API_PID=$!
 
 echo "Starting web package dev server"
-API_ORIGIN=http://localhost:8083 CORS_ORIGIN=http://localhost:3000 \
+PORT=3000 API_ORIGIN=http://localhost:8083 CORS_ORIGIN=http://localhost:3000 \
   npm run dev:start --prefix packages/web 2>&1 &
 WEB_PID=$!
 

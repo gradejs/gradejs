@@ -14059,9 +14059,9 @@ svg-baker@^1.5.0, svg-baker@^1.7.0:
     query-string "^4.3.2"
     traverse "^0.6.6"
 
-"svg-sprite-loader@git+https://github.com/ctizen/svg-sprite-loader.git#f73ede9aa3e357b7d671d2fb89e9d8846c0aa2ba":
+"svg-sprite-loader@git+https://github.com/ctizen/svg-sprite-loader.git#5fc8046921ce575698126e2fa17742678b0b91ac":
   version "6.0.11"
-  resolved "git+https://github.com/ctizen/svg-sprite-loader.git#f73ede9aa3e357b7d671d2fb89e9d8846c0aa2ba"
+  resolved "git+https://github.com/ctizen/svg-sprite-loader.git#5fc8046921ce575698126e2fa17742678b0b91ac"
   dependencies:
     bluebird "^3.5.0"
     deepmerge "1.3.2"
