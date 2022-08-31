@@ -10,5 +10,5 @@
   "exclude": [
     "**/*.test.ts"
   ],
-  "files": ["global.d.ts", "../../index.d.ts"]
+  "files": ["global.d.ts"]
 }

@@ -5,8 +5,7 @@
     "baseUrl": "./src"
   },
   "include": [
-    "./src/**/*",
-    "../../index.d.ts"
+    "./src/**/*"
   ],
   "exclude": [
     "**/*.test.ts"

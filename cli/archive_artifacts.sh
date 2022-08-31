@@ -3,6 +3,8 @@
 # Strip dev packages
 yarn install --production --pure-lockfile
 
+# Tar is required to keep the symlinks inside node_modules alive
+# and thus avoid running `yarn install --production` on server
 tar cf build.tar \
     packages/public-api/build \
     packages/public-api/package.json \
@@ -19,4 +21,3 @@ tar cf build.tar \
     node_modules \
     package.json \
     eb-start.sh
-

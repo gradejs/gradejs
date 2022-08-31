@@ -123,6 +123,8 @@ docker logs -f db
 - In the `Software` section click on the `Edit` button.
 - Enable the `CloudWatch` log streaming with a 5 day retention.
 - Specify the `API_ORIGIN` environment variable. It should point to public API entrypoint you created in chapter 5.
+- Specify the `CORS_ORIGIN` environment variable, set it to empty string to disable CORS checks.
+- Specify `PLAUSIBLE_DOMAIN`, `GA_ID` (strings) and `DUMP_ANALYTICS` (bool) to setup analytics if required. Set to empty if not required.
 - Specify the `EB_START` environment variable: `web`.
 - Click on the `Save` button and then click on the `Create environment` button.
 
