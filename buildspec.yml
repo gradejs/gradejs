@@ -8,8 +8,8 @@ phases:
       - n 16.14.2
       - docker-compose -f docker-compose.aws.yml up -d db
       - yarn install
-      - yarn workspace @gradejs-public/web build
       - yarn build:backend
+      - yarn workspace @gradejs-public/web build
       - yarn workspace @gradejs-public/shared migration:run
       - yarn test
       - docker-compose -f docker-compose.aws.yml down --volumes
@@ -18,4 +18,3 @@ artifacts:
   files:
     - build.tar
     - .platform/**/*
-

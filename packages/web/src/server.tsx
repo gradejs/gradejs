@@ -3,7 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
-import { getPort } from '@gradejs-public/shared/src/utils/env';
+import { getPort, getClientVars } from '@gradejs-public/shared/src/utils/env';
 import { store } from './store';
 import { App } from './components/App';
 import path from 'path';
@@ -23,7 +23,11 @@ app.get('*', (req, res) => {
     </Provider>
   );
 
-  res.send(layout.replace('<div id="app"></div>', '<div id="app">' + html + '</div>'));
+  res.send(
+    layout
+      .replace('<div id="app"></div>', '<div id="app">' + html + '</div>')
+      .replace('window.env = {};', 'window.env = ' + JSON.stringify(getClientVars()) + ';')
+  );
 });
 
 app.listen(getPort(8080));

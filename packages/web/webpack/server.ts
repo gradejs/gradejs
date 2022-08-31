@@ -58,6 +58,9 @@ export const serverConfig: (mode: 'development' | 'production', watch: boolean) 
     libraryTarget: 'umd',
     globalObject: 'this',
   },
+  optimization: {
+    minimize: false,
+  },
   target: 'node',
   watch,
 });

@@ -1,19 +1,8 @@
 import { resolve } from 'path';
-import { Configuration, EnvironmentPlugin, DefinePlugin } from 'webpack';
+import { Configuration, DefinePlugin } from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const SpritePlugin = require('svg-sprite-loader/plugin');
-
-export const env = [
-  'API_ORIGIN',
-  'PLAUSIBLE_DOMAIN',
-  'GA_ID',
-  'DUMP_ANALYTICS',
-  'CORS_ORIGIN',
-].reduce((acc, val) => {
-  acc[val] = `"${process.env[val]}"`;
-  return acc;
-}, {} as Record<string, any>);
 
 export const srcDir = 'src';
 
@@ -27,9 +16,9 @@ export const configCommon: (mode: 'development' | 'production') => Configuration
 });
 
 export const pluginsCommon = (mode: string, isServer: boolean) => [
-  new EnvironmentPlugin(env),
   new DefinePlugin({
     __isServer__: isServer,
+    ...(isServer ? {} : {'process.env': 'window.env'}),
   }),
   new MiniCssExtractPlugin({
     filename: mode === 'development' ? '[name].css' : '[name].[fullhash].css',
