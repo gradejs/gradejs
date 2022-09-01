@@ -27,7 +27,11 @@ app.get('*', (req, res) => {
   res.send(
     layout
       .replace('<div id="app"></div>', '<div id="app">' + html + '</div>')
-      .replace('window.env = {};', 'window.env = ' + JSON.stringify(getClientVars()) + ';')
+      // Little magic to support process.env calls on client side without additional replacements in bundle
+      .replace(
+        'window.process = { env: {} };',
+        'window.process = { env: ' + JSON.stringify(getClientVars()) + ' };'
+      )
   );
 });
 

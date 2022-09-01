@@ -18,7 +18,6 @@ export const configCommon: (mode: 'development' | 'production') => Configuration
 export const pluginsCommon = (mode: string, isServer: boolean) => [
   new DefinePlugin({
     __isServer__: isServer,
-    ...(isServer ? {} : {'process.env': 'window.env'}),
   }),
   new MiniCssExtractPlugin({
     filename: mode === 'development' ? '[name].css' : '[name].[fullhash].css',
