@@ -11,6 +11,17 @@ import weight from '../../../assets/icons/sprite/weight.svg';
 import search from '../../../assets/icons/sprite/search.svg';
 import duplicate from '../../../assets/icons/sprite/duplicate.svg';
 import outdated from '../../../assets/icons/sprite/outdated.svg';
+import cross from '../../../assets/icons/sprite/cross.svg';
+import script from '../../../assets/icons/sprite/script.svg';
+import license from '../../../assets/icons/sprite/license.svg';
+import bugOutlined from '../../../assets/icons/sprite/bug-outlined.svg';
+import repository from '../../../assets/icons/sprite/repository.svg';
+import link from '../../../assets/icons/sprite/link.svg';
+import npm from '../../../assets/icons/sprite/npm.svg';
+import rating from '../../../assets/icons/sprite/rating.svg';
+import dependency from '../../../assets/icons/sprite/dependency.svg';
+import graph from '../../../assets/icons/sprite/graph.svg';
+import ratingArrow from '../../../assets/icons/sprite/rating-arrow.svg';
 
 const icons = {
   githubLogo,
@@ -25,6 +36,17 @@ const icons = {
   duplicate,
   outdated,
   arrowDown,
+  cross,
+  script,
+  license,
+  bugOutlined,
+  repository,
+  link,
+  npm,
+  rating,
+  dependency,
+  graph,
+  ratingArrow,
 };
 
 export type IconProps = {

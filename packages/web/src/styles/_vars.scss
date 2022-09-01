@@ -8,14 +8,19 @@ $font-monospace: 'Roboto', $system-monospace;
 
 $blue-accent: #4549ff;
 $blue-secondary: #a2a4ff;
+$blue-additional: #ededff;
 $red-accent: #f3512e;
 $red-secondary: #f9a896;
+$red-additional: #feeeeb;
 $orange-accent: #f3812e;
 $orange-secondary: #f9bf96;
+$orange-additional: #fef3eb;
 $yellow-accent: #f1ce61;
 $yellow-secondary: #f8e6af;
+$yellow-additional: #fcf5df;
 $green-accent: #49d581;
 $green-secondary: #a4eabf;
+$green-additional: #e4f9ec;
 
 $black: #212121;
 $gray-text: #8e8aa0;
@@ -25,3 +30,6 @@ $white: #fff;
 
 $shadow: 0px 1px 35px rgba(#5c54ba, 0.1);
 $shadow-small: 0px 1px 24px rgba(#5c54ba, 0.1);
+
+$transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+$transition-duration: 600ms;

@@ -1,0 +1,395 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.package {
+  padding: 32px 36px;
+  border-radius: 24px;
+  background: $white;
+  box-shadow: $shadow;
+
+  @include mobile-and-tablet {
+    padding: 20px;
+  }
+}
+
+.header {
+  padding-bottom: 24px;
+}
+
+.top {
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.title {
+  padding-right: 24px;
+
+  @include mobile-and-tablet {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+
+.name {
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.version {
+  font-size: 26px;
+  font-weight: 400;
+  color: $gray-text;
+  margin-right: 12px;
+}
+
+.problems {
+  vertical-align: text-bottom;
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+  height: 33px;
+
+  & > * {
+    &:not(:last-child) {
+      margin-right: 6px;
+    }
+
+    @include mobile-and-tablet {
+      margin-bottom: 6px;
+    }
+  }
+
+  @include mobile-and-tablet {
+    display: flex;
+    flex-wrap: wrap;
+    order: 1;
+    height: initial;
+    margin-bottom: 2px;
+  }
+}
+
+.arrowWrapper {
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $gray-surface;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // FIXME: not sure that 24x24 is good UX size for clickable element,
+  // i'm considering at least 32x32, or not changing desktop 36x36 at all
+  //@include mobile-and-tablet {
+  //  width: 24px;
+  //  height: 24px;
+  //}
+}
+
+.arrow {
+  transition: transform 0.3s ease-out;
+
+  .open & {
+    transform: rotate(180deg);
+  }
+}
+
+.desc {
+  margin-top: 8px;
+  color: $gray-text;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid $gray-border;
+  padding-top: 24px;
+
+  @include mobile-and-tablet {
+    padding-top: 20px;
+  }
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+
+  & > * + * {
+    margin-left: 24px;
+  }
+}
+
+.tag {
+  font-weight: 500;
+
+  @include mobile-and-tablet {
+    &:nth-child(n + 3) {
+      display: none;
+    }
+  }
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  color: $gray-text;
+}
+
+.authorImage {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-left: 16px;
+
+  @include mobile-and-tablet {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.authorName {
+  @include mobile-and-tablet {
+    display: none;
+  }
+}
+
+.content {
+  max-height: 0;
+  overflow: hidden;
+  transition-duration: $transition-duration;
+  transition-timing-function: $transition-timing-function;
+
+  .open & {
+    max-height: 9000px;
+    transition-duration: $transition-duration;
+    transition-timing-function: ease-in;
+  }
+}
+
+.contentEnterDone {
+  overflow: visible;
+}
+
+.contentInner {
+  margin-bottom: 24px;
+}
+
+.stat {
+  margin-bottom: 32px;
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 18px;
+  color: $gray-text;
+  font-weight: 500;
+  margin-bottom: 8px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 12px;
+  }
+}
+
+.statIcon {
+  margin-right: 8px;
+}
+
+.statLink {
+  display: block;
+  line-height: 20px;
+  color: $blue-accent;
+  font-weight: 500;
+}
+
+.statTitle {
+  display: flex;
+  align-items: flex-end;
+  font-size: 26px;
+  line-height: 40px;
+  font-weight: 500;
+}
+
+.statRating {
+  position: relative;
+  align-items: flex-end;
+  margin-left: 4px;
+  font-size: 16px;
+  line-height: 1.625;
+}
+
+.statRatingGreen {
+  color: $green-accent;
+
+  .statRatingArrow {
+    color: $green-accent;
+  }
+}
+
+.statRatingRed {
+  color: $red-accent;
+
+  .statRatingArrow {
+    color: $red-accent;
+    transform: rotate(90deg);
+  }
+}
+
+.statRatingArrow {
+  top: -8px;
+  right: 0;
+  position: absolute;
+}
+
+.statSubtitle {
+  color: $gray-text;
+}
+
+.statList {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-right: 60px;
+
+  @include mobile-and-tablet {
+    flex-wrap: wrap;
+    padding-right: 0;
+  }
+}
+
+.statListItemSmall {
+  flex: 0 0 auto;
+  width: 25%;
+
+  @include mobile-and-tablet {
+    width: 50%;
+  }
+}
+
+.statListItemLarge {
+  flex: 0 0 auto;
+  width: 50%;
+
+  @include mobile-and-tablet {
+    width: 100%;
+  }
+}
+
+.popularity {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 11px;
+
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include mobile {
+    margin: 0 -20px;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+}
+
+.popularityItemWrapper {
+}
+
+.popularityItem {
+  height: 282px;
+  background: $gray-surface;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  @include mobile-and-tablet {
+    min-width: 92px;
+  }
+}
+
+.popularityFill {
+  border-radius: 10px;
+  background: $gray-border;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  font-weight: 500;
+  color: $gray-text;
+  padding-bottom: 14px;
+}
+
+.popularityFillAccent {
+  background: $blue-accent;
+  color: #ffffff;
+}
+
+.popularityVersion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  font-family: $font-monospace;
+  font-weight: 500;
+}
+
+.popularityVersionIcon {
+  margin-left: 8px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include mobile-and-tablet {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}
+
+.links {
+  display: flex;
+  align-items: center;
+
+  @include mobile-and-tablet {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  & > * + * {
+    margin-left: 62px;
+
+    @include mobile-and-tablet {
+      margin-left: 0;
+    }
+  }
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  color: $black;
+  font-weight: 500;
+}
+
+.linkIcon {
+  margin-right: 8px;
+}
+
+.details {
+  display: block;
+}

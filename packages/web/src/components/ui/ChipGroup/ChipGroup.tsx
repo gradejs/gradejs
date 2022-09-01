@@ -7,15 +7,21 @@ type Props = {
   children?: React.ReactNode;
   size?: ChipProps['size'];
   font?: ChipProps['font'];
+  fontSize?: ChipProps['fontSize'];
 };
 
-// TODO: allow Chip customizing with props
-export default function ChipGroup({ chips, children, size = 'medium', font = 'monospace' }: Props) {
+export default function ChipGroup({
+  chips,
+  children,
+  size = 'medium',
+  font = 'monospace',
+  fontSize = 'regular',
+}: Props) {
   return (
     <div className={styles.chipsWrapper}>
       <div className={styles.chips}>
         {chips.map((chip) => (
-          <Chip key={chip} className={styles.chip} size={size} font={font}>
+          <Chip key={chip} className={styles.chip} size={size} font={font} fontSize={fontSize}>
             {chip}
           </Chip>
         ))}

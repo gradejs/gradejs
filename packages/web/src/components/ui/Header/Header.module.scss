@@ -5,10 +5,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32px 0;
+  padding: 20px 0;
 
   @include mobile-and-tablet {
-    padding: 22px 0;
+    display: grid;
+    grid-row-gap: 22px;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 28px 52px;
   }
 }
 
@@ -21,9 +24,21 @@
   }
 }
 
+.searchWrapper {
+  flex-grow: 1;
+  padding: 0 40px;
+
+  @include mobile-and-tablet {
+    grid-column: 1 / -1;
+    grid-row: 2 / -1;
+    padding: 0;
+  }
+}
+
 .nav {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 
   & > * + * {
     margin-left: 40px;

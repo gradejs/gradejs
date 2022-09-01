@@ -13,7 +13,13 @@
 
   @include mobile-and-tablet {
     font-size: 14px;
+    line-height: 22px;
   }
+}
+
+.icon {
+  display: inline-flex;
+  margin-right: 2px;
 }
 
 .secondary {
@@ -30,12 +36,31 @@
   color: rgba($white, 0.8);
 }
 
-.regular {
+.badge {
+  padding: 0 9px 0 3px;
+
+  @include mobile-and-tablet {
+    font-size: 15px;
+    line-height: 17px;
+    padding: 2px 10px 2px 2px;
+
+    .icon svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.default {
   padding: 4px 11px;
 }
 
 .medium {
   padding: 7px 11px;
+
+  @include mobile-and-tablet {
+    padding: 4px 11px;
+  }
 }
 
 .large {
@@ -47,9 +72,42 @@
 }
 
 .sans-serif {
-  font-size: $font-sans-serif;
+  font-family: $font-sans-serif;
 }
 
 .monospace {
   font-family: $font-monospace;
+}
+
+.400 {
+  font-weight: normal;
+}
+
+.500 {
+  font-weight: 500;
+}
+
+.red {
+  background-color: $red-accent;
+  color: $white;
+}
+
+.orange {
+  background-color: $orange-accent;
+  color: $white;
+}
+
+.yellow {
+  background-color: $yellow-accent;
+  color: $white;
+}
+
+.blueAdditional {
+  background-color: $blue-additional;
+  color: $blue-accent;
+}
+
+.smallFont {
+  font-size: 14px;
+  line-height: 20px;
 }

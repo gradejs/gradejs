@@ -1,4 +1,5 @@
 $breakpoint-mobile: 575px;
+$breakpoint-sm: 767px;
 $breakpoint-tablet: 991px;
 $breakpoint-lg: 1199px;
 $breakpoint-xl: 1399px;
@@ -17,6 +18,12 @@ $breakpoint-xl: 1399px;
 
 @mixin mobile-and-tablet {
   @media (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: $breakpoint-sm) {
     @content;
   }
 }

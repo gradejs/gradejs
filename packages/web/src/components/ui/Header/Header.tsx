@@ -23,7 +23,7 @@ export default function Header({ variant = 'default', children }: Props) {
           />
         </a>
 
-        {children}
+        <div className={styles.searchWrapper}>{children}</div>
 
         <div className={styles.nav}>
           <a

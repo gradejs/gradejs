@@ -1,0 +1,56 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.searchBar {
+  position: relative;
+}
+
+.input {
+  display: inline-block;
+  vertical-align: middle;
+  font-family: inherit;
+  appearance: textfield;
+  width: 100%;
+  font-size: 19px;
+  line-height: 26px;
+  padding: 15px 56px 15px 28px;
+  color: $black;
+  border: none;
+  background: $gray-surface;
+  border-radius: 30px;
+  outline: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  &::placeholder {
+    color: $gray-text;
+  }
+
+  @include mobile-and-tablet {
+    padding: 15px 50px 15px 24px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+.submit,
+.clear {
+  cursor: pointer;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include mobile-and-tablet {
+    top: 14px;
+    right: 14px;
+  }
+}

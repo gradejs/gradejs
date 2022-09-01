@@ -1,0 +1,53 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.sitesList {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include mobile-and-tablet {
+    justify-content: flex-start;
+  }
+
+  & > * + * {
+    margin-left: 40px;
+  }
+}
+
+.site {
+  display: flex;
+  align-items: center;
+
+  @include mobile-and-tablet {
+    min-width: 145px;
+  }
+}
+
+.imageWrapper {
+  display: flex;
+  flex-shrink: 0;
+  width: 44px;
+  margin-right: 14px;
+}
+
+.image {
+  width: 100%;
+  object-fit: cover;
+}
+
+.title {
+  font-weight: 500;
+}
+
+.subtitle {
+  font-size: 14px;
+  line-height: 22px;
+  color: $gray-text;
+}

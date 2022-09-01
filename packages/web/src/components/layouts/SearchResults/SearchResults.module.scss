@@ -1,0 +1,249 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.searchResults {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-rows: min-content 1fr;
+  grid-column-gap: 80px;
+  margin-top: 44px;
+  margin-bottom: 100px;
+
+  @include mobile-and-tablet {
+    margin-top: 24px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-gap: 24px;
+  }
+}
+
+.packages {
+  grid-column: 2 / -1;
+
+  @include mobile-and-tablet {
+    grid-column: 1;
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+}
+
+.searchedPackage {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 36px;
+
+  @include mobile-and-tablet {
+    flex-direction: column;
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+}
+
+.searchedPackageImageWrapper {
+  display: flex;
+  flex-shrink: 0;
+  margin-right: 24px;
+  max-width: 52px;
+
+  @include mobile-and-tablet {
+    max-width: 44px;
+    margin-right: 0;
+    margin-bottom: 24px;
+  }
+}
+
+.searchedPackageImage {
+  width: 100%;
+  object-fit: cover;
+}
+
+.searchedPackageContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchedPackageTitle {
+  margin-bottom: 12px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 8px;
+  }
+}
+
+.searchedPackageHighlight {
+  color: $gray-text;
+}
+
+.searchedPackageSubtitle {
+  color: $gray-text;
+}
+
+.sidebar {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+  display: grid;
+  grid-gap: 24px;
+  align-self: start;
+
+  @include mobile-and-tablet {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+.sidebarItem {
+  &:not(:first-child) {
+    padding-top: 24px;
+    border-top: 1px solid $gray-border;
+  }
+}
+
+.sidebarItemTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sidebarItemTitle {
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 26px;
+}
+
+.sidebarItemAction {
+  display: flex;
+}
+
+.meta {
+  display: grid;
+  grid-gap: 20px;
+
+  // FIXME: not sure that mobile spacing should be higher than desktop one
+  @include mobile-and-tablet {
+    grid-gap: 24px;
+  }
+}
+
+.metaItem {
+  display: flex;
+  align-items: flex-start;
+
+  @include mobile-and-tablet {
+    line-height: 24px;
+  }
+}
+
+.metaIcon {
+  display: flex;
+  flex-shrink: 0;
+  margin-right: 20px;
+
+  @include mobile-and-tablet {
+    margin-right: 16px;
+  }
+}
+
+.metaText {
+  font-weight: 500;
+}
+
+.viewAll {
+  margin-top: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  color: $blue-accent;
+}
+
+.checkboxGroup {
+  display: grid;
+  grid-gap: 18px;
+}
+
+.checkbox {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  padding-left: 36px;
+
+  @include lg {
+    line-height: 24px;
+  }
+}
+
+.checkboxInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+
+  &:checked ~ .checkboxName {
+    &::before {
+      background: $black;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.checkboxName {
+  display: inline-block;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background: $gray-border;
+    transition: background 0.2s ease-out;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 6px;
+    width: 12px;
+    height: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+    background: url('~assets/checkbox-check.svg') 50% no-repeat;
+  }
+}
+
+.authors {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  &:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+
+.authorImageWrapper {
+  display: flex;
+  flex-shrink: 0;
+  margin-right: 6px;
+  max-width: 36px;
+}
+
+.authorImage {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}

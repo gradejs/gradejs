@@ -10,6 +10,7 @@ export type ChipProps = {
   size?: 'default' | 'medium' | 'large' | string;
   font?: 'sans-serif' | 'monospace' | string;
   fontWeight?: 400 | 500;
+  fontSize?: 'small' | 'regular';
   icon?: React.ReactElement<IconProps>;
 };
 
@@ -20,6 +21,7 @@ export default function Chip({
   size = 'default',
   font = 'sans-serif',
   fontWeight = 400,
+  fontSize = 'regular',
   icon,
 }: ChipProps) {
   return (
@@ -30,6 +32,7 @@ export default function Chip({
         styles[size],
         styles[font],
         styles[fontWeight],
+        fontSize === 'small' && styles.smallFont,
         className
       )}
     >

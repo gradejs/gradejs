@@ -1,77 +1,167 @@
+@import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
+//.button {
+//  appearance: none;
+//  border-radius: 6px;
+//  border: none;
+//  outline: none;
+//  cursor: pointer;
+//  line-height: 140%;
+//  font-family: 'Inter', sans-serif;
+//  font-weight: 400;
+//  box-sizing: border-box;
+//}
+//
+//// Sizes
+//.big {
+//  padding: 16px 16px;
+//  font-size: 16px;
+//  line-height: 28px;
+//
+//  @include mobile {
+//    font-size: 16px;
+//    line-height: 22px;
+//  }
+//}
+//
+//.medium {
+//  padding: 12px 10px 12px;
+//  font-size: 14px;
+//  line-height: 18px;
+//}
+//
+//// Variants
+//.default {
+//  background: #fff;
+//  border: 1px solid #e6e6e6;
+//  color: #0f0f0f;
+//  transition: border-color 0.2s;
+//
+//  &:enabled:hover {
+//    border-color: #a5a5a5;
+//  }
+//
+//  &:enabled:active {
+//    border-color: #000000;
+//  }
+//}
+//
+//.black {
+//  background-color: #0f0f0f;
+//  color: #fff;
+//}
+//
+//.action {
+//  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat;
+//  background-color: #0f0f0f;
+//  color: #fff;
+//  text-align: left;
+//  padding-right: 60px;
+//}
+//
+//.black,
+//.action {
+//  transition: background-color 0.2s;
+//
+//  &:enabled:hover {
+//    background-color: #666666;
+//  }
+//  &:enabled:active {
+//    background-color: #a5a5a5;
+//  }
+//}
+//
+//.action:disabled {
+//  background-color: #666666;
+//  background-image: url('~assets/loader-white.svg');
+//}
+
 .button {
-  appearance: none;
-  border-radius: 6px;
-  border: none;
-  outline: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  outline: 0;
   cursor: pointer;
-  line-height: 140%;
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  box-sizing: border-box;
-}
-
-// Sizes
-.big {
-  padding: 16px 16px;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  text-decoration: none;
+  font-family: inherit;
   font-size: 16px;
-  line-height: 28px;
+  line-height: 26px;
+  font-weight: 500;
+  border: none;
+  padding: 13px 20px;
+  background-color: $blue-accent;
+  color: $white;
+  border-radius: 67px;
+}
 
-  @include mobile {
-    font-size: 16px;
-    line-height: 22px;
+.arrowIcon {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+}
+
+.arrowIconBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba($white, 0.2);
+  transition: all $transition-duration $transition-timing-function;
+}
+
+.arrow {
+  padding-right: 69px;
+
+  .chevron {
+    transform: translateX(-3px);
+    transition: transform $transition-duration $transition-timing-function;
+  }
+
+  .line {
+    transform: translateX(-3px);
+    opacity: 0;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    transition: all $transition-duration $transition-timing-function;
+  }
+
+  &:hover {
+    .arrowIconBackground {
+      transform: scale(0.9);
+    }
+
+    .chevron {
+      transform: translateX(0);
+    }
+
+    .line {
+      transform: translateX(0);
+      opacity: 1;
+      animation: reveal $transition-duration $transition-timing-function forwards;
+    }
   }
 }
 
-.medium {
-  padding: 12px 10px 12px;
-  font-size: 14px;
-  line-height: 18px;
-}
-
-// Variants
-.default {
-  background: #fff;
-  border: 1px solid #e6e6e6;
-  color: #0f0f0f;
-  transition: border-color 0.2s;
-
-  &:enabled:hover {
-    border-color: #a5a5a5;
+@keyframes reveal {
+  from {
+    stroke: none;
+    stroke-dashoffset: 2;
   }
-
-  &:enabled:active {
-    border-color: #000000;
+  to {
+    stroke: $white;
+    stroke-dashoffset: 0;
   }
-}
-
-.black {
-  background-color: #0f0f0f;
-  color: #fff;
-}
-
-.action {
-  background: url('~assets/icons/arrow-right.svg') right 20px center / 20px 21px no-repeat;
-  background-color: #0f0f0f;
-  color: #fff;
-  text-align: left;
-  padding-right: 60px;
-}
-
-.black,
-.action {
-  transition: background-color 0.2s;
-
-  &:enabled:hover {
-    background-color: #666666;
-  }
-  &:enabled:active {
-    background-color: #a5a5a5;
-  }
-}
-
-.action:disabled {
-  background-color: #666666;
-  background-image: url('~assets/loader-white.svg');
 }
