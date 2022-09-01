@@ -24,19 +24,24 @@ const sleep = (ms: number | undefined) =>
 const hasPendingPages = (result: DetectionResult) =>
   !!result.webpages.find((item) => item.status === 'pending');
 
-const getWebsite = createAsyncThunk('websiteResults/getWebsite', async (hostname: string) => {
-  const loadStartTime = Date.now();
-  let results = await client.mutation('syncWebsite', hostname);
-  while (hasPendingPages(results)) {
-    await sleep(5000);
-    results = await client.mutation('syncWebsite', hostname);
+const getWebsite = createAsyncThunk(
+  'websiteResults/getWebsite',
+  async ({ hostname, useRetry = true }: { hostname: string; useRetry?: boolean }) => {
+    const loadStartTime = Date.now();
+    let results = await client.mutation('syncWebsite', hostname);
+    if (useRetry) {
+      while (hasPendingPages(results)) {
+        await sleep(5000);
+        results = await client.mutation('syncWebsite', hostname);
+      }
+    }
+    // TODO: move to tracking middleware?
+    trackCustomEvent('HostnamePage', 'WebsiteLoaded', {
+      value: Date.now() - loadStartTime,
+    });
+    return results;
   }
-  // TODO: move to tracking middleware?
-  trackCustomEvent('HostnamePage', 'WebsiteLoaded', {
-    value: Date.now() - loadStartTime,
-  });
-  return results;
-});
+);
 
 const websiteResults = createSlice({
   name: 'websiteResults',

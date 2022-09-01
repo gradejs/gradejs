@@ -4,6 +4,13 @@ export enum Env {
   Port = 'PORT',
   DatabaseUrl = 'DB_URL',
 
+  // Web related
+  PublicApiOrigin = 'API_ORIGIN',
+  PublicCorsOrigin = 'CORS_ORIGIN',
+  PlausibleDomain = 'PLAUSIBLE_DOMAIN',
+  AnalyticsId = 'GA_ID',
+  VerboseAnalytics = 'DUMP_ANALYTICS',
+
   // AWS
   AwsRegion = 'AWS_REGION',
   SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
@@ -63,3 +70,16 @@ export function getEnvUnsafe(name: string) {
 export function checkRequiredEnvironmentVariables(keys: Env[]) {
   keys.forEach((key) => key && getEnv(key));
 }
+
+export const getClientVars = () => {
+  return [
+    Env.PublicApiOrigin,
+    Env.PublicCorsOrigin,
+    Env.PlausibleDomain,
+    Env.AnalyticsId,
+    Env.VerboseAnalytics,
+  ].reduce((acc, val) => {
+    acc[val] = getEnvUnsafe(val) ?? '';
+    return acc;
+  }, {} as Record<string, string>);
+};

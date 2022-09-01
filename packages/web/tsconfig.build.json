@@ -1,7 +1,7 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./build",
+    "outDir": "./webpack",
     "baseUrl": "./src"
   },
   "include": [
@@ -9,5 +9,6 @@
   ],
   "exclude": [
     "**/*.test.ts"
-  ]
+  ],
+  "files": ["global.d.ts"]
 }

@@ -8,3 +8,5 @@ declare module '*.svg' {
   const path: SVGAttributes<SVGElement>;
   export default path;
 }
+
+declare const __isServer__: boolean; // Replaced with DefinePlugin during build
