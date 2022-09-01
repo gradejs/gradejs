@@ -1,5 +1,6 @@
 import { join } from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 import { configCommon, pluginsCommon, srcDir } from './common';
 import { Configuration } from 'webpack';
 
@@ -51,7 +52,12 @@ export const serverConfig: (mode: 'development' | 'production', watch: boolean) 
       },
     ],
   },
-  plugins: pluginsCommon(mode, true),
+  plugins: [
+    ...pluginsCommon(mode, true),
+    new CopyPlugin({
+      patterns: [{ from: 'robots.txt', to: 'robots.txt' }],
+    }),
+  ],
   output: {
     filename: '[name].js',
     path: join(__dirname, '..', distDir),

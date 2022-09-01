@@ -8,12 +8,22 @@ import { getPort, getClientVars } from '../../shared/src/utils/env';
 import { store } from './store';
 import { App } from './components/App';
 import path from 'path';
-import { readFileSync } from 'fs';
+import { readFileSync, readFile } from 'fs';
 
 const app = express();
 const layout = readFileSync(path.resolve(__dirname, 'static', 'index.html'), { encoding: 'utf-8' });
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
+app.get('/robots.txt', (_, res) =>
+  readFile(path.join(__dirname, '/robots.txt'), { encoding: 'utf-8' }, (err, data) => {
+    if (!err) {
+      res.send(data);
+    } else {
+      res.status(404);
+      res.send(null);
+    }
+  })
+);
 
 app.get('*', (req, res) => {
   const html = ReactDOMServer.renderToString(
