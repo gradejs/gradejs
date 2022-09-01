@@ -74,10 +74,7 @@ export const clientConfig: (mode: 'development' | 'production', watch: boolean) 
       template: join(__dirname, '..', 'index.html'),
     }),
     new CopyPlugin({
-      patterns: [
-        { from: 'robots.txt', to: 'robots.txt' },
-        { from: 'src/assets/sharing-image.png', to: 'sharing-image.png' },
-      ],
+      patterns: [{ from: 'src/assets/sharing-image.png', to: 'sharing-image.png' }],
     }),
   ],
   output: {
