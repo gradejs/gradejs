@@ -3,7 +3,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
-import { getPort, getClientVars } from '@gradejs-public/shared/src/utils/env';
+// TODO: fix import from different monorepo package
+import { getPort, getClientVars } from '../../shared/src/utils/env';
 import { store } from './store';
 import { App } from './components/App';
 import path from 'path';

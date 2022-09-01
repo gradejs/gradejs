@@ -55,7 +55,7 @@ export const serverConfig: (mode: 'development' | 'production', watch: boolean) 
   output: {
     filename: '[name].js',
     path: join(__dirname, '..', distDir),
-    libraryTarget: 'umd',
+    library: { type: 'commonjs2' },
     globalObject: 'this',
   },
   optimization: {
