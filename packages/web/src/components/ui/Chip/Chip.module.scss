@@ -2,14 +2,15 @@
 @import '~styles/responsive.scss';
 
 .chip {
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: $gray-surface;
   border-radius: 31px;
   line-height: 1.25;
   border: 1px solid transparent;
   white-space: nowrap;
+  transition: all $transition-duration $transition-timing-function;
 
   @include mobile-and-tablet {
     font-size: 14px;
@@ -22,8 +23,21 @@
   margin-right: 2px;
 }
 
+.primary {
+  background-color: $gray-surface;
+
+  &:hover {
+    background-color: $gray-border;
+  }
+}
+
 .secondary {
   color: $gray-text;
+  background-color: $gray-surface;
+
+  &:hover {
+    background-color: $gray-border;
+  }
 }
 
 .outlined {

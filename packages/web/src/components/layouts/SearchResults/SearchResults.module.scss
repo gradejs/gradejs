@@ -7,13 +7,27 @@
   grid-template-rows: min-content 1fr;
   grid-column-gap: 80px;
   margin-top: 44px;
-  margin-bottom: 100px;
+  padding-bottom: 108px;
+  border-bottom: 1px solid $gray-border;
+  margin-bottom: 80px;
+
+  @include lg {
+    grid-template-columns: 232px minmax(0, 1fr);
+    grid-column-gap: 56px;
+    padding-bottom: 86px;
+  }
 
   @include mobile-and-tablet {
     margin-top: 24px;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: none;
     grid-gap: 24px;
+    padding-bottom: 64px;
+    margin-bottom: 56px;
+  }
+
+  @include mobile {
+    padding-bottom: 64px;
   }
 }
 
@@ -25,58 +39,6 @@
     margin-left: -20px;
     margin-right: -20px;
   }
-}
-
-.searchedPackage {
-  grid-column: 2 / -1;
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 36px;
-
-  @include mobile-and-tablet {
-    flex-direction: column;
-    grid-column: 1;
-    margin-bottom: 0;
-  }
-}
-
-.searchedPackageImageWrapper {
-  display: flex;
-  flex-shrink: 0;
-  margin-right: 24px;
-  max-width: 52px;
-
-  @include mobile-and-tablet {
-    max-width: 44px;
-    margin-right: 0;
-    margin-bottom: 24px;
-  }
-}
-
-.searchedPackageImage {
-  width: 100%;
-  object-fit: cover;
-}
-
-.searchedPackageContent {
-  display: flex;
-  flex-direction: column;
-}
-
-.searchedPackageTitle {
-  margin-bottom: 12px;
-
-  @include mobile-and-tablet {
-    margin-bottom: 8px;
-  }
-}
-
-.searchedPackageHighlight {
-  color: $gray-text;
-}
-
-.searchedPackageSubtitle {
-  color: $gray-text;
 }
 
 .sidebar {
@@ -110,6 +72,10 @@
   font-weight: 500;
   font-size: 19px;
   line-height: 26px;
+}
+
+.sidebarItemCounter {
+  margin-left: 8px;
 }
 
 .sidebarItemAction {
@@ -154,6 +120,11 @@
   cursor: pointer;
   font-weight: 500;
   color: $blue-accent;
+  transition: opacity $transition-duration $transition-timing-function;
+
+  &:hover {
+    opacity: 0.6;
+  }
 }
 
 .checkboxGroup {
@@ -161,89 +132,7 @@
   grid-gap: 18px;
 }
 
-.checkbox {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  padding-left: 36px;
-
-  @include lg {
-    line-height: 24px;
-  }
-}
-
-.checkboxInput {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
-
-  &:checked ~ .checkboxName {
-    &::before {
-      background: $black;
-    }
-
-    &::after {
-      opacity: 1;
-    }
-  }
-}
-
-.checkboxName {
-  display: inline-block;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 24px;
-    height: 24px;
-    border: 2px solid transparent;
-    border-radius: 5px;
-    background: $gray-border;
-    transition: background 0.2s ease-out;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 7px;
-    left: 6px;
-    width: 12px;
-    height: 10px;
-    opacity: 0;
-    transition: opacity 0.2s ease-out;
-    background: url('~assets/checkbox-check.svg') 50% no-repeat;
-  }
-}
-
 .authors {
   display: flex;
   flex-wrap: wrap;
-}
-
-.author {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-
-  &:not(:last-child) {
-    margin-right: 16px;
-  }
-}
-
-.authorImageWrapper {
-  display: flex;
-  flex-shrink: 0;
-  margin-right: 6px;
-  max-width: 36px;
-}
-
-.authorImage {
-  width: 100%;
-  object-fit: cover;
-  border-radius: 50%;
 }

@@ -22,6 +22,7 @@ import rating from '../../../assets/icons/sprite/rating.svg';
 import dependency from '../../../assets/icons/sprite/dependency.svg';
 import graph from '../../../assets/icons/sprite/graph.svg';
 import ratingArrow from '../../../assets/icons/sprite/rating-arrow.svg';
+import check from '../../../assets/icons/sprite/check.svg';
 
 const icons = {
   githubLogo,
@@ -47,6 +48,7 @@ const icons = {
   dependency,
   graph,
   ratingArrow,
+  check,
 };
 
 export type IconProps = {

@@ -12,6 +12,7 @@ type Props = {
 };
 
 export default function HomeNew({ suggestions }: Props) {
+  // TODO: mock date, remove later
   const popularCards: CardProps[] = [
     {
       id: 'uExBVGuF',
@@ -42,6 +43,7 @@ export default function HomeNew({ suggestions }: Props) {
     },
   ];
 
+  // TODO: mock date, remove later
   const popularPackages: CardProps[] = [
     {
       id: 'FPsBcl8R',
@@ -115,6 +117,7 @@ export default function HomeNew({ suggestions }: Props) {
     },
   ];
 
+  // TODO: mock date, remove later
   const vulnerablePackages: CardProps[] = [
     {
       id: 'LnO9Xynn',

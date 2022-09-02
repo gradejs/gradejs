@@ -8,7 +8,12 @@
   margin-left: auto;
   margin-right: auto;
 
-  @include xl {
+  @include lg {
+    padding-left: 36px;
+    padding-right: 36px;
+  }
+
+  @include mobile-and-tablet {
     padding-left: 20px;
     padding-right: 20px;
   }

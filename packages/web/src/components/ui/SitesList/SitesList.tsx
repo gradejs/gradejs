@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './SitesList.module.scss';
+import clsx from 'clsx';
 
 export type Site = {
   id: string;
@@ -10,6 +11,7 @@ export type Site = {
 
 type Props = {
   sites: Site[];
+  className?: string;
 };
 
 function Site({ image, name, packagesCount }: Site) {
@@ -26,12 +28,14 @@ function Site({ image, name, packagesCount }: Site) {
   );
 }
 
-export default function SitesList({ sites }: Props) {
+export default function SitesList({ sites, className }: Props) {
   return (
-    <div className={styles.sitesList}>
-      {sites.map((site) => (
-        <Site key={site.id} {...site} />
-      ))}
+    <div className={styles.sitesListWrapper}>
+      <div className={clsx(styles.sitesList, className)}>
+        {sites.map((site) => (
+          <Site key={site.id} {...site} />
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,11 @@
 @import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
+.sitesListWrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .sitesList {
   display: flex;
   flex-wrap: nowrap;
@@ -17,7 +22,11 @@
   }
 
   & > * + * {
-    margin-left: 40px;
+    margin-left: 68px;
+
+    @include lg {
+      margin-left: 40px;
+    }
   }
 }
 

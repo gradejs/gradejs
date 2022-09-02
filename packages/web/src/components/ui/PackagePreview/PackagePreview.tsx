@@ -11,10 +11,11 @@ import Button from '../Button/Button';
 type Props = {
   name: string;
   version: string;
+  opened?: boolean;
 };
 
-export default function PackagePreview({ name, version }: Props) {
-  const [open, setOpen] = useState<boolean>(true);
+export default function PackagePreview({ name, version, opened }: Props) {
+  const [open, setOpen] = useState<boolean>(opened ?? false);
 
   // TODO: mock data, remove later
   const sites: Site[] = [
@@ -38,6 +39,24 @@ export default function PackagePreview({ name, version }: Props) {
     },
     {
       id: '1231',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      name: 'pinterest.com',
+      packagesCount: 151,
+    },
+    {
+      id: '12321',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      name: 'pinterest.com',
+      packagesCount: 151,
+    },
+    {
+      id: '123123',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      name: 'pinterest.com',
+      packagesCount: 151,
+    },
+    {
+      id: '12123132',
       image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
       name: 'pinterest.com',
       packagesCount: 151,
@@ -240,7 +259,7 @@ export default function PackagePreview({ name, version }: Props) {
             <div className={styles.stat}>
               <div className={styles.statHeader}>Used on</div>
 
-              <SitesList sites={sites} />
+              <SitesList sites={sites} className={styles.usedOnList} />
             </div>
 
             <div className={styles.actions}>

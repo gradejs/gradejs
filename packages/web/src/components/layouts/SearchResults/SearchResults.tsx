@@ -7,10 +7,121 @@ import { Icon } from '../../ui/Icon/Icon';
 import ChipGroup from '../../ui/ChipGroup/ChipGroup';
 import PackagePreview from '../../ui/PackagePreview/PackagePreview';
 import SearchBar from '../../ui/SearchBar/SearchBar';
+import Badge from '../../ui/Badge/Badge';
+import Person from 'components/ui/Person/Person';
+import Checkbox from '../../ui/Checkbox/Checkbox';
+import SearchedResource from '../../ui/SearchedResource/SearchedResource';
+import { CardProps } from '../../ui/Card/Card';
+import CardGroup from '../../ui/CardGroup/CardGroup';
+import CardList from '../../ui/CardList/CardList';
+import CardGroups from 'components/ui/CardGroups/CardGroups';
 
-type Props = {};
+export default function SearchResults() {
+  // TODO: mock date, remove later
+  const similarCards: CardProps[] = [
+    {
+      id: 'uExBVGuF',
+      title: 'github.com',
+      icon: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      packageTags: {
+        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
+        restPackages: 45,
+      },
+    },
+    {
+      id: '1EkL1u5g',
+      title: 'fingerprint.com',
+      icon: 'https://avatars.githubusercontent.com/u/67208791?s=200&v=4',
+      packageTags: {
+        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
+        restPackages: 45,
+      },
+    },
+    {
+      id: 'mhwO2bPM',
+      title: 'facebook.com',
+      icon: 'https://avatars.githubusercontent.com/u/69631?s=200&v=4',
+      packageTags: {
+        featuredPackages: ['react'],
+        restPackages: 45,
+      },
+    },
+  ];
 
-export default function SearchResults(props: Props) {
+  // TODO: mock date, remove later
+  const popularPackages: CardProps[] = [
+    {
+      id: 'FPsBcl8R',
+      title: '@team-griffin/react-heading-section',
+      description: "This package's job is to automatically determine...",
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'emtYcsUh',
+      title: 'unist-util-generated',
+      description: 'unist utility to check if a node is generated',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'TYIwvAfy',
+      title: 'react-smooth',
+      description: 'is a animation library work on React',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'Lq1pEEX7',
+      title: 'unist-util-position',
+      description: 'unist utility to get the positional info of nodes',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'cWOgIbmp',
+      title: 'vfile-message',
+      description: 'Create vfile messages',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'UT97Vpoi',
+      title: 'Go to all Popular packages',
+      variant: 'toAll',
+    },
+  ];
+
   return (
     <>
       <Header>
@@ -19,21 +130,12 @@ export default function SearchResults(props: Props) {
 
       <Container>
         <div className={styles.searchResults}>
-          <div className={styles.searchedPackage}>
-            <div className={styles.searchedPackageImageWrapper}>
-              <img
-                className={styles.searchedPackageImage}
-                src='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
-                alt=''
-              />
-            </div>
-            <div className={styles.searchedPackageContent}>
-              <h3 className={styles.searchedPackageTitle}>
-                pinterest.com <span className={styles.searchedPackageHighlight}>6 packages</span>
-              </h3>
-              <div className={styles.searchedPackageSubtitle}>Last scanning 21 feb in 21:30</div>
-            </div>
-          </div>
+          <SearchedResource
+            image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
+            name='pinterest.com'
+            totalPackages={6}
+            lastScanDate='21 feb in 21:30'
+          />
 
           <aside className={styles.sidebar}>
             <div className={styles.sidebarItem}>
@@ -87,22 +189,18 @@ export default function SearchResults(props: Props) {
 
             <div className={styles.sidebarItem}>
               <div className={styles.sidebarItemTop}>
-                <div className={styles.sidebarItemTitle}>Problem</div>
+                <div className={styles.sidebarItemTitle}>
+                  Problem
+                  <span className={styles.sidebarItemCounter}>
+                    <Badge content={1} />
+                  </span>
+                </div>
               </div>
 
               <div className={styles.checkboxGroup}>
-                <label className={styles.checkbox}>
-                  <input type='checkbox' className={styles.checkboxInput} />
-                  <span className={styles.checkboxName}>Vulnerabilities</span>
-                </label>
-                <label className={styles.checkbox}>
-                  <input type='checkbox' className={styles.checkboxInput} />
-                  <span className={styles.checkboxName}>Outdated</span>
-                </label>
-                <label className={styles.checkbox}>
-                  <input type='checkbox' className={styles.checkboxInput} />
-                  <span className={styles.checkboxName}>Duplicate</span>
-                </label>
+                <Checkbox label='Vulnerabilities' checked />
+                <Checkbox label='Outdated' />
+                <Checkbox label='Duplicate' />
               </div>
             </div>
 
@@ -115,49 +213,10 @@ export default function SearchResults(props: Props) {
               </div>
 
               <div className={styles.authors}>
-                <div className={styles.author}>
-                  <div className={styles.authorImageWrapper}>
-                    <img
-                      className={styles.authorImage}
-                      src='https://via.placeholder.com/36'
-                      alt=''
-                    />
-                  </div>
-                  <div className={styles.authorName}>acdlite</div>
-                </div>
-
-                <div className={styles.author}>
-                  <div className={styles.authorImageWrapper}>
-                    <img
-                      className={styles.authorImage}
-                      src='https://via.placeholder.com/36'
-                      alt=''
-                    />
-                  </div>
-                  <div className={styles.authorName}>gaearon</div>
-                </div>
-
-                <div className={styles.author}>
-                  <div className={styles.authorImageWrapper}>
-                    <img
-                      className={styles.authorImage}
-                      src='https://via.placeholder.com/36'
-                      alt=''
-                    />
-                  </div>
-                  <div className={styles.authorName}>sophiebits</div>
-                </div>
-
-                <div className={styles.author}>
-                  <div className={styles.authorImageWrapper}>
-                    <img
-                      className={styles.authorImage}
-                      src='https://via.placeholder.com/36'
-                      alt=''
-                    />
-                  </div>
-                  <div className={styles.authorName}>trueadm</div>
-                </div>
+                <Person image='https://via.placeholder.com/36' name='acdlite' checked />
+                <Person image='https://via.placeholder.com/36' name='gaearon' />
+                <Person image='https://via.placeholder.com/36' name='sophiebits' />
+                <Person image='https://via.placeholder.com/36' name='trueadm' />
               </div>
 
               <span role='button' className={styles.viewAll}>
@@ -173,6 +232,16 @@ export default function SearchResults(props: Props) {
             />
           </div>
         </div>
+
+        <CardGroups>
+          <CardGroup title='Similar sites'>
+            <CardList cards={similarCards} />
+          </CardGroup>
+
+          <CardGroup title='Popular packages'>
+            <CardList cards={popularPackages} />
+          </CardGroup>
+        </CardGroups>
       </Container>
 
       <Footer />

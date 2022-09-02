@@ -1,0 +1,44 @@
+@import '~styles/_vars.scss';
+
+.person {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  &:not(:last-child) {
+    margin-right: 16px;
+  }
+
+  &:hover {
+    .personName {
+      opacity: 0.8;
+    }
+  }
+}
+
+.personActive {
+  font-weight: 500;
+}
+
+.personImageWrapper {
+  display: flex;
+  flex-shrink: 0;
+  margin-right: 6px;
+  max-width: 36px;
+}
+
+.personImage {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.personName {
+  transition: opacity $transition-duration $transition-timing-function;
+}
+
+.personCheck {
+  display: inline-flex;
+  margin-left: 6px;
+}

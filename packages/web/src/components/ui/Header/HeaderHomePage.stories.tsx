@@ -3,7 +3,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import Header from './Header';
 
 export default {
-  title: 'Interface / Header',
+  title: 'Interface / Header Homepage',
   component: Header,
   parameters: {
     layout: 'fullscreen',
@@ -13,6 +13,4 @@ export default {
   },
 } as ComponentMeta<typeof Header>;
 
-const Template: ComponentStory<typeof Header> = (args) => <Header {...args} />;
-
-export const HomePage = Template.bind({});
+export const HomePage: ComponentStory<typeof Header> = () => <Header variant='homepage' />;
