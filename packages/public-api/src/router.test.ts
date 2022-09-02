@@ -4,7 +4,7 @@ import {
   PackageMetadata,
   PackageVulnerability,
   WebPage,
-  WebPagePackage,
+  WebPageScan,
 } from '@gradejs-public/shared';
 import {
   createSupertestApi,
@@ -92,7 +92,7 @@ describe('routes / website', () => {
       status: WebPage.Status.Processed,
     });
 
-    const packageInsert = await getRepository(WebPagePackage).insert({
+    const packageInsert = await getRepository(WebPageScan).insert({
       latestUrl: url,
       hostname,
       packageName: 'react',

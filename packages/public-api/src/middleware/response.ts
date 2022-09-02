@@ -15,6 +15,11 @@ export class NotFoundError extends Error {
   message = 'Not Found';
 }
 
+export class UnauthorizedError extends Error {
+  code = 401;
+  message = 'Unauthorized';
+}
+
 export function respond<T>(res: Response, data: T) {
   res.send({
     data,

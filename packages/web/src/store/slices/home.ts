@@ -3,7 +3,7 @@ import { client } from '../../services/apiClient';
 import { RootState } from '../';
 
 const parseWebsite = createAsyncThunk('home/submitWebsite', async (url: string) => {
-  await client.mutation('requestParseWebsite', url);
+  await client.mutation('requestWebPageScan', url);
 });
 
 const home = createSlice({

@@ -2,39 +2,36 @@ import {
   Column,
   Entity,
   Index,
-  PrimaryColumn,
   BaseEntity,
   CreateDateColumn,
-  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  RelationId,
 } from 'typeorm';
+import { Hostname } from './hostname';
+import { WebPageScan } from '@gradejs-public/shared';
 
 @Entity({ name: 'web_page' })
-@Index(['url'], { unique: true })
+@Index(['hostname_id', 'path'], { unique: true })
 export class WebPage extends BaseEntity {
-  @PrimaryColumn({ type: 'int', generated: 'increment' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @Column()
-  hostname!: string;
+  @ManyToOne(() => Hostname, (hostname) => hostname.webPages)
+  @JoinColumn({ name: 'hostname_id', referencedColumnName: 'id' })
+  hostname!: Hostname;
+
+  @RelationId((self: WebPage) => self.hostname)
+  hostnameId!: number;
 
   @Column()
-  url!: string;
+  path!: string;
 
-  @Column()
-  status!: WebPage.Status;
-
-  @UpdateDateColumn()
-  updatedAt?: Date;
+  @OneToMany(() => WebPageScan, (webPageScan) => webPageScan.webPage)
+  scans!: WebPageScan[];
 
   @CreateDateColumn()
   createdAt!: Date;
-}
-
-export namespace WebPage {
-  export enum Status {
-    Pending = 'pending',
-    Processed = 'processed',
-    Unsupported = 'unsupported',
-    Protected = 'protected',
-  }
 }

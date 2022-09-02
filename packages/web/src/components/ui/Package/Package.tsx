@@ -13,7 +13,7 @@ import { Icon } from '../Icon/Icon';
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
-  pkg: Api.WebPagePackage;
+  pkg: Api.ScanResultPackageResponse;
   vulnerabilities: Api.Vulnerability[];
 };
 

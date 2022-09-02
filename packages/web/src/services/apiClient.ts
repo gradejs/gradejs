@@ -27,7 +27,6 @@ export const client = createTRPCClient<AppRouter>({
   },
 });
 
-export type SyncWebsiteOutput = InferMutationOutput<'syncWebsite'>;
-export type RequestParseWebsiteOutput = InferMutationOutput<'requestParseWebsite'>;
+export type RequestWebPageScan = InferMutationOutput<'requestWebPageScan'>;
 export type { Api };
 export type ApiClient = typeof client;

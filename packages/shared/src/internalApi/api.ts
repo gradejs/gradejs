@@ -1,23 +1,23 @@
 import fetch, { RequestInit } from 'node-fetch';
-import { getInternalApiOrigin } from '../utils/env';
+import { getGradeJsApiKey, getInternalApiRootUrl } from '../utils/env';
 
 export type DetectedPackage = {
   name: string;
-  possibleVersions: string[];
+  versionSet: string[];
   versionRange: string;
   approximateSize: number | null;
 };
 
-export interface Website {
+export interface WebPageScan {
   id: number;
   url: string;
-  status: WebsiteStatus;
+  status: WebPageScanStatus;
   detectedPackages: DetectedPackage[];
   updatedAt: string;
   createdAt: string;
 }
 
-export enum WebsiteStatus {
+export enum WebPageScanStatus {
   Created = 'created',
   InProgress = 'in-progress',
   Ready = 'ready',
@@ -43,12 +43,8 @@ type Paginaton = {
   total: number;
 };
 
-export async function initiateUrlProcessing(url: string) {
-  return fetchEndpoint<Website>('POST', '/website/parse', { url });
-}
-
-export async function fetchUrlPackages(url: string) {
-  return fetchEndpoint<Website>('GET', '/website', { url });
+export async function requestWebPageScan(url: string, requestId: string) {
+  return fetchEndpoint<WebPageScan>('POST', '/website/scan', { url, requestId });
 }
 
 export async function fetchPackageIndex(offset = 0, limit = 0) {
@@ -67,11 +63,11 @@ export async function fetchEndpoint<T>(
   endpoint: string,
   data?: Record<string, unknown>
 ) {
-  const requestUrl = new URL(endpoint, getInternalApiOrigin());
+  const requestUrl = new URL(endpoint, getInternalApiRootUrl());
   const requestInit: RequestInit = { method };
 
   if (method === 'POST' || method === 'PATCH') {
-    requestInit.headers = { 'Content-Type': 'application/json' };
+    requestInit.headers = { 'Content-Type': 'application/json', 'X-Api-Token': getGradeJsApiKey() };
     requestInit.body = JSON.stringify(data);
   } else if (method === 'GET' && data) {
     for (const key of Object.keys(data)) {
@@ -79,10 +75,14 @@ export async function fetchEndpoint<T>(
     }
   }
 
-  // console.log('Request to internal API: ', requestUrl.toString(), requestInit);
-
   return fetch(requestUrl.toString(), requestInit)
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.status !== 204) {
+        return response.json();
+      }
+
+      return {};
+    })
     .then((json: any) => {
       if (!json.data) {
         throw new Error('Invalid response format');

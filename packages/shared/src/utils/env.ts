@@ -21,7 +21,8 @@ export enum Env {
   GitHubAccessToken = 'GITHUB_ACCESS_TOKEN',
 
   // Internal
-  InternalApiOrigin = 'INTERNAL_API_ORIGIN',
+  InternalApiRootUrl = 'INTERNAL_API_ROOT_URL',
+  GradeJsApiKey = 'GRADEJS_API_KEY',
 
   CorsAllowedOrigin = 'CORS_ALLOWED_ORIGIN',
 }
@@ -40,7 +41,9 @@ export const isStaging = () => getNodeEnv() === 'staging';
 export const isDevelopment = () => getNodeEnv() === 'development';
 export const isTest = () => getNodeEnv() === 'test';
 
-export const getInternalApiOrigin = () => getEnv(Env.InternalApiOrigin);
+export const getInternalApiRootUrl = () => getEnv(Env.InternalApiRootUrl);
+export const getGradeJsApiKey = () => getEnv(Env.GradeJsApiKey);
+
 export const getSqsLocalPort = () => Number(getEnv(Env.SqsLocalPort, '0'));
 
 export const getGitHubAccessToken = () => getEnv(Env.GitHubAccessToken);

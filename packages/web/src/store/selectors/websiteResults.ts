@@ -19,7 +19,10 @@ const getSorting = (state: RootState) => state.webpageResults.filters.sort;
 const getFilter = (state: RootState) => state.webpageResults.filters.filter;
 const getPackageNameFilter = (state: RootState) => state.webpageResults.filters.filterPackageName;
 
-const compareByPopularity = (left: Api.WebPagePackage, right: Api.WebPagePackage) =>
+const compareByPopularity = (
+  left: Api.ScanResultPackageResponse,
+  right: Api.ScanResultPackageResponse
+) =>
   (right.registryMetadata?.monthlyDownloads ?? 0) - (left.registryMetadata?.monthlyDownloads ?? 0);
 
 const pickHighestSeverity = memoize(
@@ -36,9 +39,9 @@ const pickHighestSeverity = memoize(
 const sortingModes: Record<
   FiltersState['sort'],
   (
-    packages: Api.WebPagePackage[],
+    packages: Api.ScanResultPackageResponse[],
     vulnerabilities: Record<string, Api.Vulnerability[]>
-  ) => Api.WebPagePackage[]
+  ) => Api.ScanResultPackageResponse[]
 > = {
   // TODO
   confidenceScore: (packages) => packages,
@@ -69,10 +72,10 @@ const sortingModes: Record<
 const filterModes: Record<
   FiltersState['filter'],
   (
-    packages: Api.WebPagePackage[],
+    packages: Api.ScanResultPackageResponse[],
     vulnerabilities: Record<string, Api.Vulnerability[]>,
     packageName?: string
-  ) => Api.WebPagePackage[]
+  ) => Api.ScanResultPackageResponse[]
 > = {
   name: (packages, vulnerabilities, packageName) => {
     if (!packageName) {

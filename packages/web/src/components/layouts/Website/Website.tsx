@@ -20,7 +20,7 @@ export type Props = {
   // }>;
   isLoading: boolean;
   isPending: boolean;
-  packages: Api.WebPagePackage[];
+  packages: Api.ScanResultPackageResponse[];
   vulnerabilities: Record<string, Api.Vulnerability[]>;
   webpages: Api.WebPage[];
   onFiltersApply: SubmitHandler<FiltersState>;
