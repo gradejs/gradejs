@@ -1,5 +1,12 @@
 import { Column, Entity, Index, PrimaryColumn, BaseEntity } from 'typeorm';
 
+type Maintainer = {
+  name: string;
+  email: string;
+  avatar: string;
+};
+type VersionData = { dependencies: Record<string, string>; unpackedSize?: number };
+
 @Entity({ name: 'package_metadata' })
 @Index(['name'], { unique: true })
 export class PackageMetadata extends BaseEntity {
@@ -17,6 +24,18 @@ export class PackageMetadata extends BaseEntity {
 
   @Column()
   description?: string;
+
+  @Column()
+  fullDescription?: string;
+
+  @Column({ type: 'jsonb' })
+  maintainers?: Maintainer[];
+
+  @Column({ type: 'jsonb' })
+  tags?: string[];
+
+  @Column({ type: 'jsonb' })
+  versionSpecificValues?: Record<string, VersionData>;
 
   @Column()
   homepageUrl?: string;
