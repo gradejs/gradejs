@@ -33,6 +33,10 @@
 
 .packages {
   grid-column: 2 / -1;
+  display: grid;
+  grid-gap: 16px;
+  align-items: start;
+  grid-template-rows: min-content;
 
   @include mobile-and-tablet {
     grid-column: 1;
@@ -59,27 +63,6 @@
     padding-top: 24px;
     border-top: 1px solid $gray-border;
   }
-}
-
-.sidebarItemTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.sidebarItemTitle {
-  font-weight: 500;
-  font-size: 19px;
-  line-height: 26px;
-}
-
-.sidebarItemCounter {
-  margin-left: 8px;
-}
-
-.sidebarItemAction {
-  display: flex;
 }
 
 .meta {
@@ -113,26 +96,4 @@
 
 .metaText {
   font-weight: 500;
-}
-
-.viewAll {
-  margin-top: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  color: $blue-accent;
-  transition: opacity $transition-duration $transition-timing-function;
-
-  &:hover {
-    opacity: 0.6;
-  }
-}
-
-.checkboxGroup {
-  display: grid;
-  grid-gap: 18px;
-}
-
-.authors {
-  display: flex;
-  flex-wrap: wrap;
 }

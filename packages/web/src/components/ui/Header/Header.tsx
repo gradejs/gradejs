@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './Header.module.scss';
 import Container from '../Container/Container';
 import clsx from 'clsx';
@@ -11,6 +11,18 @@ type Props = {
 };
 
 export default function Header({ variant = 'default', children }: Props) {
+  const trackAboutClick = useMemo(() => {
+    return () => trackCustomEvent('ClickExternalLink', 'About');
+  }, []);
+
+  const trackAboutCommunity = useMemo(() => {
+    return () => trackCustomEvent('ClickExternalLink', 'Community');
+  }, []);
+
+  const trackAboutSourceCode = useMemo(() => {
+    return () => trackCustomEvent('ClickExternalLink', 'SourceCode');
+  }, []);
+
   return (
     <Container>
       <header className={clsx(styles.header, styles[variant])}>
@@ -31,7 +43,7 @@ export default function Header({ variant = 'default', children }: Props) {
             target='_blank'
             rel='noreferrer'
             className={styles.navLink}
-            onClick={() => trackCustomEvent('ClickExternalLink', 'About')}
+            onClick={trackAboutClick}
           >
             About
           </a>
@@ -40,7 +52,7 @@ export default function Header({ variant = 'default', children }: Props) {
             target='_blank'
             rel='noreferrer'
             className={styles.navLink}
-            onClick={() => trackCustomEvent('ClickExternalLink', 'Community')}
+            onClick={trackAboutCommunity}
           >
             Community
           </a>
@@ -49,7 +61,7 @@ export default function Header({ variant = 'default', children }: Props) {
             target='_blank'
             rel='noreferrer'
             className={styles.navLink}
-            onClick={() => trackCustomEvent('ClickExternalLink', 'SourceCode')}
+            onClick={trackAboutSourceCode}
           >
             <Icon
               kind='githubLogo'

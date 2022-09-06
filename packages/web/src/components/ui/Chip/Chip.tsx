@@ -12,6 +12,7 @@ export type ChipProps = {
   fontWeight?: 400 | 500;
   fontSize?: 'small' | 'regular';
   icon?: React.ReactElement<IconProps>;
+  onClick?: React.MouseEventHandler<HTMLSpanElement>;
 };
 
 export default function Chip({
@@ -23,6 +24,7 @@ export default function Chip({
   fontWeight = 400,
   fontSize = 'regular',
   icon,
+  onClick,
 }: ChipProps) {
   return (
     <span
@@ -35,6 +37,7 @@ export default function Chip({
         fontSize === 'small' && styles.smallFont,
         className
       )}
+      onClick={onClick}
     >
       <span className={styles.icon}>{icon}</span>
       {children}

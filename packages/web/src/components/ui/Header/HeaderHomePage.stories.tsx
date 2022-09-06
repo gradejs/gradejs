@@ -11,6 +11,12 @@ export default {
       default: 'dark',
     },
   },
+  argTypes: {
+    variant: {
+      options: ['homepage', 'default'],
+      control: { type: 'radio' },
+    },
+  },
 } as ComponentMeta<typeof Header>;
 
 export const HomePage: ComponentStory<typeof Header> = () => <Header variant='homepage' />;

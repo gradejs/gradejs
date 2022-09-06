@@ -1,4 +1,3 @@
-/* eslint-disable react/button-has-type */
 import React, { MouseEventHandler } from 'react';
 import clsx from 'clsx';
 import styles from './Button.module.scss';
@@ -7,8 +6,8 @@ export type Props = {
   className?: string;
   children: React.ReactNode;
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
-  variant?: 'default' | 'arrow';
-  size?: 'medium' | 'big';
+  variant?: 'default' | 'arrow' | 'secondary';
+  size?: 'small' | 'medium' | 'big';
   disabled?: boolean;
   onClick?: MouseEventHandler;
 };

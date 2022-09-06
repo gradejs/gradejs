@@ -36,12 +36,14 @@
 
 .submit,
 .clear {
+  flex-shrink: 0;
   cursor: pointer;
   position: absolute;
   top: 16px;
   right: 16px;
   width: 24px;
   height: 24px;
+  padding: 0;
   border: none;
   background: transparent;
   user-select: none;

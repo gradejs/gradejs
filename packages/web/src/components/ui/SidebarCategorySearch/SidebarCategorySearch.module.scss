@@ -1,0 +1,117 @@
+@import '~styles/_vars.scss';
+
+.searchWrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border-radius: 33px;
+  background-color: $gray-surface;
+  padding: 11px 48px 11px 20px;
+  border: none;
+  appearance: none;
+  outline: none;
+  transition: background-color $transition-duration $transition-timing-function;
+
+  &:hover {
+    background-color: $gray-border;
+  }
+}
+
+.searchEmpty {
+  padding-left: 48px;
+}
+
+.lookingGlass,
+.clearWrapper {
+  position: absolute;
+}
+
+.lookingGlass {
+  top: 12px;
+  left: 14px;
+}
+
+.clearWrapper {
+  cursor: pointer;
+  top: 12px;
+  right: 11px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.groups {
+  max-height: 259px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  padding-right: 16px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $gray-border;
+    border-radius: 14px;
+
+    &:hover {
+      background: $gray-text;
+    }
+  }
+}
+
+.groupName {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: $gray-text;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba($gray-border, 0.5);
+}
+
+.groupList {
+  padding: 15px 0;
+}
+
+.groupItem {
+  position: relative;
+  cursor: pointer;
+  padding: 3px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
+
+.groupItemImage {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.groupItemActive {
+  font-weight: 500;
+}
+
+.groupItemName {
+  flex-grow: 1;
+}
+
+.groupItemCheck {
+  flex-shrink: 0;
+  margin-left: 8px;
+  margin-right: 8px;
+}

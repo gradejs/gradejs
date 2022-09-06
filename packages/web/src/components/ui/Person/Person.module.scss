@@ -7,7 +7,7 @@
   margin-bottom: 10px;
 
   &:not(:last-child) {
-    margin-right: 16px;
+    margin-right: 10px;
   }
 
   &:hover {
@@ -25,7 +25,8 @@
   display: flex;
   flex-shrink: 0;
   margin-right: 6px;
-  max-width: 36px;
+  width: 36px;
+  height: 36px;
 }
 
 .personImage {
@@ -41,4 +42,11 @@
 .personCheck {
   display: inline-flex;
   margin-left: 6px;
+}
+
+.personCheckPlaceholder {
+  display: inline-flex;
+  margin-left: 6px;
+  width: 12px;
+  height: 10px;
 }

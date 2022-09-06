@@ -1,20 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './SearchResults.module.scss';
 import Header from 'components/ui/Header/Header';
 import Footer from 'components/ui/Footer/Footer';
 import Container from 'components/ui/Container/Container';
 import { Icon } from '../../ui/Icon/Icon';
-import ChipGroup from '../../ui/ChipGroup/ChipGroup';
 import PackagePreview from '../../ui/PackagePreview/PackagePreview';
 import SearchBar from '../../ui/SearchBar/SearchBar';
-import Badge from '../../ui/Badge/Badge';
-import Person from 'components/ui/Person/Person';
-import Checkbox from '../../ui/Checkbox/Checkbox';
 import SearchedResource from '../../ui/SearchedResource/SearchedResource';
 import { CardProps } from '../../ui/Card/Card';
 import CardGroup from '../../ui/CardGroup/CardGroup';
 import CardList from '../../ui/CardList/CardList';
 import CardGroups from 'components/ui/CardGroups/CardGroups';
+import SidebarCategory from '../../ui/SidebarCategory/SidebarCategory';
+import { Button } from '../../ui';
 
 export default function SearchResults() {
   // TODO: mock date, remove later
@@ -122,6 +120,105 @@ export default function SearchResults() {
     },
   ];
 
+  const keyWords = {
+    fullList: [
+      {
+        id: '#art',
+        name: '#art',
+      },
+      {
+        id: '#angular',
+        name: '#angular',
+      },
+      {
+        id: '#moment',
+        name: '#moment',
+      },
+      {
+        id: '#date',
+        name: '#date',
+      },
+      {
+        id: '#react',
+        name: '#react',
+      },
+      {
+        id: '#parse',
+        name: '#parse',
+      },
+      {
+        id: '#fb',
+        name: '#fb',
+      },
+    ],
+    featuredItems: ['#moment', '#date', '#react', '#parse', '#fb'],
+  };
+
+  const vulnerabilities = ['Vulnerabilities', 'Outdated', 'Duplicate'];
+
+  const authors = {
+    fullList: [
+      {
+        id: 'acdlite',
+        name: 'acdlite',
+      },
+      {
+        id: 'gaearon',
+        name: 'gaearon',
+      },
+      {
+        id: 'sophiebits',
+        name: 'sophiebits',
+      },
+      {
+        id: 'trueadm',
+        name: 'trueadm',
+      },
+    ],
+    featuredItems: ['acdlite', 'gaearon', 'sophiebits', 'trueadm'],
+  };
+
+  const [selectedKeywords, setSelectedKeywords] = useState<string[] | []>([]);
+  const [selectedProblems, setSelectedProblems] = useState<string[] | []>([]);
+  const [selectedAuthors, setSelectedAuthors] = useState<string[] | []>([]);
+
+  const handleFiltersChange = (
+    name: string,
+    state: string[] | [],
+    setState: React.SetStateAction<any>
+  ) => {
+    const temp = [...state];
+
+    if (temp.includes(name)) {
+      const filtered = temp.filter((item) => item !== name);
+      setState(filtered);
+    } else {
+      temp.push(name);
+      setState(temp);
+    }
+  };
+
+  const handleKeywordsChange = (name: string) => {
+    handleFiltersChange(name, selectedKeywords, setSelectedKeywords);
+  };
+
+  const handleProblemsChange = (name: string) => {
+    handleFiltersChange(name, selectedProblems, setSelectedProblems);
+  };
+
+  const handleAuthorsChange = (name: string) => {
+    handleFiltersChange(name, selectedAuthors, setSelectedAuthors);
+  };
+
+  const resetFilters = () => {
+    setSelectedKeywords([]);
+    setSelectedProblems([]);
+    setSelectedAuthors([]);
+  };
+
+  const isChanged =
+    selectedKeywords.length > 0 || selectedProblems.length > 0 || selectedAuthors.length > 0;
+
   return (
     <>
       <Header>
@@ -148,7 +245,7 @@ export default function SearchResults() {
                 </div>
                 <div className={styles.metaItem}>
                   <span className={styles.metaIcon}>
-                    <Icon kind='search' width={24} height={24} />
+                    <Icon kind='search' width={24} height={24} color='#212121' />
                   </span>
                   <span className={styles.metaText}>50 scripts found</span>
                 </div>
@@ -174,58 +271,48 @@ export default function SearchResults() {
             </div>
 
             <div className={styles.sidebarItem}>
-              <div className={styles.sidebarItemTop}>
-                <div className={styles.sidebarItemTitle}>Keywords</div>
-                <div className={styles.sidebarItemAction}>
-                  <Icon kind='search' width={24} height={24} />
-                </div>
-              </div>
-
-              <ChipGroup chips={['#moment', '#date', '#react', '#parse', '#fb']} />
-              <span role='button' className={styles.viewAll}>
-                View All
-              </span>
+              <SidebarCategory
+                category={keyWords}
+                selectedKeywords={selectedKeywords}
+                selectHandler={handleKeywordsChange}
+                renderComponent='chip'
+                searchable
+              />
             </div>
 
             <div className={styles.sidebarItem}>
-              <div className={styles.sidebarItemTop}>
-                <div className={styles.sidebarItemTitle}>
-                  Problem
-                  <span className={styles.sidebarItemCounter}>
-                    <Badge content={1} />
-                  </span>
-                </div>
-              </div>
-
-              <div className={styles.checkboxGroup}>
-                <Checkbox label='Vulnerabilities' checked />
-                <Checkbox label='Outdated' />
-                <Checkbox label='Duplicate' />
-              </div>
+              <SidebarCategory
+                simpleCategory={vulnerabilities}
+                selectedKeywords={selectedProblems}
+                selectHandler={handleProblemsChange}
+                renderComponent='checkbox'
+              />
             </div>
 
             <div className={styles.sidebarItem}>
-              <div className={styles.sidebarItemTop}>
-                <div className={styles.sidebarItemTitle}>Authors</div>
-                <div className={styles.sidebarItemAction}>
-                  <Icon kind='search' width={24} height={24} />
-                </div>
-              </div>
-
-              <div className={styles.authors}>
-                <Person image='https://via.placeholder.com/36' name='acdlite' checked />
-                <Person image='https://via.placeholder.com/36' name='gaearon' />
-                <Person image='https://via.placeholder.com/36' name='sophiebits' />
-                <Person image='https://via.placeholder.com/36' name='trueadm' />
-              </div>
-
-              <span role='button' className={styles.viewAll}>
-                View All
-              </span>
+              <SidebarCategory
+                category={authors}
+                selectedKeywords={selectedAuthors}
+                selectHandler={handleAuthorsChange}
+                renderComponent='person'
+                searchable
+              />
             </div>
+
+            {isChanged && (
+              <div className={styles.sidebarItem}>
+                <Button variant='secondary' size='small' onClick={resetFilters}>
+                  Reset filters
+                </Button>
+              </div>
+            )}
           </aside>
 
           <div className={styles.packages}>
+            <PackagePreview
+              name='@team-griffin/react-heading-section@team-griffin/react-heading-section'
+              version='3.0.0 - 4.16.4'
+            />
             <PackagePreview
               name='@team-griffin/react-heading-section@team-griffin/react-heading-section'
               version='3.0.0 - 4.16.4'

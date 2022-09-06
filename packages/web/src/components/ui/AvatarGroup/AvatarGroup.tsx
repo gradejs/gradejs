@@ -12,8 +12,8 @@ export default function AvatarGroup({ avatarGroup, counter }: Props) {
     <div className={styles.avatarsWrapper}>
       <div className={styles.avatars}>
         <div className={styles.avatarGroup}>
-          {avatarGroup.map((avatar) => (
-            <div key={avatar} className={styles.avatarItem}>
+          {avatarGroup.map((avatar, idx) => (
+            <div key={idx} className={styles.avatarItem}>
               <img src={avatar} className={styles.avatarImage} alt='' />
             </div>
           ))}
