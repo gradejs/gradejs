@@ -22,7 +22,7 @@ describe('task / syncPackageIndexBatch', () => {
         Promise.resolve({
           updateSeq: 123,
           updatedAt,
-          versionList: ['0.1.0', '1.0.0', '1.0.1', '1.1.0'],
+          versionSpecificValues: { '0.1.0': {}, '1.0.0': {}, '1.0.1': {}, '1.1.0': {} },
           latestVersion: '1.1.0',
           downloads: 500,
         } as any)
@@ -64,7 +64,7 @@ describe('task / syncPackageIndexBatch', () => {
         Promise.resolve({
           updateSeq: savedPackage.updateSeq,
           updatedAt: savedPackage.updatedAt,
-          versionList: ['0.1.0', '1.0.0'],
+          versionSpecificValues: { '0.1.0': {}, '1.0.0': {} },
           latestVersion: savedPackage.latestVersion,
           downloads: 100,
         } as any)
