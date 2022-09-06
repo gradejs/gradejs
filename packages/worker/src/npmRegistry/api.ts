@@ -6,6 +6,8 @@ import fetch from 'node-fetch';
 // does not support `local_seq` parameter and the `/changes` endpoint.
 const REGISTRY_URL = 'https://replicate.npmjs.com';
 const NPM_API_ORIGIN = 'https://api.npmjs.org';
+const makeAvatarUrl = (email: string) =>
+  `https://s.gravatar.com/avatar/${createHash('md5').update(email).digest('hex')}`;
 
 type DocumentScope = {
   description?: string;
@@ -73,18 +75,15 @@ export async function fetchPackageMetadata(name: string) {
     maintainers: (document.maintainers ?? []).map((author) => ({
       name: author.name,
       email: author.email,
-      avatar: `https://s.gravatar.com/avatar/${createHash('md5')
-        .update(author.email)
-        .digest('hex')}`,
+      avatar: makeAvatarUrl(author.email),
     })),
-    tags: document.keywords ?? [],
+    keywords: document.keywords ?? [],
     license: document.license,
     homepageUrl,
     repositoryUrl,
     updateSeq: Number(document._local_seq),
     updatedAt: new Date(document.time.modified),
     latestVersion: document['dist-tags'].latest,
-    versionList,
     versionSpecificValues: versionList.reduce((acc, el) => {
       acc[el] = {
         dependencies: {

@@ -24,7 +24,7 @@ async function syncPackage(name: string) {
   await Promise.all([
     internalApi.requestPackageIndexing({
       name,
-      versions: statsAndMetadata.versionList,
+      versions: Object.keys(statsAndMetadata.versionSpecificValues),
     }),
     PackageMetadata.upsert(
       {
@@ -33,7 +33,7 @@ async function syncPackage(name: string) {
         description: statsAndMetadata.description,
         fullDescription: statsAndMetadata.fullDescription,
         maintainers: statsAndMetadata.maintainers,
-        tags: statsAndMetadata.tags,
+        keywords: statsAndMetadata.keywords,
         homepageUrl: statsAndMetadata.homepageUrl,
         repositoryUrl: statsAndMetadata.repositoryUrl,
         license: statsAndMetadata.license,

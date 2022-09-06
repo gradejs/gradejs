@@ -13,13 +13,13 @@ describe.skip('npmRegistry / api', () => {
     expect(metadata.repositoryUrl).toEqual('git+ssh://git@github.com/react-ga/react-ga.git');
     expect(metadata.homepageUrl).toEqual('https://github.com/react-ga/react-ga');
     expect(metadata.maintainers[0].name).toEqual('simeonc');
-    expect(metadata.tags).toContain('Google Analytics');
+    expect(metadata.keywords).toContain('Google Analytics');
+    expect(metadata.versionSpecificValues).toHaveProperty('3.2.1');
     expect(metadata.versionSpecificValues['3.2.1'].unpackedSize).toEqual(212680);
     expect(metadata.versionSpecificValues['3.2.1'].dependencies).toHaveProperty('react');
     expect(metadata.description).toContain('React');
     expect(metadata.fullDescription).toContain('React Google Analytics Module');
     expect(metadata.license).toEqual('Apache-2.0');
-    expect(metadata.versionList).toContain('2.1.0');
     expect(metadata.updatedAt > new Date(2010, 1, 1)).toBeTruthy();
     expect(metadata.updateSeq > 100_000).toBeTruthy();
   });

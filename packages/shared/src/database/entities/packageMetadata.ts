@@ -32,7 +32,7 @@ export class PackageMetadata extends BaseEntity {
   maintainers?: Maintainer[];
 
   @Column({ type: 'jsonb' })
-  tags?: string[];
+  keywords?: string[];
 
   @Column({ type: 'jsonb' })
   versionSpecificValues?: Record<string, VersionData>;
