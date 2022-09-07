@@ -2,8 +2,8 @@ $breakpoint-mobile: 575px;
 $breakpoint-sm: 767px;
 $breakpoint-tablet: 991px;
 $breakpoint-lg: 1199px;
-$breakpoint-xl: 1399px;
-$breakpoint-xxl: 1920px;
+$breakpoint-xl: 1599px;
+$breakpoint-xxl: 1600px;
 
 @mixin xxl {
   @media (min-width: $breakpoint-xxl) {

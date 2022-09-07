@@ -2,7 +2,7 @@
 @import '~styles/responsive.scss';
 
 .package {
-  padding: 26px 28px;
+  padding: 24px;
   border-radius: 24px;
   background: $white;
   box-shadow: $shadow;
@@ -320,8 +320,14 @@
 }
 
 .usedOnList {
-  margin: 0 -36px;
-  padding: 0 36px;
+  margin-top: 10px;
+  margin: 0 -24px;
+  padding: 0 24px;
+
+  @include xxl {
+    margin: 0 -32px;
+    padding: 0 32px;
+  }
 
   @include mobile-and-tablet {
     margin: 0 -20px;

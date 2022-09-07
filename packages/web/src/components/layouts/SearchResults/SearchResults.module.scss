@@ -82,7 +82,7 @@
 
 .metaItem {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 
   @include mobile-and-tablet {
     line-height: 24px;

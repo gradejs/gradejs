@@ -2,19 +2,16 @@
 
 .container {
   width: 100%;
-  max-width: 1200px;
-  padding-left: 52px;
-  padding-right: 52px;
+  max-width: 1320px;
+  padding-left: 24px;
+  padding-right: 24px;
   margin-left: auto;
   margin-right: auto;
 
   @include xxl {
     max-width: 1470px;
-  }
-
-  @include lg {
-    padding-left: 36px;
-    padding-right: 36px;
+    padding-left: 52px;
+    padding-right: 52px;
   }
 
   @include mobile-and-tablet {

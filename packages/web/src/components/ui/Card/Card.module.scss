@@ -6,20 +6,17 @@
   position: relative;
   background: #ffffff;
   border-radius: 24px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: $shadow;
   width: 100%;
   max-width: 600px;
-  min-height: 220px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
 
   @include xxl {
     min-height: 248px;
-  }
-
-  @include lg {
-    padding: 20px;
+    padding: 24px;
   }
 
   @include mobile-and-tablet {
@@ -75,10 +72,10 @@
 }
 
 .tagsWrapper {
-  margin-top: 28px;
+  margin-top: 20px;
 
-  @include mobile-and-tablet {
-    margin-top: 20px;
+  @include xxl {
+    margin-top: 28px;
   }
 }
 

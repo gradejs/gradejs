@@ -6,10 +6,7 @@
   display: inline-block;
   position: relative;
   padding-left: 36px;
-
-  @include lg {
-    line-height: 24px;
-  }
+  line-height: 24px;
 }
 
 .checkboxInput {

@@ -9,9 +9,9 @@
 
   @include mobile-and-tablet {
     display: grid;
-    grid-row-gap: 0px;
+    grid-row-gap: 22px;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 28px 0px;
+    grid-template-rows: 28px 52px;
   }
 }
 
