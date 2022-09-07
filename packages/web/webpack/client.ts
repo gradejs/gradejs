@@ -12,6 +12,7 @@ export const clientConfig: (options: WebpackConfigOptions) => Configuration = ({
   mode,
   publicPath,
   watch = false,
+  plugins = [],
 }) => ({
   entry: join(__dirname, '..', srcDir, 'index.tsx'),
   ...configCommon(mode),
@@ -78,6 +79,7 @@ export const clientConfig: (options: WebpackConfigOptions) => Configuration = ({
     new CopyPlugin({
       patterns: [{ from: 'src/assets/sharing-image.png', to: 'sharing-image.png' }],
     }),
+    ...plugins,
   ],
   output: {
     filename: 'bundle.[fullhash].js',
