@@ -8,7 +8,7 @@ import Footer from '../../ui/Footer/Footer';
 import CardGroup from '../../ui/CardGroup/CardGroup';
 
 type Props = {
-  suggestions: string[];
+  suggestions?: string[];
 };
 
 export default function Home({ suggestions }: Props) {

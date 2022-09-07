@@ -6,8 +6,16 @@ import { IconProps } from '../Icon/Icon';
 export type ChipProps = {
   children: React.ReactNode;
   className?: string;
-  variant?: 'primary' | 'secondary' | 'outlined' | 'suggest';
-  size?: 'default' | 'medium' | 'large';
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'outlined'
+    | 'suggest'
+    | 'vulnerability'
+    | 'duplicate'
+    | 'outdated'
+    | 'info';
+  size?: 'badge' | 'default' | 'medium' | 'large';
   font?: 'sans-serif' | 'monospace';
   fontWeight?: 400 | 500;
   fontSize?: 'small' | 'regular';

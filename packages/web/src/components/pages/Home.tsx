@@ -42,5 +42,8 @@ export function HomePage() {
     }
   });
 
-  return <Home onSubmit={handleDetectStart} isLoading={state.isLoading} />;
+  return (
+    // TODO: pass proper props when API integration will take place
+    <Home />
+  );
 }

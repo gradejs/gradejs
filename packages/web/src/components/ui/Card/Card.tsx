@@ -39,7 +39,7 @@ export default function Card({
   return (
     <div className={clsx(styles.card, variant && styles[variant])}>
       <div className={styles.cardTop}>
-        <header className={styles.header}>
+        <div className={styles.header}>
           {icon && (
             <div className={styles.iconWrapper}>
               <img className={styles.icon} src={icon} alt='' />
@@ -47,7 +47,7 @@ export default function Card({
           )}
 
           <div className={styles.title}>{title}</div>
-        </header>
+        </div>
 
         {description && <div className={styles.description}>{description}</div>}
       </div>

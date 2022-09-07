@@ -77,21 +77,21 @@ export default function PackagePreview({ name, version, opened }: Props) {
             </span>
             <span className={styles.problems}>
               <Chip
-                variant='red'
+                variant='vulnerability'
                 size='badge'
                 icon={<Icon kind='bug' width={24} height={24} color='white' />}
               >
                 Vulnerabilities
               </Chip>
               <Chip
-                variant='orange'
+                variant='duplicate'
                 size='badge'
                 icon={<Icon kind='duplicate' width={24} height={24} color='white' />}
               >
                 Duplicate
               </Chip>
               <Chip
-                variant='yellow'
+                variant='outdated'
                 size='badge'
                 icon={
                   <Icon kind='outdated' width={24} height={24} color='white' stroke='#F1CE61' />
@@ -308,7 +308,7 @@ export default function PackagePreview({ name, version, opened }: Props) {
           <a href='#' className={styles.tag}>
             #format
           </a>
-          <Chip variant='blueAdditional' size='medium' fontWeight={500}>
+          <Chip variant='info' size='medium' fontWeight={500}>
             +45
           </Chip>
         </div>
