@@ -1,10 +1,12 @@
 {
-  "rewrites": [{
-    "source": "/(.*)",
-    "destination": "/index.html"
-  }, 
-  {
-    "source": "/static/sprite.svg",
-    "destination": "/sprite.svg"
-  }]
+  "rewrites": [
+    {
+      "source": "/static/sprite.svg",
+      "destination": "/sprite.svg"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
