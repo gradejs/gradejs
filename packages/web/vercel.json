@@ -5,6 +5,6 @@
   }, 
   {
     "source": "/static/sprite.svg",
-    "destination": "/storybook/static/sprite.svg"
+    "destination": "/sprite.svg"
   }]
 }
