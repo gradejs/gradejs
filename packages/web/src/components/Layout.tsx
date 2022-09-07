@@ -22,15 +22,12 @@ export function Layout({
   css,
   head,
   env,
-  // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-  initialState,
   html,
 }: {
   js: string[];
   css: string[];
   head: HelmetData;
   env: Record<string, string>;
-  initialState: any;
   html: string; // pre-rendered components
 }) {
   return (
@@ -63,14 +60,6 @@ export function Layout({
           type='text/javascript'
           dangerouslySetInnerHTML={{ __html: `window.process = ${sanitizeJSON({ env })}` }}
         />
-        {/* TODO: pass minimal initial state here
-          <script
-          type='text/javascript'
-          dangerouslySetInnerHTML={{
-            __html: `window.__initialState__ = ${sanitizeJSON(initialState)}`,
-          }}
-        />
-          */}
         {js.map((jsFile) => (
           <script key={jsFile} src={jsFile} />
         ))}

@@ -71,14 +71,7 @@ app.get('*', (req, res) => {
     res.send(
       '<!doctype html>' +
         ReactDOMServer.renderToString(
-          <Layout
-            js={js}
-            css={css}
-            head={helmet}
-            env={getClientVars()}
-            initialState={store.getState()}
-            html={html}
-          />
+          <Layout js={js} css={css} head={helmet} env={getClientVars()} html={html} />
         )
     );
   });
