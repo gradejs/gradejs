@@ -19,10 +19,20 @@ const args = yargs(hideBin(process.argv))
   })
   .parse();
 
+const publicPath = '/static/';
+
 webpack(
   [
-    clientConfig(args.production ? 'production' : 'development', args.watch),
-    serverConfig(args.production ? 'production' : 'development', args.watch),
+    clientConfig({
+      mode: args.production ? 'production' : 'development',
+      watch: args.watch,
+      publicPath,
+    }),
+    serverConfig({
+      mode: args.production ? 'production' : 'development',
+      watch: args.watch,
+      publicPath,
+    }),
   ],
   (err, stats) => {
     // [Stats Object](#stats-object)

@@ -4,13 +4,15 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import { configCommon, pluginsCommon, srcDir } from './common';
 import { Configuration } from 'webpack';
+import { WebpackConfigOptions } from './config';
 
 const distDir = 'dist/static';
 
-export const clientConfig: (mode: 'development' | 'production', watch: boolean) => Configuration = (
+export const clientConfig: (options: WebpackConfigOptions) => Configuration = ({
   mode,
-  watch
-) => ({
+  publicPath,
+  watch = false,
+}) => ({
   entry: join(__dirname, '..', srcDir, 'index.tsx'),
   ...configCommon(mode),
   module: {
@@ -80,7 +82,7 @@ export const clientConfig: (mode: 'development' | 'production', watch: boolean) 
   output: {
     filename: 'bundle.[fullhash].js',
     path: resolve(__dirname, '..', distDir),
-    publicPath: '/static/',
+    publicPath,
     assetModuleFilename: '[hash][ext]',
   },
   watch,
