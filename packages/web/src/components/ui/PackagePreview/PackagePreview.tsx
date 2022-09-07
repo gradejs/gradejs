@@ -308,7 +308,7 @@ export default function PackagePreview({ name, version, opened }: Props) {
           <a href='#' className={styles.tag}>
             #format
           </a>
-          <Chip variant='info' size='medium' fontWeight={500}>
+          <Chip variant='info' size='medium' fontWeight='semiBold'>
             +45
           </Chip>
         </div>
