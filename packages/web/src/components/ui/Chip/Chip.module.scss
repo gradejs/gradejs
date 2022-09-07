@@ -6,11 +6,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 31px;
+  border-radius: 22px;
   line-height: 1.25;
   border: 1px solid transparent;
   white-space: nowrap;
   transition: all $transition-duration $transition-timing-function;
+
+  @include xxl {
+    border-radius: 31px;
+  }
 
   @include mobile-and-tablet {
     font-size: 14px;
@@ -78,7 +82,11 @@
 }
 
 .large {
-  padding: 15px 19px;
+  padding: 12px 15px;
+
+  @include xxl {
+    padding: 15px 19px;
+  }
 
   @include mobile-and-tablet {
     padding: 12px 15px;

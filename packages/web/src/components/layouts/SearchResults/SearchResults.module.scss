@@ -5,11 +5,15 @@
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
   grid-template-rows: min-content 1fr;
-  grid-column-gap: 80px;
+  grid-column-gap: 60px;
   margin-top: 44px;
   padding-bottom: 108px;
   border-bottom: 1px solid $gray-border;
   margin-bottom: 80px;
+
+  @include xxl {
+    grid-column-gap: 80px;
+  }
 
   @include lg {
     grid-template-columns: 232px minmax(0, 1fr);

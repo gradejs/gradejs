@@ -11,13 +11,17 @@
 body {
   margin: 0;
   font-family: $font-sans-serif;
-  font-size: 1rem;
+  font-size: 0.85rem;
   line-height: 1.62;
   color: $black;
   text-align: left;
   background-color: $white;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  @include xxl {
+    font-size: 1rem;
+  }
 
   @include mobile-and-tablet {
     font-size: 0.875rem;
@@ -54,8 +58,13 @@ h6 {
 }
 
 h1 {
-  font-size: 82px;
-  line-height: 92px;
+  font-size: 74px;
+  line-height: 82px;
+
+  @include xxl {
+    font-size: 82px;
+    line-height: 92px;
+  }
 
   @include mobile-and-tablet {
     font-size: 36px;
@@ -64,8 +73,13 @@ h1 {
 }
 
 h2 {
-  font-size: 48px;
-  line-height: 58px;
+  font-size: 40px;
+  line-height: 46px;
+
+  @include xxl {
+    font-size: 48px;
+    line-height: 58px;
+  }
 
   @include mobile-and-tablet {
     font-size: 28px;
@@ -74,8 +88,13 @@ h2 {
 }
 
 h3 {
-  font-size: 40px;
-  line-height: 50px;
+  font-size: 32px;
+  line-height: 40px;
+
+  @include xxl {
+    font-size: 40px;
+    line-height: 50px;
+  }
 
   @include mobile-and-tablet {
     font-size: 24px;
@@ -84,8 +103,13 @@ h3 {
 }
 
 h4 {
-  font-size: 32px;
-  line-height: 50px;
+  font-size: 28px;
+  line-height: 45px;
+
+  @include xxl {
+    font-size: 32px;
+    line-height: 50px;
+  }
 
   @include mobile-and-tablet {
     font-size: 22px;
