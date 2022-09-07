@@ -8,14 +8,9 @@ import Person from '../Person/Person';
 import Checkbox from '../Checkbox/Checkbox';
 import SidebarCategorySearch from '../SidebarCategorySearch/SidebarCategorySearch';
 
-type listItem = {
-  id: string;
-  name: string;
-};
-
 type GroupItem = {
   group: string;
-  children: listItem[];
+  children: string[];
 };
 
 type Group = {
@@ -23,11 +18,7 @@ type Group = {
 };
 
 type Props = {
-  category?: {
-    fullList: listItem[];
-    featuredItems: string[];
-  };
-  simpleCategory?: string[];
+  keywordsList: string[];
   selectedKeywords: string[];
   selectHandler: (name: string) => void;
   renderComponent: 'chip' | 'checkbox' | 'person';
@@ -35,8 +26,7 @@ type Props = {
 };
 
 export default function SidebarCategory({
-  category,
-  simpleCategory,
+  keywordsList,
   selectedKeywords,
   selectHandler,
   renderComponent,
@@ -44,16 +34,14 @@ export default function SidebarCategory({
 }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
-  const [list, setList] = useState<GroupItem[] | []>([]);
+  const [list, setList] = useState<GroupItem[]>([]);
 
-  const sortAndGroupList = (unorderedList: listItem[], value: string): GroupItem[] => {
-    const filteredList = unorderedList.filter((item) => item.name.includes(value));
-    const sortedList = filteredList.sort((a: listItem, b: listItem) =>
-      a.name.localeCompare(b.name)
-    );
+  const sortAndGroupList = (unorderedList: string[], value: string): GroupItem[] => {
+    const filteredList = unorderedList.filter((item) => item.includes(value));
+    const sortedList = filteredList.sort((a: string, b: string) => a.localeCompare(b));
 
     const groups = sortedList.reduce((r: Group, e) => {
-      const group = e.name.includes('#') ? e.name[1] : e.name[0];
+      const group = e.includes('#') ? e[1] : e[0];
       if (!r[group]) r[group] = { group, children: [e] };
       else r[group].children.push(e);
       return r;
@@ -75,20 +63,18 @@ export default function SidebarCategory({
   };
 
   let combinedList, chips, checkboxes, people;
-  if (searchable && category) {
-    const { featuredItems, fullList } = category;
-
+  if (searchable) {
     // FIXME: not sure that this is optimal UX, because when we're selecting item from featured list,
     // it jumps to first half of the list with other previously selected items, maybe it's fine though
-    combinedList = fullList &&
-      featuredItems && [...new Set([...selectedKeywords, ...featuredItems])];
+    combinedList = [...new Set([...selectedKeywords, ...keywordsList])];
 
     useEffect(() => {
-      const filteredList = sortAndGroupList(fullList, searchValue);
+      const filteredList = sortAndGroupList(keywordsList, searchValue);
       setList(filteredList);
     }, [searchValue]);
 
-    chips = combinedList?.map((chip) => (
+    // Show only first 6 element from list
+    chips = combinedList.slice(0, 6).map((chip) => (
       <Chip
         key={chip}
         className={clsx(
@@ -103,9 +89,10 @@ export default function SidebarCategory({
       </Chip>
     ));
 
+    // Show only first 4 element from list
     people = (
       <div className={styles.authors}>
-        {combinedList?.map((person) => (
+        {combinedList.slice(0, 4).map((person) => (
           <Person
             key={person}
             name={person}
@@ -119,7 +106,7 @@ export default function SidebarCategory({
   } else {
     checkboxes = (
       <div className={styles.checkboxGroup}>
-        {simpleCategory?.map((name) => (
+        {keywordsList?.map((name) => (
           <Checkbox
             key={name}
             label={name}
@@ -171,7 +158,7 @@ export default function SidebarCategory({
           renderComponent={renderComponent}
           clearInput={clearInput}
           selectedItems={selectedKeywords}
-          list={list}
+          alphabeticalGroups={list}
         />
       ) : (
         renderedList

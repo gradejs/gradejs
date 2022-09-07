@@ -1,89 +1,176 @@
-/* eslint-disable react/button-has-type */
-import React, { useCallback } from 'react';
-import clsx from 'clsx';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { Button, Header, Section, TextInput, Wrapper } from 'components/ui';
-import styles from './Home.module.scss';
+import React from 'react';
+import { CardProps } from '../../ui/Card/Card';
+import Hero from '../../ui/Hero/Hero';
+import Container from 'components/ui/Container/Container';
+import CardList from '../../ui/CardList/CardList';
+import CardGroups from '../../ui/CardGroups/CardGroups';
+import Footer from '../../ui/Footer/Footer';
+import CardGroup from '../../ui/CardGroup/CardGroup';
 
-type FormData = {
-  address: string;
+type Props = {
+  suggestions?: string[];
 };
 
-export type Props = {
-  onSubmit: SubmitHandler<FormData>;
-  isLoading?: boolean;
-};
-
-export default function Home({ onSubmit, isLoading }: Props) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<FormData>();
-
-  const validate = useCallback(
-    (data: FormData) => {
-      let { address } = data;
-
-      if (!address.startsWith('http')) {
-        address = `https://${address}`;
-      }
-
-      try {
-        address = new URL(address).toString(); // normalize
-        onSubmit({ address });
-      } catch (e) {
-        setError('address', { message: 'Invalid origin format. Should be: https://example.com' });
-      }
-
-      // if (address.match(re)) {
-      // } else {
-      //   setError('address', { message: 'Invalid origin format. Should be: https://example.com' });
-      // }
+export default function Home({ suggestions }: Props) {
+  // TODO: mock data, remove later
+  const popularCards: CardProps[] = [
+    {
+      id: 'uExBVGuF',
+      title: 'github.com',
+      icon: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      packageTags: {
+        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
+        restPackages: 45,
+      },
     },
-    [setError]
-  );
+    {
+      id: '1EkL1u5g',
+      title: 'fingerprint.com',
+      icon: 'https://avatars.githubusercontent.com/u/67208791?s=200&v=4',
+      packageTags: {
+        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
+        restPackages: 45,
+      },
+    },
+    {
+      id: 'mhwO2bPM',
+      title: 'facebook.com',
+      icon: 'https://avatars.githubusercontent.com/u/69631?s=200&v=4',
+      packageTags: {
+        featuredPackages: ['react'],
+        restPackages: 45,
+      },
+    },
+  ];
 
-  const { address: error } = errors;
+  // TODO: mock data, remove later
+  const popularPackages: CardProps[] = [
+    {
+      id: 'FPsBcl8R',
+      title: '@team-griffin/react-heading-section',
+      description: "This package's job is to automatically determine...",
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'emtYcsUh',
+      title: 'unist-util-generated',
+      description: 'unist utility to check if a node is generated',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'TYIwvAfy',
+      title: 'react-smooth',
+      description: 'is a animation library work on React',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'Lq1pEEX7',
+      title: 'unist-util-position',
+      description: 'unist utility to get the positional info of nodes',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'cWOgIbmp',
+      title: 'vfile-message',
+      description: 'Create vfile messages',
+      featuredSites: {
+        iconList: [
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        ],
+        numberOfUses: 5265,
+      },
+    },
+    {
+      id: 'UT97Vpoi',
+      title: 'Go to all Popular packages',
+      variant: 'toAll',
+    },
+  ];
+
+  // TODO: mock data, remove later
+  const vulnerablePackages: CardProps[] = [
+    {
+      id: 'LnO9Xynn',
+      title: 'disneyland.omsk.ru/signup',
+      vulnerablePackage: {
+        name: 'mdast-util-from-markdown',
+      },
+      variant: 'vulnerable',
+    },
+    {
+      id: '-A74UAy8',
+      title: 'disneyland.omsk.ru/signup',
+      vulnerablePackage: {
+        name: 'mdast-util-from-markdown',
+        moreCount: 1,
+      },
+      variant: 'vulnerable',
+    },
+    {
+      id: 'DPa05I2W',
+      title: 'disneyland.omsk.ru/signup',
+      vulnerablePackage: {
+        name: 'mdast-util-from-markdown',
+      },
+      variant: 'vulnerable',
+    },
+  ];
 
   return (
-    <Wrapper className={styles.wrapper}>
-      <Header />
-      <Section className={styles.content}>
-        <h1>Analyze webpack production bundle</h1>
-        <form onSubmit={handleSubmit(validate)} noValidate>
-          <TextInput
-            type='url'
-            className={styles.address}
-            placeholder='Enter a website URL'
-            name='address'
-            register={register}
-            error={errors.address}
-            disabled={isLoading}
-          />
-          <Button className={styles.submit} variant='action' type='submit' disabled={isLoading}>
-            Start
-          </Button>
+    <>
+      <Hero suggestions={suggestions} />
 
-          {error?.message ? (
-            <p className={clsx(styles.disclaimer, styles.error)}>{error.message}</p>
-          ) : (
-            <p className={clsx(styles.disclaimer)}>
-              GradeJS will analyze production JavaScript files and match webpack bundled modules to
-              1,826 indexed NPM libraries over 54,735 releases.{' '}
-              <a
-                href='https://github.com/gradejs/gradejs/discussions/6'
-                target='_blank'
-                rel='noreferrer'
-                className={clsx(styles.learnMore)}
-              >
-                Learn more
-              </a>
-            </p>
-          )}
-        </form>
-      </Section>
-    </Wrapper>
+      <Container>
+        <CardGroups>
+          <CardGroup title='Popular search queries'>
+            <CardList cards={popularCards} />
+          </CardGroup>
+
+          <CardGroup title='Popular packages'>
+            <CardList cards={popularPackages} />
+          </CardGroup>
+
+          <CardGroup title='Vulnerable sites'>
+            <CardList cards={vulnerablePackages} variant='vertical' />
+          </CardGroup>
+
+          <CardGroup title='Authors of popular packages'>
+            <CardList cards={popularCards} />
+          </CardGroup>
+        </CardGroups>
+      </Container>
+
+      <Footer />
+    </>
   );
 }

@@ -8,7 +8,7 @@ import { Icon } from '../Icon/Icon';
 export type HeroProps = {
   inputText?: string;
   loading?: boolean;
-  suggestions: string[];
+  suggestions?: string[];
 };
 
 export default function Hero({ inputText, suggestions, loading = false }: HeroProps) {
@@ -47,13 +47,15 @@ export default function Hero({ inputText, suggestions, loading = false }: HeroPr
             </button>
           </div>
 
-          <div className={styles.suggestions}>
-            {suggestions.map((suggestion) => (
-              <Chip key={suggestion} variant='suggest' size='medium'>
-                {suggestion}
-              </Chip>
-            ))}
-          </div>
+          {suggestions && (
+            <div className={styles.suggestions}>
+              {suggestions.map((suggestion) => (
+                <Chip key={suggestion} variant='suggest' size='medium'>
+                  {suggestion}
+                </Chip>
+              ))}
+            </div>
+          )}
         </div>
       </Container>
     </section>

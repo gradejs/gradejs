@@ -15,7 +15,7 @@ import SidebarCategory from '../../ui/SidebarCategory/SidebarCategory';
 import { Button } from '../../ui';
 
 export default function SearchResults() {
-  // TODO: mock date, remove later
+  // TODO: mock data, remove later
   const similarCards: CardProps[] = [
     {
       id: 'uExBVGuF',
@@ -46,7 +46,7 @@ export default function SearchResults() {
     },
   ];
 
-  // TODO: mock date, remove later
+  // TODO: mock data, remove later
   const popularPackages: CardProps[] = [
     {
       id: 'FPsBcl8R',
@@ -120,71 +120,22 @@ export default function SearchResults() {
     },
   ];
 
-  const keyWords = {
-    fullList: [
-      {
-        id: '#art',
-        name: '#art',
-      },
-      {
-        id: '#angular',
-        name: '#angular',
-      },
-      {
-        id: '#moment',
-        name: '#moment',
-      },
-      {
-        id: '#date',
-        name: '#date',
-      },
-      {
-        id: '#react',
-        name: '#react',
-      },
-      {
-        id: '#parse',
-        name: '#parse',
-      },
-      {
-        id: '#fb',
-        name: '#fb',
-      },
-    ],
-    featuredItems: ['#moment', '#date', '#react', '#parse', '#fb'],
-  };
+  // TODO: mock data, remove later
+  const keyWords = ['#moment', '#date', '#react', '#parse', '#fb', '#angular', '#vue', '#ember'];
 
+  // TODO: mock data, remove later
   const vulnerabilities = ['Vulnerabilities', 'Outdated', 'Duplicate'];
 
-  const authors = {
-    fullList: [
-      {
-        id: 'acdlite',
-        name: 'acdlite',
-      },
-      {
-        id: 'gaearon',
-        name: 'gaearon',
-      },
-      {
-        id: 'sophiebits',
-        name: 'sophiebits',
-      },
-      {
-        id: 'trueadm',
-        name: 'trueadm',
-      },
-    ],
-    featuredItems: ['acdlite', 'gaearon', 'sophiebits', 'trueadm'],
-  };
+  // TODO: mock data, remove later
+  const authors = ['gaearon', 'acdlite', 'sophiebits', 'sebmarkbage', 'zpao', 'trueadm', 'bvaughn'];
 
-  const [selectedKeywords, setSelectedKeywords] = useState<string[] | []>([]);
-  const [selectedProblems, setSelectedProblems] = useState<string[] | []>([]);
-  const [selectedAuthors, setSelectedAuthors] = useState<string[] | []>([]);
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+  const [selectedProblems, setSelectedProblems] = useState<string[]>([]);
+  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
 
   const handleFiltersChange = (
     name: string,
-    state: string[] | [],
+    state: string[],
     setState: React.SetStateAction<any>
   ) => {
     const temp = [...state];
@@ -272,7 +223,7 @@ export default function SearchResults() {
 
             <div className={styles.sidebarItem}>
               <SidebarCategory
-                category={keyWords}
+                keywordsList={keyWords}
                 selectedKeywords={selectedKeywords}
                 selectHandler={handleKeywordsChange}
                 renderComponent='chip'
@@ -282,7 +233,7 @@ export default function SearchResults() {
 
             <div className={styles.sidebarItem}>
               <SidebarCategory
-                simpleCategory={vulnerabilities}
+                keywordsList={vulnerabilities}
                 selectedKeywords={selectedProblems}
                 selectHandler={handleProblemsChange}
                 renderComponent='checkbox'
@@ -291,7 +242,7 @@ export default function SearchResults() {
 
             <div className={styles.sidebarItem}>
               <SidebarCategory
-                category={authors}
+                keywordsList={authors}
                 selectedKeywords={selectedAuthors}
                 selectHandler={handleAuthorsChange}
                 renderComponent='person'
