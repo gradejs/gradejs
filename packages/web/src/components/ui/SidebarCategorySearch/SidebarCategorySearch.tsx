@@ -3,21 +3,47 @@ import styles from './SidebarCategorySearch.module.scss';
 import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
 
-type listItem = {
-  id: string;
-  name: string;
-};
-
 type GroupItem = {
   group: string;
-  children: listItem[];
+  children: string[];
 };
+
+type SearchItem = {
+  item: string;
+  selectedItems: string[];
+  selectHandler: (name: string) => void;
+  renderComponent: string;
+};
+
+function SearchItem({ item, selectedItems, selectHandler, renderComponent }: SearchItem) {
+  return (
+    <div
+      className={clsx(styles.groupItem, selectedItems.includes(item) && styles.groupItemActive)}
+      onClick={() => selectHandler(item)}
+    >
+      {renderComponent === 'person' && (
+        // TODO: pass actual person image here
+        <img src='https://via.placeholder.com/36' className={styles.groupItemImage} alt='' />
+      )}
+      <span className={styles.groupItemName}>{item}</span>
+      {selectedItems.includes(item) && (
+        <Icon
+          kind='check'
+          width={12}
+          height={10}
+          color='#212121'
+          className={styles.groupItemCheck}
+        />
+      )}
+    </div>
+  );
+}
 
 type Props = {
   searchValue: string;
   searchChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearInput: () => void;
-  list: GroupItem[] | [];
+  alphabeticalGroups: GroupItem[];
   selectedItems: string[];
   renderComponent: string;
   selectHandler: (name: string) => void;
@@ -27,7 +53,7 @@ export default function SidebarCategorySearch({
   searchValue,
   searchChangeHandler,
   clearInput,
-  list,
+  alphabeticalGroups,
   selectedItems,
   renderComponent,
   selectHandler,
@@ -62,42 +88,22 @@ export default function SidebarCategorySearch({
       </div>
 
       <div className={styles.groups}>
-        {list?.length > 0 &&
-          list.map(({ group, children }) => (
-            <div key={group}>
-              {list.length > 1 && <div className={styles.groupName}>{group}</div>}
-              <div className={styles.groupList}>
-                {children.map(({ name, id }: listItem) => (
-                  <div
-                    key={id}
-                    className={clsx(
-                      styles.groupItem,
-                      selectedItems.includes(name) && styles.groupItemActive
-                    )}
-                    onClick={() => selectHandler(name)}
-                  >
-                    {renderComponent === 'person' && (
-                      <img
-                        src='https://via.placeholder.com/36'
-                        className={styles.groupItemImage}
-                        alt=''
-                      />
-                    )}
-                    <span className={styles.groupItemName}>{name}</span>
-                    {selectedItems.includes(name) && (
-                      <Icon
-                        kind='check'
-                        width={12}
-                        height={10}
-                        color='#212121'
-                        className={styles.groupItemCheck}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
+        {alphabeticalGroups.map(({ group, children }) => (
+          <div key={group}>
+            {alphabeticalGroups.length > 1 && <div className={styles.groupName}>{group}</div>}
+
+            <div className={styles.groupList}>
+              {children.map((item) => (
+                <SearchItem
+                  item={item}
+                  selectedItems={selectedItems}
+                  selectHandler={selectHandler}
+                  renderComponent={renderComponent}
+                />
+              ))}
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
-import Home, { Props } from './Home';
+import Home from './Home';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
   title: 'Layouts / Home',
@@ -7,6 +8,11 @@ export default {
   parameters: {
     layout: 'fullscreen',
   },
-};
+} as ComponentMeta<typeof Home>;
 
-export const Default = (args: Props) => <Home {...args} />;
+const Template: ComponentStory<typeof Home> = (args) => <Home {...args} />;
+
+export const Default = Template.bind({});
+Default.args = {
+  suggestions: ['tinkoff.ru', 'pinterest.com', 'github.com', 'gradejs.com', 'npmjs.com'],
+};

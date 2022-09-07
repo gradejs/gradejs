@@ -37,6 +37,7 @@
   grid-gap: 16px;
   align-items: start;
   grid-template-rows: min-content;
+  grid-template-columns: minmax(0, 1fr);
 
   @include mobile-and-tablet {
     grid-column: 1;
