@@ -10,9 +10,13 @@
   box-shadow: $shadow;
   width: 100%;
   max-width: 600px;
-  min-height: 248px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
+
+  @include xxl {
+    min-height: 248px;
+  }
 
   @include lg {
     padding: 20px;
@@ -39,14 +43,22 @@
 
 .icon {
   width: 100%;
-  max-width: 52px;
+  max-width: 42px;
   object-fit: cover;
+
+  @include xxl {
+    max-width: 52px;
+  }
 }
 
 .title {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 500;
   line-height: 1.54;
+
+  @include xxl {
+    max-width: 26px;
+  }
 
   @include mobile-and-tablet {
     font-size: 20px;
@@ -96,14 +108,6 @@
   min-height: 136px;
   justify-content: space-between;
   max-width: initial;
-
-  .title {
-    font-size: 24px;
-
-    @include mobile-and-tablet {
-      font-size: 20px;
-    }
-  }
 
   @include mobile-and-tablet {
     min-height: 136px;

@@ -12,10 +12,15 @@
   position: relative;
   display: flex;
   align-items: center;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 20px;
   font-family: $font-monospace;
   color: $red-accent;
+
+  @include xxl {
+    font-size: 18px;
+    line-height: 24px;
+  }
 
   @include mobile-and-tablet {
     font-size: 14px;

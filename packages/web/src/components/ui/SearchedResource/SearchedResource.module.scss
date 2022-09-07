@@ -18,7 +18,11 @@
   display: flex;
   flex-shrink: 0;
   margin-right: 24px;
-  max-width: 52px;
+  max-width: 42px;
+
+  @include xxl {
+    max-width: 52px;
+  }
 
   @include mobile-and-tablet {
     max-width: 44px;

@@ -2,11 +2,15 @@
 
 .container {
   width: 100%;
-  max-width: 1470px;
+  max-width: 1200px;
   padding-left: 52px;
   padding-right: 52px;
   margin-left: auto;
   margin-right: auto;
+
+  @include xxl {
+    max-width: 1470px;
+  }
 
   @include lg {
     padding-left: 36px;
