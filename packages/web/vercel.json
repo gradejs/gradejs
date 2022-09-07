@@ -1,11 +1,6 @@
 {
   "rewrites": [{
-      "source": "/api/event",
-      "destination": "https://plausible.io/api/event"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+    "source": "/(.*)",
+    "destination": "/index.html"
+  }]
 }

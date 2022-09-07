@@ -2,6 +2,8 @@
 
 GradeJS is an open-source project that allows you to analyze webpack production bundles without having access to the source code of a website. It detects a list of bundled NPM libraries and works even for minified or tree-shaken bundles.
 
+![Preview](./docs/preview.png)
+
 More info:
 
 - [How it works?](https://github.com/gradejs/gradejs/discussions/6)

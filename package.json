@@ -22,7 +22,7 @@
     "build:public-api": "yarn workspace @gradejs-public/public-api run build",
     "build:backend": "yarn build:shared && yarn build:public-api && yarn build:worker",
     "dev:start": "bash cli/local_start.sh",
-    "dev:start:onlyWeb": "API_ORIGIN=https://api.staging.gradejs.com npm start --prefix packages/web"
+    "dev:start:web": "PORT=3000 API_ORIGIN=https://api.staging.gradejs.com npm run dev:start --prefix packages/web"
   },
   "devDependencies": {
     "@swc/core": "^1.2.233",

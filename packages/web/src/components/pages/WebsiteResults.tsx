@@ -22,9 +22,15 @@ export function WebsiteResultsPage() {
   );
   const setFilters = (filters: FiltersState) => dispatch(applyFilters(filters));
 
+  // TODO: discuss. Looks ugly
+  // Fetch data for SSR if host is already processed
+  if (__isServer__ && hostname) {
+    dispatch(getWebsite({ hostname, useRetry: false }));
+  }
+
   useEffect(() => {
     if (hostname && !isLoading && isPending) {
-      const promise = dispatch(getWebsite(hostname));
+      const promise = dispatch(getWebsite({ hostname }));
       return function cleanup() {
         promise.abort();
       };

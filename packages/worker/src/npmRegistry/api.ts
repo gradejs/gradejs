@@ -1,13 +1,19 @@
 import nano from 'nano';
+import { createHash } from 'crypto';
 import fetch from 'node-fetch';
 
 // We use the relicate API since the `registry.npmjs.com`
 // does not support `local_seq` parameter and the `/changes` endpoint.
 const REGISTRY_URL = 'https://replicate.npmjs.com';
 const NPM_API_ORIGIN = 'https://api.npmjs.org';
+const makeAvatarUrl = (email: string) =>
+  `https://s.gravatar.com/avatar/${createHash('md5').update(email).digest('hex')}`;
 
 type DocumentScope = {
   description?: string;
+  readme?: string;
+  maintainers?: Array<{ name: string; email: string }>;
+  keywords?: string[];
   license?: string;
   homepage?: string;
   repository?:
@@ -25,14 +31,23 @@ type DocumentScope = {
   'dist-tags': {
     latest: string;
   };
-  versions: Record<string, Record<string, unknown>>;
+  versions?: Record<
+    string,
+    {
+      dependencies?: Record<string, string>;
+      peerDependencies?: Record<string, string>;
+      dist: {
+        unpackedSize?: number;
+      };
+    }
+  >;
 };
 
 const registry = nano(REGISTRY_URL).scope<DocumentScope>('registry');
 
 export async function fetchPackageMetadata(name: string) {
   const document = await registry.get(name, { local_seq: true });
-  const versionList = Object.keys(document.versions);
+  const versionList = Object.keys(document.versions ?? {});
 
   let homepageUrl, repositoryUrl;
 
@@ -55,14 +70,30 @@ export async function fetchPackageMetadata(name: string) {
   // );
 
   return {
-    description: document.description ?? undefined,
-    license: document.license ?? undefined,
+    description: document.description,
+    fullDescription: document.readme,
+    maintainers: (document.maintainers ?? []).map((author) => ({
+      name: author.name,
+      email: author.email,
+      avatar: makeAvatarUrl(author.email),
+    })),
+    keywords: document.keywords ?? [],
+    license: document.license,
     homepageUrl,
     repositoryUrl,
     updateSeq: Number(document._local_seq),
     updatedAt: new Date(document.time.modified),
     latestVersion: document['dist-tags'].latest,
-    versionList,
+    versionSpecificValues: versionList.reduce((acc, el) => {
+      acc[el] = {
+        dependencies: {
+          ...(document.versions?.[el].dependencies ?? {}),
+          ...(document.versions?.[el].peerDependencies ?? {}),
+        },
+        unpackedSize: document.versions?.[el].dist.unpackedSize,
+      };
+      return acc;
+    }, {} as Record<string, { dependencies: Record<string, string>; unpackedSize?: number }>),
   };
 }
 

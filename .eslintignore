@@ -1,7 +1,5 @@
 .eslintrc.js
 index.d.ts
-webpack.config.js
 node_modules/
 packages/*/build
 packages/*/dist
-

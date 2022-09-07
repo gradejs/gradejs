@@ -7,14 +7,19 @@ jest.setTimeout(30000);
 // TODO: The replicate npm registry may be down sometimes and these tests are flaky
 describe.skip('npmRegistry / api', () => {
   it('fetchPackageMetadata', async () => {
-    const metadata = await fetchPackageMetadata('react');
+    const metadata = await fetchPackageMetadata('react-ga');
 
-    expect(semver.gte(metadata.latestVersion, '18.0.0')).toBeTruthy();
-    expect(metadata.repositoryUrl).toEqual('https://github.com/facebook/react');
-    expect(metadata.homepageUrl).toEqual('https://reactjs.org/');
+    expect(semver.gte(metadata.latestVersion, '3.0.0')).toBeTruthy();
+    expect(metadata.repositoryUrl).toEqual('git+ssh://git@github.com/react-ga/react-ga.git');
+    expect(metadata.homepageUrl).toEqual('https://github.com/react-ga/react-ga');
+    expect(metadata.maintainers[0].name).toEqual('simeonc');
+    expect(metadata.keywords).toContain('Google Analytics');
+    expect(metadata.versionSpecificValues).toHaveProperty('3.2.1');
+    expect(metadata.versionSpecificValues['3.2.1'].unpackedSize).toEqual(212680);
+    expect(metadata.versionSpecificValues['3.2.1'].dependencies).toHaveProperty('react');
     expect(metadata.description).toContain('React');
-    expect(metadata.license).toEqual('MIT');
-    expect(metadata.versionList).toContain('17.0.0');
+    expect(metadata.fullDescription).toContain('React Google Analytics Module');
+    expect(metadata.license).toEqual('Apache-2.0');
     expect(metadata.updatedAt > new Date(2010, 1, 1)).toBeTruthy();
     expect(metadata.updateSeq > 100_000).toBeTruthy();
   });

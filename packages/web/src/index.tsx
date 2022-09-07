@@ -4,12 +4,15 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { store } from './store';
 import { App } from './components/App';
+import { initAnalytics } from './services/analytics';
 import 'styles/global.scss';
 
-ReactDOM.render(
+const locationChangeHandler = initAnalytics();
+
+ReactDOM.hydrate(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <App locationChangeHandler={locationChangeHandler} />
     </BrowserRouter>
   </Provider>,
   document.getElementById('app')

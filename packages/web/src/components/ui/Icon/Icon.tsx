@@ -82,7 +82,7 @@ export function Icon({
       stroke={stroke}
       xmlns='http://www.w3.org/2000/svg'
     >
-      <use xlinkHref={`/sprite.svg#${icons[kind].id}`} />
+      <use xlinkHref={`/static/sprite.svg#${icons[kind].id}`} />
     </svg>
   );
 }
