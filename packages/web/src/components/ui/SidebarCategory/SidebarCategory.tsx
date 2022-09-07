@@ -28,7 +28,7 @@ type Props = {
     featuredItems: string[];
   };
   simpleCategory?: string[];
-  selectedKeywords: string[] | [];
+  selectedKeywords: string[];
   selectHandler: (name: string) => void;
   renderComponent: 'chip' | 'checkbox' | 'person';
   searchable?: boolean;

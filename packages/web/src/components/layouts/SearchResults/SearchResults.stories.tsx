@@ -10,6 +10,6 @@ export default {
   },
 } as ComponentMeta<typeof SearchResults>;
 
-const Template: ComponentStory<typeof SearchResults> = (args) => <SearchResults {...args} />;
+const Template: ComponentStory<typeof SearchResults> = () => <SearchResults />;
 
 export const Default = Template.bind({});
