@@ -8,8 +8,8 @@
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "test": "echo 'Not implemented yet'",
     "storybook": "start-storybook -p 6006",
-    "build:storybook": "build-storybook -o dist/storybook",
     "build": "ts-node --swc webpack/build.ts --production",
+    "build:vercel": "ts-node --swc webpack/build-vercel-deploy-preview.ts && build-storybook -o dist/static/storybook",
     "dev:start": "./webpack/start_dev.sh",
     "start": "node dist/main.js",
     "dev:build": "ts-node --swc webpack/build.ts"
