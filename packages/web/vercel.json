@@ -1,6 +1,6 @@
 {
   "rewrites": [{
     "source": "/(.*)",
-    "destination": "/storybook/index.html"
+    "destination": "/index.html"
   }]
 }

@@ -3,13 +3,14 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import { configCommon, pluginsCommon, srcDir } from './common';
 import { Configuration } from 'webpack';
+import { WebpackConfigOptions } from './config';
 
 const distDir = 'dist';
 
-export const serverConfig: (mode: 'development' | 'production', watch: boolean) => Configuration = (
+export const serverConfig: (options: WebpackConfigOptions) => Configuration = ({
   mode,
-  watch
-) => ({
+  watch = false,
+}) => ({
   entry: join(__dirname, '..', srcDir, 'server.tsx'),
   ...configCommon(mode),
   module: {

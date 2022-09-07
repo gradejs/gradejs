@@ -8,8 +8,8 @@
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "test": "echo 'Not implemented yet'",
     "storybook": "start-storybook -p 6006",
-    "build:storybook": "build-storybook -o dist/storybook",
     "build": "ts-node --swc webpack/build.ts --production",
+    "build:vercel": "ts-node --swc webpack/build-vercel-deploy-preview.ts && build-storybook -o dist/static/storybook",
     "dev:start": "./webpack/start_dev.sh",
     "start": "node dist/main.js",
     "dev:build": "ts-node --swc webpack/build.ts"
@@ -39,6 +39,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.2.0",
     "dotenv": "^10.0.0",
+    "html-replace-webpack-plugin": "^2.6.0",
     "html-webpack-plugin": "^5.3.2",
     "mini-css-extract-plugin": "^2.3.0",
     "node-sass": "^7.0.1",
