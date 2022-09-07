@@ -105,6 +105,16 @@ export const selectors = {
     isPending: webpages.length === 0 || webpages.some((item) => item.status === 'pending'),
     isProtected: webpages.some((item) => item.status === 'protected'),
   })),
+  packagesStats: createSelector([getPackages, getVulnerabilities], (packages, vulnerabilities) => ({
+    total: packages.length,
+    vulnerable: packages.filter((pkg) => (vulnerabilities[pkg.packageName]?.length ?? 0) > 0)
+      .length,
+    outdated: packages.filter(
+      (pkg) =>
+        pkg.registryMetadata &&
+        semver.gtr(pkg.registryMetadata.latestVersion, pkg.packageVersionRange)
+    ).length,
+  })),
   packagesSortedAndFiltered: createSelector(
     [getPackages, getVulnerabilities, getSorting, getFilter, getPackageNameFilter],
     (packages, vulnerabilities, sorting, filter, packageNameFilter) =>
