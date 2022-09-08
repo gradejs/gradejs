@@ -5,6 +5,7 @@ import { HomePage } from './pages/Home';
 import { WebsiteResultsPage } from './pages/WebsiteResults';
 type AppProps = {
   locationChangeHandler: (url?: string | URL) => void;
+  hostname: string;
 };
 /**
  * The App component has not any router wrapper because it uses both with tests, storybook and browser.
@@ -15,7 +16,7 @@ type AppProps = {
  *   <App />
  * </BrowserRouter>
  */
-export function App({ locationChangeHandler }: AppProps) {
+export function App({ locationChangeHandler, hostname }: AppProps) {
   const location = useLocation();
   locationChangeHandler(location.pathname);
   return (
@@ -26,6 +27,9 @@ export function App({ locationChangeHandler }: AppProps) {
           name='description'
           content='GradeJS analyzes production JavaScript files and matches bundled NPM packages with specific version precision.'
         />
+
+        <meta property='og:url' content={'https://' + hostname + location.pathname} />
+        <meta property='og:type' content='website' />
         <meta property='og:title' content='Production Webpack Bundle Analyzer - GradeJS' />
         <meta
           property='og:description'

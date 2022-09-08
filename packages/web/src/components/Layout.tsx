@@ -38,11 +38,11 @@ export function Layout({
         <meta charSet='utf-8' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <meta name='mobile-web-app-capable' content='yes' />
-        {/* TODO: preload all fonts after redesign
+        {/* TODO: preload all fonts and add icons after redesign
           <link rel="preload" href={} as="font" type="font/woff2"/>
+          <link rel='icon' type='image/svg+xml' href={'TODO'} />
+          <link rel='icon' type='image/png' href={'TODO'} />
         */}
-        <link rel='icon' type='image/svg+xml' href={'TODO'} />
-        <link rel='icon' type='image/png' href={'TODO'} />
         {css.map((cssFile) => (
           <link key={cssFile} rel='stylesheet' href={cssFile} />
         ))}
