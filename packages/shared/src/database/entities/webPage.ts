@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  Index,
   BaseEntity,
   CreateDateColumn,
   PrimaryGeneratedColumn,
@@ -9,12 +8,13 @@ import {
   JoinColumn,
   OneToMany,
   RelationId,
+  Index,
 } from 'typeorm';
 import { Hostname } from './hostname';
-import { WebPageScan } from '@gradejs-public/shared';
+import { WebPageScan } from './webPageScan';
 
 @Entity({ name: 'web_page' })
-@Index(['hostname_id', 'path'], { unique: true })
+@Index(['hostname', 'path'], { unique: true })
 export class WebPage extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;

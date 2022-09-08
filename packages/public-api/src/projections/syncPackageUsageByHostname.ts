@@ -1,7 +1,7 @@
 import { PackageUsageByHostnameProjection, WebPage, WebPageScan } from '@gradejs-public/shared';
 import { EntityManager } from 'typeorm';
 
-export async function syncPackageUsageByHost(newScan: WebPageScan, em: EntityManager) {
+export async function syncPackageUsageByHostname(newScan: WebPageScan, em: EntityManager) {
   if (!newScan.scanResult) {
     throw new Error('Scan was not completed');
   }
@@ -13,15 +13,17 @@ export async function syncPackageUsageByHost(newScan: WebPageScan, em: EntityMan
   const previousScan = await webPageScanRepo
     .createQueryBuilder('webpagescan')
     .where('webpagescan.id < :newId', { newId: newScan.id })
-    .orderBy('webpagescan.id DESC')
+    .andWhere('webpagescan.web_page_id = :webPageId', { webPageId: newScan.webPageId })
+    .orderBy('webpagescan.id', 'DESC')
     .limit(1)
     .getOne();
 
   if (previousScan) {
-    await packageUsageByHostRepo
-      .createQueryBuilder('packageusage')
+    await em
+      .createQueryBuilder()
       .delete()
-      .where('packageusage.source_scan_id = :scanId', { scanId: previousScan.id })
+      .from(PackageUsageByHostnameProjection)
+      .where('source_scan_id = :scanId', { scanId: previousScan.id })
       .execute();
   }
 
@@ -40,7 +42,7 @@ export async function syncPackageUsageByHost(newScan: WebPageScan, em: EntityMan
     })
   );
 
-  if (packageUsageEntities) {
+  if (packageUsageEntities.length) {
     await packageUsageByHostRepo.save(packageUsageEntities);
   }
 }

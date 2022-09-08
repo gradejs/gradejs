@@ -32,7 +32,7 @@ export function respondWithError(res: Response, err: unknown) {
     message: 'Internal server error, try again later',
   };
 
-  if (err instanceof NotFoundError) {
+  if (err instanceof NotFoundError || err instanceof UnauthorizedError) {
     error.code = err.code;
     error.message = err.message;
   }

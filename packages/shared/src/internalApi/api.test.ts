@@ -14,30 +14,22 @@ beforeEach(() => {
 describe('internalApi', () => {
   it('initiateUrlProcessingInternal', async () => {
     const url = 'http://example.com/' + Math.random().toString();
-    const response = {
-      data: {
-        id: 1,
-        url,
-        status: 'in-progress',
-        packages: [],
-        updatedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-      },
-    };
+    const requestId = 'test-req-id';
 
-    fetchMode.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(response))));
+    fetchMode.mockImplementation(() => Promise.resolve(new Response('', { status: 204 })));
 
-    const result = await requestWebPageScan(url, '1');
+    const result = await requestWebPageScan(url, requestId);
 
-    expect(fetchMode).toBeCalledWith('https://mocked-domain.com/webpage/scan', {
+    expect(fetchMode).toBeCalledWith('https://api.gradejs.com/website/scan', {
       method: 'POST',
-      body: `{"url":"${url}"}`,
+      body: `{"url":"${url}","requestId":"${requestId}"}`,
       headers: {
         'Content-Type': 'application/json',
+        'X-Api-Token': 'TEST_API_KEY',
       },
     });
 
     expect(fetchMode).toHaveBeenCalledTimes(1);
-    expect(result).toMatchObject(response.data);
+    expect(result).toMatchObject({});
   });
 });

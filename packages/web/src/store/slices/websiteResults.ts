@@ -1,19 +1,20 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DefaultFiltersAndSorters, FiltersState } from '../../components/layouts/Filters/Filters';
-import { client, SyncWebsiteOutput } from '../../services/apiClient';
+import { client, RequestWebPageScanOutput } from '../../services/apiClient';
 import { trackCustomEvent } from '../../services/analytics';
 
-const defaultDetectionResult: SyncWebsiteOutput = {
-  packages: [],
-  vulnerabilities: {},
-  webpages: [],
+type WebsiteResultsState = {
+  filters: typeof DefaultFiltersAndSorters;
+  isFailed: boolean;
+  isLoading: boolean;
+  detectionResult?: RequestWebPageScanOutput;
 };
 
-const initialState = {
+const initialState: WebsiteResultsState = {
   filters: { ...DefaultFiltersAndSorters },
   isFailed: false,
   isLoading: false,
-  detectionResult: defaultDetectionResult,
+  detectionResult: undefined,
 };
 
 const sleep = (ms: number | undefined) =>
@@ -21,18 +22,17 @@ const sleep = (ms: number | undefined) =>
     setTimeout(r, ms);
   });
 
-const hasPendingPages = (result: DetectionResult) =>
-  !!result.webpages.find((item) => item.status === 'pending');
+const isScanPending = (result: DetectionResult) => result && result.status === 'pending';
 
 const getWebsite = createAsyncThunk(
   'websiteResults/getWebsite',
   async ({ hostname, useRetry = true }: { hostname: string; useRetry?: boolean }) => {
     const loadStartTime = Date.now();
-    let results = await client.mutation('syncWebsite', hostname);
+    let results = await client.mutation('requestWebPageScan', hostname);
     if (useRetry) {
-      while (hasPendingPages(results)) {
+      while (isScanPending(results)) {
         await sleep(5000);
-        results = await client.mutation('syncWebsite', hostname);
+        results = await client.mutation('requestWebPageScan', hostname);
       }
     }
     // TODO: move to tracking middleware?
@@ -59,6 +59,7 @@ const websiteResults = createSlice({
       .addCase(getWebsite.pending, (state) => {
         state.isLoading = true;
         state.isFailed = false;
+        state.detectionResult = undefined;
       })
       .addCase(getWebsite.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -71,7 +72,7 @@ const websiteResults = createSlice({
   },
 });
 
-export type DetectionResult = typeof defaultDetectionResult;
+export type DetectionResult = RequestWebPageScanOutput | undefined;
 export const { resetFilters, applyFilters } = websiteResults.actions;
 export { getWebsite };
 export const websiteResultsReducer = websiteResults.reducer;

@@ -5,8 +5,9 @@ import { UnauthorizedError } from './response';
 const API_TOKEN_HEADER = 'X-Api-Token';
 
 export function verifyApiToken(req: Request, _res: Response, next: NextFunction) {
-  if (req.headers[API_TOKEN_HEADER] !== getGradeJsApiKey()) {
-    throw new UnauthorizedError();
+  if (req.headers[API_TOKEN_HEADER.toLowerCase()] !== getGradeJsApiKey()) {
+    next(new UnauthorizedError());
+    return;
   }
 
   next();

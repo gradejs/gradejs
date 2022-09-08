@@ -1,9 +1,9 @@
-import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn, RelationId } from 'typeorm';
 import { Hostname } from './hostname';
-import { WebPageScan } from '@gradejs-public/shared';
+import { WebPageScan } from './webPageScan';
 
 @Entity({ name: 'package_usage_by_hostname_projection' })
-@Index(['package_name'])
+@Index(['packageName'])
 export class PackageUsageByHostnameProjection extends BaseEntity {
   @PrimaryColumn({ type: 'bigint', generated: 'increment' })
   id!: number;
@@ -11,8 +11,14 @@ export class PackageUsageByHostnameProjection extends BaseEntity {
   @ManyToOne(() => Hostname)
   hostname!: Hostname;
 
+  @RelationId((self: PackageUsageByHostnameProjection) => self.hostname)
+  hostnameId!: number;
+
   @ManyToOne(() => WebPageScan)
   sourceScan!: WebPageScan;
+
+  @RelationId((self: PackageUsageByHostnameProjection) => self.sourceScan)
+  sourceScanId!: number;
 
   @Column()
   packageName!: string;

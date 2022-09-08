@@ -6,7 +6,7 @@
     "prettier": "prettier --check ./src",
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "build": "tsc --project tsconfig.build.json",
-    "test": "CORS_ALLOWED_ORIGIN=http://localhost:3000 jest",
+    "test": "GRADEJS_API_KEY=TEST_API_KEY INTERNAL_API_ROOT_URL=http://localhost:8080 CORS_ALLOWED_ORIGIN=http://localhost:3000 jest",
     "start": "node build/index.js",
     "debug": "node --inspect=9201 build/index.js"
   },

@@ -6,8 +6,7 @@ import { requestWebPageScan } from './website/service';
 import { getAffectingVulnerabilities } from './vulnerabilities/vulnerabilities';
 import {
   PackageMetadata,
-  PackageVulnerability,
-  ScanResultPackage,
+  PackageVulnerabilityData,
   SerializableEntity,
   toSerializable,
   WebPageScan,
@@ -21,12 +20,30 @@ import { getPackageMetadataByPackageNames } from './packageMetadata/packageMetad
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
 type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
-export namespace Api {
-  export type ScanResultResponse = SerializableEntity<WebPageScan>;
-  export type ScanResultPackageResponse = SerializableEntity<ScanResultPackage>;
-  export type PackageVulnerabilityResponse = SerializableEntity<PackageVulnerability>;
-  export type PackageMetadataResponse = SerializableEntity<PackageMetadata>;
+type ScanResultPackageWithMetadata = WebPageScan.Package & { registryMetadata?: PackageMetadata };
+
+export namespace ClientApi {
+  export type PackageVulnerabilityResponse = SerializableEntity<PackageVulnerabilityData>;
+  export type ScanResultPackageResponse = SerializableEntity<ScanResultPackageWithMetadata>;
 }
+
+function mergeRegistryMetadata(
+  packages: WebPageScan.Package[],
+  registryMetadata: Record<string, PackageMetadata>
+) {
+  return packages.map((it) => ({
+    ...it,
+    registryMetadata: registryMetadata[it.name],
+  }));
+}
+
+type RequestWebPageScanResponse = Pick<WebPageScan, 'status' | 'finishedAt'> & {
+  id: string;
+  scanResult?: {
+    packages: ScanResultPackageWithMetadata[];
+    vulnerabilities: Record<string, PackageVulnerabilityData[]>;
+  };
+};
 
 export const appRouter = trpc
   .router<Context>()
@@ -34,6 +51,13 @@ export const appRouter = trpc
     input: z.string().url(),
     async resolve({ input: url }) {
       const scan = await requestWebPageScan(url);
+
+      const scanResponse: RequestWebPageScanResponse = {
+        id: scan.id.toString(),
+        status: scan.status,
+        finishedAt: scan.finishedAt,
+        scanResult: undefined,
+      };
 
       if (scan.scanResult) {
         const packageNames = scan.scanResult.packages.map((it) => it.name);
@@ -43,17 +67,13 @@ export const appRouter = trpc
           getAffectingVulnerabilities(scan.scanResult),
         ]);
 
-        return toSerializable({
-          ...scan,
-          scanResult: {
-            ...scan.scanResult,
-            metadata,
-            vulnerabilities,
-          },
-        });
+        scanResponse.scanResult = {
+          packages: mergeRegistryMetadata(scan.scanResult.packages, metadata),
+          vulnerabilities,
+        };
       }
 
-      return toSerializable(scan);
+      return toSerializable(scanResponse);
     },
   })
   .formatError(({ shape, error }) => {
@@ -71,4 +91,4 @@ export const appRouter = trpc
   });
 
 // export type definition of API
-export type AppRouter = typeof appRouter;
+export type ClientApiRouter = typeof appRouter;

@@ -6,17 +6,21 @@ import {
   Index,
   ManyToOne,
   PrimaryColumn,
+  RelationId,
 } from 'typeorm';
-import { WebPageScan } from '@gradejs-public/shared';
+import { WebPageScan } from './webPageScan';
 
 @Entity({ name: 'scans_with_vulnerabilities_projection' })
-@Index(['web_page_id', 'created_at'])
+@Index(['createdAt'])
 export class ScansWithVulnerabilitiesProjection extends BaseEntity {
   @PrimaryColumn({ type: 'bigint', generated: 'increment' })
   id!: number;
 
   @ManyToOne(() => WebPageScan)
   sourceScan!: WebPageScan;
+
+  @RelationId((self: ScansWithVulnerabilitiesProjection) => self.sourceScan)
+  sourceScanId!: number;
 
   @Column({ type: 'jsonb' })
   vulnerabilities!: CompactVulnerabilityDescription[];

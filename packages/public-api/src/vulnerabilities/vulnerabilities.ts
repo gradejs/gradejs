@@ -2,7 +2,7 @@ import {
   GithubAdvisoryDatabaseSpecific,
   PackageVulnerabilityData,
   PackageVulnerability,
-  ScanResult,
+  WebPageScan,
 } from '@gradejs-public/shared';
 import { getRepository } from 'typeorm';
 import semver from 'semver';
@@ -19,7 +19,7 @@ export async function getVulnerabilitiesByPackageNames(packageNames: string[]) {
   return vulnerabilitiesQuery.getMany();
 }
 
-export async function getAffectingVulnerabilities(scanResult: ScanResult) {
+export async function getAffectingVulnerabilities(scanResult: WebPageScan.Result) {
   const affectingVulnerabilitiesByPackage: Record<string, PackageVulnerabilityData[]> = {};
 
   const packages = scanResult.packages;

@@ -5,25 +5,18 @@ export type DetectedPackage = {
   name: string;
   versionSet: string[];
   versionRange: string;
-  approximateSize: number | null;
+  approximateByteSize: number | null;
 };
 
-export interface WebPageScan {
-  id: number;
-  url: string;
-  status: WebPageScanStatus;
-  detectedPackages: DetectedPackage[];
-  updatedAt: string;
-  createdAt: string;
-}
-
-export enum WebPageScanStatus {
-  Created = 'created',
-  InProgress = 'in-progress',
-  Ready = 'ready',
-  Failed = 'failed',
-  Invalid = 'invalid',
-  Protected = 'protected',
+export namespace WebPageScan {
+  export enum Status {
+    Created = 'created',
+    InProgress = 'in-progress',
+    Ready = 'ready',
+    Failed = 'failed',
+    Invalid = 'invalid',
+    Protected = 'protected',
+  }
 }
 
 export interface Package {
@@ -44,7 +37,7 @@ type Paginaton = {
 };
 
 export async function requestWebPageScan(url: string, requestId: string) {
-  return fetchEndpoint<WebPageScan>('POST', '/website/scan', { url, requestId });
+  return fetchEndpoint<{}>('POST', '/website/scan', { url, requestId });
 }
 
 export async function fetchPackageIndex(offset = 0, limit = 0) {
@@ -81,7 +74,7 @@ export async function fetchEndpoint<T>(
         return response.json();
       }
 
-      return {};
+      return { data: {} };
     })
     .then((json: any) => {
       if (!json.data) {

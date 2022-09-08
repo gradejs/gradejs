@@ -4,7 +4,7 @@ export * from './database/entities/webPage';
 export * from './database/entities/webPageScan';
 export * from './database/entities/packageMetadata';
 export * from './database/entities/packageVulnerability';
-export * from './database/entities/packageUsageByHostProjection';
+export * from './database/entities/packageUsageByHostnameProjection';
 export * from './database/entities/scansWithVulnerabilitiesProjection';
 
 export * from './utils/aws';

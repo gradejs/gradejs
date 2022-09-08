@@ -6,9 +6,9 @@ import {
   WebPage,
 } from '@gradejs-public/shared';
 import { EntityManager } from 'typeorm';
-import { ApiScanReport } from '../internalApiRouter';
-import { syncPackageUsageByHost } from '../projections/syncPackageUsageByHost';
+import { syncPackageUsageByHostname } from '../projections/syncPackageUsageByHostname';
 import { syncScansWithVulnerabilities } from '../projections/syncScansWithVulnerabilities';
+import { SystemApi } from '../systemApiRouter';
 
 const RESCAN_TIMEOUT_MS = 1000 * 60 * 60 * 24; // 1 day in ms
 
@@ -46,15 +46,15 @@ export async function requestWebPageScan(url: string) {
 
   const db = await getDatabaseConnection();
 
-  return await db.transaction(async (em) => {
+  const result = await db.transaction(async (em) => {
     const webPageScanRepo = em.getRepository(WebPageScan);
 
     const webPageEntity = await findOrCreateWebPage(parsedUrl, em);
 
     const mostRecentScan = await webPageScanRepo
-      .createQueryBuilder('webpagescan')
-      .where('webpagescan.web_page_id = :webPageId', { webPageId: webPageEntity.id })
-      .orderBy('webpagescan.createdAt', 'DESC')
+      .createQueryBuilder('scan')
+      .where('scan.web_page_id = :webPageId', { webPageId: webPageEntity.id })
+      .orderBy('scan.created_at', 'DESC')
       .limit(1)
       .getOne();
 
@@ -67,16 +67,18 @@ export async function requestWebPageScan(url: string) {
       status: WebPageScan.Status.Pending,
     });
 
-    await internalApi.requestWebPageScan(parsedUrl.toString(), webPageEntity.id.toString());
+    await internalApi.requestWebPageScan(parsedUrl.toString(), webPageScanEntity.id.toString());
 
     return webPageScanEntity;
   });
+
+  return result;
 }
 
-export async function syncWebPageScanResult(scanReport: ApiScanReport) {
+export async function syncWebPageScanResult(scanReport: SystemApi.ScanReport) {
   const db = await getDatabaseConnection();
 
-  await db.transaction(async (em) => {
+  return await db.transaction(async (em) => {
     const webPageScanRepo = em.getRepository(WebPageScan);
 
     let scanEntity: WebPageScan;
@@ -96,19 +98,21 @@ export async function syncWebPageScanResult(scanReport: ApiScanReport) {
     await webPageScanRepo.save(scanEntity);
 
     await Promise.all([
-      syncPackageUsageByHost(scanEntity, em),
+      syncPackageUsageByHostname(scanEntity, em),
       syncScansWithVulnerabilities(scanEntity, em),
     ]);
+
+    return scanEntity;
   });
 }
 
-function mapInternalWebsiteStatus(status: internalApi.WebPageScanStatus) {
+function mapInternalWebsiteStatus(status: internalApi.WebPageScan.Status) {
   switch (status) {
-    case internalApi.WebPageScanStatus.Invalid:
+    case internalApi.WebPageScan.Status.Invalid:
       return WebPageScan.Status.Unsupported;
-    case internalApi.WebPageScanStatus.InProgress:
+    case internalApi.WebPageScan.Status.InProgress:
       return WebPageScan.Status.Pending;
-    case internalApi.WebPageScanStatus.Protected:
+    case internalApi.WebPageScan.Status.Protected:
       return WebPageScan.Status.Protected;
     default:
       return WebPageScan.Status.Processed;
