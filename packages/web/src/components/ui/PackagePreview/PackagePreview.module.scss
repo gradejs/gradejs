@@ -1,7 +1,14 @@
 @import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
+.packageSkeleton {
+  border-radius: 24px;
+  min-height: 224px;
+  transform: scale(1);
+}
+
 .package {
+  width: 100%;
   padding: 24px;
   border-radius: 24px;
   background: $white;
@@ -301,6 +308,15 @@
   padding-bottom: 14px;
 }
 
+.popularityFillSkeleton {
+  padding-bottom: 0;
+}
+
+.popularitySkeleton {
+  padding-bottom: 0;
+  transform: none;
+}
+
 .popularityFillAccent {
   background: $blue-accent;
   color: #ffffff;
@@ -313,6 +329,10 @@
   margin-top: 16px;
   font-family: $font-monospace;
   font-weight: 500;
+}
+
+.popularityVersionSkeleton {
+  margin: 0 auto;
 }
 
 .popularityVersionIcon {

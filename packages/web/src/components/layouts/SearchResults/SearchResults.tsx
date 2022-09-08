@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './SearchResults.module.scss';
 import Header from 'components/ui/Header/Header';
 import Footer from 'components/ui/Footer/Footer';
@@ -13,8 +13,32 @@ import CardList from '../../ui/CardList/CardList';
 import CardGroups from 'components/ui/CardGroups/CardGroups';
 import SidebarCategory from '../../ui/SidebarCategory/SidebarCategory';
 import { Button } from '../../ui';
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
+import SidebarMeta from '../../ui/SidebarMeta/SidebarMeta';
 
-export default function SearchResults() {
+type Props = {
+  pageLoading?: boolean;
+};
+
+export default function SearchResults({ pageLoading = false }: Props) {
+  const [loading, setLoading] = useState<boolean>(pageLoading);
+  const loadingRef = useRef<LoadingBarRef>(null);
+
+  // FIXME: just for demo purposes to show how loading bar works
+  // Documentation: https://github.com/klendi/react-top-loading-bar
+  // Starts the loading indicator with a random starting value between 20-30 (or startingValue),
+  // then repetitively after an refreshRate (in milliseconds), increases it by a random value
+  // between 2-10. This continues until it reaches 90% of the indicator's width.
+  useEffect(() => {
+    loadingRef?.current?.continuousStart(10, 2000);
+
+    // After 10 seconds makes the loading indicator reach 100% of his width and then fade.
+    setTimeout(() => {
+      loadingRef?.current?.complete();
+      setLoading(false);
+    }, 4000);
+  }, []);
+
   // TODO: mock data, remove later
   const similarCards: CardProps[] = [
     {
@@ -120,6 +144,29 @@ export default function SearchResults() {
     },
   ];
 
+  const metaItems = [
+    {
+      icon: <Icon kind='weight' width={24} height={24} />,
+      text: '159 kb webpack bundle size',
+    },
+    {
+      icon: <Icon kind='search' width={24} height={24} color='#212121' />,
+      text: '50 scripts found',
+    },
+    {
+      icon: <Icon kind='bug' width={24} height={24} color='#F3512E' />,
+      text: '6 vulnerabilities in 4 packages',
+    },
+    {
+      icon: <Icon kind='duplicate' color='#F3812E' width={24} height={24} />,
+      text: '12 duplicate packages',
+    },
+    {
+      icon: <Icon kind='outdated' color='#F1CE61' stroke='white' width={24} height={24} />,
+      text: '18 outdated packages',
+    },
+  ];
+
   // TODO: mock data, remove later
   const keyWords = ['#moment', '#date', '#react', '#parse', '#fb', '#angular', '#vue', '#ember'];
 
@@ -172,6 +219,17 @@ export default function SearchResults() {
 
   return (
     <>
+      {pageLoading && (
+        <LoadingBar
+          ref={loadingRef}
+          color='linear-gradient(90deg, #2638D9 0%, #B22AF2 100%)'
+          height={4}
+          shadow={false}
+          transitionTime={600}
+          loaderSpeed={600}
+        />
+      )}
+
       <Header>
         <SearchBar value='pinterest.com/blog/%D0%92%D092%D092%D092%/dFD092fg092%D092%/dFD092/blog/%D0%92%D092%D092%D092%/dFD092fg092%D092%/dFD092f' />
       </Header>
@@ -183,69 +241,45 @@ export default function SearchResults() {
             name='pinterest.com'
             totalPackages={6}
             lastScanDate='21 feb in 21:30'
+            loading={loading}
           />
 
           <aside className={styles.sidebar}>
             <div className={styles.sidebarItem}>
-              <div className={styles.meta}>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaIcon}>
-                    <Icon kind='weight' width={24} height={24} />
-                  </span>
-                  <span className={styles.metaText}>159 kb webpack bundle size</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaIcon}>
-                    <Icon kind='search' width={24} height={24} color='#212121' />
-                  </span>
-                  <span className={styles.metaText}>50 scripts found</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaIcon}>
-                    <Icon kind='bug' width={24} height={24} color='#F3512E' />
-                  </span>
-                  <span className={styles.metaText}>6 vulnerabilities in 4&nbsp;packages</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaIcon}>
-                    <Icon kind='duplicate' color='#F3812E' width={24} height={24} />
-                  </span>
-                  <span className={styles.metaText}>12 duplicate packages</span>
-                </div>
-                <div className={styles.metaItem}>
-                  <span className={styles.metaIcon}>
-                    <Icon kind='outdated' color='#F1CE61' stroke='white' width={24} height={24} />
-                  </span>
-                  <span className={styles.metaText}>18 outdated packages</span>
-                </div>
-              </div>
+              <SidebarMeta meta={metaItems} loading={loading} />
             </div>
 
             <div className={styles.sidebarItem}>
               <SidebarCategory
+                categoryName='Keywords'
                 keywordsList={keyWords}
                 selectedKeywords={selectedKeywords}
                 selectHandler={handleKeywordsChange}
                 renderComponent='chip'
+                loading={loading}
                 searchable
               />
             </div>
 
             <div className={styles.sidebarItem}>
               <SidebarCategory
+                categoryName='Problems'
                 keywordsList={vulnerabilities}
                 selectedKeywords={selectedProblems}
                 selectHandler={handleProblemsChange}
                 renderComponent='checkbox'
+                loading={loading}
               />
             </div>
 
             <div className={styles.sidebarItem}>
               <SidebarCategory
+                categoryName='Authors'
                 keywordsList={authors}
                 selectedKeywords={selectedAuthors}
                 selectHandler={handleAuthorsChange}
                 renderComponent='person'
+                loading={loading}
                 searchable
               />
             </div>
@@ -260,21 +294,27 @@ export default function SearchResults() {
           </aside>
 
           <div className={styles.packages}>
+            <PackagePreview
+              name='@team-griffin/react-heading-section'
+              version='3.0.0 - 4.16.4'
+              loading={loading}
+            />
             <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
             <PackagePreview
               name='@team-griffin/react-heading-section@team-griffin/react-heading-section'
               version='3.0.0 - 4.16.4'
+              loading={loading}
             />
           </div>
         </div>
 
         <CardGroups>
           <CardGroup title='Similar sites'>
-            <CardList cards={similarCards} />
+            <CardList cards={similarCards} loading={loading} />
           </CardGroup>
 
           <CardGroup title='Popular packages'>
-            <CardList cards={popularPackages} />
+            <CardList cards={popularPackages} loading={loading} />
           </CardGroup>
         </CardGroups>
       </Container>

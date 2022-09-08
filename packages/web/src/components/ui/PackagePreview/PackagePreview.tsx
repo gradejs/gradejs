@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Skeleton from '../Skeleton/Skeleton';
 import styles from './PackagePreview.module.scss';
 import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
@@ -12,10 +13,19 @@ type Props = {
   name: string;
   version: string;
   opened?: boolean;
+  loading?: boolean;
+  detailsLoading?: boolean;
 };
 
-export default function PackagePreview({ name, version, opened }: Props) {
+export default function PackagePreview({
+  name,
+  version,
+  opened,
+  loading = false,
+  detailsLoading = false,
+}: Props) {
   const [open, setOpen] = useState<boolean>(opened ?? false);
+  const [packageDetailsLoading, setPackageDetailsLoading] = useState<boolean>(detailsLoading);
 
   // TODO: mock data, remove later
   const sites: Site[] = [
@@ -63,9 +73,57 @@ export default function PackagePreview({ name, version, opened }: Props) {
     },
   ];
 
+  // TODO: mock data, remove later
+  const modules = [
+    {
+      fill: '100%',
+      uses: 89912,
+      moduleVersion: '21.3.0',
+    },
+    {
+      fill: '90%',
+      uses: 67111,
+      moduleVersion: '18.2.0',
+    },
+    {
+      fill: '80%',
+      uses: 44212,
+      moduleVersion: '20.1.0',
+    },
+    {
+      fill: '70%',
+      uses: 41129,
+      moduleVersion: '18.0.0',
+    },
+    {
+      fill: '60%',
+      uses: 40465,
+      moduleVersion: '19.11.2',
+    },
+    {
+      fill: '50%',
+      uses: 38907,
+      moduleVersion: '8.1.2',
+      bug: true,
+    },
+  ];
+
   const toggleOpen = () => {
-    setOpen(!open);
+    if (open) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+      setPackageDetailsLoading(true);
+
+      // FIXME: just for demo purposes
+      setTimeout(() => setPackageDetailsLoading(false), 4000);
+    }
   };
+
+  // TODO: add arrow button inside skeleton
+  if (loading) {
+    return <Skeleton className={styles.packageSkeleton} />;
+  }
 
   return (
     <div className={clsx(styles.package, open && styles.open)}>
@@ -128,9 +186,17 @@ export default function PackagePreview({ name, version, opened }: Props) {
                 <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
                 Script
               </div>
-              <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
-                /rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz
-              </a>
+              {packageDetailsLoading ? (
+                <Skeleton>
+                  <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
+                    /rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz
+                  </a>
+                </Skeleton>
+              ) : (
+                <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
+                  /rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz
+                </a>
+              )}
             </div>
 
             <div className={styles.statList}>
@@ -139,8 +205,21 @@ export default function PackagePreview({ name, version, opened }: Props) {
                   <Icon kind='license' color='#8E8AA0' className={styles.statIcon} />
                   License
                 </div>
-                <div className={styles.statTitle}>MIT license</div>
-                <div className={styles.statSubtitle}>freely distributable</div>
+                {packageDetailsLoading ? (
+                  <>
+                    <Skeleton>
+                      <div className={styles.statTitle}>MIT license</div>
+                    </Skeleton>
+                    <Skeleton>
+                      <div className={styles.statSubtitle}>freely distributable</div>
+                    </Skeleton>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.statTitle}>MIT license</div>
+                    <div className={styles.statSubtitle}>freely distributable</div>
+                  </>
+                )}
               </div>
 
               <div className={clsx(styles.stat, styles.statListItemSmall)}>
@@ -148,29 +227,44 @@ export default function PackagePreview({ name, version, opened }: Props) {
                   <Icon kind='rating' color='#8E8AA0' className={styles.statIcon} />
                   Rating
                 </div>
-                <div className={styles.statTitle}>
-                  385
-                  {/* or: <div className={clsx(styles.statRating, styles.statRatingRed)}> */}
-                  <div className={clsx(styles.statRating, styles.statRatingGreen)}>
-                    <Icon
-                      kind='ratingArrow'
-                      width={12}
-                      height={12}
-                      className={styles.statRatingArrow}
-                    />
-                    +4
-                  </div>
-                </div>
-                <div className={styles.statSubtitle}>out of 12 842</div>
+                {packageDetailsLoading ? (
+                  <>
+                    <Skeleton>
+                      <div className={styles.statTitle}>385</div>
+                    </Skeleton>
+                    <Skeleton>
+                      <div className={styles.statSubtitle}>out of 12 842</div>
+                    </Skeleton>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.statTitle}>
+                      385
+                      {/* or: <div className={clsx(styles.statRating, styles.statRatingRed)}> */}
+                      <div className={clsx(styles.statRating, styles.statRatingGreen)}>
+                        <Icon
+                          kind='ratingArrow'
+                          width={12}
+                          height={12}
+                          className={styles.statRatingArrow}
+                        />
+                        +4
+                      </div>
+                    </div>
+                    <div className={styles.statSubtitle}>out of 12 842</div>
+                  </>
+                )}
               </div>
 
               <div className={clsx(styles.stat, styles.statListItemLarge)}>
                 <div className={styles.statHeader}>
-                  <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />4 Dependency
+                  <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
+                  {!packageDetailsLoading && 4} Dependency
                 </div>
                 <ChipGroup
                   chips={['art', 'create-react-class', 'loose-envify', 'scheduler']}
                   fontSize='small'
+                  loading={packageDetailsLoading}
                 />
               </div>
             </div>
@@ -182,75 +276,47 @@ export default function PackagePreview({ name, version, opened }: Props) {
               </div>
 
               <div className={styles.popularity}>
-                <div className={styles.popularityItemWrapper}>
-                  <div className={styles.popularityItem}>
-                    <div className={styles.popularityFill} style={{ height: '100%' }}>
-                      89 912
+                {modules.map(({ fill, uses, moduleVersion, bug }) => (
+                  <div className={styles.popularityItemWrapper}>
+                    <div className={styles.popularityItem}>
+                      {packageDetailsLoading ? (
+                        <div
+                          className={clsx(styles.popularityFill, styles.popularityFillSkeleton)}
+                          style={{ height: fill }}
+                        >
+                          <Skeleton
+                            width='100%'
+                            height='100%'
+                            className={styles.popularitySkeleton}
+                          >
+                            {uses.toLocaleString()}
+                          </Skeleton>
+                        </div>
+                      ) : (
+                        <div className={styles.popularityFill} style={{ height: fill }}>
+                          {uses.toLocaleString()}
+                        </div>
+                      )}
                     </div>
+
+                    {packageDetailsLoading ? (
+                      <Skeleton className={styles.popularityVersionSkeleton}>
+                        <div className={styles.popularityVersion}>{moduleVersion}</div>
+                      </Skeleton>
+                    ) : (
+                      <div className={styles.popularityVersion}>
+                        {moduleVersion}
+                        {bug && (
+                          <Icon
+                            kind='bugOutlined'
+                            color='#212121'
+                            className={styles.popularityVersionIcon}
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
-
-                  <div className={styles.popularityVersion}>21.3.0</div>
-                </div>
-
-                <div className={styles.popularityItemWrapper}>
-                  <div className={styles.popularityItem}>
-                    <div
-                      className={clsx(styles.popularityFill, styles.popularityFillAccent)}
-                      style={{ height: '90%' }}
-                    >
-                      67 111
-                    </div>
-                  </div>
-
-                  <div className={styles.popularityVersion}>18.2.0</div>
-                </div>
-
-                <div className={styles.popularityItemWrapper}>
-                  <div className={styles.popularityItem}>
-                    <div className={styles.popularityFill} style={{ height: '80%' }}>
-                      44 212
-                    </div>
-                  </div>
-
-                  <div className={styles.popularityVersion}>20.1.0</div>
-                </div>
-
-                <div className={styles.popularityItemWrapper}>
-                  <div className={styles.popularityItem}>
-                    <div className={styles.popularityFill} style={{ height: '70%' }}>
-                      41 129
-                    </div>
-                  </div>
-
-                  <div className={styles.popularityVersion}>18.0.0</div>
-                </div>
-
-                <div className={styles.popularityItemWrapper}>
-                  <div className={styles.popularityItem}>
-                    <div className={styles.popularityFill} style={{ height: '60%' }}>
-                      40 465
-                    </div>
-                  </div>
-
-                  <div className={styles.popularityVersion}>19.11.2</div>
-                </div>
-
-                <div className={styles.popularityItemWrapper}>
-                  <div className={styles.popularityItem}>
-                    <div className={styles.popularityFill} style={{ height: '50%' }}>
-                      38 907
-                    </div>
-                  </div>
-
-                  <div className={styles.popularityVersion}>
-                    8.1.2
-                    <Icon
-                      kind='bugOutlined'
-                      color='#212121'
-                      className={styles.popularityVersionIcon}
-                    />
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -259,30 +325,55 @@ export default function PackagePreview({ name, version, opened }: Props) {
             <div className={styles.stat}>
               <div className={styles.statHeader}>Used on</div>
 
-              <SitesList sites={sites} className={styles.usedOnList} />
+              <SitesList
+                sites={sites}
+                className={styles.usedOnList}
+                loading={packageDetailsLoading}
+              />
             </div>
 
             <div className={styles.actions}>
               <div className={styles.links}>
-                <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
-                  <Icon kind='repository' color='#212121' className={styles.linkIcon} />
-                  Repository
-                </a>
+                {packageDetailsLoading ? (
+                  <>
+                    <div className={styles.link}>
+                      <Skeleton width={18} height={18} className={styles.linkIcon} />
+                      <Skeleton>Repository</Skeleton>
+                    </div>
 
-                <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
-                  <Icon kind='link' color='#212121' className={styles.linkIcon} />
-                  Homepage
-                </a>
+                    <div className={styles.link}>
+                      <Skeleton width={18} height={18} className={styles.linkIcon} />
+                      <Skeleton>Repository</Skeleton>
+                    </div>
 
-                <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
-                  <Icon
-                    kind='npm'
-                    width={32}
-                    height={32}
-                    color='#212121'
-                    className={styles.linkIcon}
-                  />
-                </a>
+                    <div className={styles.link}>
+                      <Skeleton width={18} height={18} className={styles.linkIcon} />
+                      <Skeleton>Repository</Skeleton>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
+                      <Icon kind='repository' color='#212121' className={styles.linkIcon} />
+                      Repository
+                    </a>
+
+                    <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
+                      <Icon kind='link' color='#212121' className={styles.linkIcon} />
+                      Homepage
+                    </a>
+
+                    <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
+                      <Icon
+                        kind='npm'
+                        width={32}
+                        height={32}
+                        color='#212121'
+                        className={styles.linkIcon}
+                      />
+                    </a>
+                  </>
+                )}
               </div>
 
               <Button variant='arrow'>Details</Button>

@@ -7,6 +7,7 @@ import Chip from '../Chip/Chip';
 import Person from '../Person/Person';
 import Checkbox from '../Checkbox/Checkbox';
 import SidebarCategorySearch from '../SidebarCategorySearch/SidebarCategorySearch';
+import Skeleton from '../Skeleton/Skeleton';
 
 type GroupItem = {
   group: string;
@@ -18,19 +19,23 @@ type Group = {
 };
 
 type Props = {
+  categoryName: string;
   keywordsList: string[];
   selectedKeywords: string[];
   selectHandler: (name: string) => void;
   renderComponent: 'chip' | 'checkbox' | 'person';
   searchable?: boolean;
+  loading?: boolean;
 };
 
 export default function SidebarCategory({
+  categoryName,
   keywordsList,
   selectedKeywords,
   selectHandler,
   renderComponent,
   searchable,
+  loading,
 }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -74,23 +79,62 @@ export default function SidebarCategory({
     }, [searchValue]);
 
     // Show only first 6 element from list
-    chips = combinedList.slice(0, 6).map((chip) => (
-      <Chip
-        key={chip}
-        className={clsx(
-          styles.sidebarChip,
-          selectedKeywords.includes(chip) && styles.sidebarChipActive
-        )}
-        onClick={() => selectHandler(chip)}
-        size='medium'
-        font='monospace'
-      >
-        {chip}
-      </Chip>
-    ));
+    chips = loading ? (
+      <>
+        {/* TODO: there is probably a better way to avoid repetition */}
+        <Skeleton variant='rounded' className={styles.chipSkeleton}>
+          <Chip>#moment</Chip>
+        </Skeleton>
+        <Skeleton variant='rounded' className={styles.chipSkeleton}>
+          <Chip>#date</Chip>
+        </Skeleton>
+        <Skeleton variant='rounded' className={styles.chipSkeleton}>
+          <Chip>#date</Chip>
+        </Skeleton>
+        <Skeleton variant='rounded' className={styles.chipSkeleton}>
+          <Chip>#react</Chip>
+        </Skeleton>
+        <Skeleton variant='rounded' className={styles.chipSkeleton}>
+          <Chip>#parse</Chip>
+        </Skeleton>
+        <Skeleton variant='rounded' className={styles.chipSkeleton}>
+          <Chip>#fb</Chip>
+        </Skeleton>
+      </>
+    ) : (
+      combinedList.slice(0, 6).map((chip) => (
+        <Chip
+          key={chip}
+          className={clsx(
+            styles.sidebarChip,
+            selectedKeywords.includes(chip) && styles.sidebarChipActive
+          )}
+          onClick={() => selectHandler(chip)}
+          size='medium'
+          font='monospace'
+        >
+          {chip}
+        </Chip>
+      ))
+    );
 
     // Show only first 4 element from list
-    people = (
+    people = loading ? (
+      <>
+        {/* TODO: there is probably a better way to avoid repetition */}
+        {[...Array(4)].map((item, idx) => (
+          <div key={idx} className={styles.personSkeleton}>
+            <Skeleton
+              width={36}
+              height={36}
+              variant='circular'
+              className={styles.personSkeletonImage}
+            ></Skeleton>
+            <Skeleton>gaeron</Skeleton>
+          </div>
+        ))}
+      </>
+    ) : (
       <div className={styles.authors}>
         {combinedList.slice(0, 4).map((person) => (
           <Person
@@ -104,7 +148,22 @@ export default function SidebarCategory({
       </div>
     );
   } else {
-    checkboxes = (
+    checkboxes = loading ? (
+      <div className={styles.checkboxGroup}>
+        <div className={styles.checkboxSkeleton}>
+          <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
+          <Skeleton>Lorem ipsum</Skeleton>
+        </div>
+        <div className={styles.checkboxSkeleton}>
+          <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
+          <Skeleton>Lorem ipsum</Skeleton>
+        </div>
+        <div className={styles.checkboxSkeleton}>
+          <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
+          <Skeleton>Lorem ipsum</Skeleton>
+        </div>
+      </div>
+    ) : (
       <div className={styles.checkboxGroup}>
         {keywordsList?.map((name) => (
           <Checkbox
@@ -136,18 +195,22 @@ export default function SidebarCategory({
     <div className={styles.category}>
       <div className={styles.sidebarItemTop}>
         <div className={styles.sidebarItemTitle}>
-          Keywords
+          {loading ? <Skeleton>{categoryName}</Skeleton> : categoryName}
           {selectedKeywords.length > 0 && (
             <span className={styles.selectedCounter}>
               <Badge content={selectedKeywords.length} />
             </span>
           )}
         </div>
-        {!open && searchable && (
-          <div className={styles.sidebarItemAction} onClick={toggleOpen}>
-            <Icon kind='search' width={24} height={24} />
-          </div>
-        )}
+        {!open &&
+          searchable &&
+          (loading ? (
+            <Skeleton width={24} height={24} className={styles.sidebarItemAction} />
+          ) : (
+            <div className={styles.sidebarItemAction} onClick={toggleOpen}>
+              <Icon kind='search' width={24} height={24} />
+            </div>
+          ))}
       </div>
 
       {open && searchable ? (
@@ -164,7 +227,7 @@ export default function SidebarCategory({
         renderedList
       )}
 
-      {searchable && (
+      {searchable && !loading && (
         <span role='button' className={styles.toggleView} onClick={toggleOpen}>
           {open ? 'Hide' : 'View All'}
         </span>

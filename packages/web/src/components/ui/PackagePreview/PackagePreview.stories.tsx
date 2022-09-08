@@ -10,8 +10,15 @@ export default {
   },
 } as ComponentMeta<typeof PackagePreview>;
 
+export const ClosedLoading: ComponentStory<typeof PackagePreview> = () => (
+  <PackagePreview name='name' version='1.0.0' loading />
+);
 export const Closed: ComponentStory<typeof PackagePreview> = () => (
   <PackagePreview name='name' version='1.0.0' />
+);
+
+export const OpenedLoading: ComponentStory<typeof PackagePreview> = () => (
+  <PackagePreview name='name' version='1.0.0' opened detailsLoading />
 );
 
 export const Opened: ComponentStory<typeof PackagePreview> = () => (
