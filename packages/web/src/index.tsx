@@ -12,7 +12,7 @@ const locationChangeHandler = initAnalytics();
 ReactDOM.hydrate(
   <Provider store={store}>
     <BrowserRouter>
-      <App locationChangeHandler={locationChangeHandler} hostname={window.location.host} />
+      <App locationChangeHandler={locationChangeHandler} />
     </BrowserRouter>
   </Provider>,
   document.getElementById('app')

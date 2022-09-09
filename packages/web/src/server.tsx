@@ -53,7 +53,7 @@ app.get('*', (req, res) => {
   const html = ReactDOMServer.renderToString(
     <Provider store={store}>
       <StaticRouter location={req.url}>
-        <App locationChangeHandler={() => {}} hostname={req.hostname ?? ''} />
+        <App locationChangeHandler={() => {}} />
       </StaticRouter>
     </Provider>
   );
