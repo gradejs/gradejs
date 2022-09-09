@@ -11,14 +11,20 @@ import Footer from '../../ui/Footer/Footer';
 
 export type Props = {
   host: string;
-  heading: string;
-  desc: string;
+  message: string;
+  action?: string;
+  actionTitle?: string;
+  onRetryClick: () => unknown;
+  onReportClick: () => unknown;
 };
 
 export default function Error({
   host,
-  heading = 'It looks like the entered website is not built with Webpack',
-  desc = 'GradeJS will analyze production JavaScript files and match webpack bundled modules to 1,826 indexed NPM libraries over 54,735 releases',
+  message = 'It looks like the entered website is not built with Webpack',
+  action = 'GradeJS will analyze production JavaScript files and match webpack bundled modules to 1,826 indexed NPM libraries over 54,735 releases',
+  actionTitle,
+  onRetryClick,
+  onReportClick,
 }: Props) {
   // TODO: mock data, remove later
   const similarCards: CardProps[] = [
@@ -133,12 +139,12 @@ export default function Error({
         <section className={styles.errorPage}>
           <div className={styles.textContent}>
             <p className={styles.host}>{host}</p>
-            <h2 className={styles.heading}>{heading}</h2>
-            {desc && <p className={styles.desc}>{desc}</p>}
+            <h2 className={styles.heading}>{message}</h2>
+            {action && <p className={styles.desc}>{action}</p>}
           </div>
 
           <div className={styles.searchWrapper}>
-            <SearchBar size='large' placeholder='Try one more' />
+            <SearchBar size='large' placeholder={actionTitle} />
           </div>
         </section>
 
