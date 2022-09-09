@@ -3,6 +3,7 @@ import styles from './CardList.module.scss';
 import Card, { CardProps } from '../Card/Card';
 import clsx from 'clsx';
 import Skeleton from '../Skeleton/Skeleton';
+import { repeat } from 'utils/helpers';
 
 type Props = {
   cards: CardProps[];
@@ -13,21 +14,14 @@ type Props = {
 export default function CardList({ cards, variant = 'default', loading }: Props) {
   return (
     <div className={clsx(styles.grid, styles[variant])}>
-      {loading ? (
-        <>
-          <Skeleton width='100%' variant='rounded'>
-            <Card id='id1' title='title' />
-          </Skeleton>
-          <Skeleton width='100%' variant='rounded'>
-            <Card id='id2' title='title' />
-          </Skeleton>
-          <Skeleton width='100%' variant='rounded'>
-            <Card id='id3' title='title' />
-          </Skeleton>
-        </>
-      ) : (
-        cards.map((card) => <Card key={card.id} {...card} />)
-      )}
+      {loading
+        ? repeat(
+            3,
+            <Skeleton width='100%' variant='rounded'>
+              <Card id='id1' title='title' />
+            </Skeleton>
+          )
+        : cards.map((card) => <Card key={card.id} {...card} />)}
     </div>
   );
 }

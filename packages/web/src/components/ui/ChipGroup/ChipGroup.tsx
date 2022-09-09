@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ChipGroup.module.scss';
 import Chip, { ChipProps } from '../Chip/Chip';
 import Skeleton from '../Skeleton/Skeleton';
+import { repeat } from 'utils/helpers';
 
 type Props = {
   chips: string[];
@@ -24,11 +25,12 @@ export default function ChipGroup({
     <div className={styles.chipsWrapper}>
       <div className={styles.chips}>
         {loading
-          ? [...Array(4)].map((item, idx) => (
-              <Skeleton key={idx} variant='rounded' className={styles.chip}>
+          ? repeat(
+              4,
+              <Skeleton variant='rounded' className={styles.chip}>
                 <Chip>Lorem ipsum</Chip>
               </Skeleton>
-            ))
+            )
           : chips.map((chip) => (
               <Chip key={chip} className={styles.chip} size={size} font={font} fontSize={fontSize}>
                 {chip}

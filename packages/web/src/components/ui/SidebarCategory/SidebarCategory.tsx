@@ -8,6 +8,7 @@ import Person from '../Person/Person';
 import Checkbox from '../Checkbox/Checkbox';
 import SidebarCategorySearch from '../SidebarCategorySearch/SidebarCategorySearch';
 import Skeleton from '../Skeleton/Skeleton';
+import { repeat } from 'utils/helpers';
 
 type GroupItem = {
   group: string;
@@ -79,61 +80,42 @@ export default function SidebarCategory({
     }, [searchValue]);
 
     // Show only first 6 element from list
-    chips = loading ? (
-      <>
-        {/* TODO: there is probably a better way to avoid repetition */}
-        <Skeleton variant='rounded' className={styles.chipSkeleton}>
-          <Chip>#moment</Chip>
-        </Skeleton>
-        <Skeleton variant='rounded' className={styles.chipSkeleton}>
-          <Chip>#date</Chip>
-        </Skeleton>
-        <Skeleton variant='rounded' className={styles.chipSkeleton}>
-          <Chip>#date</Chip>
-        </Skeleton>
-        <Skeleton variant='rounded' className={styles.chipSkeleton}>
-          <Chip>#react</Chip>
-        </Skeleton>
-        <Skeleton variant='rounded' className={styles.chipSkeleton}>
-          <Chip>#parse</Chip>
-        </Skeleton>
-        <Skeleton variant='rounded' className={styles.chipSkeleton}>
-          <Chip>#fb</Chip>
-        </Skeleton>
-      </>
-    ) : (
-      combinedList.slice(0, 6).map((chip) => (
-        <Chip
-          key={chip}
-          className={clsx(
-            styles.sidebarChip,
-            selectedKeywords.includes(chip) && styles.sidebarChipActive
-          )}
-          onClick={() => selectHandler(chip)}
-          size='medium'
-          font='monospace'
-        >
-          {chip}
-        </Chip>
-      ))
-    );
+    chips = loading
+      ? repeat(
+          6,
+          <Skeleton variant='rounded' className={styles.chipSkeleton}>
+            <Chip>#moment</Chip>
+          </Skeleton>
+        )
+      : combinedList.slice(0, 6).map((chip) => (
+          <Chip
+            key={chip}
+            className={clsx(
+              styles.sidebarChip,
+              selectedKeywords.includes(chip) && styles.sidebarChipActive
+            )}
+            onClick={() => selectHandler(chip)}
+            size='medium'
+            font='monospace'
+          >
+            {chip}
+          </Chip>
+        ));
 
     // Show only first 4 element from list
     people = loading ? (
-      <>
-        {/* TODO: there is probably a better way to avoid repetition */}
-        {[...Array(4)].map((item, idx) => (
-          <div key={idx} className={styles.personSkeleton}>
-            <Skeleton
-              width={36}
-              height={36}
-              variant='circular'
-              className={styles.personSkeletonImage}
-            ></Skeleton>
-            <Skeleton>gaeron</Skeleton>
-          </div>
-        ))}
-      </>
+      repeat(
+        4,
+        <div className={styles.personSkeleton}>
+          <Skeleton
+            width={36}
+            height={36}
+            variant='circular'
+            className={styles.personSkeletonImage}
+          ></Skeleton>
+          <Skeleton>gaeron</Skeleton>
+        </div>
+      )
     ) : (
       <div className={styles.authors}>
         {combinedList.slice(0, 4).map((person) => (

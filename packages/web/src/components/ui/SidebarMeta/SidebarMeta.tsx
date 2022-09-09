@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './SidebarMeta.module.scss';
 import { IconProps } from '../Icon/Icon';
 import Skeleton from '../Skeleton/Skeleton';
+import { repeat } from 'utils/helpers';
 
 type MetaItemProps = {
   icon: React.ReactElement<IconProps>;
@@ -25,22 +26,17 @@ function MetaItem({ icon, text }: MetaItemProps) {
 export default function SidebarMeta({ meta, loading }: Props) {
   return (
     <div className={styles.meta}>
-      {loading ? (
-        <>
-          {/* FIXME: looks kinda bad, but will there be a way to know length of meta array */}
-          {/* while loading?  */}
-          {[...Array(5)].map(() => (
+      {loading
+        ? repeat(
+            5,
             <div className={styles.skeleton}>
               <Skeleton width={18} height={18} variant='circular' className={styles.skeletonIcon} />
               <Skeleton width='100%' />
             </div>
+          )
+        : meta.map((metaItem) => (
+            <MetaItem key={metaItem.text} icon={metaItem.icon} text={metaItem.text} />
           ))}
-        </>
-      ) : (
-        meta.map((metaItem) => (
-          <MetaItem key={metaItem.text} icon={metaItem.icon} text={metaItem.text} />
-        ))
-      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import ChipGroup from '../ChipGroup/ChipGroup';
 import SitesList, { Site } from '../SitesList/SitesList';
 import { CSSTransition } from 'react-transition-group';
 import Button from '../Button/Button';
+import { formatNumber } from '../../../utils/helpers';
 
 type Props = {
   name: string;
@@ -289,12 +290,12 @@ export default function PackagePreview({
                             height='100%'
                             className={styles.popularitySkeleton}
                           >
-                            {uses.toLocaleString()}
+                            {formatNumber(uses)}
                           </Skeleton>
                         </div>
                       ) : (
                         <div className={styles.popularityFill} style={{ height: fill }}>
-                          {uses.toLocaleString()}
+                          {formatNumber(uses)}
                         </div>
                       )}
                     </div>
