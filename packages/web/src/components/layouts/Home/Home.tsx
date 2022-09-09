@@ -8,10 +8,12 @@ import Footer from '../../ui/Footer/Footer';
 import CardGroup from '../../ui/CardGroup/CardGroup';
 
 type Props = {
+  loading?: boolean;
+  onSubmit?: (site: string) => void;
   suggestions?: string[];
 };
 
-export default function Home({ suggestions }: Props) {
+export default function Home({ suggestions, loading, onSubmit }: Props) {
   // TODO: mock data, remove later
   const popularCards: CardProps[] = [
     {
@@ -148,7 +150,7 @@ export default function Home({ suggestions }: Props) {
 
   return (
     <>
-      <Hero suggestions={suggestions} />
+      <Hero suggestions={suggestions} onSubmit={onSubmit} loading={loading} />
 
       <Container>
         <CardGroups>

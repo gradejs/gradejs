@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Hero.module.scss';
 import Container from '../Container/Container';
 import Chip from '../Chip/Chip';
@@ -6,12 +6,13 @@ import Header from '../Header/Header';
 import { Icon } from '../Icon/Icon';
 
 export type HeroProps = {
-  inputText?: string;
   loading?: boolean;
   suggestions?: string[];
+  onSubmit?: (site: string) => void;
 };
 
-export default function Hero({ inputText, suggestions, loading = false }: HeroProps) {
+export default function Hero({ suggestions, onSubmit = () => {}, loading = false }: HeroProps) {
+  const [inputText, setInputText] = useState('');
   return (
     <section className={styles.hero}>
       <Header variant='homepage' />
@@ -25,26 +26,35 @@ export default function Hero({ inputText, suggestions, loading = false }: HeroPr
           </p>
 
           <div className={styles.search}>
-            <input
-              type='text'
-              className={styles.input}
-              value={inputText}
-              placeholder='Start analyzing...'
-            />
-            <button type='submit' className={styles.submit}>
-              {/* TODO: use SVG loading component */}
-              {!loading ? (
-                <Icon
-                  kind='arrow'
-                  className={styles.submitIcon}
-                  width={32}
-                  height={32}
-                  color='#fff'
-                />
-              ) : (
-                <span className={styles.loader} />
-              )}
-            </button>
+            <form
+              onSubmit={(e) => {
+                onSubmit(inputText);
+                e.preventDefault();
+                return false;
+              }}
+            >
+              <input
+                type='text'
+                className={styles.input}
+                value={inputText}
+                onChange={(e) => setInputText(e.currentTarget.value)}
+                placeholder='Start analyzing...'
+              />
+              <button type='submit' className={styles.submit}>
+                {/* TODO: use SVG loading component */}
+                {!loading ? (
+                  <Icon
+                    kind='arrow'
+                    className={styles.submitIcon}
+                    width={32}
+                    height={32}
+                    color='#fff'
+                  />
+                ) : (
+                  <span className={styles.loader} />
+                )}
+              </button>
+            </form>
           </div>
 
           {suggestions && (

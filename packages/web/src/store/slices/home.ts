@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, SerializedError } from '@reduxjs/toolkit';
 import { client } from '../../services/apiClient';
 import { RootState } from '../';
 
@@ -12,6 +12,7 @@ const home = createSlice({
     isLoading: false,
     isFailed: false,
     hostname: '',
+    loadError: null as SerializedError | null,
   },
   reducers: {
     resetError(state) {
@@ -25,13 +26,15 @@ const home = createSlice({
         state.hostname = new URL(action.meta.arg).hostname;
         state.isLoading = true;
         state.isFailed = false;
+        state.loadError = null;
       })
       .addCase(parseWebsite.fulfilled, (state) => {
         state.isLoading = false;
       })
-      .addCase(parseWebsite.rejected, (state) => {
+      .addCase(parseWebsite.rejected, (state, action) => {
         state.isFailed = true;
         state.isLoading = false;
+        state.loadError = action.error;
       });
   },
 });
