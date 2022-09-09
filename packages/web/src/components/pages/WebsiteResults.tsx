@@ -54,13 +54,6 @@ export function WebsiteResultsPage() {
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={hostname ?? ''}
-        onRetryClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickRetry_Protected');
-          navigate('/', { replace: false });
-        }}
-        onReportClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickReport_Protected');
-        }}
       />
     );
   }
@@ -74,13 +67,6 @@ export function WebsiteResultsPage() {
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={hostname ?? ''}
-        onRetryClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickRetry_Invalid');
-          navigate('/', { replace: false });
-        }}
-        onReportClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickReport_Invalid');
-        }}
       />
     );
   }

@@ -14,8 +14,6 @@ export type Props = {
   message: string;
   action?: string;
   actionTitle?: string;
-  onRetryClick: () => unknown;
-  onReportClick: () => unknown;
 };
 
 export default function Error({
@@ -23,8 +21,6 @@ export default function Error({
   message = 'It looks like the entered website is not built with Webpack',
   action = 'GradeJS will analyze production JavaScript files and match webpack bundled modules to 1,826 indexed NPM libraries over 54,735 releases',
   actionTitle,
-  onRetryClick,
-  onReportClick,
 }: Props) {
   // TODO: mock data, remove later
   const similarCards: CardProps[] = [
