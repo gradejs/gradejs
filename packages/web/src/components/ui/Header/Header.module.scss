@@ -6,7 +6,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 0;
+}
 
+.default {
   @include mobile-and-tablet {
     display: grid;
     grid-row-gap: 22px;
@@ -73,5 +75,21 @@
 
   .navLink {
     color: $white;
+  }
+}
+
+.error {
+  padding: 32px 0;
+
+  @include mobile-and-tablet {
+    padding: 24px 0;
+
+    .navLink {
+      display: none;
+    }
+
+    .navLinkIssues {
+      display: block;
+    }
   }
 }

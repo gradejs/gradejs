@@ -30,13 +30,13 @@ export default function SearchResults({ pageLoading = false }: Props) {
   // then repetitively after an refreshRate (in milliseconds), increases it by a random value
   // between 2-10. This continues until it reaches 90% of the indicator's width.
   useEffect(() => {
-    loadingRef?.current?.continuousStart(10, 2000);
+    loadingRef?.current?.continuousStart(10, 5000);
 
     // After 10 seconds makes the loading indicator reach 100% of his width and then fade.
     setTimeout(() => {
       loadingRef?.current?.complete();
       setLoading(false);
-    }, 4000);
+    }, 60000);
   }, []);
 
   // TODO: mock data, remove later

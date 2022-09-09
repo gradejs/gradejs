@@ -6,11 +6,15 @@ import { Icon } from '../Icon/Icon';
 import { trackCustomEvent } from '../../../services/analytics';
 
 type Props = {
-  variant?: 'default' | 'homepage';
+  variant?: 'default' | 'homepage' | 'error';
   children?: React.ReactNode;
 };
 
 export default function Header({ variant = 'default', children }: Props) {
+  const trackIssuesClick = useMemo(() => {
+    return () => trackCustomEvent('ClickExternalLink', 'Issues');
+  }, []);
+
   const trackAboutClick = useMemo(() => {
     return () => trackCustomEvent('ClickExternalLink', 'About');
   }, []);
@@ -31,13 +35,25 @@ export default function Header({ variant = 'default', children }: Props) {
             kind='logo'
             width={129}
             height={25}
-            color={variant === 'default' ? '#212121' : 'white'}
+            color={variant === 'homepage' ? 'white' : '#212121'}
           />
         </a>
 
-        <div className={styles.searchWrapper}>{children}</div>
+        {children && <div className={styles.searchWrapper}>{children}</div>}
 
         <div className={styles.nav}>
+          {variant === 'error' && (
+            <a
+              href='https://github.com/gradejs/gradejs/issues'
+              target='_blank'
+              rel='noreferrer'
+              className={clsx(styles.navLink, styles.navLinkIssues)}
+              onClick={trackIssuesClick}
+            >
+              Report an issue
+            </a>
+          )}
+
           <a
             href='https://github.com/gradejs/gradejs/discussions/6'
             target='_blank'
@@ -68,7 +84,7 @@ export default function Header({ variant = 'default', children }: Props) {
               className={styles.githubIcon}
               width={32}
               height={32}
-              color={variant === 'default' ? '#212121' : 'white'}
+              color={variant === 'homepage' ? 'white' : '#212121'}
             />
           </a>
         </div>

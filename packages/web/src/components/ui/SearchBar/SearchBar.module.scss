@@ -56,3 +56,38 @@
     right: 14px;
   }
 }
+
+.large {
+  .input {
+    font-size: 26px;
+    line-height: 40px;
+    border-radius: 70px;
+    padding: 30px 100px 30px 44px;
+
+    @include mobile-and-tablet {
+      font-size: 20px;
+      line-height: 22px;
+      padding: 21px 28px;
+    }
+  }
+
+  .submit,
+  .clear {
+    top: 34px;
+    right: 40px;
+    width: 32px;
+    height: 32px;
+
+    @include mobile-and-tablet {
+      width: 24px;
+      height: 24px;
+      top: 20px;
+      right: 22px;
+
+      svg {
+        width: inherit;
+        height: inherit;
+      }
+    }
+  }
+}
