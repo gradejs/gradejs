@@ -1,4 +1,4 @@
-import { Column, Entity, Index, PrimaryColumn, BaseEntity } from 'typeorm';
+import { Column, Entity, Index, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 
 type Maintainer = {
   name: string;
@@ -10,7 +10,7 @@ type VersionData = { dependencies: Record<string, string>; unpackedSize?: number
 @Entity({ name: 'package_metadata' })
 @Index(['name'], { unique: true })
 export class PackageMetadata extends BaseEntity {
-  @PrimaryColumn({ type: 'int', generated: 'increment' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
   @Column()

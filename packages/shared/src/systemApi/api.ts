@@ -68,12 +68,8 @@ export async function fetchEndpoint<T>(
     }
   }
 
-  console.log(requestUrl.toString());
-
   return fetch(requestUrl.toString(), requestInit)
     .then((response) => {
-      console.log(requestUrl.toString(), response.status);
-
       if (response.status !== 204) {
         return response.json();
       }
@@ -84,8 +80,6 @@ export async function fetchEndpoint<T>(
       if (!json.data) {
         throw new Error('Invalid response format');
       }
-
-      console.log(requestUrl.toString(), json);
 
       return json.data as T;
     })

@@ -5,7 +5,7 @@ import {
   Entity,
   Index,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
 import { WebPageScan } from './webPageScan';
@@ -13,7 +13,7 @@ import { WebPageScan } from './webPageScan';
 @Entity({ name: 'scans_with_vulnerabilities_projection' })
 @Index(['createdAt'])
 export class ScansWithVulnerabilitiesProjection extends BaseEntity {
-  @PrimaryColumn({ type: 'bigint', generated: 'increment' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
   @ManyToOne(() => WebPageScan)

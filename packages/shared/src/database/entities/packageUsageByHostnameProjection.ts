@@ -1,11 +1,19 @@
-import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn, RelationId } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import { Hostname } from './hostname';
 import { WebPageScan } from './webPageScan';
 
 @Entity({ name: 'package_usage_by_hostname_projection' })
 @Index(['packageName'])
 export class PackageUsageByHostnameProjection extends BaseEntity {
-  @PrimaryColumn({ type: 'bigint', generated: 'increment' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
   @ManyToOne(() => Hostname)

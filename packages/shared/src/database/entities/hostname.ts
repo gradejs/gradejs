@@ -1,10 +1,10 @@
-import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { WebPage } from './webPage';
 
 @Entity({ name: 'hostname' })
 @Index(['hostname'], { unique: true })
 export class Hostname extends BaseEntity {
-  @PrimaryColumn({ type: 'int', generated: 'increment' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
   @Column()
