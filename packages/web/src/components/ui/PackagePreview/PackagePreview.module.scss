@@ -265,7 +265,7 @@
   margin-top: 16px;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-gap: 11px;
+  grid-column-gap: 11px;
   overflow-x: auto;
 
   &::-webkit-scrollbar {
@@ -278,9 +278,6 @@
     display: flex;
     flex-wrap: nowrap;
   }
-}
-
-.popularityItemWrapper {
 }
 
 .popularityItem {
@@ -332,7 +329,7 @@
 }
 
 .popularityVersionSkeleton {
-  margin: 0 auto;
+  margin: 15px auto 0;
 }
 
 .popularityVersionIcon {

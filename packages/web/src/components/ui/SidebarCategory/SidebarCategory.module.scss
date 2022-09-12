@@ -69,6 +69,11 @@
   grid-gap: 18px;
 }
 
+.chipSkeletonWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .chipSkeleton {
   display: inline-flex;
   margin-bottom: 8px;

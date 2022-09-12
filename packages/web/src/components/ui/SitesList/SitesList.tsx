@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './SitesList.module.scss';
 import clsx from 'clsx';
 import Skeleton from '../Skeleton/Skeleton';
+import { repeat } from 'utils/helpers';
 
 export type Site = {
   id?: string;
@@ -25,8 +26,8 @@ function Site({ image, name, packagesCount, loading }: Site) {
           <Skeleton width={36} height={36} variant='circular' />
         </div>
         <div className={styles.content}>
-          <Skeleton>Lorem ipsum</Skeleton>
-          <Skeleton>Lorem</Skeleton>
+          <Skeleton width={116} />
+          <Skeleton width={86} />
         </div>
       </div>
     );
@@ -49,7 +50,7 @@ export default function SitesList({ sites, className, loading }: Props) {
     <div className={styles.sitesListWrapper}>
       <div className={clsx(styles.sitesList, className)}>
         {loading
-          ? [...Array(4)].map((item, idx) => <Site key={idx} loading={loading} />)
+          ? repeat(4, <Site loading={loading} />)
           : sites.map((site) => <Site key={site.id} {...site} />)}
       </div>
     </div>

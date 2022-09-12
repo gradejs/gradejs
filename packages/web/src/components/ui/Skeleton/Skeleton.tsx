@@ -5,7 +5,7 @@ import clsx from 'clsx';
 type Props = {
   width?: number | string;
   height?: number | string;
-  variant?: 'text' | 'circular' | 'rounded';
+  variant?: 'text' | 'circular' | 'rounded' | 'rectangular';
   className?: string;
   children?: React.ReactNode;
 };

@@ -5,5 +5,7 @@ export function formatNumber(x: number) {
 }
 
 export function repeat(times: number, children: React.ReactNode) {
-  return [...Array(times)].map((_, idx) => <React.Fragment key={idx}>{children}</React.Fragment>);
+  return new Array(times)
+    .fill(undefined)
+    .map((_, idx) => <React.Fragment key={idx}>{children}</React.Fragment>);
 }

@@ -80,27 +80,29 @@ export default function SidebarCategory({
     }, [searchValue]);
 
     // Show only first 6 element from list
-    chips = loading
-      ? repeat(
+    chips = loading ? (
+      <div className={styles.chipSkeletonWrapper}>
+        {repeat(
           6,
-          <Skeleton variant='rounded' className={styles.chipSkeleton}>
-            <Chip>#moment</Chip>
-          </Skeleton>
-        )
-      : combinedList.slice(0, 6).map((chip) => (
-          <Chip
-            key={chip}
-            className={clsx(
-              styles.sidebarChip,
-              selectedKeywords.includes(chip) && styles.sidebarChipActive
-            )}
-            onClick={() => selectHandler(chip)}
-            size='medium'
-            font='monospace'
-          >
-            {chip}
-          </Chip>
-        ));
+          <Skeleton variant='rounded' width={69} height={36} className={styles.chipSkeleton} />
+        )}
+      </div>
+    ) : (
+      combinedList.slice(0, 6).map((chip) => (
+        <Chip
+          key={chip}
+          className={clsx(
+            styles.sidebarChip,
+            selectedKeywords.includes(chip) && styles.sidebarChipActive
+          )}
+          onClick={() => selectHandler(chip)}
+          size='medium'
+          font='monospace'
+        >
+          {chip}
+        </Chip>
+      ))
+    );
 
     // Show only first 4 element from list
     people = loading ? (
@@ -112,8 +114,8 @@ export default function SidebarCategory({
             height={36}
             variant='circular'
             className={styles.personSkeletonImage}
-          ></Skeleton>
-          <Skeleton>gaeron</Skeleton>
+          />
+          <Skeleton width={56} />
         </div>
       )
     ) : (
@@ -132,18 +134,13 @@ export default function SidebarCategory({
   } else {
     checkboxes = loading ? (
       <div className={styles.checkboxGroup}>
-        <div className={styles.checkboxSkeleton}>
-          <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
-          <Skeleton>Lorem ipsum</Skeleton>
-        </div>
-        <div className={styles.checkboxSkeleton}>
-          <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
-          <Skeleton>Lorem ipsum</Skeleton>
-        </div>
-        <div className={styles.checkboxSkeleton}>
-          <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
-          <Skeleton>Lorem ipsum</Skeleton>
-        </div>
+        {repeat(
+          3,
+          <div className={styles.checkboxSkeleton}>
+            <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
+            <Skeleton width={100} />
+          </div>
+        )}
       </div>
     ) : (
       <div className={styles.checkboxGroup}>
@@ -177,7 +174,7 @@ export default function SidebarCategory({
     <div className={styles.category}>
       <div className={styles.sidebarItemTop}>
         <div className={styles.sidebarItemTitle}>
-          {loading ? <Skeleton>{categoryName}</Skeleton> : categoryName}
+          {loading ? <Skeleton width={100} /> : categoryName}
           {selectedKeywords.length > 0 && (
             <span className={styles.selectedCounter}>
               <Badge content={selectedKeywords.length} />

@@ -25,6 +25,10 @@
   border-radius: 50%;
 }
 
+.rectangular {
+  border-radius: 4px;
+}
+
 .hasChildren {
   & > * {
     visibility: hidden;

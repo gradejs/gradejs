@@ -27,9 +27,7 @@ export default function ChipGroup({
         {loading
           ? repeat(
               4,
-              <Skeleton variant='rounded' className={styles.chip}>
-                <Chip>Lorem ipsum</Chip>
-              </Skeleton>
+              <Skeleton variant='rounded' width={108} height={36} className={styles.chip} />
             )
           : chips.map((chip) => (
               <Chip key={chip} className={styles.chip} size={size} font={font} fontSize={fontSize}>

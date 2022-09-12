@@ -8,7 +8,7 @@ import ChipGroup from '../ChipGroup/ChipGroup';
 import SitesList, { Site } from '../SitesList/SitesList';
 import { CSSTransition } from 'react-transition-group';
 import Button from '../Button/Button';
-import { formatNumber } from '../../../utils/helpers';
+import { formatNumber, repeat } from 'utils/helpers';
 
 type Props = {
   name: string;
@@ -117,7 +117,7 @@ export default function PackagePreview({
       setPackageDetailsLoading(true);
 
       // FIXME: just for demo purposes
-      setTimeout(() => setPackageDetailsLoading(false), 4000);
+      setTimeout(() => setPackageDetailsLoading(false), 60000);
     }
   };
 
@@ -188,11 +188,7 @@ export default function PackagePreview({
                 Script
               </div>
               {packageDetailsLoading ? (
-                <Skeleton>
-                  <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
-                    /rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz
-                  </a>
-                </Skeleton>
+                <Skeleton width={354} />
               ) : (
                 <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
                   /rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz
@@ -208,12 +204,13 @@ export default function PackagePreview({
                 </div>
                 {packageDetailsLoading ? (
                   <>
-                    <Skeleton>
-                      <div className={styles.statTitle}>MIT license</div>
-                    </Skeleton>
-                    <Skeleton>
-                      <div className={styles.statSubtitle}>freely distributable</div>
-                    </Skeleton>
+                    <Skeleton
+                      width={103}
+                      height={26}
+                      variant='rectangular'
+                      className={styles.statHeader}
+                    />
+                    <Skeleton width={135} />
                   </>
                 ) : (
                   <>
@@ -230,12 +227,13 @@ export default function PackagePreview({
                 </div>
                 {packageDetailsLoading ? (
                   <>
-                    <Skeleton>
-                      <div className={styles.statTitle}>385</div>
-                    </Skeleton>
-                    <Skeleton>
-                      <div className={styles.statSubtitle}>out of 12 842</div>
-                    </Skeleton>
+                    <Skeleton
+                      width={62}
+                      height={26}
+                      variant='rectangular'
+                      className={styles.statHeader}
+                    />
+                    <Skeleton width={102} />
                   </>
                 ) : (
                   <>
@@ -289,9 +287,7 @@ export default function PackagePreview({
                             width='100%'
                             height='100%'
                             className={styles.popularitySkeleton}
-                          >
-                            {formatNumber(uses)}
-                          </Skeleton>
+                          />
                         </div>
                       ) : (
                         <div className={styles.popularityFill} style={{ height: fill }}>
@@ -301,9 +297,7 @@ export default function PackagePreview({
                     </div>
 
                     {packageDetailsLoading ? (
-                      <Skeleton className={styles.popularityVersionSkeleton}>
-                        <div className={styles.popularityVersion}>{moduleVersion}</div>
-                      </Skeleton>
+                      <Skeleton width={64} className={styles.popularityVersionSkeleton} />
                     ) : (
                       <div className={styles.popularityVersion}>
                         {moduleVersion}
@@ -337,20 +331,13 @@ export default function PackagePreview({
               <div className={styles.links}>
                 {packageDetailsLoading ? (
                   <>
-                    <div className={styles.link}>
-                      <Skeleton width={18} height={18} className={styles.linkIcon} />
-                      <Skeleton>Repository</Skeleton>
-                    </div>
-
-                    <div className={styles.link}>
-                      <Skeleton width={18} height={18} className={styles.linkIcon} />
-                      <Skeleton>Repository</Skeleton>
-                    </div>
-
-                    <div className={styles.link}>
-                      <Skeleton width={18} height={18} className={styles.linkIcon} />
-                      <Skeleton>Repository</Skeleton>
-                    </div>
+                    {repeat(
+                      3,
+                      <div className={styles.link}>
+                        <Skeleton width={18} height={18} className={styles.linkIcon} />
+                        <Skeleton width={80} />
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
