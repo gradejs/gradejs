@@ -7,6 +7,7 @@ export enum Env {
   // Web related
   PublicApiOrigin = 'API_ORIGIN',
   PublicCorsOrigin = 'CORS_ORIGIN',
+  PublicRootUrl = 'PUBLIC_ROOT_URL',
   PlausibleDomain = 'PLAUSIBLE_DOMAIN',
   AnalyticsId = 'GA_ID',
   VerboseAnalytics = 'DUMP_ANALYTICS',
@@ -53,6 +54,8 @@ export const getCorsAllowedOrigins = () => {
   return origins.split(',').map((origin) => origin.trim());
 };
 
+export const getPublicRootUrl = () => getEnv(Env.PublicRootUrl);
+
 export function getEnv(name: string, defaultValue?: string) {
   const value = process.env[name];
 
@@ -73,6 +76,7 @@ export function checkRequiredEnvironmentVariables(keys: Env[]) {
 
 export const getClientVars = () => {
   return [
+    Env.PublicRootUrl,
     Env.PublicApiOrigin,
     Env.PublicCorsOrigin,
     Env.PlausibleDomain,

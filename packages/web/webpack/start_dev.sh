@@ -19,7 +19,7 @@ do
 done
 
 echo "Starting server bundle"
-nodemon --watch dist/main.js -V dist/main.js 2>&1 &
+nodemon --watch dist/main.js -V --inspect=9203 dist/main.js 2>&1 &
 SRV_PID=$!
 
 # Some magic to shut down all services at once when requested
