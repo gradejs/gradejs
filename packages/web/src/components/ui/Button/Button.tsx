@@ -7,7 +7,7 @@ export type Props = {
   children: React.ReactNode;
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
   // TODO fix types after redesign refactoring
-  variant?: 'default' | 'arrow' | 'secondary' | string; 
+  variant?: 'default' | 'arrow' | 'secondary' | string;
   size?: 'small' | 'medium' | 'big';
   disabled?: boolean;
   onClick?: MouseEventHandler;

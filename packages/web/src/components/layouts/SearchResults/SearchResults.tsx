@@ -260,10 +260,7 @@ export default function SearchResults() {
           </aside>
 
           <div className={styles.packages}>
-            <PackagePreview
-              name='@team-griffin/react-heading-section'
-              version='3.0.0 - 4.16.4'
-            />
+            <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
             <PackagePreview
               name='@team-griffin/react-heading-section@team-griffin/react-heading-section'
               version='3.0.0 - 4.16.4'
