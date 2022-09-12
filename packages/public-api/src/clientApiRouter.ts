@@ -2,7 +2,7 @@ import * as trpc from '@trpc/server';
 // See also: https://colinhacks.com/essays/painless-typesafety
 import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import { z, ZodError } from 'zod';
-import { requestWebPageScan } from './website/service';
+import { getOrRequestWebPageScan } from './website/service';
 import { getAffectingVulnerabilities } from './vulnerabilities/vulnerabilities';
 import {
   PackageMetadata,
@@ -50,7 +50,7 @@ export const appRouter = trpc
   .mutation('requestWebPageScan', {
     input: z.string().url(),
     async resolve({ input: url }) {
-      const scan = await requestWebPageScan(url);
+      const scan = await getOrRequestWebPageScan(url);
 
       const scanResponse: RequestWebPageScanResponse = {
         id: scan.id.toString(),

@@ -17,13 +17,13 @@ const api = createSupertestApi(createApp);
 describe('routes / systemApi', () => {
   it('should deny requests without valid api key', async () => {
     await api.post('/system/scan').send().expect(401);
-    await api.post('/system/scan').set('X-Api-Token', 'INVALID').send().expect(401);
+    await api.post('/system/scan').set('X-Api-Key', 'INVALID').send().expect(401);
   });
 
   it('should deny requests with invalid body', async () => {
     await api
       .post('/system/scan')
-      .set('X-Api-Token', getGradeJsApiKey())
+      .set('X-Api-Key', getGradeJsApiKey())
       .send({
         id: 'test',
         url: 'http://test.com',
@@ -56,7 +56,7 @@ describe('routes / systemApi', () => {
       });
     });
 
-    await api.post('/system/scan').set('X-Api-Token', getGradeJsApiKey()).send(payload).expect(204);
+    await api.post('/system/scan').set('X-Api-Key', getGradeJsApiKey()).send(payload).expect(204);
 
     expect(sencWebPageScanResultMock).toBeCalledWith(payload);
   });

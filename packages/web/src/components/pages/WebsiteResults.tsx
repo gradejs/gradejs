@@ -31,14 +31,14 @@ export function WebsiteResultsPage() {
   }
 
   useEffect(() => {
-    if (hostname && !isLoading && isPending) {
+    if (hostname && isPending && !isFailed) {
       const promise = dispatch(getWebsite({ hostname }));
       return function cleanup() {
         promise.abort();
       };
     }
     return () => {};
-  }, [hostname]);
+  }, [hostname, isPending, isFailed]);
 
   // TODO: properly handle history/routing
   useEffect(() => {

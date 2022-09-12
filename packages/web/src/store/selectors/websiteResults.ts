@@ -103,7 +103,7 @@ export const selectors = {
     (scanStatus, packages, flags) => ({
       ...flags,
       isInvalid: packages && packages.length === 0,
-      isPending: scanStatus === 'pending',
+      isPending: !scanStatus || scanStatus === 'pending',
       isProtected: scanStatus === 'protected',
     })
   ),

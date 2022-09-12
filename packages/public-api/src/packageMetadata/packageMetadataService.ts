@@ -1,6 +1,10 @@
 import { getDatabaseConnection, PackageMetadata } from '@gradejs-public/shared';
 
 export async function getPackageMetadataByPackageNames(packageNames: string[]) {
+  if (!packageNames.length) {
+    return {};
+  }
+
   const db = await getDatabaseConnection();
   const packageMetadataRepo = db.getRepository(PackageMetadata);
 

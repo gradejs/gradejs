@@ -10,7 +10,7 @@ import {
   Index,
 } from 'typeorm';
 import { WebPage } from './webPage';
-import { DetectedPackage } from '../../internalApi/api';
+import { DetectedPackage } from '../../systemApi/api';
 
 @Entity({ name: 'web_page_scan' })
 @Index(['webPage', 'createdAt'])

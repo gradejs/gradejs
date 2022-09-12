@@ -41,10 +41,20 @@ export const isStaging = () => getNodeEnv() === 'staging';
 export const isDevelopment = () => getNodeEnv() === 'development';
 export const isTest = () => getNodeEnv() === 'test';
 
-// TODO: DROP DEFAULTS
-export const getInternalApiRootUrl = () =>
-  getEnv(Env.InternalApiRootUrl, 'https://api.gradejs.com');
-export const getGradeJsApiKey = () => getEnv(Env.GradeJsApiKey, 'TEST_API_KEY');
+export const getInternalApiRootUrl = () => {
+  if (isTest()) {
+    return getEnvUnsafe(Env.InternalApiRootUrl) ?? 'https://api.test.gradejs.com/';
+  }
+
+  return getEnv(Env.InternalApiRootUrl);
+};
+export const getGradeJsApiKey = () => {
+  if (isTest()) {
+    return getEnvUnsafe(Env.GradeJsApiKey) ?? 'TEST_API_KEY';
+  }
+
+  return getEnv(Env.GradeJsApiKey);
+};
 
 export const getSqsLocalPort = () => Number(getEnv(Env.SqsLocalPort, '0'));
 

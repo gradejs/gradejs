@@ -70,7 +70,7 @@ export class DataLayerRework1662077882511 implements MigrationInterface {
       CREATE MATERIALIZED VIEW "package_popularity_view" AS
         SELECT
         "package_usage"."package_name" AS "package_name",
-         count(DISTINCT "package_usage"."hostname_id") as "popularity_rank",
+         count(DISTINCT "package_usage"."hostname_id") as "usage_by_hostname_count",
          (SELECT jsonb_agg(r)
            FROM (
              SELECT "package_version", count("package_version")
@@ -80,12 +80,12 @@ export class DataLayerRework1662077882511 implements MigrationInterface {
              WHERE "package_usage_subquery"."package_name" = "package_usage"."package_name"
              GROUP BY "package_version"
            ) as r
-         ) as json_data
+         ) as version_popularity
       FROM
         "package_usage_by_hostname_projection" as "package_usage"
       GROUP BY "package_usage"."package_name";
         
-      CREATE INDEX "package_popularity_view_popularity_rank" ON "package_popularity_view" ("popularity_rank" DESC);
+      CREATE INDEX "package_popularity_view_usage_by_hostname_count" ON "package_popularity_view" ("usage_by_hostname_count" DESC);
       CREATE INDEX "package_popularity_view_package_name" ON "package_popularity_view" ("package_name" DESC);
     `);
   }

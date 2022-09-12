@@ -41,7 +41,7 @@ export async function findOrCreateWebPage(url: URL, em: EntityManager) {
   return webPageEntity;
 }
 
-export async function requestWebPageScan(url: string) {
+export async function getOrRequestWebPageScan(url: string) {
   const parsedUrl = new URL(url);
 
   const db = await getDatabaseConnection();

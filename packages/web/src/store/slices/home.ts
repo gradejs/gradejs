@@ -3,6 +3,10 @@ import { client } from '../../services/apiClient';
 import { RootState } from '../';
 
 const parseWebsite = createAsyncThunk('home/submitWebsite', async (url: string) => {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = `https://${url}`;
+  }
+
   await client.mutation('requestWebPageScan', url);
 });
 

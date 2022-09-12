@@ -11,6 +11,6 @@ export * from './utils/aws';
 export * from './utils/env';
 export * from './utils/types';
 
-export * as internalApi from './internalApi/api';
+export * as internalApi from './systemApi/api';
 
 export * from './worker/types';

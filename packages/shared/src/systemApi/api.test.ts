@@ -11,7 +11,7 @@ beforeEach(() => {
   fetchMode.mockClear();
 });
 
-describe('internalApi', () => {
+describe('systemApi', () => {
   it('initiateUrlProcessingInternal', async () => {
     const url = 'http://example.com/' + Math.random().toString();
     const requestId = 'test-req-id';
@@ -20,12 +20,12 @@ describe('internalApi', () => {
 
     const result = await requestWebPageScan(url, requestId);
 
-    expect(fetchMode).toBeCalledWith('https://api.gradejs.com/website/scan', {
+    expect(fetchMode).toBeCalledWith('https://api.test.gradejs.com/website/scan', {
       method: 'POST',
       body: `{"url":"${url}","requestId":"${requestId}"}`,
       headers: {
         'Content-Type': 'application/json',
-        'X-Api-Token': 'TEST_API_KEY',
+        'X-Api-Key': 'TEST_API_KEY',
       },
     });
 

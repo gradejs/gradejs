@@ -27,6 +27,10 @@ const isScanPending = (result: DetectionResult) => result && result.status === '
 const getWebsite = createAsyncThunk(
   'websiteResults/getWebsite',
   async ({ hostname, useRetry = true }: { hostname: string; useRetry?: boolean }) => {
+    if (!hostname.startsWith('http://') && !hostname.startsWith('https://')) {
+      hostname = `https://${hostname}`;
+    }
+
     const loadStartTime = Date.now();
     let results = await client.mutation('requestWebPageScan', hostname);
     if (useRetry) {
