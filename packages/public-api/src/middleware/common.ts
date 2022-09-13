@@ -1,7 +1,7 @@
 import { ZodError } from 'zod';
 import createCorsMiddleware from 'cors';
 import { Request, Response, NextFunction } from 'express';
-import { NotFoundError, respondWithError } from './response';
+import { NotFoundError, respondWithError, UnauthorizedError } from './response';
 import { getCorsAllowedOrigins } from '@gradejs-public/shared';
 
 const originAllowList = getCorsAllowedOrigins();
@@ -34,7 +34,11 @@ export function errorHandlerMiddleware(
   _next: NextFunction
 ) {
   // Log only useful errors
-  if (!(error instanceof NotFoundError) && !(error instanceof ZodError)) {
+  if (
+    !(error instanceof NotFoundError) &&
+    !(error instanceof UnauthorizedError) &&
+    !(error instanceof ZodError)
+  ) {
     // TODO: add logger
     console.error(error, req);
   }

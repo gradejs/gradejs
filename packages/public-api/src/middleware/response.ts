@@ -15,6 +15,11 @@ export class NotFoundError extends Error {
   message = 'Not Found';
 }
 
+export class UnauthorizedError extends Error {
+  code = 401;
+  message = 'Unauthorized';
+}
+
 export function respond<T>(res: Response, data: T) {
   res.send({
     data,
@@ -27,7 +32,7 @@ export function respondWithError(res: Response, err: unknown) {
     message: 'Internal server error, try again later',
   };
 
-  if (err instanceof NotFoundError) {
+  if (err instanceof NotFoundError || err instanceof UnauthorizedError) {
     error.code = err.code;
     error.message = err.message;
   }

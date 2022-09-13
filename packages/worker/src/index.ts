@@ -9,7 +9,7 @@ import {
 checkRequiredEnvironmentVariables([
   Env.AwsRegion,
   Env.DatabaseUrl,
-  Env.InternalApiOrigin,
+  Env.InternalApiRootUrl,
   Env.SqsWorkerQueueUrl,
 ]);
 

@@ -7,7 +7,7 @@ import styles from './Website.module.scss';
 import Filters, { FiltersState } from '../Filters/Filters';
 import TagBadge from '../../ui/TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-import { Api } from '../../../services/apiClient';
+import { ClientApi } from '../../../services/apiClient';
 import { Icon } from '../../ui/Icon/Icon';
 
 // TODO: Add plashechka
@@ -20,9 +20,8 @@ export type Props = {
   // }>;
   isLoading: boolean;
   isPending: boolean;
-  packages: Api.WebPagePackage[];
-  vulnerabilities: Record<string, Api.Vulnerability[]>;
-  webpages: Api.WebPage[];
+  packages: ClientApi.ScanResultPackageResponse[];
+  vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>;
   onFiltersApply: SubmitHandler<FiltersState>;
 };
 
@@ -31,7 +30,6 @@ export default function Website({
   isLoading,
   isPending,
   packages,
-  webpages,
   vulnerabilities,
   onFiltersApply,
 }: Props) {
@@ -49,7 +47,7 @@ export default function Website({
             It may take a few minutes and depends on the number of JavaScript files and their size.
           </div>
         ) : (
-          webpages.length > 0 && (
+          packages.length > 0 && (
             <div className={styles.disclaimer}>
               The <strong>beta</strong> version of GradeJS is able to detect only 1,826 popular
               packages with up to 85% accuracy.
@@ -120,7 +118,7 @@ export default function Website({
               variant={view}
               className={styles.package}
               pkg={data}
-              vulnerabilities={vulnerabilities[data.packageName] || []}
+              vulnerabilities={vulnerabilities[data.name] || []}
             />
           ))}
           {isLoading && (

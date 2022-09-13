@@ -16,7 +16,7 @@ export function WebsiteResultsPage() {
   const { hostname } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { webpages, vulnerabilities } = useAppSelector(selectors.default);
+  const { vulnerabilities } = useAppSelector(selectors.default);
   const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
   const packagesStats = useAppSelector(selectors.packagesStats);
   const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
@@ -31,14 +31,14 @@ export function WebsiteResultsPage() {
   }
 
   useEffect(() => {
-    if (hostname && !isLoading && isPending) {
+    if (hostname && isPending && !isFailed) {
       const promise = dispatch(getWebsite({ hostname }));
       return function cleanup() {
         promise.abort();
       };
     }
     return () => {};
-  }, [hostname]);
+  }, [hostname, isPending, isFailed]);
 
   // TODO: properly handle history/routing
   useEffect(() => {
@@ -104,10 +104,9 @@ export function WebsiteResultsPage() {
       <Website
         isLoading={isLoading}
         isPending={isPending}
-        webpages={webpages}
-        packages={packagesFiltered}
-        host={hostname ?? ''}
-        vulnerabilities={vulnerabilities}
+        packages={packagesFiltered ?? []}
+      host={hostname ?? ''}
+      vulnerabilities={vulnerabilities ?? {}}
         onFiltersApply={setFilters}
       />
     </>

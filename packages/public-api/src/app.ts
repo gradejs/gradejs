@@ -1,15 +1,19 @@
 import express from 'express';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { endpointMissingMiddleware, errorHandlerMiddleware, cors } from './middleware/common';
-import { appRouter, createContext } from './router';
+import { appRouter, createContext } from './clientApiRouter';
+import { verifySystemApiToken } from './middleware/verifySystemApiToken';
+import systemApiRouter from './systemApiRouter';
 
 export function createApp() {
   const app = express();
   app.get('/', (_, res) => res.send('gradejs-public-api')); // healthcheck path
-  app.use(cors);
+
+  app.use('/system', verifySystemApiToken, express.json(), systemApiRouter);
 
   app.use(
-    '/',
+    '/client',
+    cors,
     createExpressMiddleware({
       router: appRouter,
       createContext,

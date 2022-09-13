@@ -15,7 +15,7 @@ echo "- Worker debugger on localhost:9202"
 
 # Save current env and values passed in CLI
 CURENV=$(declare -p -x)
-# Set local development envvars
+# Set local development env vars
 set -o allexport
 source cli/development.env
 set +o allexport
@@ -35,8 +35,10 @@ ELASTICMQ_PID=$!
 
 echo "Starting worker package"
 AWS_REGION=test PORT=8084 DB_URL=postgres://gradejs:gradejs@localhost:5432/gradejs-public \
-  INTERNAL_API_ORIGIN=http://localhost:8082 SQS_WORKER_QUEUE_URL=/test/frontend-queue \
+  SQS_WORKER_QUEUE_URL=/test/frontend-queue \
   SQS_LOCAL_PORT=29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
+  INTERNAL_API_ROOT_URL=http://localhost:8082 \
+  GRADEJS_API_KEY=TEST_API_KEY \
   npm run debug --prefix packages/worker 2>&1 &
 WORKER_PID=$!
 
@@ -47,9 +49,11 @@ PULLER_PID=$!
 
 echo "Starting public api package"
 AWS_REGION=test PORT=8083 DB_URL=postgres://gradejs:gradejs@localhost:5432/gradejs-public \
-  INTERNAL_API_ORIGIN=http://localhost:8082 SQS_WORKER_QUEUE_URL=/test/frontend-queue \
+  SQS_WORKER_QUEUE_URL=/test/frontend-queue \
   SQS_LOCAL_PORT=29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
   CORS_ALLOWED_ORIGIN=http://localhost:3000 \
+  INTERNAL_API_ROOT_URL=http://localhost:8082 \
+  GRADEJS_API_KEY=TEST_API_KEY \
   npm run debug --prefix packages/public-api 2>&1 &
 API_PID=$!
 

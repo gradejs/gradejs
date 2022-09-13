@@ -7,21 +7,21 @@ import Dropdown from '../Dropdown/Dropdown';
 import Vulnerability from '../Vulnerability/Vulnerability';
 import TagBadge from '../TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
-import { Api } from '../../../services/apiClient';
+import { ClientApi } from '../../../services/apiClient';
 import { Icon } from '../Icon/Icon';
 
 export type Props = {
   className?: string;
   variant?: 'grid' | 'lines';
-  pkg: Api.WebPagePackage;
-  vulnerabilities: Api.Vulnerability[];
+  pkg: ClientApi.ScanResultPackageResponse;
+  vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
 };
 
 export default function Package({ className, variant = 'grid', pkg, vulnerabilities }: Props) {
   const repositoryUrl = pkg.registryMetadata?.repositoryUrl;
   const homepageUrl = pkg.registryMetadata?.homepageUrl;
   const isOutdated =
-    pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.packageVersionRange);
+    pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.versionRange);
   const isVulnerable = !!vulnerabilities?.length;
 
   return (
@@ -81,21 +81,19 @@ export default function Package({ className, variant = 'grid', pkg, vulnerabilit
       </div>
       <a
         className={styles.name}
-        href={`https://www.npmjs.com/package/${pkg.packageName}`}
+        href={`https://www.npmjs.com/package/${pkg.name}`}
         target='_blank'
         rel='noopener noreferrer'
-        aria-label={pkg.packageName}
+        aria-label={pkg.name}
         // Browser won't break a line for '/' symbol, so we add the <wbr> specificaly
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: pkg.packageName.replace('/', '/<wbr>') }}
+        dangerouslySetInnerHTML={{ __html: pkg.name.replace('/', '/<wbr>') }}
         onClick={() => trackCustomEvent('Package', 'ClickPackageUrl')}
       />
       <div className={styles.meta}>
-        <div className={styles.version}>{toReadableVersion(pkg.packageVersionRange)}</div>
-        {!!pkg.packageMetadata?.approximateByteSize && (
-          <span className={styles.size}>
-            {toReadableSize(pkg.packageMetadata.approximateByteSize)}
-          </span>
+        <div className={styles.version}>{toReadableVersion(pkg.versionRange)}</div>
+        {!!pkg.approximateByteSize && (
+          <span className={styles.size}>{toReadableSize(pkg.approximateByteSize)}</span>
         )}
       </div>
     </div>
