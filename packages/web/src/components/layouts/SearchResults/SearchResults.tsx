@@ -15,6 +15,8 @@ import SidebarCategory from '../../ui/SidebarCategory/SidebarCategory';
 import { Button } from '../../ui';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import SidebarMeta from '../../ui/SidebarMeta/SidebarMeta';
+import clsx from 'clsx';
+import Badge from '../../ui/Badge/Badge';
 
 type Props = {
   pageLoading?: boolean;
@@ -22,6 +24,8 @@ type Props = {
 
 export default function SearchResults({ pageLoading = false }: Props) {
   const [loading, setLoading] = useState<boolean>(pageLoading);
+  const [offCanvasOpen, setOffCanvasOpen] = useState<boolean>(false);
+  const [subMenu, setSubMenu] = useState('');
   const loadingRef = useRef<LoadingBarRef>(null);
 
   // FIXME: just for demo purposes to show how loading bar works
@@ -214,11 +218,82 @@ export default function SearchResults({ pageLoading = false }: Props) {
     setSelectedAuthors([]);
   };
 
+  const openOffCanvas = (subMenuName: string) => {
+    setOffCanvasOpen(true);
+    setSubMenu(subMenuName);
+  };
+
+  const closeOffCanvas = () => {
+    setOffCanvasOpen(false);
+  };
+
+  const filterToggles = [
+    { name: 'keywords', state: selectedKeywords },
+    { name: 'problems', state: selectedProblems },
+    { name: 'authors', state: selectedAuthors },
+  ];
+
   const isChanged =
     selectedKeywords.length > 0 || selectedProblems.length > 0 || selectedAuthors.length > 0;
 
   return (
-    <>
+    <div className={clsx(styles.offCanvas, offCanvasOpen && styles.offCanvasOpen)}>
+      <div className={styles.offCanvasOverlay} onClick={closeOffCanvas} />
+
+      <div className={styles.offCanvasMenu}>
+        <div className={styles.offCanvasContent}>
+          {subMenu === 'keywords' && (
+            <SidebarCategory
+              categoryName='Keywords'
+              keywordsList={keyWords}
+              selectedKeywords={selectedKeywords}
+              selectHandler={handleKeywordsChange}
+              renderComponent='chip'
+              loading={loading}
+              searchable
+              searchOpen
+              returnButton={closeOffCanvas}
+              resetGroup={() => setSelectedKeywords([])}
+            />
+          )}
+
+          {subMenu === 'problems' && (
+            <div className={styles.offCanvasContentWrapper}>
+              <SidebarCategory
+                categoryName='Problems'
+                keywordsList={vulnerabilities}
+                selectedKeywords={selectedProblems}
+                selectHandler={handleProblemsChange}
+                renderComponent='checkbox'
+                loading={loading}
+                resetGroup={() => setSelectedProblems([])}
+              />
+            </div>
+          )}
+
+          {subMenu === 'authors' && (
+            <SidebarCategory
+              categoryName='Authors'
+              keywordsList={authors}
+              selectedKeywords={selectedAuthors}
+              selectHandler={handleAuthorsChange}
+              renderComponent='person'
+              loading={loading}
+              searchable
+              searchOpen
+              returnButton={closeOffCanvas}
+              resetGroup={() => setSelectedAuthors([])}
+            />
+          )}
+
+          <div className={styles.offCanvasAction}>
+            <Button variant='arrow' onClick={closeOffCanvas}>
+              Apply
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {pageLoading && (
         <LoadingBar
           ref={loadingRef}
@@ -249,7 +324,41 @@ export default function SearchResults({ pageLoading = false }: Props) {
               <SidebarMeta meta={metaItems} loading={loading} />
             </div>
 
-            <div className={styles.sidebarItem}>
+            <div className={clsx(styles.sidebarItem, styles.sidebarItemMobileFilter)}>
+              <div className={styles.mobileFiltersTop}>
+                <div className={styles.mobileFiltersTitle}>
+                  <span className={styles.mobileFiltersIcon}>
+                    <Icon kind='filters' width={16} height={16} color='#8E8AA0' />
+                  </span>
+                  Filters
+                </div>
+
+                {isChanged && (
+                  <div className={styles.mobileFiltersResetWrapper}>
+                    <span className={styles.mobileFiltersReset} onClick={resetFilters}>
+                      Reset
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {filterToggles.map(({ name, state }) => (
+                <Button
+                  key={name}
+                  variant='secondary'
+                  size='small'
+                  className={styles.mobileFilterToggle}
+                  onClick={() => openOffCanvas(name)}
+                >
+                  {state.length > 0 && (
+                    <Badge content={state.length} className={styles.mobileSelectedCounter} />
+                  )}
+                  {name[0].toUpperCase() + name.slice(1)}
+                </Button>
+              ))}
+            </div>
+
+            <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
               <SidebarCategory
                 categoryName='Keywords'
                 keywordsList={keyWords}
@@ -261,7 +370,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
               />
             </div>
 
-            <div className={styles.sidebarItem}>
+            <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
               <SidebarCategory
                 categoryName='Problems'
                 keywordsList={vulnerabilities}
@@ -272,7 +381,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
               />
             </div>
 
-            <div className={styles.sidebarItem}>
+            <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
               <SidebarCategory
                 categoryName='Authors'
                 keywordsList={authors}
@@ -285,7 +394,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
             </div>
 
             {isChanged && (
-              <div className={styles.sidebarItem}>
+              <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
                 <Button variant='secondary' size='small' onClick={resetFilters}>
                   Reset filters
                 </Button>
@@ -299,7 +408,6 @@ export default function SearchResults({ pageLoading = false }: Props) {
               version='3.0.0 - 4.16.4'
               loading={loading}
             />
-            <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
             <PackagePreview
               name='@team-griffin/react-heading-section@team-griffin/react-heading-section'
               version='3.0.0 - 4.16.4'
@@ -320,6 +428,6 @@ export default function SearchResults({ pageLoading = false }: Props) {
       </Container>
 
       <Footer />
-    </>
+    </div>
   );
 }

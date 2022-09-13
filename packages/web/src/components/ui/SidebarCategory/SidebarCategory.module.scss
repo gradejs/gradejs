@@ -1,6 +1,17 @@
 @import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
 
-.category {
+.arrowBack {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  padding: 0;
 }
 
 .sidebarItemTop {
@@ -14,6 +25,9 @@
   font-weight: 500;
   font-size: 19px;
   line-height: 26px;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .sidebarItemCounter {
@@ -23,6 +37,19 @@
 .sidebarItemAction {
   cursor: pointer;
   display: flex;
+}
+
+.localReset {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.localResetVisible {
+  opacity: 1;
+  visibility: visible;
 }
 
 .selectedCounter {
@@ -39,6 +66,10 @@
 
   &:hover {
     opacity: 0.6;
+  }
+
+  @include mobile-and-tablet {
+    display: none;
   }
 }
 

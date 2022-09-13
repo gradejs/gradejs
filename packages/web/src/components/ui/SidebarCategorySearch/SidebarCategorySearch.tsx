@@ -95,6 +95,7 @@ export default function SidebarCategorySearch({
             <div className={styles.groupList}>
               {children.map((item) => (
                 <SearchItem
+                  key={item}
                   item={item}
                   selectedItems={selectedItems}
                   selectHandler={selectHandler}

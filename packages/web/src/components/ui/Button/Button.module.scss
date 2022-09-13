@@ -33,6 +33,11 @@
   align-items: center;
   justify-content: center;
   margin-left: 20px;
+
+  @include mobile-and-tablet {
+    width: 42px;
+    height: 42px;
+  }
 }
 
 .arrowIconBackground {
@@ -76,6 +81,12 @@
       opacity: 1;
       animation: reveal $transition-duration $transition-timing-function forwards;
     }
+  }
+
+  @include mobile-and-tablet {
+    font-size: 14px;
+    line-height: 22px;
+    padding-right: 65px;
   }
 }
 

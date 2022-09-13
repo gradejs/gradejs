@@ -1,4 +1,5 @@
 @import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
 
 .searchWrapper {
   position: relative;
@@ -53,6 +54,13 @@
   overflow-y: auto;
   margin-bottom: 12px;
   padding-right: 16px;
+
+  @include mobile-and-tablet {
+    max-height: calc(100vh - 184px);
+    min-height: calc(100vh - 184px);
+    margin-bottom: 0;
+    padding-bottom: 48px;
+  }
 
   &::-webkit-scrollbar {
     width: 6px;

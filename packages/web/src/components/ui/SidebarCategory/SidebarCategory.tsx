@@ -9,6 +9,7 @@ import Checkbox from '../Checkbox/Checkbox';
 import SidebarCategorySearch from '../SidebarCategorySearch/SidebarCategorySearch';
 import Skeleton from '../Skeleton/Skeleton';
 import { repeat } from 'utils/helpers';
+import Button from '../Button/Button';
 
 type GroupItem = {
   group: string;
@@ -26,6 +27,9 @@ type Props = {
   selectHandler: (name: string) => void;
   renderComponent: 'chip' | 'checkbox' | 'person';
   searchable?: boolean;
+  searchOpen?: boolean;
+  returnButton?: () => void;
+  resetGroup?: () => void;
   loading?: boolean;
 };
 
@@ -37,8 +41,11 @@ export default function SidebarCategory({
   renderComponent,
   searchable,
   loading,
+  searchOpen = false,
+  returnButton,
+  resetGroup,
 }: Props) {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(searchOpen);
   const [searchValue, setSearchValue] = useState<string>('');
   const [list, setList] = useState<GroupItem[]>([]);
 
@@ -174,11 +181,28 @@ export default function SidebarCategory({
     <div className={styles.category}>
       <div className={styles.sidebarItemTop}>
         <div className={styles.sidebarItemTitle}>
+          {returnButton && (
+            <button className={styles.arrowBack} onClick={returnButton}>
+              <Icon kind='arrowBack' width={18} height={16} color='#212121' />
+            </button>
+          )}
           {loading ? <Skeleton width={100} /> : categoryName}
           {selectedKeywords.length > 0 && (
             <span className={styles.selectedCounter}>
               <Badge content={selectedKeywords.length} />
             </span>
+          )}
+          {resetGroup && (
+            <div
+              className={clsx(
+                styles.localReset,
+                selectedKeywords.length > 0 && styles.localResetVisible
+              )}
+            >
+              <Button variant='secondary' size='small' onClick={resetGroup}>
+                Reset
+              </Button>
+            </div>
           )}
         </div>
         {!open &&
