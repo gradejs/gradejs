@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Error as ErrorLayout, Website } from 'components/layouts';
 import { trackCustomEvent } from '../../services/analytics';
@@ -15,8 +16,9 @@ export function WebsiteResultsPage() {
   const { hostname } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { webpages, vulnerabilities } = useAppSelector(selectors.default);
+  const { vulnerabilities } = useAppSelector(selectors.default);
   const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
+  const packagesStats = useAppSelector(selectors.packagesStats);
   const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
     selectors.stateFlags
   );
@@ -29,14 +31,14 @@ export function WebsiteResultsPage() {
   }
 
   useEffect(() => {
-    if (hostname && !isLoading && isPending) {
+    if (hostname && isPending && !isFailed) {
       const promise = dispatch(getWebsite({ hostname }));
       return function cleanup() {
         promise.abort();
       };
     }
     return () => {};
-  }, [hostname]);
+  }, [hostname, isPending, isFailed]);
 
   // TODO: properly handle history/routing
   useEffect(() => {
@@ -84,15 +86,29 @@ export function WebsiteResultsPage() {
       />
     );
   }
+
+  const title = `List of NPM packages that are used on ${hostname} - GradeJS`;
+  const description =
+    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${hostname}` +
+    (packagesStats.vulnerable > 0 ? `, ${packagesStats.vulnerable} are vulnerable` : '') +
+    (packagesStats.outdated > 0 ? `, ${packagesStats.outdated} are outdated` : '');
+
   return (
-    <Website
-      isLoading={isLoading}
-      isPending={isPending}
-      webpages={webpages}
-      packages={packagesFiltered}
-      host={hostname ?? ''}
-      vulnerabilities={vulnerabilities}
-      onFiltersApply={setFilters}
-    />
+    <>
+      <Helmet>
+        <title>{title}</title>
+        <meta name='description' content={description} />
+        <meta property='og:title' content={title} />
+        <meta property='og:description' content={description} />
+      </Helmet>
+      <Website
+        isLoading={isLoading}
+        isPending={isPending}
+        packages={packagesFiltered ?? []}
+        host={hostname ?? ''}
+        vulnerabilities={vulnerabilities ?? {}}
+        onFiltersApply={setFilters}
+      />
+    </>
   );
 }

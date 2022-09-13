@@ -1,4 +1,4 @@
-import * as internalApi from '../internalApi/api';
+import * as internalApi from '../systemApi/api';
 
 export type WorkerTask = {
   [Key in WorkerTaskType]: {

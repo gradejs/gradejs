@@ -2,6 +2,8 @@ import { join, resolve } from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { StatsWriterPlugin } = require('webpack-stats-plugin');
 import { configCommon, pluginsCommon, srcDir } from './common';
 import { Configuration } from 'webpack';
 import { WebpackConfigOptions } from './config';
@@ -80,6 +82,9 @@ export const clientConfig: (options: WebpackConfigOptions) => Configuration = ({
       patterns: [{ from: 'src/assets/sharing-image.png', to: 'sharing-image.png' }],
     }),
     ...plugins,
+    new StatsWriterPlugin({
+      filename: 'stats.json',
+    }),
   ],
   output: {
     filename: 'bundle.[fullhash].js',
