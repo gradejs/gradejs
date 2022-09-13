@@ -7,9 +7,14 @@ import Chip from '../Chip/Chip';
 import Person from '../Person/Person';
 import Checkbox from '../Checkbox/Checkbox';
 import SidebarCategorySearch from '../SidebarCategorySearch/SidebarCategorySearch';
-import Skeleton from '../Skeleton/Skeleton';
-import { repeat } from 'utils/helpers';
 import Button from '../Button/Button';
+import {
+  CategoryNameSkeleton,
+  CheckboxesSkeleton,
+  ChipsSkeleton,
+  PeopleSkeleton,
+  SearchIconSkeleton,
+} from './SidebarCategorySkeleton';
 
 type GroupItem = {
   group: string;
@@ -88,12 +93,7 @@ export default function SidebarCategory({
 
     // Show only first 6 element from list
     chips = loading ? (
-      <div className={styles.chipSkeletonWrapper}>
-        {repeat(
-          6,
-          <Skeleton variant='rounded' width={69} height={36} className={styles.chipSkeleton} />
-        )}
-      </div>
+      <ChipsSkeleton />
     ) : (
       combinedList.slice(0, 6).map((chip) => (
         <Chip
@@ -113,18 +113,7 @@ export default function SidebarCategory({
 
     // Show only first 4 element from list
     people = loading ? (
-      repeat(
-        4,
-        <div className={styles.personSkeleton}>
-          <Skeleton
-            width={36}
-            height={36}
-            variant='circular'
-            className={styles.personSkeletonImage}
-          />
-          <Skeleton width={56} />
-        </div>
-      )
+      <PeopleSkeleton />
     ) : (
       <div className={styles.authors}>
         {combinedList.slice(0, 4).map((person) => (
@@ -140,15 +129,7 @@ export default function SidebarCategory({
     );
   } else {
     checkboxes = loading ? (
-      <div className={styles.checkboxGroup}>
-        {repeat(
-          3,
-          <div className={styles.checkboxSkeleton}>
-            <Skeleton width={20} height={20} className={styles.checkboxSkeletonCheck} />
-            <Skeleton width={100} />
-          </div>
-        )}
-      </div>
+      <CheckboxesSkeleton />
     ) : (
       <div className={styles.checkboxGroup}>
         {keywordsList?.map((name) => (
@@ -186,7 +167,7 @@ export default function SidebarCategory({
               <Icon kind='arrowBack' width={18} height={16} color='#212121' />
             </button>
           )}
-          {loading ? <Skeleton width={100} /> : categoryName}
+          {loading ? <CategoryNameSkeleton /> : categoryName}
           {selectedKeywords.length > 0 && (
             <span className={styles.selectedCounter}>
               <Badge content={selectedKeywords.length} />
@@ -208,7 +189,7 @@ export default function SidebarCategory({
         {!open &&
           searchable &&
           (loading ? (
-            <Skeleton width={24} height={24} className={styles.sidebarItemAction} />
+            <SearchIconSkeleton />
           ) : (
             <div className={styles.sidebarItemAction} onClick={toggleOpen}>
               <Icon kind='search' width={24} height={24} />

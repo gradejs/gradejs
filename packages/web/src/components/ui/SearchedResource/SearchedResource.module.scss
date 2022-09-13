@@ -57,6 +57,11 @@
   color: $gray-text;
 }
 
+.searchedResourceHighlightSkeleton {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .searchedResourceSubtitle {
   color: $gray-text;
 }

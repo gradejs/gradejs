@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Skeleton from '../Skeleton/Skeleton';
 import styles from './PackagePreview.module.scss';
 import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
@@ -8,7 +7,16 @@ import ChipGroup from '../ChipGroup/ChipGroup';
 import SitesList, { Site } from '../SitesList/SitesList';
 import { CSSTransition } from 'react-transition-group';
 import Button from '../Button/Button';
-import { formatNumber, repeat } from 'utils/helpers';
+import { formatNumber } from 'utils/helpers';
+import {
+  LicenceSkeleton,
+  LinksSkeleton,
+  PackagePreviewSkeleton,
+  PopularitySkeleton,
+  PopularityVersionSkeleton,
+  RatingSkeleton,
+  ScriptSkeleton,
+} from './PackagePreviewSkeleton';
 
 type Props = {
   name: string;
@@ -123,7 +131,7 @@ export default function PackagePreview({
 
   // TODO: add arrow button inside skeleton
   if (loading) {
-    return <Skeleton className={styles.packageSkeleton} />;
+    return <PackagePreviewSkeleton />;
   }
 
   return (
@@ -188,7 +196,7 @@ export default function PackagePreview({
                 Script
               </div>
               {packageDetailsLoading ? (
-                <Skeleton width={354} />
+                <ScriptSkeleton />
               ) : (
                 <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
                   /rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz
@@ -203,15 +211,7 @@ export default function PackagePreview({
                   License
                 </div>
                 {packageDetailsLoading ? (
-                  <>
-                    <Skeleton
-                      width={103}
-                      height={26}
-                      variant='rectangular'
-                      className={styles.statHeader}
-                    />
-                    <Skeleton width={135} />
-                  </>
+                  <LicenceSkeleton />
                 ) : (
                   <>
                     <div className={styles.statTitle}>MIT license</div>
@@ -226,15 +226,7 @@ export default function PackagePreview({
                   Rating
                 </div>
                 {packageDetailsLoading ? (
-                  <>
-                    <Skeleton
-                      width={62}
-                      height={26}
-                      variant='rectangular'
-                      className={styles.statHeader}
-                    />
-                    <Skeleton width={102} />
-                  </>
+                  <RatingSkeleton />
                 ) : (
                   <>
                     <div className={styles.statTitle}>
@@ -283,11 +275,7 @@ export default function PackagePreview({
                           className={clsx(styles.popularityFill, styles.popularityFillSkeleton)}
                           style={{ height: fill }}
                         >
-                          <Skeleton
-                            width='100%'
-                            height='100%'
-                            className={styles.popularitySkeleton}
-                          />
+                          <PopularitySkeleton />
                         </div>
                       ) : (
                         <div className={styles.popularityFill} style={{ height: fill }}>
@@ -297,7 +285,7 @@ export default function PackagePreview({
                     </div>
 
                     {packageDetailsLoading ? (
-                      <Skeleton width={64} className={styles.popularityVersionSkeleton} />
+                      <PopularityVersionSkeleton />
                     ) : (
                       <div className={styles.popularityVersion}>
                         {moduleVersion}
@@ -330,15 +318,7 @@ export default function PackagePreview({
             <div className={styles.actions}>
               <div className={styles.links}>
                 {packageDetailsLoading ? (
-                  <>
-                    {repeat(
-                      3,
-                      <div className={styles.link}>
-                        <Skeleton width={18} height={18} className={styles.linkIcon} />
-                        <Skeleton width={80} />
-                      </div>
-                    )}
-                  </>
+                  <LinksSkeleton />
                 ) : (
                   <>
                     <a href='#' className={styles.link} target='_blank' rel='noreferrer'>

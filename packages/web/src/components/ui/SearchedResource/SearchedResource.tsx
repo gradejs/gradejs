@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SearchedResource.module.scss';
-import Skeleton from '../Skeleton/Skeleton';
+import { SearchedResourceSkeleton } from './SearchedResourceSkeleton';
 
 type Props = {
   image: string;
@@ -17,6 +17,10 @@ export default function SearchedResource({
   lastScanDate,
   loading,
 }: Props) {
+  if (loading) {
+    return <SearchedResourceSkeleton image={image} name={name} />;
+  }
+
   return (
     <div className={styles.searchedResource}>
       <div className={styles.searchedResourceImageWrapper}>
@@ -24,18 +28,9 @@ export default function SearchedResource({
       </div>
       <div className={styles.searchedResourceContent}>
         <h3 className={styles.searchedResourceTitle}>
-          {name}{' '}
-          {!loading && (
-            <span className={styles.searchedResourceHighlight}>{totalPackages} packages</span>
-          )}
+          {name} <span className={styles.searchedResourceHighlight}>{totalPackages} packages</span>
         </h3>
-        {loading ? (
-          <div className={styles.searchedResourceSubtitle}>
-            <Skeleton width={213} />
-          </div>
-        ) : (
-          <div className={styles.searchedResourceSubtitle}>Last scanning {lastScanDate}</div>
-        )}
+        <div className={styles.searchedResourceSubtitle}>Last scanning {lastScanDate}</div>
       </div>
     </div>
   );

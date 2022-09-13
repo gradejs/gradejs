@@ -1,8 +1,7 @@
 import React from 'react';
 import styles from './SitesList.module.scss';
 import clsx from 'clsx';
-import Skeleton from '../Skeleton/Skeleton';
-import { repeat } from 'utils/helpers';
+import { SitesListSkeleton } from './SitesListSkeleton';
 
 export type Site = {
   id?: string;
@@ -18,20 +17,7 @@ type Props = {
   loading?: boolean;
 };
 
-function Site({ image, name, packagesCount, loading }: Site) {
-  if (loading) {
-    return (
-      <div className={styles.site}>
-        <div className={styles.imageWrapper}>
-          <Skeleton width={36} height={36} variant='circular' />
-        </div>
-        <div className={styles.content}>
-          <Skeleton width={116} />
-          <Skeleton width={86} />
-        </div>
-      </div>
-    );
-  }
+function Site({ image, name, packagesCount }: Site) {
   return (
     <div className={styles.site}>
       <div className={styles.imageWrapper}>
@@ -49,9 +35,7 @@ export default function SitesList({ sites, className, loading }: Props) {
   return (
     <div className={styles.sitesListWrapper}>
       <div className={clsx(styles.sitesList, className)}>
-        {loading
-          ? repeat(4, <Site loading={loading} />)
-          : sites.map((site) => <Site key={site.id} {...site} />)}
+        {loading ? <SitesListSkeleton /> : sites.map((site) => <Site key={site.id} {...site} />)}
       </div>
     </div>
   );
