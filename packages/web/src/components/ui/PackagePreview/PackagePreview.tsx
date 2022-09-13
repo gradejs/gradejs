@@ -20,6 +20,7 @@ import BarChart from '../BarChart/BarChart';
 import BarChartSkeleton from '../BarChart/BarChartSkeleton';
 import { formatNumber } from 'utils/helpers';
 import Hint from '../Tooltip/Hint';
+import { useNavigate } from 'react-router-dom';
 
 type Problem = 'vulnerabilities' | 'duplicate' | 'outdated';
 
@@ -30,6 +31,7 @@ type ExternalLink = {
 };
 
 type Props = {
+  /*
   name: string;
   version: string;
   desc: string;
@@ -39,23 +41,60 @@ type Props = {
     name: string;
     image: string;
   };
+  */
   opened?: boolean;
   detailsLoading?: boolean;
+  sites: Site[];
+  flags: {
+    vulnerable: boolean;
+    duplicate: boolean;
+    outdated: boolean;
+  };
+  pkg: {
+    name: string;
+    descriptionFull: string;
+    containingScriptUrl: string;
+    version: string;
+    license: string;
+    licenseDescription: string;
+    rating: number;
+    ratingDelta: number;
+    deps: string[]; // TODO: probably not just string[]
+    repositoryUrl?: string;
+    homePageUrl?: string;
+    npmUrl?: string;
+    keywords: Array<{
+      name: string;
+    }>;
+    author: {
+      name: string;
+      avatar: string;
+    };
+  };
+  totalRatedPackages: number;
 };
 
 // TODO: refactor this (decomposition, props, memoization, etc)
 export default function PackagePreview({
-  name,
-  version,
-  desc,
-  problems,
-  keywords,
-  author,
+  /*  name,
+      version,
+      desc,
+      problems,
+      keywords,
+      author,
+      opened,
+      detailsLoading = false,
+      */
   opened,
+  sites,
+  flags,
+  pkg,
+  totalRatedPackages,
   detailsLoading = false,
 }: Props) {
   const [open, setOpen] = useState<boolean>(opened ?? false);
   const [packageDetailsLoading, setPackageDetailsLoading] = useState<boolean>(detailsLoading);
+  const navigate = useNavigate();
 
   const toggleOpen = () => {
     if (open) {
@@ -170,7 +209,7 @@ export default function PackagePreview({
     links: externalLinks,
   };
 
-  const { script, license, rating, dependencies, packages, sites, links } = loadedData;
+  //const { script, license, rating, dependencies, packages, sites, links } = loadedData;
 
   return (
     <div className={clsx(styles.package, open && styles.open)}>
@@ -178,10 +217,10 @@ export default function PackagePreview({
         <div className={styles.top} onClick={toggleOpen}>
           <div className={styles.title}>
             <span className={styles.name}>
-              {name} <span className={styles.version}>{version}</span>
+              {pkg.name} <span className={styles.version}>{pkg.version}</span>
             </span>
 
-            {problems && (
+            {flags && ( // TODO deal with flags
               <span className={styles.problems}>
                 {problems.map((problem) => (
                   <ProblemBadge key={problem} problem={problem} />
@@ -191,11 +230,18 @@ export default function PackagePreview({
           </div>
 
           <button type='button' className={styles.arrowWrapper} onClick={toggleOpen}>
-            <Icon kind='arrowDown' width={14} height={8} color='#8E8AA0' className={styles.arrow} />
+            <Icon
+              kind='arrowDown'
+              style={{ transform: opened ? 'rotate(180deg)' : 'rotate(0)' }}
+              width={14}
+              height={8}
+              color='#8E8AA0'
+              className={styles.arrow}
+            />
           </button>
         </div>
 
-        <div className={styles.desc}>{desc}</div>
+        <div className={styles.desc}>{pkg.descriptionFull}</div>
       </div>
 
       <CSSTransition
@@ -215,8 +261,13 @@ export default function PackagePreview({
               {packageDetailsLoading ? (
                 <ScriptSkeleton />
               ) : (
-                <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
-                  {script}
+                <a
+                  href={pkg.containingScriptUrl}
+                  className={styles.statLink}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  {pkg.containingScriptUrl}
                 </a>
               )}
             </div>
@@ -231,8 +282,8 @@ export default function PackagePreview({
                   <LicenceSkeleton />
                 ) : (
                   <>
-                    <div className={styles.statTitle}>{license.title}</div>
-                    <div className={styles.statSubtitle}>{license.subtitle}</div>
+                    <div className={styles.statTitle}>{pkg.license}</div>
+                    <div className={styles.statSubtitle}>{pkg.licenseDescription}</div>
                   </>
                 )}
               </div>
@@ -250,12 +301,11 @@ export default function PackagePreview({
                 ) : (
                   <>
                     <div className={styles.statTitle}>
-                      {rating.place}
-
+                      {pkg.rating}
                       <div
                         className={clsx(
                           styles.statRating,
-                          rating.rankingDelta > 0 ? styles.statRatingGreen : styles.statRatingRed
+                          pkg.ratingDelta > 0 ? styles.statRatingGreen : styles.statRatingRed
                         )}
                       >
                         <Icon
@@ -264,10 +314,12 @@ export default function PackagePreview({
                           height={12}
                           className={styles.statRatingArrow}
                         />
-                        {rating.rankingDelta}
+                        {pkg.ratingDelta}
                       </div>
                     </div>
-                    <div className={styles.statSubtitle}>out of {formatNumber(rating.out)}</div>
+                    <div className={styles.statSubtitle}>
+                      out of {formatNumber(totalRatedPackages)}
+                    </div>
                   </>
                 )}
               </div>
@@ -276,21 +328,21 @@ export default function PackagePreview({
                 <div className={styles.statHeader}>
                   <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
                   Dependencies
+                  {packageDetailsLoading ? (
+                    <ChipGroupSkeleton />
+                  ) : (
+                    <ChipGroup>
+                      {pkg.deps.map((dependency) => (
+                        <Chip size='medium' fontSize='small' font='monospace'>
+                          {dependency}
+                        </Chip>
+                      ))}
+                    </ChipGroup>
+                  )}
                 </div>
-                {packageDetailsLoading ? (
-                  <ChipGroupSkeleton />
-                ) : (
-                  <ChipGroup>
-                    {dependencies.map((dependency) => (
-                      <Chip size='medium' fontSize='small' font='monospace'>
-                        {dependency}
-                      </Chip>
-                    ))}
-                  </ChipGroup>
-                )}
               </div>
-            </div>
 
+              {/* TODO: separate component
             <div className={styles.stat}>
               <div className={styles.statHeader}>
                 <Icon kind='graph' color='#8E8AA0' className={styles.statIcon} />
@@ -301,46 +353,75 @@ export default function PackagePreview({
                 {packageDetailsLoading ? <BarChartSkeleton /> : <BarChart bars={packages} />}
               </div>
             </div>
+            */}
 
-            {/* TODO: add Modules treemap here */}
+              {/* TODO: add Modules treemap here */}
 
-            <div className={styles.stat}>
-              <div className={styles.statHeader}>Used on</div>
+              <div className={styles.stat}>
+                <div className={styles.statHeader}>Used on</div>
 
-              {packageDetailsLoading ? (
-                <SitesListSkeleton className={styles.usedOnList} />
-              ) : (
-                <SitesList sites={sites} className={styles.usedOnList} />
-              )}
-            </div>
-
-            <div className={styles.actions}>
-              <div className={styles.links}>
                 {packageDetailsLoading ? (
-                  <LinksSkeleton />
+                  <SitesListSkeleton className={styles.usedOnList} />
                 ) : (
-                  links.map(({ href, kind, linkText }) => (
-                    <a
-                      key={href}
-                      href={href}
-                      className={styles.link}
-                      target='_blank'
-                      rel='noreferrer'
-                    >
-                      <Icon
-                        kind={kind}
-                        width={kind !== 'npm' ? 16 : 32}
-                        height={kind !== 'npm' ? 16 : 32}
-                        color='#212121'
-                        className={styles.linkIcon}
-                      />
-                      {linkText}
-                    </a>
-                  ))
+                  <SitesList sites={sites} className={styles.usedOnList} />
                 )}
               </div>
 
-              <Button variant='arrow'>Details</Button>
+              <div className={styles.actions}>
+                <div className={styles.links}>
+                  {packageDetailsLoading ? (
+                    <LinksSkeleton />
+                  ) : (
+                    <>
+                      {pkg.repositoryUrl && (
+                        <a
+                          href={pkg.repositoryUrl}
+                          className={styles.link}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          <Icon kind='repository' color='#212121' className={styles.linkIcon} />
+                          Repository
+                        </a>
+                      )}
+
+                      {pkg.homePageUrl && (
+                        <a
+                          href={pkg.homePageUrl}
+                          className={styles.link}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          <Icon kind='link' color='#212121' className={styles.linkIcon} />
+                          Homepage
+                        </a>
+                      )}
+
+                      {pkg.npmUrl && (
+                        <a
+                          href={pkg.npmUrl}
+                          className={styles.link}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          <Icon
+                            kind='npm'
+                            width={32}
+                            height={32}
+                            color='#212121'
+                            className={styles.linkIcon}
+                          />
+                        </a>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {/* TODO: should be a <a> link */}
+                <Button variant='arrow' onClick={() => navigate('/package/' + pkg.name)}>
+                  Details
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -351,21 +432,21 @@ export default function PackagePreview({
           {/* TODO: not sure how to conditionally render maximum number of keywords (e.g. 5 for
                     desktop, 3/4 for tablet, 2 for mobile) based on viewport and update rest number
                     of keywords beyond current maximum in Chip */}
-          {keywords.slice(0, 5).map((keyword) => (
-            <a key={keyword} href='#' className={styles.tag}>
-              {keyword}
+          {pkg.keywords.slice(6).map((tag) => (
+            <a href='#' className={styles.tag}>
+              {tag.name}
             </a>
           ))}
-          {keywords.slice(5).length > 0 && (
+          {pkg.keywords.length > 6 && (
             <Chip variant='info' size='medium' fontWeight='semiBold'>
-              +{keywords.slice(5).length}
+              +{pkg.keywords.length - 6}
             </Chip>
           )}
         </div>
 
         <div className={styles.author}>
-          <span className={styles.authorName}>{author.name}</span>
-          <img className={styles.authorImage} src={author.image} alt='' />
+          <span className={styles.authorName}>{pkg.author.name}</span>
+          <img className={styles.authorImage} src={pkg.author.avatar} alt='' />
         </div>
       </div>
     </div>

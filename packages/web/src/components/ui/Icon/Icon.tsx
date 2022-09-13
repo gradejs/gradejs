@@ -62,6 +62,7 @@ export type IconProps = {
   width?: number;
   height?: number;
   className?: string;
+  style?: React.CSSProperties;
   color?: string;
   stroke?: string;
   onClick?: () => unknown;
@@ -73,6 +74,7 @@ export function Icon({
   color = '#A5A5A5',
   stroke,
   className,
+  style,
   kind,
   onClick,
 }: IconProps) {
@@ -85,6 +87,7 @@ export function Icon({
       viewBox={icons[kind].viewBox}
       fill='none'
       color={color}
+      style={style}
       stroke={stroke}
       xmlns='http://www.w3.org/2000/svg'
     >

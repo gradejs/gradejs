@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import semver from 'semver';
 import styles from './SearchResults.module.scss';
 import Footer from 'components/ui/Footer/Footer';
 import Container from 'components/ui/Container/Container';
@@ -15,10 +16,23 @@ import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
 import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
-import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
+import { RequestWebPageScanOutput } from '../../../services/apiClient';
+import { SubmitHandler } from 'react-hook-form';
+
+type FiltersState = {
+  filter: 'all' | 'outdated' | 'vulnerable' | 'name';
+  sort: 'name' | 'size' | 'severity' | 'importDepth' | 'packagePopularity' | 'confidenceScore';
+  filterPackageName?: string;
+};
 
 type Props = {
-  pageLoading?: boolean;
+  searchQuery: string;
+  host: string;
+  siteFavicon: string;
+  isLoading: boolean;
+  isPending: boolean;
+  scanOutput: RequestWebPageScanOutput;
+  onFiltersApply: SubmitHandler<FiltersState>;
 };
 
 export default function SearchResults({ pageLoading = false }: Props) {
@@ -41,6 +55,31 @@ export default function SearchResults({ pageLoading = false }: Props) {
     }, 60000);
   }, []);
 
+  // TODO: memoize
+  // Corresponding flags are determined by array index (packages[i] <=> flags[i]).
+  const flags: Array<{ vulnerable: boolean; duplicate: boolean; outdated: boolean }> = (
+    scanOutput.scanResult?.packages ?? []
+  ).map((pkg) => ({
+    duplicate: false, // TODO
+    outdated: !!(
+      pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.versionRange)
+    ),
+    vulnerable: (scanOutput.scanResult?.vulnerabilities[pkg.name]?.length ?? 0) > 0,
+  }));
+
+  // TODO memoize
+  const outdatedCount = flags.filter((f) => f.outdated).length;
+
+  // TODO memoize
+  const keywordsList = [
+    ...new Set(
+      scanOutput.scanResult?.packages.reduce((acc, pkg) => {
+        return acc.concat(pkg.registryMetadata?.keywords ?? []);
+      }, [] as string[])
+    ),
+  ];
+
+  /*
   // TODO: mock data, remove later
   const metaItems = [
     {
@@ -73,6 +112,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
 
   // TODO: mock data, remove later
   const authors = ['gaearon', 'acdlite', 'sophiebits', 'sebmarkbage', 'zpao', 'trueadm', 'bvaughn'];
+  */
 
   return (
     <>
@@ -87,7 +127,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
         />
       )}
 
-      <StickyDefaultHeader showSearch />
+      <StickyDefaultHeader showSearch query={searchQuery} />
 
       <Container>
         <div className={styles.searchResults}>
@@ -99,49 +139,44 @@ export default function SearchResults({ pageLoading = false }: Props) {
               />
             ) : (
               <SearchedResource
-                image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
-                name='pinterest.com'
-                totalPackages={6}
-                lastScanDate='21 feb in 21:30'
+                image={siteFavicon}
+                name={host}
+                totalPackages={scanOutput.scanResult?.packages.length ?? 0}
+                lastScanDate={scanOutput.finishedAt}
               />
             )}
           </div>
 
           <div className={styles.searchResultsSidebar}>
             <SearchResultsSidebar
-              metaItems={metaItems}
+              metaItems={scanOutput.scanResult?.meta}
               keyWords={keyWords}
               vulnerabilities={vulnerabilities}
-              authors={authors}
+              authors={state.fetched.authors}
               loading={loading}
             />
           </div>
 
           <div className={styles.packages}>
             {loading ? (
-              <PackagePreviewSkeleton />
+              <>
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+              </>
             ) : (
-              <PackagePreview
-                name='@team-griffin/react-heading-section'
-                version='3.0.0 - 4.16.4'
-                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
-                problems={['vulnerabilities']}
-                keywords={['#moment', '#date', '#time', '#parse', '#format', '#format', '#format']}
-                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
-              />
-            )}
-
-            {loading ? (
-              <PackagePreviewSkeleton />
-            ) : (
-              <PackagePreview
-                name='@team-griffin/react-heading-section'
-                version='3.0.0 - 4.16.4'
-                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
-                problems={['vulnerabilities', 'duplicate', 'outdated']}
-                keywords={['#moment', '#date', '#time', '#parse', '#format']}
-                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
-              />
+              scanOutput.scanResult?.packages.map((pkg, index) => (
+                <PackagePreview // TODO пробрасываем сюда данные
+                  pkg={pkg}
+                  flags={flags[index]}
+                  sites={[] /* TODO */}
+                  opened={index === 0}
+                  totalRatedPackages={totalRatedPackages}
+                />
+              ))
             )}
           </div>
         </div>
@@ -151,15 +186,15 @@ export default function SearchResults({ pageLoading = false }: Props) {
             {loading ? (
               <CardListSkeleton />
             ) : (
-              <PackagesBySourceCardList cards={packagesBySourceListData} />
+              <PackagesBySourceCardList cards={state.fetched.similarCards} />
             )}
           </CardGroup>
 
           <CardGroup title='Popular packages'>
             {loading ? (
-              <CardListSkeleton numberOfElements={6} />
+              <CardListSkeleton />
             ) : (
-              <PopularPackageCardList cards={popularPackageListData} />
+              <PopularPackageCardList cards={state.fetched.popularPackages} />
             )}
           </CardGroup>
         </CardGroups>

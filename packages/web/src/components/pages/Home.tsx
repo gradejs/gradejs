@@ -11,22 +11,30 @@ export function HomePage() {
 
   // TODO: properly handle history/routing
   useEffect(() => {
-    if (!state.isLoading && !state.isFailed && state.hostname) {
-      navigate(`/w/${state.hostname}`, { replace: true });
+    if (!state.isLoading && !state.isFailed && state.address) {
+      navigate(`/scan/${state.address}`);
     }
   });
 
   const handleDetectStart = useCallback(async (address: string) => {
     trackCustomEvent('HomePage', 'WebsiteSubmitted');
     // TODO: error state of input field, e.g. when empty
-    if (!address.startsWith('http://') && !address.startsWith('https://')) {
-      address = 'https://' + address;
-    }
     await dispatch(parseWebsite(address));
   }, []);
 
   if (state.isFailed) {
-    return <Error host={state.hostname} />;
+    return (
+      <Error
+        host={state.address}
+        onReportClick={() => {
+          trackCustomEvent('HomePage', 'ClickReport');
+        }}
+        onRetryClick={() => {
+          trackCustomEvent('HomePage', 'ClickRetry');
+          dispatch(resetError());
+        }}
+      />
+    );
   }
 
   return <Home onSubmit={handleDetectStart} loading={state.isLoading} />;
