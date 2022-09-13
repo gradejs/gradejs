@@ -4,6 +4,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { configCommon, pluginsCommon, srcDir } from './common';
 import { Configuration } from 'webpack';
 import { WebpackConfigOptions } from './config';
+import nodeExternals from 'webpack-node-externals';
 
 const distDir = 'dist';
 
@@ -13,6 +14,7 @@ export const serverConfig: (options: WebpackConfigOptions) => Configuration = ({
 }) => ({
   entry: join(__dirname, '..', srcDir, 'server.tsx'),
   ...configCommon(mode),
+  devtool: mode === 'production' ? false : 'inline-cheap-module-source-map',
   module: {
     rules: [
       {
@@ -69,5 +71,6 @@ export const serverConfig: (options: WebpackConfigOptions) => Configuration = ({
     minimize: false,
   },
   target: 'node',
+  externals: ['react-helmet', nodeExternals() as any],
   watch,
 });

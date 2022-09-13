@@ -1,4 +1,6 @@
+import { getPublicRootUrl } from '../../../shared/src/utils/env';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HomePage } from './pages/Home';
 import { WebsiteResultsPage } from './pages/WebsiteResults';
@@ -18,10 +20,28 @@ export function App({ locationChangeHandler }: AppProps) {
   const location = useLocation();
   locationChangeHandler(location.pathname);
   return (
-    <Routes>
-      <Route index element={<HomePage />} />
-      <Route path='/w/:hostname' element={<WebsiteResultsPage />} />
-      <Route path='*' element={<Navigate replace to='/' />} />
-    </Routes>
+    <>
+      <Helmet>
+        <title>Production Webpack Bundle Analyzer - GradeJS</title>
+        <meta
+          name='description'
+          content='GradeJS analyzes production JavaScript files and matches bundled NPM packages with specific version precision.'
+        />
+
+        <meta property='og:url' content={getPublicRootUrl() + location.pathname} />
+        <meta property='og:type' content='website' />
+        <meta property='og:title' content='Production Webpack Bundle Analyzer - GradeJS' />
+        <meta
+          property='og:description'
+          content='GradeJS analyzes production JavaScript files and matches bundled NPM packages with specific version precision.'
+        />
+        <meta property='og:image' content='/static/sharing-image.png' />
+      </Helmet>
+      <Routes>
+        <Route index element={<HomePage />} />
+        <Route path='/w/:hostname' element={<WebsiteResultsPage />} />
+        <Route path='*' element={<Navigate replace to='/' />} />
+      </Routes>
+    </>
   );
 }

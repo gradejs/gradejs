@@ -12,12 +12,11 @@ export default {
 export const Ready = (args: Props) => <Website {...args} />;
 Ready.args = {
   host: 'gradejs.com',
-  webpages: [],
   packages: [
     {
-      packageName: 'react',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
       registryMetadata: {
         latestVersion: '18.0.0',
         description: 'Test description',
@@ -27,49 +26,49 @@ Ready.args = {
       },
     },
     {
-      packageName: 'react-dom',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react-dom',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react-dom',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react-dom',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react-dom',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react-dom',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react-dom',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react-dom',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
     {
-      packageName: 'react-dom',
-      possiblePackageVersions: ['17.0.2'],
-      packageVersionRange: '17.0.2',
+      name: 'react-dom',
+      versionSet: ['17.0.2'],
+      versionRange: '17.0.2',
     },
   ],
   vulnerabilities: {
@@ -97,17 +96,15 @@ Ready.args = {
 export const Pending = (args: Props) => <Website {...args} />;
 Pending.args = {
   host: 'gradejs.com',
-  webpages: [
-    {
-      status: 'pending',
-    },
-  ],
   packages: [],
+  isLoading: false,
+  isPending: true,
 };
 
 export const Loading = (args: Props) => <Website {...args} />;
 Loading.args = {
   host: 'gradejs.com',
-  webpages: [],
   packages: [],
+  isLoading: true,
+  isPending: false,
 };
