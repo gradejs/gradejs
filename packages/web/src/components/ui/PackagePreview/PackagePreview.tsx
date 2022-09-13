@@ -228,6 +228,7 @@ export default function PackagePreview({
                 {packageDetailsLoading ? (
                   <RatingSkeleton />
                 ) : (
+                  // TODO: What about adding a rankingDelta prop and deciding on class name based on number's sign?
                   <>
                     <div className={styles.statTitle}>
                       385
@@ -271,6 +272,8 @@ export default function PackagePreview({
                   <div className={styles.popularityItemWrapper}>
                     <div className={styles.popularityItem}>
                       {packageDetailsLoading ? (
+                        // TODO: We should be on lookout for these deoptimizations,
+                        //       this should definitely be a component / top-level const.
                         <div
                           className={clsx(styles.popularityFill, styles.popularityFillSkeleton)}
                           style={{ height: fill }}

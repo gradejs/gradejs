@@ -1,18 +1,13 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import Header from './Header';
-import SearchBar from '../SearchBar/SearchBar';
+import DefaultHeader from './DefaultHeader';
 
 export default {
   title: 'Interface / Header Inner page',
-  component: Header,
+  component: DefaultHeader,
   parameters: {
     layout: 'fullscreen',
   },
-} as ComponentMeta<typeof Header>;
+} as ComponentMeta<typeof DefaultHeader>;
 
-export const InnerPage: ComponentStory<typeof Header> = () => (
-  <Header>
-    <SearchBar value='pinterest.com/blog/%D0%92%D092%D092%D092%/dFD092fg092%D092%/dFD092/blog/%D0%92%D092%D092%D092%/dFD092fg092%D092%/dFD092f' />
-  </Header>
-);
+export const InnerPage: ComponentStory<typeof DefaultHeader> = () => <DefaultHeader showSearch />;

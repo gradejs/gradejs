@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './Error.module.scss';
-import { Header } from 'components/ui';
 import Container from 'components/ui/Container/Container';
 import SearchBar from '../../ui/SearchBar/SearchBar';
 import { CardProps } from '../../ui/Card/Card';
@@ -8,6 +7,7 @@ import CardGroup from '../../ui/CardGroup/CardGroup';
 import CardList from '../../ui/CardList/CardList';
 import CardGroups from '../../ui/CardGroups/CardGroups';
 import Footer from '../../ui/Footer/Footer';
+import ErrorHeader from 'components/ui/Header/ErrorHeader';
 
 export type Props = {
   host: string;
@@ -129,7 +129,7 @@ export default function Error({
 
   return (
     <>
-      <Header variant='error' />
+      <ErrorHeader />
 
       <Container>
         <section className={styles.errorPage}>
@@ -144,6 +144,8 @@ export default function Error({
           </div>
         </section>
 
+        {/* TODO: Trying to fit separate domain entities within a single component seems like burden.
+                  Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='But we have'>
             <CardList cards={similarCards} />

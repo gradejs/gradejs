@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './SearchResults.module.scss';
-import Header from 'components/ui/Header/Header';
 import Footer from 'components/ui/Footer/Footer';
 import Container from 'components/ui/Container/Container';
 import { Icon } from '../../ui/Icon/Icon';
 import PackagePreview from '../../ui/PackagePreview/PackagePreview';
-import SearchBar from '../../ui/SearchBar/SearchBar';
 import SearchedResource from '../../ui/SearchedResource/SearchedResource';
 import { CardProps } from '../../ui/Card/Card';
 import CardGroup from '../../ui/CardGroup/CardGroup';
@@ -17,6 +15,7 @@ import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import SidebarMeta from '../../ui/SidebarMeta/SidebarMeta';
 import clsx from 'clsx';
 import SidebarMobileFilter from '../../ui/SidebarMobileFilter/SidebarMobileFilter';
+import DefaultHeader from '../../ui/Header/DefaultHeader';
 
 type Props = {
   pageLoading?: boolean;
@@ -305,9 +304,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
         />
       )}
 
-      <Header>
-        <SearchBar value='pinterest.com/blog/%D0%92%D092%D092%D092%/dFD092fg092%D092%/dFD092/blog/%D0%92%D092%D092%D092%/dFD092fg092%D092%/dFD092f' />
-      </Header>
+      <DefaultHeader showSearch />
 
       <Container>
         <div className={styles.searchResults}>
@@ -334,6 +331,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
               />
             </div>
 
+            {/*TODO: What about splitting these off into separate components and passing them back here through children or a render prop of sorts?*/}
             <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
               <SidebarCategory
                 categoryName='Keywords'
@@ -392,6 +390,8 @@ export default function SearchResults({ pageLoading = false }: Props) {
           </div>
         </div>
 
+        {/* TODO: Trying to fit separate domain entities within a single component seems like burden.
+                  Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='Similar sites'>
             <CardList cards={similarCards} loading={loading} />

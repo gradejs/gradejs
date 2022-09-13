@@ -9,13 +9,13 @@ type Props = {
   placeholder?: string;
 };
 
+// TODO: connect search to redux and get/update with it
 export default function SearchBar({
-  value,
+  value = 'pinterest.com',
   size = 'default',
   placeholder = 'Start analyzing...',
 }: Props) {
-  // FIXME: not sure that this is legal
-  const [inputText, setInputText] = useState<string | undefined>(value);
+  const [inputText, setInputText] = useState<string>(value);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value);

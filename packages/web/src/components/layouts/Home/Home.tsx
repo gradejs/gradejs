@@ -153,6 +153,8 @@ export default function Home({ suggestions, loading, onSubmit }: Props) {
       <Hero suggestions={suggestions} onSubmit={onSubmit} loading={loading} />
 
       <Container>
+        {/* TODO: Trying to fit separate domain entities within a single component seems like burden.
+                  Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='Popular search queries'>
             <CardList cards={popularCards} />

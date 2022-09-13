@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './Hero.module.scss';
 import Container from '../Container/Container';
 import Chip from '../Chip/Chip';
-import Header from '../Header/Header';
+import DefaultHeader from '../Header/DefaultHeader';
 import { Icon } from '../Icon/Icon';
 
 export type HeroProps = {
@@ -13,9 +13,12 @@ export type HeroProps = {
 
 export default function Hero({ suggestions, onSubmit = () => {}, loading = false }: HeroProps) {
   const [inputText, setInputText] = useState('');
+
   return (
     <section className={styles.hero}>
-      <Header variant='homepage' />
+      <div className={styles.headerWrapper}>
+        <DefaultHeader variant='light' />
+      </div>
 
       <Container>
         <div className={styles.content}>
