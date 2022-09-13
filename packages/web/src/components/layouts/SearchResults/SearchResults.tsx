@@ -17,6 +17,8 @@ import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import SidebarMeta from '../../ui/SidebarMeta/SidebarMeta';
 import clsx from 'clsx';
 import Badge from '../../ui/Badge/Badge';
+import Skeleton from 'components/ui/Skeleton/Skeleton';
+import { repeat } from 'utils/helpers';
 
 type Props = {
   pageLoading?: boolean;
@@ -327,10 +329,21 @@ export default function SearchResults({ pageLoading = false }: Props) {
             <div className={clsx(styles.sidebarItem, styles.sidebarItemMobileFilter)}>
               <div className={styles.mobileFiltersTop}>
                 <div className={styles.mobileFiltersTitle}>
-                  <span className={styles.mobileFiltersIcon}>
-                    <Icon kind='filters' width={16} height={16} color='#8E8AA0' />
-                  </span>
-                  Filters
+                  {loading ? (
+                    <>
+                      <span className={styles.mobileFiltersIcon}>
+                        <Skeleton width={16} height={16} variant='circular' />
+                      </span>
+                      <Skeleton width={50} />
+                    </>
+                  ) : (
+                    <>
+                      <span className={styles.mobileFiltersIcon}>
+                        <Icon kind='filters' width={16} height={16} color='#8E8AA0' />
+                      </span>
+                      Filters
+                    </>
+                  )}
                 </div>
 
                 {isChanged && (
@@ -342,20 +355,30 @@ export default function SearchResults({ pageLoading = false }: Props) {
                 )}
               </div>
 
-              {filterToggles.map(({ name, state }) => (
-                <Button
-                  key={name}
-                  variant='secondary'
-                  size='small'
-                  className={styles.mobileFilterToggle}
-                  onClick={() => openOffCanvas(name)}
-                >
-                  {state.length > 0 && (
-                    <Badge content={state.length} className={styles.mobileSelectedCounter} />
-                  )}
-                  {name[0].toUpperCase() + name.slice(1)}
-                </Button>
-              ))}
+              {loading
+                ? repeat(
+                    3,
+                    <Skeleton
+                      width={100}
+                      height={40}
+                      variant='rounded'
+                      className={styles.mobileFilterToggle}
+                    />
+                  )
+                : filterToggles.map(({ name, state }) => (
+                    <Button
+                      key={name}
+                      variant='secondary'
+                      size='small'
+                      className={styles.mobileFilterToggle}
+                      onClick={() => openOffCanvas(name)}
+                    >
+                      {state.length > 0 && (
+                        <Badge content={state.length} className={styles.mobileSelectedCounter} />
+                      )}
+                      {name[0].toUpperCase() + name.slice(1)}
+                    </Button>
+                  ))}
             </div>
 
             <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
