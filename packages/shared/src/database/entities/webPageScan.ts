@@ -1,3 +1,4 @@
+import { SystemAPI } from '@gradejs-public/shared';
 import {
   Column,
   Entity,
@@ -10,7 +11,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { WebPage } from './webPage';
-import { DetectedPackage } from '../../systemApi/api';
 
 @Entity({ name: 'web_page_scan' })
 @Index(['webPage', 'createdAt'])
@@ -47,8 +47,11 @@ export namespace WebPageScan {
     Failed = 'failed',
   }
 
-  export type Package = DetectedPackage;
+  export type IdentifiedModule = SystemAPI.ScanReport.IdentifiedModule;
+  export type IdentifiedPackage = SystemAPI.ScanReport.IdentifiedPackage;
+
   export type Result = {
-    packages: Package[];
+    identifiedModuleMap: Record<string, IdentifiedModule>;
+    identifiedPackages: IdentifiedPackage[];
   };
 }

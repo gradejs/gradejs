@@ -1,50 +1,20 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { getGradeJsApiKey, getInternalApiRootUrl } from '../utils/env';
-
-export type DetectedPackage = {
-  name: string;
-  versionSet: string[];
-  versionRange: string;
-  approximateByteSize: number | null;
-};
-
-export namespace WebPageScan {
-  export enum Status {
-    Created = 'created',
-    InProgress = 'in-progress',
-    Ready = 'ready',
-    Failed = 'failed',
-    Invalid = 'invalid',
-    Protected = 'protected',
-  }
-}
-
-export interface Package {
-  name: string;
-  latestVersion: string;
-}
-
-export interface PackageIndexRequest {
-  name: string;
-  versions: string[];
-  [key: string]: unknown;
-}
-
-type Paginaton = {
-  offset: number;
-  limit: number;
-  total: number;
-};
+import { PackageIndexRequest, PackageRequest, PaginatonRequest } from './types';
 
 export async function requestWebPageScan(url: string, requestId: string) {
   return fetchEndpoint<{}>('POST', '/website/scan', { url, requestId });
 }
 
 export async function fetchPackageIndex(offset = 0, limit = 0) {
-  return fetchEndpoint<{ pagination: Paginaton; packages: Package[] }>('GET', '/package/index', {
-    offset,
-    limit,
-  });
+  return fetchEndpoint<{ pagination: PaginatonRequest; packages: PackageRequest[] }>(
+    'GET',
+    '/package/index',
+    {
+      offset,
+      limit,
+    }
+  );
 }
 
 export async function requestPackageIndexing(payload: PackageIndexRequest) {

@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { syncPackageIndexBatch } from './syncPackageIndexBatch';
 import * as npmRegistry from '../npmRegistry/api';
-import { internalApi, PackageMetadata } from '@gradejs-public/shared';
+import { systemApi, PackageMetadata } from '@gradejs-public/shared';
 import { useDatabaseConnection, useTransactionalTesting } from '@gradejs-public/test-utils';
 
 useDatabaseConnection();
@@ -29,7 +29,7 @@ describe('task / syncPackageIndexBatch', () => {
       );
 
     const requestPackageIndexingMock = jest
-      .spyOn(internalApi, 'requestPackageIndexing')
+      .spyOn(systemApi, 'requestPackageIndexing')
       .mockImplementation(() => Promise.resolve(true));
 
     await syncPackageIndexBatch([mockedPackage]);
@@ -70,7 +70,7 @@ describe('task / syncPackageIndexBatch', () => {
         } as any)
       );
 
-    const requestPackageIndexingMock = jest.spyOn(internalApi, 'requestPackageIndexing');
+    const requestPackageIndexingMock = jest.spyOn(systemApi, 'requestPackageIndexing');
 
     await syncPackageIndexBatch([
       { name: savedPackage.name, latestVersion: savedPackage.latestVersion },

@@ -1,4 +1,4 @@
-import * as internalApi from '../systemApi/api';
+import { PackageRequest } from '../systemApi/types';
 
 export type WorkerTask = {
   [Key in WorkerTaskType]: {
@@ -11,6 +11,6 @@ export type WorkerTaskType = keyof WorkerTaskPayloadMap;
 
 export type WorkerTaskPayloadMap = {
   syncPackageIndex: undefined;
-  syncPackageIndexBatch: internalApi.Package[];
+  syncPackageIndexBatch: PackageRequest[];
   syncPackageVulnerabilities: undefined;
 };

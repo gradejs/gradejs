@@ -4,9 +4,8 @@ import {
   useTransactionalTesting,
 } from '@gradejs-public/test-utils';
 import { createApp } from './app';
-import { getGradeJsApiKey, internalApi, WebPageScan } from '@gradejs-public/shared';
+import { getGradeJsApiKey, SystemAPI, WebPageScan } from '@gradejs-public/shared';
 import * as WebsiteService from './website/service';
-import { SystemApi } from './systemApiRouter';
 import { getRepository } from 'typeorm';
 
 useDatabaseConnection();
@@ -33,20 +32,18 @@ describe('routes / systemApi', () => {
   });
 
   it('should process reported scans', async () => {
-    const payload: SystemApi.ScanReport = {
-      id: 'test',
+    const payload: SystemAPI.ScanReport = {
+      requestId: 'test',
       url: 'http://test.com',
-      status: internalApi.WebPageScan.Status.Ready,
-      scan: {
-        packages: [
-          {
-            name: 'react',
-            versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
-          },
-        ],
-      },
+      status: SystemAPI.ScanReport.Status.Ready,
+      identifiedModuleMap: {},
+      identifiedPackages: [
+        {
+          name: 'react',
+          versionSet: ['17.0.0'],
+          moduleIds: [],
+        },
+      ],
     };
 
     const sencWebPageScanResultMock = jest.spyOn(WebsiteService, 'syncWebPageScanResult');
