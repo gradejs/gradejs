@@ -3,7 +3,6 @@ import styles from './SidebarMobileFilter.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Button } from '../index';
 import Badge from '../Badge/Badge';
-import { SidebarMobileFilterSkeleton } from './SidebarMobileFilterSkeleton';
 
 type toggleList = {
   name: string;
@@ -12,22 +11,12 @@ type toggleList = {
 };
 
 type Props = {
-  loading?: boolean;
   isChanged: boolean;
   resetFilters: () => void;
   filterTriggers: any[];
 };
 
-export default function SidebarMobileFilter({
-  loading,
-  isChanged,
-  resetFilters,
-  filterTriggers,
-}: Props) {
-  if (loading) {
-    return <SidebarMobileFilterSkeleton />;
-  }
-
+export default function SidebarMobileFilter({ isChanged, resetFilters, filterTriggers }: Props) {
   return (
     <>
       <div className={styles.mobileFiltersTop}>

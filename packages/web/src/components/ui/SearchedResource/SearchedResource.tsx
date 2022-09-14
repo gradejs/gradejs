@@ -1,26 +1,14 @@
 import React from 'react';
 import styles from './SearchedResource.module.scss';
-import { SearchedResourceSkeleton } from './SearchedResourceSkeleton';
 
 type Props = {
   image: string;
   name: string;
   totalPackages: number;
   lastScanDate?: string;
-  loading?: boolean;
 };
 
-export default function SearchedResource({
-  image,
-  name,
-  totalPackages,
-  lastScanDate,
-  loading,
-}: Props) {
-  if (loading) {
-    return <SearchedResourceSkeleton image={image} name={name} />;
-  }
-
+export default function SearchedResource({ image, name, totalPackages, lastScanDate }: Props) {
   return (
     <div className={styles.searchedResource}>
       <div className={styles.searchedResourceImageWrapper}>

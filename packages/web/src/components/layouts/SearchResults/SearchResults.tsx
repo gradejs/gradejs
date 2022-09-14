@@ -12,6 +12,9 @@ import CardGroups from 'components/ui/CardGroups/CardGroups';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import DefaultHeader from '../../ui/Header/DefaultHeader';
 import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResultsSidebar';
+import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
+import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
+import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
 
 type Props = {
   pageLoading?: boolean;
@@ -192,13 +195,19 @@ export default function SearchResults({ pageLoading = false }: Props) {
       <Container>
         <div className={styles.searchResults}>
           <div className={styles.searchResultsResource}>
-            <SearchedResource
-              image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
-              name='pinterest.com'
-              totalPackages={6}
-              lastScanDate='21 feb in 21:30'
-              loading={loading}
-            />
+            {loading ? (
+              <SearchedResourceSkeleton
+                image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
+                name='pinterest.com'
+              />
+            ) : (
+              <SearchedResource
+                image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
+                name='pinterest.com'
+                totalPackages={6}
+                lastScanDate='21 feb in 21:30'
+              />
+            )}
           </div>
 
           <div className={styles.searchResultsSidebar}>
@@ -212,16 +221,17 @@ export default function SearchResults({ pageLoading = false }: Props) {
           </div>
 
           <div className={styles.packages}>
-            <PackagePreview
-              name='@team-griffin/react-heading-section'
-              version='3.0.0 - 4.16.4'
-              loading={loading}
-            />
-            <PackagePreview
-              name='@team-griffin/react-heading-section@team-griffin/react-heading-section'
-              version='3.0.0 - 4.16.4'
-              loading={loading}
-            />
+            {loading ? (
+              <PackagePreviewSkeleton />
+            ) : (
+              <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
+            )}
+
+            {loading ? (
+              <PackagePreviewSkeleton />
+            ) : (
+              <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
+            )}
           </div>
         </div>
 
@@ -229,11 +239,11 @@ export default function SearchResults({ pageLoading = false }: Props) {
                   Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='Similar sites'>
-            <CardList cards={similarCards} loading={loading} />
+            {loading ? <CardListSkeleton /> : <CardList cards={similarCards} />}
           </CardGroup>
 
           <CardGroup title='Popular packages'>
-            <CardList cards={popularPackages} loading={loading} />
+            {loading ? <CardListSkeleton /> : <CardList cards={popularPackages} />}
           </CardGroup>
         </CardGroups>
       </Container>

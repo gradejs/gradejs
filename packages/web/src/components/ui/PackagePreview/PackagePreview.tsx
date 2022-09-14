@@ -11,7 +11,6 @@ import { formatNumber } from 'utils/helpers';
 import {
   LicenceSkeleton,
   LinksSkeleton,
-  PackagePreviewSkeleton,
   PopularitySkeleton,
   PopularityVersionSkeleton,
   RatingSkeleton,
@@ -22,17 +21,11 @@ type Props = {
   name: string;
   version: string;
   opened?: boolean;
-  loading?: boolean;
   detailsLoading?: boolean;
 };
 
-export default function PackagePreview({
-  name,
-  version,
-  opened,
-  loading = false,
-  detailsLoading = false,
-}: Props) {
+// TODO: refactor this (decomposition, props, memoization, etc)
+export default function PackagePreview({ name, version, opened, detailsLoading = false }: Props) {
   const [open, setOpen] = useState<boolean>(opened ?? false);
   const [packageDetailsLoading, setPackageDetailsLoading] = useState<boolean>(detailsLoading);
 
@@ -128,11 +121,6 @@ export default function PackagePreview({
       setTimeout(() => setPackageDetailsLoading(false), 60000);
     }
   };
-
-  // TODO: add arrow button inside skeleton
-  if (loading) {
-    return <PackagePreviewSkeleton />;
-  }
 
   return (
     <div className={clsx(styles.package, open && styles.open)}>

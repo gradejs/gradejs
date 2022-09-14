@@ -15,8 +15,9 @@ import { ProblemsListSkeleton } from '../ProblemsList/ProblemsListSkeleton';
 import PeopleList from '../PeopleList/PeopleList';
 import { PeopleListSkeleton } from '../PeopleList/PeopleListSkeleton';
 import { Button } from '../index';
-
 import { IconProps } from '../Icon/Icon';
+import { SidebarMetaSkeleton } from '../SidebarMeta/SidebarMetaSkeleton';
+import { SidebarMobileFilterSkeleton } from '../SidebarMobileFilter/SidebarMobileFilterSkeleton';
 
 type MetaItemProps = {
   icon: React.ReactElement<IconProps>;
@@ -136,16 +137,19 @@ export default function SearchResultsSidebar({
 
       <aside className={styles.sidebar}>
         <div className={styles.sidebarItem}>
-          <SidebarMeta meta={metaItems} loading={loading} />
+          {loading ? <SidebarMetaSkeleton /> : <SidebarMeta meta={metaItems} />}
         </div>
 
         <div className={clsx(styles.sidebarItem, styles.sidebarItemMobileFilter)}>
-          <SidebarMobileFilter
-            isChanged={isChanged}
-            resetFilters={resetFilters}
-            filterTriggers={filterTriggers}
-            loading={loading}
-          />
+          {loading ? (
+            <SidebarMobileFilterSkeleton />
+          ) : (
+            <SidebarMobileFilter
+              isChanged={isChanged}
+              resetFilters={resetFilters}
+              filterTriggers={filterTriggers}
+            />
+          )}
         </div>
 
         <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>

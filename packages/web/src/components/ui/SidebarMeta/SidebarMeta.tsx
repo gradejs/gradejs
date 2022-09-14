@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './SidebarMeta.module.scss';
 import { IconProps } from '../Icon/Icon';
-import { SidebarMetaSkeleton } from './SidebarMetaSkeleton';
 
 type MetaItemProps = {
   icon: React.ReactElement<IconProps>;
@@ -10,7 +9,6 @@ type MetaItemProps = {
 
 type Props = {
   meta: MetaItemProps[];
-  loading?: boolean;
 };
 
 function MetaItem({ icon, text }: MetaItemProps) {
@@ -22,11 +20,7 @@ function MetaItem({ icon, text }: MetaItemProps) {
   );
 }
 
-export default function SidebarMeta({ meta, loading }: Props) {
-  if (loading) {
-    return <SidebarMetaSkeleton />;
-  }
-
+export default function SidebarMeta({ meta }: Props) {
   return (
     <div className={styles.meta}>
       {meta.map((metaItem) => (
