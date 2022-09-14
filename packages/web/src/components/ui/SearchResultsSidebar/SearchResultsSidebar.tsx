@@ -100,7 +100,6 @@ export default function SearchResultsSidebar({
           selectHandler={handleKeywordsChange}
           returnButton={() => setModalKeywordsOpen(false)}
           resetGroup={() => setSelectedKeywords([])}
-          itemsWithImage
           searchOpen
         />
       </Modal>
