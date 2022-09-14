@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../layouts/SearchResults/SearchResults.module.scss';
+import styles from './SidebarMobileFilter.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Button } from '../index';
 import Badge from '../Badge/Badge';
@@ -8,22 +8,21 @@ import { SidebarMobileFilterSkeleton } from './SidebarMobileFilterSkeleton';
 type toggleList = {
   name: string;
   state: [];
+  openModal: () => void;
 };
 
 type Props = {
   loading?: boolean;
   isChanged: boolean;
   resetFilters: () => void;
-  filterToggles: any[];
-  openFilter: (name: string) => void;
+  filterTriggers: any[];
 };
 
 export default function SidebarMobileFilter({
   loading,
   isChanged,
   resetFilters,
-  filterToggles,
-  openFilter,
+  filterTriggers,
 }: Props) {
   if (loading) {
     return <SidebarMobileFilterSkeleton />;
@@ -48,13 +47,13 @@ export default function SidebarMobileFilter({
         )}
       </div>
 
-      {filterToggles.map(({ name, state }: toggleList) => (
+      {filterTriggers.map(({ name, state, openModal }: toggleList) => (
         <Button
           key={name}
           variant='secondary'
           size='small'
           className={styles.mobileFilterToggle}
-          onClick={() => openFilter(name)}
+          onClick={openModal}
         >
           {state.length > 0 && (
             <Badge content={state.length} className={styles.mobileSelectedCounter} />

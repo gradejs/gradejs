@@ -1,0 +1,44 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.mobileSelectedCounter {
+  margin-right: 6px;
+}
+
+.mobileFilterToggle {
+  display: inline-flex;
+  margin-right: 8px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.mobileFiltersTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  line-height: 22px;
+}
+
+.mobileFiltersTitle {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: $gray-text;
+}
+
+.mobileFiltersIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+}
+
+.mobileFiltersReset {
+  font-weight: 500;
+}

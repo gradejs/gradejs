@@ -9,15 +9,9 @@ import { CardProps } from '../../ui/Card/Card';
 import CardGroup from '../../ui/CardGroup/CardGroup';
 import CardList from '../../ui/CardList/CardList';
 import CardGroups from 'components/ui/CardGroups/CardGroups';
-import SidebarCategory from '../../ui/SidebarCategory/SidebarCategory';
-import { Button } from '../../ui';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
-import SidebarMeta from '../../ui/SidebarMeta/SidebarMeta';
-import clsx from 'clsx';
-import SidebarMobileFilter from '../../ui/SidebarMobileFilter/SidebarMobileFilter';
 import DefaultHeader from '../../ui/Header/DefaultHeader';
-import Modal from '../../ui/Modal/Modal';
-import modalStyles from '../../ui/Modal/Modal.module.scss';
+import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResultsSidebar';
 
 type Props = {
   pageLoading?: boolean;
@@ -25,8 +19,7 @@ type Props = {
 
 export default function SearchResults({ pageLoading = false }: Props) {
   const [loading, setLoading] = useState<boolean>(pageLoading);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [subMenu, setSubMenu] = useState('');
+
   const loadingRef = useRef<LoadingBarRef>(null);
 
   // FIXME: just for demo purposes to show how loading bar works
@@ -181,62 +174,6 @@ export default function SearchResults({ pageLoading = false }: Props) {
   // TODO: mock data, remove later
   const authors = ['gaearon', 'acdlite', 'sophiebits', 'sebmarkbage', 'zpao', 'trueadm', 'bvaughn'];
 
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
-  const [selectedProblems, setSelectedProblems] = useState<string[]>([]);
-  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
-
-  const handleFiltersChange = (
-    name: string,
-    state: string[],
-    setState: React.SetStateAction<any>
-  ) => {
-    const temp = [...state];
-
-    if (temp.includes(name)) {
-      const filtered = temp.filter((item) => item !== name);
-      setState(filtered);
-    } else {
-      temp.push(name);
-      setState(temp);
-    }
-  };
-
-  const handleKeywordsChange = (name: string) => {
-    handleFiltersChange(name, selectedKeywords, setSelectedKeywords);
-  };
-
-  const handleProblemsChange = (name: string) => {
-    handleFiltersChange(name, selectedProblems, setSelectedProblems);
-  };
-
-  const handleAuthorsChange = (name: string) => {
-    handleFiltersChange(name, selectedAuthors, setSelectedAuthors);
-  };
-
-  const resetFilters = () => {
-    setSelectedKeywords([]);
-    setSelectedProblems([]);
-    setSelectedAuthors([]);
-  };
-
-  const openMobileFilter = (subMenuName: string) => {
-    setShowModal(true);
-    setSubMenu(subMenuName);
-  };
-
-  const closeMobileFilter = () => {
-    setShowModal(false);
-  };
-
-  const filterToggles = [
-    { name: 'keywords', state: selectedKeywords },
-    { name: 'problems', state: selectedProblems },
-    { name: 'authors', state: selectedAuthors },
-  ];
-
-  const isChanged =
-    selectedKeywords.length > 0 || selectedProblems.length > 0 || selectedAuthors.length > 0;
-
   return (
     <>
       {pageLoading && (
@@ -250,126 +187,29 @@ export default function SearchResults({ pageLoading = false }: Props) {
         />
       )}
 
-      {/* TODO: What about splitting these off into separate components and passing them back
-                here through children or a render prop of sorts? */}
-      <Modal show={showModal} setShow={setShowModal}>
-        {subMenu === 'keywords' && (
-          <SidebarCategory
-            categoryName='Keywords'
-            keywordsList={keyWords}
-            selectedKeywords={selectedKeywords}
-            selectHandler={handleKeywordsChange}
-            renderComponent='chip'
-            loading={loading}
-            searchable
-            searchOpen
-            returnButton={closeMobileFilter}
-            resetGroup={() => setSelectedKeywords([])}
-          />
-        )}
-
-        {subMenu === 'problems' && (
-          <div className={modalStyles.modalContentWrapper}>
-            <SidebarCategory
-              categoryName='Problems'
-              keywordsList={vulnerabilities}
-              selectedKeywords={selectedProblems}
-              selectHandler={handleProblemsChange}
-              renderComponent='checkbox'
-              loading={loading}
-              resetGroup={() => setSelectedProblems([])}
-            />
-          </div>
-        )}
-
-        {subMenu === 'authors' && (
-          <SidebarCategory
-            categoryName='Authors'
-            keywordsList={authors}
-            selectedKeywords={selectedAuthors}
-            selectHandler={handleAuthorsChange}
-            renderComponent='person'
-            loading={loading}
-            searchable
-            searchOpen
-            returnButton={closeMobileFilter}
-            resetGroup={() => setSelectedAuthors([])}
-          />
-        )}
-      </Modal>
-
       <DefaultHeader showSearch />
 
       <Container>
         <div className={styles.searchResults}>
-          <SearchedResource
-            image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
-            name='pinterest.com'
-            totalPackages={6}
-            lastScanDate='21 feb in 21:30'
-            loading={loading}
-          />
+          <div className={styles.searchResultsResource}>
+            <SearchedResource
+              image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
+              name='pinterest.com'
+              totalPackages={6}
+              lastScanDate='21 feb in 21:30'
+              loading={loading}
+            />
+          </div>
 
-          <aside className={styles.sidebar}>
-            <div className={styles.sidebarItem}>
-              <SidebarMeta meta={metaItems} loading={loading} />
-            </div>
-
-            <div className={clsx(styles.sidebarItem, styles.sidebarItemMobileFilter)}>
-              <SidebarMobileFilter
-                isChanged={isChanged}
-                resetFilters={resetFilters}
-                filterToggles={filterToggles}
-                openFilter={openMobileFilter}
-                loading={loading}
-              />
-            </div>
-
-            {/* TODO: What about splitting these off into separate components and passing them back
-                      here through children or a render prop of sorts? */}
-            <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
-              <SidebarCategory
-                categoryName='Keywords'
-                keywordsList={keyWords}
-                selectedKeywords={selectedKeywords}
-                selectHandler={handleKeywordsChange}
-                renderComponent='chip'
-                loading={loading}
-                searchable
-              />
-            </div>
-
-            <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
-              <SidebarCategory
-                categoryName='Problems'
-                keywordsList={vulnerabilities}
-                selectedKeywords={selectedProblems}
-                selectHandler={handleProblemsChange}
-                renderComponent='checkbox'
-                loading={loading}
-              />
-            </div>
-
-            <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
-              <SidebarCategory
-                categoryName='Authors'
-                keywordsList={authors}
-                selectedKeywords={selectedAuthors}
-                selectHandler={handleAuthorsChange}
-                renderComponent='person'
-                loading={loading}
-                searchable
-              />
-            </div>
-
-            {isChanged && (
-              <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
-                <Button variant='secondary' size='small' onClick={resetFilters}>
-                  Reset filters
-                </Button>
-              </div>
-            )}
-          </aside>
+          <div className={styles.searchResultsSidebar}>
+            <SearchResultsSidebar
+              metaItems={metaItems}
+              keyWords={keyWords}
+              vulnerabilities={vulnerabilities}
+              authors={authors}
+              loading={loading}
+            />
+          </div>
 
           <div className={styles.packages}>
             <PackagePreview

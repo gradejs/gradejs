@@ -1,0 +1,19 @@
+.authors {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.personSkeleton {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  &:not(:last-child) {
+    margin-right: 16px;
+  }
+}
+
+.personSkeletonImage {
+  flex-shrink: 0;
+  margin-right: 6px;
+}
