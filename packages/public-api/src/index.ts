@@ -10,7 +10,8 @@ checkRequiredEnvironmentVariables([
   Env.AwsRegion,
   Env.DatabaseUrl,
   Env.SqsWorkerQueueUrl,
-  Env.InternalApiOrigin,
+  Env.InternalApiRootUrl,
+  Env.GradeJsApiKey,
 ]);
 
 const port = getPort(8080);

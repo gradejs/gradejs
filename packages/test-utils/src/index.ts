@@ -52,9 +52,9 @@ export function useTransactionalTesting() {
       async (runInTransaction: (entityManager: EntityManager) => Promise<unknown>) => {
         const em = connection.createEntityManager();
         if (connection.createQueryRunner().isTransactionActive) {
-          await runInTransaction(em);
+          return await runInTransaction(em);
         } else {
-          await connection.transaction(runInTransaction);
+          return await connection.transaction(runInTransaction);
         }
       }
     );

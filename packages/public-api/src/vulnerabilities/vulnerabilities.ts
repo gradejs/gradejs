@@ -2,7 +2,7 @@ import {
   GithubAdvisoryDatabaseSpecific,
   PackageVulnerabilityData,
   PackageVulnerability,
-  WebPagePackage,
+  WebPageScan,
 } from '@gradejs-public/shared';
 import { getRepository } from 'typeorm';
 import semver from 'semver';
@@ -19,16 +19,18 @@ export async function getVulnerabilitiesByPackageNames(packageNames: string[]) {
   return vulnerabilitiesQuery.getMany();
 }
 
-export async function getAffectingVulnerabilities(packages: WebPagePackage[]) {
+export async function getAffectingVulnerabilities(scanResult: WebPageScan.Result) {
   const affectingVulnerabilitiesByPackage: Record<string, PackageVulnerabilityData[]> = {};
+
+  const packages = scanResult.packages;
   if (!packages.length) {
     return affectingVulnerabilitiesByPackage;
   }
 
   const packagesByNames = packages.reduce((acc, pkg) => {
-    acc[pkg.packageName] = pkg;
+    acc[pkg.name] = pkg;
     return acc;
-  }, {} as Record<string, WebPagePackage>);
+  }, {} as Record<string, typeof packages[number]>);
 
   const vulnerabilitiesByPackage = await getVulnerabilitiesByPackageNames(
     Object.keys(packagesByNames)
@@ -37,7 +39,7 @@ export async function getAffectingVulnerabilities(packages: WebPagePackage[]) {
   for (const vulnerability of vulnerabilitiesByPackage) {
     const relatedPackage = packagesByNames[vulnerability.packageName]!;
     const affectsReportedRange = semver.subset(
-      relatedPackage.packageVersionRange,
+      relatedPackage.versionRange,
       vulnerability.packageVersionRange,
       { loose: true }
     );
