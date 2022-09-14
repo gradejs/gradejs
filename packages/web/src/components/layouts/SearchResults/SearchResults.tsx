@@ -16,6 +16,8 @@ import SidebarMeta from '../../ui/SidebarMeta/SidebarMeta';
 import clsx from 'clsx';
 import SidebarMobileFilter from '../../ui/SidebarMobileFilter/SidebarMobileFilter';
 import DefaultHeader from '../../ui/Header/DefaultHeader';
+import Modal from '../../ui/Modal/Modal';
+import modalStyles from '../../ui/Modal/Modal.module.scss';
 
 type Props = {
   pageLoading?: boolean;
@@ -23,7 +25,7 @@ type Props = {
 
 export default function SearchResults({ pageLoading = false }: Props) {
   const [loading, setLoading] = useState<boolean>(pageLoading);
-  const [offCanvasOpen, setOffCanvasOpen] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [subMenu, setSubMenu] = useState('');
   const loadingRef = useRef<LoadingBarRef>(null);
 
@@ -217,13 +219,13 @@ export default function SearchResults({ pageLoading = false }: Props) {
     setSelectedAuthors([]);
   };
 
-  const openOffCanvas = (subMenuName: string) => {
-    setOffCanvasOpen(true);
+  const openMobileFilter = (subMenuName: string) => {
+    setShowModal(true);
     setSubMenu(subMenuName);
   };
 
-  const closeOffCanvas = () => {
-    setOffCanvasOpen(false);
+  const closeMobileFilter = () => {
+    setShowModal(false);
   };
 
   const filterToggles = [
@@ -236,63 +238,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
     selectedKeywords.length > 0 || selectedProblems.length > 0 || selectedAuthors.length > 0;
 
   return (
-    <div className={clsx(styles.offCanvas, offCanvasOpen && styles.offCanvasOpen)}>
-      <div className={styles.offCanvasOverlay} onClick={closeOffCanvas} />
-
-      <div className={styles.offCanvasMenu}>
-        <div className={styles.offCanvasContent}>
-          {subMenu === 'keywords' && (
-            <SidebarCategory
-              categoryName='Keywords'
-              keywordsList={keyWords}
-              selectedKeywords={selectedKeywords}
-              selectHandler={handleKeywordsChange}
-              renderComponent='chip'
-              loading={loading}
-              searchable
-              searchOpen
-              returnButton={closeOffCanvas}
-              resetGroup={() => setSelectedKeywords([])}
-            />
-          )}
-
-          {subMenu === 'problems' && (
-            <div className={styles.offCanvasContentWrapper}>
-              <SidebarCategory
-                categoryName='Problems'
-                keywordsList={vulnerabilities}
-                selectedKeywords={selectedProblems}
-                selectHandler={handleProblemsChange}
-                renderComponent='checkbox'
-                loading={loading}
-                resetGroup={() => setSelectedProblems([])}
-              />
-            </div>
-          )}
-
-          {subMenu === 'authors' && (
-            <SidebarCategory
-              categoryName='Authors'
-              keywordsList={authors}
-              selectedKeywords={selectedAuthors}
-              selectHandler={handleAuthorsChange}
-              renderComponent='person'
-              loading={loading}
-              searchable
-              searchOpen
-              returnButton={closeOffCanvas}
-              resetGroup={() => setSelectedAuthors([])}
-            />
-          )}
-
-          <div className={styles.offCanvasAction}>
-            <Button variant='arrow' onClick={closeOffCanvas}>
-              Apply
-            </Button>
-          </div>
-        </div>
-      </div>
-
+    <>
       {pageLoading && (
         <LoadingBar
           ref={loadingRef}
@@ -303,6 +249,54 @@ export default function SearchResults({ pageLoading = false }: Props) {
           loaderSpeed={600}
         />
       )}
+
+      {/* TODO: What about splitting these off into separate components and passing them back
+                here through children or a render prop of sorts? */}
+      <Modal show={showModal} setShow={setShowModal}>
+        {subMenu === 'keywords' && (
+          <SidebarCategory
+            categoryName='Keywords'
+            keywordsList={keyWords}
+            selectedKeywords={selectedKeywords}
+            selectHandler={handleKeywordsChange}
+            renderComponent='chip'
+            loading={loading}
+            searchable
+            searchOpen
+            returnButton={closeMobileFilter}
+            resetGroup={() => setSelectedKeywords([])}
+          />
+        )}
+
+        {subMenu === 'problems' && (
+          <div className={modalStyles.modalContentWrapper}>
+            <SidebarCategory
+              categoryName='Problems'
+              keywordsList={vulnerabilities}
+              selectedKeywords={selectedProblems}
+              selectHandler={handleProblemsChange}
+              renderComponent='checkbox'
+              loading={loading}
+              resetGroup={() => setSelectedProblems([])}
+            />
+          </div>
+        )}
+
+        {subMenu === 'authors' && (
+          <SidebarCategory
+            categoryName='Authors'
+            keywordsList={authors}
+            selectedKeywords={selectedAuthors}
+            selectHandler={handleAuthorsChange}
+            renderComponent='person'
+            loading={loading}
+            searchable
+            searchOpen
+            returnButton={closeMobileFilter}
+            resetGroup={() => setSelectedAuthors([])}
+          />
+        )}
+      </Modal>
 
       <DefaultHeader showSearch />
 
@@ -326,12 +320,13 @@ export default function SearchResults({ pageLoading = false }: Props) {
                 isChanged={isChanged}
                 resetFilters={resetFilters}
                 filterToggles={filterToggles}
-                openOffCanvas={openOffCanvas}
+                openFilter={openMobileFilter}
                 loading={loading}
               />
             </div>
 
-            {/*TODO: What about splitting these off into separate components and passing them back here through children or a render prop of sorts?*/}
+            {/* TODO: What about splitting these off into separate components and passing them back
+                      here through children or a render prop of sorts? */}
             <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
               <SidebarCategory
                 categoryName='Keywords'
@@ -404,6 +399,6 @@ export default function SearchResults({ pageLoading = false }: Props) {
       </Container>
 
       <Footer />
-    </div>
+    </>
   );
 }

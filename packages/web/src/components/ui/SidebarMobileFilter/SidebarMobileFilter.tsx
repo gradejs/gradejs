@@ -15,7 +15,7 @@ type Props = {
   isChanged: boolean;
   resetFilters: () => void;
   filterToggles: any[];
-  openOffCanvas: (name: string) => void;
+  openFilter: (name: string) => void;
 };
 
 export default function SidebarMobileFilter({
@@ -23,7 +23,7 @@ export default function SidebarMobileFilter({
   isChanged,
   resetFilters,
   filterToggles,
-  openOffCanvas,
+  openFilter,
 }: Props) {
   if (loading) {
     return <SidebarMobileFilterSkeleton />;
@@ -54,7 +54,7 @@ export default function SidebarMobileFilter({
           variant='secondary'
           size='small'
           className={styles.mobileFilterToggle}
-          onClick={() => openOffCanvas(name)}
+          onClick={() => openFilter(name)}
         >
           {state.length > 0 && (
             <Badge content={state.length} className={styles.mobileSelectedCounter} />
