@@ -11,7 +11,7 @@ import ErrorHeader from 'components/ui/Header/ErrorHeader';
 
 export type Props = {
   host: string;
-  message: string;
+  message?: string;
   action?: string;
   actionTitle?: string;
 };

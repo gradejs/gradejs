@@ -1,13 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { Error, Home } from 'components/layouts';
 import { trackCustomEvent } from '../../services/analytics';
-import {
-  useAppDispatch,
-  parseWebsite,
-  resetError,
-  useAppSelector,
-  homeDefaultSelector,
-} from '../../store';
+import { useAppDispatch, parseWebsite, useAppSelector, homeDefaultSelector } from '../../store';
 import { useNavigate } from 'react-router-dom';
 
 export function HomePage() {
@@ -32,18 +26,7 @@ export function HomePage() {
   }, []);
 
   if (state.isFailed) {
-    return (
-      <Error
-        host={state.hostname}
-        onReportClick={() => {
-          trackCustomEvent('HomePage', 'ClickReport');
-        }}
-        onRetryClick={() => {
-          trackCustomEvent('HomePage', 'ClickRetry');
-          dispatch(resetError());
-        }}
-      />
-    );
+    return <Error host={state.hostname} />;
   }
 
   return <Home onSubmit={handleDetectStart} loading={state.isLoading} />;
