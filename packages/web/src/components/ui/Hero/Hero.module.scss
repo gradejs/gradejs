@@ -17,6 +17,14 @@
   }
 }
 
+.headerWrapper {
+  padding: 12px 0;
+
+  @include mobile-and-tablet {
+    padding: 0;
+  }
+}
+
 .content {
   padding-top: 24px;
   padding-bottom: 100px;

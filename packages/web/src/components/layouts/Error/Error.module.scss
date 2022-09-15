@@ -1,42 +1,43 @@
+@import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
+.errorPage {
+  padding-top: 36px;
+  padding-bottom: 20px;
+
+  @include mobile-and-tablet {
+    padding-top: 16px;
+    padding-bottom: 8px;
+  }
+}
+
+.textContent {
+  max-width: 786px;
+  margin-bottom: 36px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 24px;
+  }
+}
+
+.searchWrapper {
+  max-width: 884px;
+  width: 100%;
+}
+
+.host {
+  color: $gray-text;
+  margin-bottom: 12px;
+}
+
 .heading {
-  font-size: 44px;
-  margin: 0 0 32px;
-
-  @include mobile {
-    font-size: 28px;
-  }
+  margin-bottom: 16px;
 }
 
-.primary {
-  margin: 0 0 16px;
-  font-size: 20px;
-  line-height: 135%;
-  color: #0f0f0f;
-}
+.desc {
+  font-size: 19px;
 
-.secondary {
-  font-size: 14px;
-  line-height: 140%;
-  color: #666666;
-  margin: 0 0 24px;
-}
-
-.button {
-  width: 212px;
-  margin-left: 12px;
-
-  @include mobile {
-    margin-top: 12px;
-    margin-left: 0;
-    width: 100%;
-  }
-}
-
-.retry {
-  @include mobile {
-    width: 100%;
-    text-align: left;
+  @include mobile-and-tablet {
+    font-size: 14px;
   }
 }

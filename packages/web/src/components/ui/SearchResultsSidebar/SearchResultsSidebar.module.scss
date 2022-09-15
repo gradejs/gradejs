@@ -1,0 +1,28 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.sidebar {
+  display: grid;
+  grid-gap: 24px;
+}
+
+.sidebarItem {
+  &:not(:first-child) {
+    padding-top: 24px;
+    border-top: 1px solid $gray-border;
+  }
+}
+
+.sidebarItemFilter {
+  @include mobile-and-tablet {
+    display: none;
+  }
+}
+
+.sidebarItemMobileFilter {
+  display: none;
+
+  @include mobile-and-tablet {
+    display: block;
+  }
+}

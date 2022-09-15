@@ -23,6 +23,8 @@ import dependency from '../../../assets/icons/sprite/dependency.svg';
 import graph from '../../../assets/icons/sprite/graph.svg';
 import ratingArrow from '../../../assets/icons/sprite/rating-arrow.svg';
 import check from '../../../assets/icons/sprite/check.svg';
+import arrowBack from '../../../assets/icons/sprite/arrow-back.svg';
+import filters from '../../../assets/icons/sprite/filters.svg';
 
 const icons = {
   githubLogo,
@@ -49,6 +51,8 @@ const icons = {
   graph,
   ratingArrow,
   check,
+  arrowBack,
+  filters,
 };
 
 export type IconProps = {

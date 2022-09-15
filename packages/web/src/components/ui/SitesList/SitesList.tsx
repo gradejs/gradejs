@@ -1,17 +1,20 @@
 import React from 'react';
 import styles from './SitesList.module.scss';
 import clsx from 'clsx';
+import { SitesListSkeleton } from './SitesListSkeleton';
 
 export type Site = {
-  id: string;
-  image: string;
-  name: string;
-  packagesCount: number;
+  id?: string;
+  image?: string;
+  name?: string;
+  packagesCount?: number;
+  loading?: boolean;
 };
 
 type Props = {
   sites: Site[];
   className?: string;
+  loading?: boolean;
 };
 
 function Site({ image, name, packagesCount }: Site) {
@@ -28,13 +31,11 @@ function Site({ image, name, packagesCount }: Site) {
   );
 }
 
-export default function SitesList({ sites, className }: Props) {
+export default function SitesList({ sites, className, loading }: Props) {
   return (
     <div className={styles.sitesListWrapper}>
       <div className={clsx(styles.sitesList, className)}>
-        {sites.map((site) => (
-          <Site key={site.id} {...site} />
-        ))}
+        {loading ? <SitesListSkeleton /> : sites.map((site) => <Site key={site.id} {...site} />)}
       </div>
     </div>
   );

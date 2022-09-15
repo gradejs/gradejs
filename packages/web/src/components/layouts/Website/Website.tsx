@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { SubmitHandler } from 'react-hook-form';
-import { Header, Package, Section, PackageSkeleton } from 'components/ui';
+import { Package, Section, PackageSkeleton } from 'components/ui';
 import styles from './Website.module.scss';
 import Filters, { FiltersState } from '../Filters/Filters';
 import TagBadge from '../../ui/TagBadge/TagBadge';
 import { trackCustomEvent } from '../../../services/analytics';
 import { ClientApi } from '../../../services/apiClient';
 import { Icon } from '../../ui/Icon/Icon';
+import DefaultHeader from '../../ui/Header/DefaultHeader';
 
 // TODO: Add plashechka
 export type Props = {
@@ -37,7 +38,7 @@ export default function Website({
 
   return (
     <>
-      <Header />
+      <DefaultHeader />
       <Section>
         <h1 className={styles.heading}>{host}</h1>
 

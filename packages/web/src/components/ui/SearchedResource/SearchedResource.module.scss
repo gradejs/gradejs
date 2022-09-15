@@ -2,7 +2,6 @@
 @import '~styles/responsive.scss';
 
 .searchedResource {
-  grid-column: 2 / -1;
   display: flex;
   align-items: flex-start;
   margin-bottom: 24px;
@@ -13,7 +12,6 @@
 
   @include mobile-and-tablet {
     flex-direction: column;
-    grid-column: 1;
     margin-bottom: 0;
   }
 }
@@ -55,6 +53,11 @@
 
 .searchedResourceHighlight {
   color: $gray-text;
+}
+
+.searchedResourceHighlightSkeleton {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .searchedResourceSubtitle {

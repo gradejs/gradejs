@@ -35,6 +35,25 @@
   }
 }
 
+.searchResultsResource {
+  grid-column: 2 / -1;
+
+  @include mobile-and-tablet {
+    grid-column: 1;
+  }
+}
+
+.searchResultsSidebar {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+  align-self: start;
+
+  @include mobile-and-tablet {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
 .packages {
   grid-column: 2 / -1;
   display: grid;
@@ -48,57 +67,4 @@
     margin-left: -20px;
     margin-right: -20px;
   }
-}
-
-.sidebar {
-  grid-column: 1 / 2;
-  grid-row: 1 / 3;
-  display: grid;
-  grid-gap: 24px;
-  align-self: start;
-
-  @include mobile-and-tablet {
-    grid-column: 1;
-    grid-row: 2;
-  }
-}
-
-.sidebarItem {
-  &:not(:first-child) {
-    padding-top: 24px;
-    border-top: 1px solid $gray-border;
-  }
-}
-
-.meta {
-  display: grid;
-  grid-gap: 20px;
-
-  // FIXME: not sure that mobile spacing should be higher than desktop one
-  @include mobile-and-tablet {
-    grid-gap: 24px;
-  }
-}
-
-.metaItem {
-  display: flex;
-  align-items: center;
-
-  @include mobile-and-tablet {
-    line-height: 24px;
-  }
-}
-
-.metaIcon {
-  display: flex;
-  flex-shrink: 0;
-  margin-right: 20px;
-
-  @include mobile-and-tablet {
-    margin-right: 16px;
-  }
-}
-
-.metaText {
-  font-weight: 500;
 }

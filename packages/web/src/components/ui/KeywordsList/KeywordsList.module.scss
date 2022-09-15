@@ -1,0 +1,13 @@
+.chipSkeletonWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chipSkeleton {
+  display: inline-flex;
+  margin-bottom: 8px;
+
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+}

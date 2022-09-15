@@ -12,16 +12,16 @@ type SearchItem = {
   item: string;
   selectedItems: string[];
   selectHandler: (name: string) => void;
-  renderComponent: string;
+  itemsWithImage?: boolean;
 };
 
-function SearchItem({ item, selectedItems, selectHandler, renderComponent }: SearchItem) {
+function SearchItem({ item, selectedItems, selectHandler, itemsWithImage }: SearchItem) {
   return (
     <div
       className={clsx(styles.groupItem, selectedItems.includes(item) && styles.groupItemActive)}
       onClick={() => selectHandler(item)}
     >
-      {renderComponent === 'person' && (
+      {itemsWithImage && (
         // TODO: pass actual person image here
         <img src='https://via.placeholder.com/36' className={styles.groupItemImage} alt='' />
       )}
@@ -45,7 +45,7 @@ type Props = {
   clearInput: () => void;
   alphabeticalGroups: GroupItem[];
   selectedItems: string[];
-  renderComponent: string;
+  itemsWithImage?: boolean;
   selectHandler: (name: string) => void;
 };
 
@@ -55,7 +55,7 @@ export default function SidebarCategorySearch({
   clearInput,
   alphabeticalGroups,
   selectedItems,
-  renderComponent,
+  itemsWithImage,
   selectHandler,
 }: Props) {
   return (
@@ -95,10 +95,11 @@ export default function SidebarCategorySearch({
             <div className={styles.groupList}>
               {children.map((item) => (
                 <SearchItem
+                  key={item}
                   item={item}
                   selectedItems={selectedItems}
                   selectHandler={selectHandler}
-                  renderComponent={renderComponent}
+                  itemsWithImage={itemsWithImage}
                 />
               ))}
             </div>

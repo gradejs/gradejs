@@ -1,0 +1,41 @@
+@import '~styles/responsive.scss';
+
+.meta {
+  display: grid;
+  grid-gap: 20px;
+
+  // FIXME: not sure that mobile spacing should be higher than desktop one
+  @include mobile-and-tablet {
+    grid-gap: 24px;
+  }
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  line-height: 24px;
+}
+
+.metaIcon {
+  display: flex;
+  flex-shrink: 0;
+  margin-right: 20px;
+
+  @include mobile-and-tablet {
+    margin-right: 16px;
+  }
+}
+
+.metaText {
+  font-weight: 500;
+}
+
+.skeleton {
+  display: flex;
+  align-items: center;
+}
+
+.skeletonIcon {
+  flex-shrink: 0;
+  margin-right: 23px;
+}

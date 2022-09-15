@@ -10,6 +10,11 @@ export default {
   },
 } as ComponentMeta<typeof SearchResults>;
 
-const Template: ComponentStory<typeof SearchResults> = () => <SearchResults />;
+const Template: ComponentStory<typeof SearchResults> = (args) => <SearchResults {...args} />;
 
 export const Default = Template.bind({});
+
+export const Loading = Template.bind({});
+Loading.args = {
+  pageLoading: true,
+};

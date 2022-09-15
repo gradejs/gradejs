@@ -1,10 +1,10 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
-import Header from './Header';
+import DefaultHeader from './DefaultHeader';
 
 export default {
   title: 'Interface / Header Homepage',
-  component: Header,
+  component: DefaultHeader,
   parameters: {
     layout: 'fullscreen',
     backgrounds: {
@@ -17,6 +17,8 @@ export default {
       control: { type: 'radio' },
     },
   },
-} as ComponentMeta<typeof Header>;
+} as ComponentMeta<typeof DefaultHeader>;
 
-export const HomePage: ComponentStory<typeof Header> = () => <Header variant='homepage' />;
+export const HomePage: ComponentStory<typeof DefaultHeader> = () => (
+  <DefaultHeader variant='light' />
+);

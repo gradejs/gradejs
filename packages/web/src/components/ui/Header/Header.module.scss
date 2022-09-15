@@ -5,9 +5,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
+  min-height: 96px;
 
   @include mobile-and-tablet {
+    min-height: 72px;
+  }
+}
+
+.default {
+  color: $black;
+}
+
+.light {
+  color: $white;
+}
+
+.showSearch {
+  @include mobile-and-tablet {
+    padding: 20px 0;
+    min-height: initial;
     display: grid;
     grid-row-gap: 22px;
     grid-template-columns: 1fr 2fr;
@@ -51,7 +67,7 @@
 
 .navLink {
   display: flex;
-  color: $black;
+  color: inherit;
 }
 
 .githubIcon {
@@ -61,17 +77,5 @@
   @include mobile-and-tablet {
     width: 28px;
     height: 28px;
-  }
-}
-
-.homepage {
-  padding: 44px 0;
-
-  @include mobile-and-tablet {
-    padding: 22px 0;
-  }
-
-  .navLink {
-    color: $white;
   }
 }
