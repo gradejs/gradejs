@@ -22,7 +22,7 @@ export async function getVulnerabilitiesByPackageNames(packageNames: string[]) {
 export async function getAffectingVulnerabilities(scanResult: WebPageScan.Result) {
   const affectingVulnerabilitiesByPackage: Record<string, PackageVulnerabilityData[]> = {};
 
-  const packages = scanResult.packages;
+  const packages = scanResult.identifiedPackages;
   if (!packages.length) {
     return affectingVulnerabilitiesByPackage;
   }
@@ -38,8 +38,9 @@ export async function getAffectingVulnerabilities(scanResult: WebPageScan.Result
 
   for (const vulnerability of vulnerabilitiesByPackage) {
     const relatedPackage = packagesByNames[vulnerability.packageName]!;
+    const relatedPackageVersionRange = relatedPackage.versionSet.join(' || ');
     const affectsReportedRange = semver.subset(
-      relatedPackage.versionRange,
+      relatedPackageVersionRange,
       vulnerability.packageVersionRange,
       { loose: true }
     );

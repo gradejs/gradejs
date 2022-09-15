@@ -1,6 +1,6 @@
 import { useDatabaseConnection, useTransactionalTesting } from '@gradejs-public/test-utils';
 import { findOrCreateWebPage, syncWebPageScanResult } from './service';
-import { getDatabaseConnection, internalApi, WebPageScan } from '@gradejs-public/shared';
+import { getDatabaseConnection, systemApi, WebPageScan } from '@gradejs-public/shared';
 
 useDatabaseConnection();
 useTransactionalTesting();
@@ -20,31 +20,43 @@ describe('website / service', () => {
     });
 
     await syncWebPageScanResult({
-      id: scan.id.toString(),
-      status: internalApi.WebPageScan.Status.Ready,
+      requestId: scan.id.toString(),
+      status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
-      scan: {
-        packages: [
-          {
-            name: 'react',
-            versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
-          },
-        ],
+      identifiedModuleMap: {
+        moduleId: {
+          packageName: 'react',
+          packageVersionSet: ['17.0.0'],
+          packageFile: 'index.js',
+          approximateByteSize: 100,
+        },
       },
+      identifiedPackages: [
+        {
+          name: 'react',
+          versionSet: ['17.0.0'],
+          moduleIds: ['moduleId'],
+        },
+      ],
     });
 
     const updatedScan = await em.getRepository(WebPageScan).findOneOrFail({ id: scan.id });
     expect(updatedScan).toMatchObject({
       status: WebPageScan.Status.Processed,
       scanResult: {
-        packages: [
+        identifiedModuleMap: {
+          moduleId: {
+            packageName: 'react',
+            packageVersionSet: ['17.0.0'],
+            packageFile: 'index.js',
+            approximateByteSize: 100,
+          },
+        },
+        identifiedPackages: [
           {
             name: 'react',
             versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
+            moduleIds: ['moduleId'],
           },
         ],
       },
@@ -56,29 +68,27 @@ describe('website / service', () => {
     const url = new URL('https://example.com/test2');
 
     const scan = await syncWebPageScanResult({
-      status: internalApi.WebPageScan.Status.Ready,
+      status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
-      scan: {
-        packages: [
-          {
-            name: 'react',
-            versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
-          },
-        ],
-      },
+      identifiedModuleMap: {},
+      identifiedPackages: [
+        {
+          name: 'react',
+          versionSet: ['17.0.0'],
+          moduleIds: [],
+        },
+      ],
     });
 
     expect(scan).toMatchObject({
       status: WebPageScan.Status.Processed,
       scanResult: {
-        packages: [
+        identifiedModuleMap: {},
+        identifiedPackages: [
           {
             name: 'react',
             versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
+            moduleIds: [],
           },
         ],
       },
@@ -89,19 +99,17 @@ describe('website / service', () => {
     const url = new URL('https://example.com/test3');
 
     const syncPromise = syncWebPageScanResult({
-      id: '9999999',
-      status: internalApi.WebPageScan.Status.Ready,
+      requestId: '9999999',
+      status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
-      scan: {
-        packages: [
-          {
-            name: 'react',
-            versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
-          },
-        ],
-      },
+      identifiedModuleMap: {},
+      identifiedPackages: [
+        {
+          name: 'react',
+          versionSet: ['17.0.0'],
+          moduleIds: [],
+        },
+      ],
     });
 
     await expect(syncPromise).rejects.toThrow();
