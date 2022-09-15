@@ -6,16 +6,23 @@ import { trackCustomEvent } from '../../services/analytics';
 import {
   useAppDispatch,
   useAppSelector,
-  getWebsite,
+  getScanResults,
   websiteResultsSelectors as selectors,
 } from '../../store';
 
 export function WebsiteResultsPage() {
   const { address } = useParams();
-  const hostname = new URL(address!).hostname;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { vulnerabilities } = useAppSelector(selectors.default);
+
+  /* TODO
+     - Отключить фильтры из селекторов (временно) ./
+     - Прокинуть данные из packages в packagePreview (все что есть), формализовать тип pkg ./
+     - Разобраться с тем как работают фильтрующие компоненты. Мб прикрутить их в отдельный redux-слайс для порядку.
+     - Сформулировать типы для фильтров и вернуть их обратно в селекторы.
+   */
+
+  const { vulnerabilities, keywordsList, status } = useAppSelector(selectors.default);
   const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
   const packagesStats = useAppSelector(selectors.packagesStats);
   const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
@@ -25,12 +32,12 @@ export function WebsiteResultsPage() {
   // TODO: discuss. Looks ugly
   // Fetch data for SSR if host is already processed
   if (__isServer__ && address) {
-    dispatch(getWebsite({ hostname: address, useRetry: false }));
+    dispatch(getScanResults({ address, useRetry: false }));
   }
 
   useEffect(() => {
     if (address && isPending && !isFailed) {
-      const promise = dispatch(getWebsite({ hostname: address }));
+      const promise = dispatch(getScanResults({ address }));
       return function cleanup() {
         promise.abort();
       };
@@ -54,6 +61,7 @@ export function WebsiteResultsPage() {
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={address ?? ''}
+        /*
         onRetryClick={() => {
           trackCustomEvent('HostnamePage', 'ClickRetry_Protected');
           navigate('/', { replace: false });
@@ -61,6 +69,7 @@ export function WebsiteResultsPage() {
         onReportClick={() => {
           trackCustomEvent('HostnamePage', 'ClickReport_Protected');
         }}
+        */
       />
     );
   }
@@ -74,6 +83,7 @@ export function WebsiteResultsPage() {
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
         host={address ?? ''}
+        /*
         onRetryClick={() => {
           trackCustomEvent('HostnamePage', 'ClickRetry_Invalid');
           navigate('/', { replace: false });
@@ -81,6 +91,7 @@ export function WebsiteResultsPage() {
         onReportClick={() => {
           trackCustomEvent('HostnamePage', 'ClickReport_Invalid');
         }}
+        */
       />
     );
   }
@@ -102,8 +113,12 @@ export function WebsiteResultsPage() {
       <SearchResults
         isLoading={isLoading}
         isPending={isPending}
-        host={address ?? ''}
-        scanOutput={}
+        searchQuery={address ?? ''}
+        packages={packagesFiltered}
+        packagesStats={packagesStats}
+        vulnerabilities={vulnerabilities ?? {}}
+        keywordsList={keywordsList}
+        status={status}
       />
     </>
   );

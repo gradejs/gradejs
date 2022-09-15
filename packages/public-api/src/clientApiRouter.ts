@@ -2,7 +2,7 @@ import * as trpc from '@trpc/server';
 // See also: https://colinhacks.com/essays/painless-typesafety
 import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import { z, ZodError } from 'zod';
-import { getOrRequestWebPageScan } from './website/service';
+import { getWebPageScan, requestWebPageRescan } from './website/service';
 import { getAffectingVulnerabilities } from './vulnerabilities/vulnerabilities';
 import {
   PackageMetadata,
@@ -12,9 +12,6 @@ import {
   WebPageScan,
 } from '@gradejs-public/shared';
 import { getPackageMetadataByPackageNames } from './packageMetadata/packageMetadataService';
-
-// const hostnameRe =
-//   /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$/;
 
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
@@ -39,8 +36,14 @@ function mergeRegistryMetadata(
   }));
 }
 
-type RequestWebPageScanResponse = Pick<WebPageScan, 'status' | 'finishedAt'> & {
+enum WebPageStatusNoData {
+  NoData = 'noData',
+}
+type WebPageStatus = WebPageScan.Status | WebPageStatusNoData;
+
+type RequestWebPageScanResponse = Pick<WebPageScan, 'finishedAt'> & {
   id: string;
+  status: WebPageStatus;
   scanResult?: {
     identifiedModuleMap: Record<string, WebPageScan.IdentifiedModule>;
     identifiedPackages: ScanResultPackageWithMetadata[];
@@ -50,10 +53,19 @@ type RequestWebPageScanResponse = Pick<WebPageScan, 'status' | 'finishedAt'> & {
 
 export const appRouter = trpc
   .router<Context>()
-  .mutation('requestWebPageScan', {
+  .mutation('requestWebPageRescan', {
     input: z.string().url(),
     async resolve({ input: url }) {
-      const scan = await getOrRequestWebPageScan(url);
+      return await requestWebPageRescan(url);
+    },
+  })
+  .query('getWebPageScan', {
+    input: z.string().url(),
+    async resolve({ input: url }) {
+      const scan = await getWebPageScan(url);
+      if (!scan) {
+        return { id: '', status: WebPageStatusNoData.NoData };
+      }
 
       const scanResponse: RequestWebPageScanResponse = {
         id: scan.id.toString(),

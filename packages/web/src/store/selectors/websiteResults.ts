@@ -1,29 +1,67 @@
 import semver from 'semver';
 import memoize from 'lodash.memoize';
 import { createSelector } from '@reduxjs/toolkit';
-import { GithubAdvisorySeverity } from '@gradejs-public/shared';
+//import { GithubAdvisorySeverity } from '@gradejs-public/shared';
 import { RootState } from '../';
-import { FiltersState } from '../../components/layouts/Filters/Filters';
-import { SeverityWeightMap } from '../../components/ui/Vulnerability/Vulnerability';
-import type { ClientApi } from '../../services/apiClient';
+//import { FiltersState } from '../../components/layouts/Filters/Filters';
+//import { SeverityWeightMap } from '../../components/ui/Vulnerability/Vulnerability';
+import type { ClientApi, GetWebPageScanOutput } from '../../services/apiClient';
+
+export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
+  approximateByteSize?: number;
+  outdated?: boolean;
+  vulnerable?: boolean;
+  duplicate?: boolean;
+};
 
 const getFlags = (state: RootState) => ({
   isLoading: state.webpageResults.isLoading,
   isFailed: state.webpageResults.isFailed,
 });
+
 const getScanStatus = (state: RootState) => state.webpageResults.detectionResult?.status;
+export type ScanStatus = ReturnType<typeof getScanStatus>;
+
+const getPackagesMemoized = memoize((result: GetWebPageScanOutput['scanResult']) => {
+  const packages: IdentifiedPackage[] = result?.identifiedPackages ?? [];
+
+  for (const pkg of packages) {
+    pkg.approximateByteSize = pkg.moduleIds.reduce((acc: number, id) => {
+      const size: number = result?.identifiedModuleMap?.[id]?.approximateByteSize ?? 0;
+      return acc + size;
+    }, 0);
+    pkg.duplicate = false; // TODO
+    pkg.outdated = !!(
+      pkg.registryMetadata &&
+      !pkg.versionSet.some(
+        (ver) => pkg.registryMetadata && semver.eq(pkg.registryMetadata.latestVersion, ver)
+      )
+    );
+    pkg.vulnerable = (result?.vulnerabilities[pkg.name]?.length ?? 0) > 0;
+  }
+  return packages;
+});
+
 const getPackages = (state: RootState) =>
-  state.webpageResults.detectionResult?.scanResult?.packages;
+  getPackagesMemoized(state.webpageResults.detectionResult?.scanResult);
+
 const getVulnerabilities = (state: RootState) =>
   state.webpageResults.detectionResult?.scanResult?.vulnerabilities;
-const getSorting = (state: RootState) => state.webpageResults.filters.sort;
-const getFilter = (state: RootState) => state.webpageResults.filters.filter;
-const getPackageNameFilter = (state: RootState) => state.webpageResults.filters.filterPackageName;
 
-const compareByPopularity = (
-  left: ClientApi.ScanResultPackageResponse,
-  right: ClientApi.ScanResultPackageResponse
-) =>
+const getSorting = (state: RootState) => state.webpageResults.filters.sort;
+
+const getFilter = (state: RootState) => state.webpageResults.filters.filter;
+
+const getKeywords = (state: RootState) => [
+  ...new Set(
+    state.webpageResults.detectionResult?.scanResult?.identifiedPackages.reduce((acc, pkg) => {
+      return acc.concat(pkg.registryMetadata?.keywords ?? []);
+    }, [] as string[])
+  ),
+];
+
+/*
+const compareByPopularity = (left: IdentifiedPackage, right: IdentifiedPackage) =>
   (right.registryMetadata?.monthlyDownloads ?? 0) - (left.registryMetadata?.monthlyDownloads ?? 0);
 
 const pickHighestSeverity = memoize(
@@ -43,7 +81,7 @@ const pickHighestSeverity = memoize(
 const sortingModes: Record<
   FiltersState['sort'],
   (
-    packages: ClientApi.ScanResultPackageResponse[],
+    packages: IdentifiedPackage[],
     vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>
   ) => ClientApi.ScanResultPackageResponse[]
 > = {
@@ -72,32 +110,22 @@ const sortingModes: Record<
 
 const filterModes: Record<
   FiltersState['filter'],
-  (
-    packages: ClientApi.ScanResultPackageResponse[],
-    vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>,
-    packageName?: string
-  ) => ClientApi.ScanResultPackageResponse[]
+  (packages: IdentifiedPackage[], packageName?: string) => IdentifiedPackage[]
 > = {
-  name: (packages, vulnerabilities, packageName) => {
-    if (!packageName) {
-      return packages;
-    }
-    return packages.filter((pkg) => pkg.name.includes(packageName));
-  },
-  outdated: (packages) =>
-    packages.filter(
-      (pkg) =>
-        pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.versionRange)
-    ),
-  vulnerable: (packages, vulnerabilities) => packages.filter((pkg) => !!vulnerabilities[pkg.name]),
+  outdated: (packages) => packages.filter((pkg) => !!pkg.outdated),
+  vulnerable: (packages) => packages.filter((pkg) => !!pkg.vulnerable),
   all: (packages) => packages,
-};
+};*/
 
 export const selectors = {
-  default: createSelector([getScanStatus, getVulnerabilities], (scanStatus, vulnerabilities) => ({
-    status: scanStatus,
-    vulnerabilities,
-  })),
+  default: createSelector(
+    [getScanStatus, getVulnerabilities, getKeywords],
+    (status, vulnerabilities, keywordsList) => ({
+      status,
+      vulnerabilities,
+      keywordsList,
+    })
+  ),
   stateFlags: createSelector(
     [getScanStatus, getPackages, getFlags],
     (scanStatus, packages, flags) => ({
@@ -107,26 +135,15 @@ export const selectors = {
       isProtected: scanStatus === 'protected',
     })
   ),
-  packagesStats: createSelector(
-    [getPackages, getVulnerabilities],
-    (packages = [], vulnerabilities = {}) => ({
-      total: packages.length,
-      vulnerable: packages.filter((pkg) => (vulnerabilities[pkg.name]?.length ?? 0) > 0).length,
-      outdated: packages.filter(
-        (pkg) =>
-          pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.versionRange)
-      ).length,
-    })
-  ),
+  packagesStats: createSelector([getPackages], (packages = []) => ({
+    total: packages.length,
+    vulnerable: packages.filter((pkg) => !!pkg.vulnerable).length,
+    outdated: packages.filter((pkg) => !!pkg.outdated).length,
+  })),
   packagesSortedAndFiltered: createSelector(
-    [getPackages, getVulnerabilities, getSorting, getFilter, getPackageNameFilter],
-    (packages, vulnerabilities, sorting, filter, packageNameFilter) =>
-      packages &&
+    [getPackages, getVulnerabilities, getSorting, getFilter],
+    (packages /*, vulnerabilities, sorting, filter*/) => packages /* &&
       vulnerabilities &&
-      filterModes[filter](
-        sortingModes[sorting](packages, vulnerabilities),
-        vulnerabilities,
-        packageNameFilter
-      )
+      filterModes[filter](sortingModes[sorting](packages, vulnerabilities))*/
   ),
 };

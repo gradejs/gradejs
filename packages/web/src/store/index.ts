@@ -17,5 +17,5 @@ export const useAppDispatch = () => useDispatch<typeof store.dispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export { parseWebsite, resetError, defaultSelector as homeDefaultSelector } from './slices/home';
-export { applyFilters, getWebsite } from './slices/websiteResults';
+export { applyFilters, getScanResults } from './slices/websiteResults';
 export { selectors as websiteResultsSelectors } from './selectors/websiteResults';

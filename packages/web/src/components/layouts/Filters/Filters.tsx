@@ -13,7 +13,7 @@ export type Props = {
 };
 
 export type FiltersState = {
-  filter: 'all' | 'outdated' | 'vulnerable' | 'name';
+  filter: 'all' | 'outdated' | 'vulnerable';
   sort: 'name' | 'size' | 'severity' | 'importDepth' | 'packagePopularity' | 'confidenceScore';
   filterPackageName?: string;
 };
