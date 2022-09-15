@@ -1,4 +1,4 @@
-import { PackageRequest } from '../systemApi/types';
+import { PackageRequest } from '../systemApi/api';
 
 export type WorkerTask = {
   [Key in WorkerTaskType]: {
