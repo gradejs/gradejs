@@ -33,7 +33,7 @@ export async function syncPackageUsageByHostname(newScan: WebPageScan, em: Entit
     .leftJoinAndSelect('webpage.hostname', 'hostname')
     .getOneOrFail();
 
-  const packageUsageEntities = newScan.scanResult.packages.map((sourcePackage) =>
+  const packageUsageEntities = newScan.scanResult.identifiedPackages.map((sourcePackage) =>
     packageUsageByHostRepo.create({
       hostname: relatedWebPage.hostname,
       sourceScan: newScan,

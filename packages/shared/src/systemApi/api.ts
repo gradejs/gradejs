@@ -1,25 +1,50 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { getGradeJsApiKey, getInternalApiRootUrl } from '../utils/env';
+import { z } from 'zod';
 
-export type DetectedPackage = {
-  name: string;
-  versionSet: string[];
-  versionRange: string;
-  approximateByteSize: number | null;
-};
+export const identifiedModuleSchema = z.object({
+  packageName: z.string(),
+  packageVersionSet: z.array(z.string()),
+  packageFile: z.string(),
+  approximateByteSize: z.number(),
+});
 
-export namespace WebPageScan {
+export const identifiedPackageSchema = z.object({
+  name: z.string(),
+  versionSet: z.array(z.string()),
+  moduleIds: z.array(z.string()),
+});
+
+// TODO: add processed scripts
+// TODO: add identified bundler
+
+export const apiScanReportSchema = z.union([
+  z.object({
+    requestId: z.optional(z.string()),
+    url: z.string().url(),
+    status: z.literal('ready'),
+    identifiedModuleMap: z.record(identifiedModuleSchema),
+    identifiedPackages: z.array(identifiedPackageSchema),
+  }),
+  z.object({
+    requestId: z.optional(z.string()),
+    url: z.string().url(),
+    status: z.literal('error'),
+  }),
+]);
+
+export namespace ScanReport {
+  export type IdentifiedPackage = z.infer<typeof identifiedPackageSchema>;
+  export type IdentifiedModule = z.infer<typeof identifiedModuleSchema>;
   export enum Status {
-    Created = 'created',
-    InProgress = 'in-progress',
     Ready = 'ready',
-    Failed = 'failed',
-    Invalid = 'invalid',
-    Protected = 'protected',
+    Error = 'error',
   }
 }
 
-export interface Package {
+export type ScanReport = z.infer<typeof apiScanReportSchema>;
+
+export interface PackageRequest {
   name: string;
   latestVersion: string;
 }
@@ -30,7 +55,7 @@ export interface PackageIndexRequest {
   [key: string]: unknown;
 }
 
-type Paginaton = {
+export type PaginatonRequest = {
   offset: number;
   limit: number;
   total: number;
@@ -41,10 +66,14 @@ export async function requestWebPageScan(url: string, requestId: string) {
 }
 
 export async function fetchPackageIndex(offset = 0, limit = 0) {
-  return fetchEndpoint<{ pagination: Paginaton; packages: Package[] }>('GET', '/package/index', {
-    offset,
-    limit,
-  });
+  return fetchEndpoint<{ pagination: PaginatonRequest; packages: PackageRequest[] }>(
+    'GET',
+    '/package/index',
+    {
+      offset,
+      limit,
+    }
+  );
 }
 
 export async function requestPackageIndexing(payload: PackageIndexRequest) {

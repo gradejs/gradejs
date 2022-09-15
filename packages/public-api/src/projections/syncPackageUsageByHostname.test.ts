@@ -23,12 +23,11 @@ describe('projections / packageUsageByHostname', () => {
       webPage,
       status: WebPageScan.Status.Processed,
       scanResult: {
-        packages: [
+        identifiedPackages: [
           {
             name: 'react',
             versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
+            moduleIds: [],
           },
         ],
       },
@@ -64,18 +63,16 @@ describe('projections / packageUsageByHostname', () => {
       webPage,
       status: WebPageScan.Status.Processed,
       scanResult: {
-        packages: [
+        identifiedPackages: [
           {
             name: 'react',
             versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
+            moduleIds: [],
           },
           {
             name: 'react-dom',
             versionSet: ['17.0.0'],
             versionRange: '17.0.0',
-            approximateByteSize: null,
           },
         ],
       },
@@ -108,12 +105,11 @@ describe('projections / packageUsageByHostname', () => {
       webPage,
       status: WebPageScan.Status.Processed,
       scanResult: {
-        packages: [
+        identifiedPackages: [
           {
             name: 'react',
             versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
+            moduleIds: [],
           },
         ],
       },

@@ -2,7 +2,7 @@ import { TRPC_ERROR_CODES_BY_KEY } from '@trpc/server/rpc';
 import {
   getDatabaseConnection,
   Hostname,
-  internalApi,
+  systemApi,
   WebPage,
   WebPageScan,
 } from '@gradejs-public/shared';
@@ -44,7 +44,7 @@ describe('routes / website', () => {
   it('should initiate a webpage scan', async () => {
     const siteUrl = new URL('https://example.com/' + Math.random().toString());
 
-    const requestWebPageScanMock = jest.spyOn(internalApi, 'requestWebPageScan');
+    const requestWebPageScanMock = jest.spyOn(systemApi, 'requestWebPageScan');
     requestWebPageScanMock.mockImplementation(async () => ({}));
 
     const response = await api
@@ -97,7 +97,7 @@ describe('routes / website', () => {
   it('should return a cached scan if applicable', async () => {
     const siteUrl = new URL(`https://${Math.random().toString()}.example.com/`);
 
-    const requestWebPageScanMock = jest.spyOn(internalApi, 'requestWebPageScan');
+    const requestWebPageScanMock = jest.spyOn(systemApi, 'requestWebPageScan');
     requestWebPageScanMock.mockImplementation(async () => ({}));
 
     const db = await getDatabaseConnection();
@@ -108,12 +108,12 @@ describe('routes / website', () => {
       webPage,
       status: WebPageScan.Status.Processed,
       scanResult: {
-        packages: [
+        identifiedModuleMap: {},
+        identifiedPackages: [
           {
             name: 'react',
             versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
+            moduleIds: [],
           },
         ],
       },
@@ -132,12 +132,12 @@ describe('routes / website', () => {
           id: existingScan.id.toString(),
           status: WebPageScan.Status.Processed,
           scanResult: {
-            packages: [
+            identifiedModuleMap: {},
+            identifiedPackages: [
               {
                 name: 'react',
                 versionSet: ['17.0.0'],
-                versionRange: '17.0.0',
-                approximateByteSize: null,
+                moduleIds: [],
               },
             ],
           },
