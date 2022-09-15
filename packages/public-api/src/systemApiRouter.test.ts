@@ -4,7 +4,7 @@ import {
   useTransactionalTesting,
 } from '@gradejs-public/test-utils';
 import { createApp } from './app';
-import { getGradeJsApiKey, SystemAPI, WebPageScan } from '@gradejs-public/shared';
+import { getGradeJsApiKey, systemApi, WebPageScan } from '@gradejs-public/shared';
 import * as WebsiteService from './website/service';
 import { getRepository } from 'typeorm';
 
@@ -32,10 +32,10 @@ describe('routes / systemApi', () => {
   });
 
   it('should process reported scans', async () => {
-    const payload: SystemAPI.ScanReport = {
+    const payload: systemApi.ScanReport = {
       requestId: 'test',
       url: 'http://test.com',
-      status: SystemAPI.ScanReport.Status.Ready,
+      status: systemApi.ScanReport.Status.Ready,
       identifiedModuleMap: {},
       identifiedPackages: [
         {

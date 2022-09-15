@@ -13,6 +13,5 @@ export * from './utils/types';
 
 // lower case for methods and upper case for typings and zod schemas
 export * as systemApi from './systemApi/api';
-export * as SystemAPI from './systemApi/types';
 
 export * from './worker/types';

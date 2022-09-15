@@ -1,6 +1,6 @@
 import { useDatabaseConnection, useTransactionalTesting } from '@gradejs-public/test-utils';
 import { findOrCreateWebPage, syncWebPageScanResult } from './service';
-import { getDatabaseConnection, SystemAPI, WebPageScan } from '@gradejs-public/shared';
+import { getDatabaseConnection, systemApi, WebPageScan } from '@gradejs-public/shared';
 
 useDatabaseConnection();
 useTransactionalTesting();
@@ -21,7 +21,7 @@ describe('website / service', () => {
 
     await syncWebPageScanResult({
       requestId: scan.id.toString(),
-      status: SystemAPI.ScanReport.Status.Ready,
+      status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
       identifiedModuleMap: {
         moduleId: {
@@ -68,7 +68,7 @@ describe('website / service', () => {
     const url = new URL('https://example.com/test2');
 
     const scan = await syncWebPageScanResult({
-      status: SystemAPI.ScanReport.Status.Ready,
+      status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
       identifiedModuleMap: {},
       identifiedPackages: [
@@ -100,7 +100,7 @@ describe('website / service', () => {
 
     const syncPromise = syncWebPageScanResult({
       requestId: '9999999',
-      status: SystemAPI.ScanReport.Status.Ready,
+      status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
       identifiedModuleMap: {},
       identifiedPackages: [

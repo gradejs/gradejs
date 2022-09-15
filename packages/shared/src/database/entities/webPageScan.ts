@@ -1,4 +1,4 @@
-import { SystemAPI } from '@gradejs-public/shared';
+import { systemApi } from '@gradejs-public/shared';
 import {
   Column,
   Entity,
@@ -47,8 +47,8 @@ export namespace WebPageScan {
     Failed = 'failed',
   }
 
-  export type IdentifiedModule = SystemAPI.ScanReport.IdentifiedModule;
-  export type IdentifiedPackage = SystemAPI.ScanReport.IdentifiedPackage;
+  export type IdentifiedModule = systemApi.ScanReport.IdentifiedModule;
+  export type IdentifiedPackage = systemApi.ScanReport.IdentifiedPackage;
 
   export type Result = {
     identifiedModuleMap: Record<string, IdentifiedModule>;

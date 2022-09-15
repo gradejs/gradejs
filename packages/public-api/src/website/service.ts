@@ -2,7 +2,6 @@ import {
   WebPageScan,
   getDatabaseConnection,
   systemApi,
-  SystemAPI,
   Hostname,
   WebPage,
 } from '@gradejs-public/shared';
@@ -75,7 +74,7 @@ export async function getOrRequestWebPageScan(url: string) {
   return result;
 }
 
-export async function syncWebPageScanResult(scanReport: SystemAPI.ScanReport) {
+export async function syncWebPageScanResult(scanReport: systemApi.ScanReport) {
   const db = await getDatabaseConnection();
 
   return await db.transaction(async (em) => {
@@ -115,7 +114,7 @@ export async function syncWebPageScanResult(scanReport: SystemAPI.ScanReport) {
 // TODO: add protected website use-case
 function mapScanReportStatus(status: string) {
   switch (status) {
-    case SystemAPI.ScanReport.Status.Ready:
+    case systemApi.ScanReport.Status.Ready:
       return WebPageScan.Status.Processed;
     default:
       return WebPageScan.Status.Failed;

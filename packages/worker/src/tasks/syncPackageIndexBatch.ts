@@ -1,7 +1,7 @@
-import { systemApi, SystemAPI, PackageMetadata } from '@gradejs-public/shared';
+import { systemApi, PackageMetadata } from '@gradejs-public/shared';
 import { fetchPackageStatsAndMetadata } from '../npmRegistry/api';
 
-export async function syncPackageIndexBatch(payload: SystemAPI.PackageRequest[]) {
+export async function syncPackageIndexBatch(payload: systemApi.PackageRequest[]) {
   // We do not need any concurrent limits here since the batch size
   // is controlled by the `syncPackageIndex` task.
   await Promise.all(payload.map((item) => syncPackage(item.name)));
