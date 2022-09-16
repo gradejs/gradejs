@@ -19,6 +19,7 @@ import { SitesListSkeleton } from '../SitesList/SitesListSkeleton';
 import BarChart from '../BarChart/BarChart';
 import BarChartSkeleton from '../BarChart/BarChartSkeleton';
 import { formatNumber } from 'utils/helpers';
+import Tooltip from '../Tooltip/Tooltip';
 
 type Problem = 'vulnerabilities' | 'duplicate' | 'outdated';
 
@@ -240,6 +241,9 @@ export default function PackagePreview({
                 <div className={styles.statHeader}>
                   <Icon kind='rating' color='#8E8AA0' className={styles.statIcon} />
                   Rating
+                  <span className={styles.statTooltip}>
+                    <Tooltip text='Rating based on our service' />
+                  </span>
                 </div>
                 {packageDetailsLoading ? (
                   <RatingSkeleton />
@@ -247,6 +251,7 @@ export default function PackagePreview({
                   <>
                     <div className={styles.statTitle}>
                       {rating.place}
+
                       <div
                         className={clsx(
                           styles.statRating,
@@ -335,7 +340,7 @@ export default function PackagePreview({
         </div>
       </CSSTransition>
 
-      <footer className={styles.footer}>
+      <div className={styles.footer}>
         <div className={styles.tags}>
           {/* TODO: not sure how to conditionally render maximum number of keywords (e.g. 5 for
                     desktop, 3/4 for tablet, 2 for mobile) based on viewport and update rest number
@@ -356,7 +361,7 @@ export default function PackagePreview({
           <span className={styles.authorName}>{author.name}</span>
           <img className={styles.authorImage} src={author.image} alt='' />
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
