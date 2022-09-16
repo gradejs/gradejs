@@ -10,11 +10,11 @@ import CardGroup from '../../ui/CardGroup/CardGroup';
 import CardList from '../../ui/CardList/CardList';
 import CardGroups from 'components/ui/CardGroups/CardGroups';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
-import DefaultHeader from '../../ui/Header/DefaultHeader';
 import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResultsSidebar';
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
+import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 
 type Props = {
   pageLoading?: boolean;
@@ -155,7 +155,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
       text: '50 scripts found',
     },
     {
-      icon: <Icon kind='bug' width={24} height={24} color='#F3512E' />,
+      icon: <Icon kind='vulnerabilities' width={24} height={24} color='#F3512E' />,
       text: '6 vulnerabilities in 4 packages',
     },
     {
@@ -190,7 +190,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
         />
       )}
 
-      <DefaultHeader showSearch />
+      <StickyDefaultHeader showSearch />
 
       <Container>
         <div className={styles.searchResults}>
@@ -224,13 +224,27 @@ export default function SearchResults({ pageLoading = false }: Props) {
             {loading ? (
               <PackagePreviewSkeleton />
             ) : (
-              <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
+              <PackagePreview
+                name='@team-griffin/react-heading-section'
+                version='3.0.0 - 4.16.4'
+                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
+                problems={['vulnerabilities']}
+                keywords={['#moment', '#date', '#time', '#parse', '#format', '#format', '#format']}
+                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
+              />
             )}
 
             {loading ? (
               <PackagePreviewSkeleton />
             ) : (
-              <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
+              <PackagePreview
+                name='@team-griffin/react-heading-section'
+                version='3.0.0 - 4.16.4'
+                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
+                problems={['vulnerabilities', 'duplicate', 'outdated']}
+                keywords={['#moment', '#date', '#time', '#parse', '#format']}
+                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
+              />
             )}
           </div>
         </div>

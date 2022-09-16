@@ -7,7 +7,7 @@ import CardGroup from '../../ui/CardGroup/CardGroup';
 import CardList from '../../ui/CardList/CardList';
 import CardGroups from '../../ui/CardGroups/CardGroups';
 import Footer from '../../ui/Footer/Footer';
-import ErrorHeader from 'components/ui/Header/ErrorHeader';
+import StickyErrorHeader from '../../ui/Header/StickyErrorHeader';
 
 export type Props = {
   host: string;
@@ -129,7 +129,7 @@ export default function Error({
 
   return (
     <>
-      <ErrorHeader />
+      <StickyErrorHeader />
 
       <Container>
         <section className={styles.errorPage}>

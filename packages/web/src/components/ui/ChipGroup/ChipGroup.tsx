@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './ChipGroup.module.scss';
 import Chip, { ChipProps } from '../Chip/Chip';
-import { ChipGroupSkeleton } from './ChipGroupSkeleton';
 
 type Props = {
   chips: string[];
@@ -18,20 +17,15 @@ export default function ChipGroup({
   size = 'medium',
   font = 'monospace',
   fontSize = 'regular',
-  loading,
 }: Props) {
   return (
     <div className={styles.chipsWrapper}>
       <div className={styles.chips}>
-        {loading ? (
-          <ChipGroupSkeleton />
-        ) : (
-          chips.map((chip) => (
-            <Chip key={chip} className={styles.chip} size={size} font={font} fontSize={fontSize}>
-              {chip}
-            </Chip>
-          ))
-        )}
+        {chips.map((chip) => (
+          <Chip key={chip} className={styles.chip} size={size} font={font} fontSize={fontSize}>
+            {chip}
+          </Chip>
+        ))}
 
         {children}
       </div>

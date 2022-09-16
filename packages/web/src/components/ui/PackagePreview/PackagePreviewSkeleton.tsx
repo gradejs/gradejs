@@ -21,14 +21,6 @@ export const RatingSkeleton = () => (
   </>
 );
 
-export const PopularitySkeleton = () => (
-  <Skeleton width='100%' height='100%' className={styles.popularitySkeleton} />
-);
-
-export const PopularityVersionSkeleton = () => (
-  <Skeleton width={64} className={styles.popularityVersionSkeleton} />
-);
-
 export const LinksSkeleton = () => (
   <>
     {repeat(

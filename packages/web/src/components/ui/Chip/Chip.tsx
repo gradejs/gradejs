@@ -11,7 +11,7 @@ export type ChipProps = {
     | 'secondary'
     | 'outlined'
     | 'suggest'
-    | 'vulnerability'
+    | 'vulnerabilities'
     | 'duplicate'
     | 'outdated'
     | 'info';

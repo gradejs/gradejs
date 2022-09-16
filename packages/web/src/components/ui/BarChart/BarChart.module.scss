@@ -1,0 +1,77 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.popularity {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column-gap: 11px;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include mobile {
+    margin: 0 -20px;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+}
+
+.popularityItem {
+  height: 282px;
+  background: $gray-surface;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  @include mobile-and-tablet {
+    min-width: 92px;
+  }
+}
+
+.popularityFill {
+  border-radius: 10px;
+  background: $gray-border;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  font-weight: 500;
+  color: $gray-text;
+  padding-bottom: 14px;
+}
+
+.popularityFillSkeleton {
+  padding-bottom: 0;
+}
+
+.popularitySkeleton {
+  padding-bottom: 0;
+  transform: none;
+}
+
+.popularityFillAccent {
+  background: $blue-accent;
+  color: #ffffff;
+}
+
+.popularityVersion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  font-family: $font-monospace;
+  font-weight: 500;
+}
+
+.popularityVersionSkeleton {
+  margin: 15px auto 0;
+}
+
+.popularityVersionIcon {
+  margin-left: 8px;
+}
