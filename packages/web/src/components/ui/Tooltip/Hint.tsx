@@ -1,15 +1,17 @@
 import React from 'react';
 import styles from './Tooltip.module.scss';
-import { usePopperTooltip } from 'react-popper-tooltip';
+import { usePopperTooltip, Config } from 'react-popper-tooltip';
 import { Icon } from '../Icon/Icon';
 
 type Props = {
   text: string;
 };
 
-export default function Tooltip({ text }: Props) {
+const tooltipOptions: Config = { placement: 'top-end', offset: [20, 13] };
+
+export default function Hint({ text }: Props) {
   const { getArrowProps, getTooltipProps, setTooltipRef, setTriggerRef, visible } =
-    usePopperTooltip({ placement: 'top-end', offset: [20, 13] });
+    usePopperTooltip(tooltipOptions);
 
   return (
     <>

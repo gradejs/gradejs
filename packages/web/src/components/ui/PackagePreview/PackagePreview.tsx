@@ -19,7 +19,7 @@ import { SitesListSkeleton } from '../SitesList/SitesListSkeleton';
 import BarChart from '../BarChart/BarChart';
 import BarChartSkeleton from '../BarChart/BarChartSkeleton';
 import { formatNumber } from 'utils/helpers';
-import Tooltip from '../Tooltip/Tooltip';
+import Hint from '../Tooltip/Hint';
 
 type Problem = 'vulnerabilities' | 'duplicate' | 'outdated';
 
@@ -91,33 +91,33 @@ export default function PackagePreview({
     dependencies: ['art', 'create-react-class', 'loose-envify', 'scheduler'],
     packages: [
       {
-        fill: '100%',
+        fill: 1,
         uses: 89912,
         moduleVersion: '21.3.0',
       },
       {
-        fill: '90%',
+        fill: 0.8,
         uses: 67111,
         moduleVersion: '18.2.0',
         highlighted: true,
       },
       {
-        fill: '80%',
+        fill: 0.7,
         uses: 44212,
         moduleVersion: '20.1.0',
       },
       {
-        fill: '70%',
+        fill: 0.6,
         uses: 41129,
         moduleVersion: '18.0.0',
       },
       {
-        fill: '60%',
+        fill: 0.5,
         uses: 40465,
         moduleVersion: '19.11.2',
       },
       {
-        fill: '50%',
+        fill: 0.4,
         uses: 38907,
         moduleVersion: '8.1.2',
         vulnerabilities: true,
@@ -242,7 +242,7 @@ export default function PackagePreview({
                   <Icon kind='rating' color='#8E8AA0' className={styles.statIcon} />
                   Rating
                   <span className={styles.statTooltip}>
-                    <Tooltip text='Rating based on our service' />
+                    <Hint text='Rating based on our service' />
                   </span>
                 </div>
                 {packageDetailsLoading ? (

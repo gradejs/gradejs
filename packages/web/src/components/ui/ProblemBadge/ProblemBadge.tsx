@@ -13,7 +13,7 @@ function ProblemBadge({ problem }: Props) {
         <Chip
           variant='vulnerabilities'
           size='badge'
-          icon={<Icon kind='vulnerabilities' width={24} height={24} color='white' />}
+          icon={<Icon kind='vulnerability' width={24} height={24} color='white' />}
         >
           Vulnerabilities
         </Chip>

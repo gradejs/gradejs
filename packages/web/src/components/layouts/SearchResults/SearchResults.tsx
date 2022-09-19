@@ -13,10 +13,9 @@ import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedReso
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
-import CardListChips from '../../ui/CardList/CardListChips';
-import { CardChipsProps } from '../../ui/Card/CardChips';
-import CardListPopular from '../../ui/CardList/CardListPopular';
-import { CardPopularProps } from '../../ui/Card/CardPopular';
+import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
+import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
+import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
 
 type Props = {
   pageLoading?: boolean;
@@ -43,89 +42,6 @@ export default function SearchResults({ pageLoading = false }: Props) {
   }, []);
 
   // TODO: mock data, remove later
-  const similarCards: CardChipsProps[] = [
-    {
-      id: 'uExBVGuF',
-      title: 'github.com',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      chips: ['mdast-util-from-markdown', 'react', 'react-dom'],
-      restPackages: 45,
-    },
-    {
-      id: '1EkL1u5g',
-      title: 'fingerprint.com',
-      icon: 'https://avatars.githubusercontent.com/u/67208791?s=200&v=4',
-      chips: ['mdast-util-from-markdown', 'react', 'react-dom'],
-      restPackages: 45,
-    },
-    {
-      id: 'mhwO2bPM',
-      title: 'facebook.com',
-      icon: 'https://avatars.githubusercontent.com/u/69631?s=200&v=4',
-      chips: ['react'],
-      restPackages: 45,
-    },
-  ];
-
-  // TODO: mock data, remove later
-  const popularPackages: CardPopularProps[] = [
-    {
-      id: 'FPsBcl8R',
-      title: '@team-griffin/react-heading-section',
-      description: "This package's job is to automatically determine...",
-      imagesList: [
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      ],
-      numberOfUses: 5265,
-    },
-    {
-      id: 'emtYcsUh',
-      title: 'unist-util-generated',
-      description: 'unist utility to check if a node is generated',
-      imagesList: [
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      ],
-      numberOfUses: 5265,
-    },
-    {
-      id: 'TYIwvAfy',
-      title: 'react-smooth',
-      description: 'is a animation library work on React',
-      imagesList: [
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      ],
-      numberOfUses: 5265,
-    },
-    {
-      id: 'Lq1pEEX7',
-      title: 'unist-util-position',
-      description: 'unist utility to get the positional info of nodes',
-      imagesList: [
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      ],
-      numberOfUses: 5265,
-    },
-    {
-      id: 'cWOgIbmp',
-      title: 'vfile-message',
-      description: 'Create vfile messages',
-      imagesList: [
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      ],
-      numberOfUses: 5265,
-    },
-  ];
-
   const metaItems = [
     {
       icon: <Icon kind='weight' width={24} height={24} />,
@@ -136,7 +52,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
       text: '50 scripts found',
     },
     {
-      icon: <Icon kind='vulnerabilities' width={24} height={24} color='#F3512E' />,
+      icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,
       text: '6 vulnerabilities in 4 packages',
     },
     {
@@ -232,14 +148,18 @@ export default function SearchResults({ pageLoading = false }: Props) {
 
         <CardGroups>
           <CardGroup title='Similar sites'>
-            {loading ? <CardListSkeleton /> : <CardListChips cards={similarCards} />}
+            {loading ? (
+              <CardListSkeleton />
+            ) : (
+              <PackagesBySourceCardList cards={packagesBySourceListData} />
+            )}
           </CardGroup>
 
           <CardGroup title='Popular packages'>
             {loading ? (
               <CardListSkeleton numberOfElements={6} />
             ) : (
-              <CardListPopular cards={popularPackages} />
+              <PopularPackageCardList cards={popularPackageListData} />
             )}
           </CardGroup>
         </CardGroups>

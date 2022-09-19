@@ -13,7 +13,7 @@ export default function VulnerablePackage({ name, moreTotal }: Props) {
     <div className={styles.vulnerableWrapper}>
       <span className={styles.vulnerablePackage}>
         <span className={styles.vulnerableIcon}>
-          <Icon kind='vulnerabilities' color='#F3512E' width={28} height={28} />
+          <Icon kind='vulnerability' color='#F3512E' width={28} height={28} />
         </span>
         {name}
       </span>

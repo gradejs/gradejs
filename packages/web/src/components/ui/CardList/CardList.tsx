@@ -3,12 +3,12 @@ import styles from './CardList.module.scss';
 import clsx from 'clsx';
 
 type Props = {
-  className?: string;
+  variant?: 'vertical';
   children: React.ReactNode;
 };
 
-const CardList = ({ className, children }: Props) => (
-  <div className={clsx(styles.grid, className)}>{children}</div>
+const CardList = ({ variant, children }: Props) => (
+  <div className={clsx(styles.grid, variant)}>{children}</div>
 );
 
 export default CardList;

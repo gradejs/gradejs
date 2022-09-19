@@ -5,7 +5,7 @@ import lines from '../../../assets/icons/sprite/lines.svg';
 import external from '../../../assets/icons/sprite/external.svg';
 import arrow from '../../../assets/icons/sprite/arrow.svg';
 import arrowDown from '../../../assets/icons/sprite/arrow-down.svg';
-import vulnerabilities from '../../../assets/icons/sprite/vulnerabilities.svg';
+import vulnerability from '../../../assets/icons/sprite/vulnerability.svg';
 import logo from '../../../assets/icons/sprite/logo.svg';
 import weight from '../../../assets/icons/sprite/weight.svg';
 import search from '../../../assets/icons/sprite/search.svg';
@@ -33,7 +33,7 @@ const icons = {
   lines,
   external,
   arrow,
-  vulnerabilities,
+  vulnerability,
   logo,
   weight,
   search,

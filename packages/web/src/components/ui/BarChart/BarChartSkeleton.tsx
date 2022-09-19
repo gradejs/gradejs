@@ -24,10 +24,7 @@ export default function BarChartSkeleton() {
         6,
         <div className={styles.popularityItemWrapper}>
           <div className={styles.popularityItem}>
-            <div
-              className={clsx(styles.popularityFill, styles.popularityFillSkeleton)}
-              style={{ height: '100%' }}
-            >
+            <div className={clsx(styles.popularityFill, styles.popularityFillSkeleton)}>
               <PopularitySkeleton />
             </div>
           </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './CardList.module.scss';
 import { repeat } from '../../../utils/helpers';
 import Skeleton from '../Skeleton/Skeleton';
-import CardCommon from '../Card/CardCommon';
+import Card from '../Card/Card';
 
 type Props = {
   numberOfElements?: number;
@@ -13,7 +13,7 @@ export const CardListSkeleton = ({ numberOfElements = 3 }: Props) => (
     {repeat(
       numberOfElements,
       <Skeleton width='100%' variant='rounded'>
-        <CardCommon />
+        <Card />
       </Skeleton>
     )}
   </div>

@@ -5,7 +5,7 @@ import { formatNumber } from '../../../utils/helpers';
 import { Icon } from '../Icon/Icon';
 
 type Bar = {
-  fill: string;
+  fill: number; // expects a floating point number between 0 and 1
   uses: number;
   moduleVersion: string;
   vulnerabilities?: boolean;
@@ -17,9 +17,11 @@ type Props = {
 };
 
 const Bar = ({ fill, uses, moduleVersion, vulnerabilities, highlighted }: Bar) => {
-  const memoizedFillHeight = useMemo(() => {
+  const fillHeightStyle = useMemo(() => {
+    const normalizedFill = Math.max(Math.min(fill, 1), 0);
+
     return {
-      height: fill,
+      height: `${normalizedFill * 100}%`,
     };
   }, [fill]);
 
@@ -28,7 +30,7 @@ const Bar = ({ fill, uses, moduleVersion, vulnerabilities, highlighted }: Bar) =
       <div className={styles.popularityItem}>
         <div
           className={clsx(styles.popularityFill, highlighted && styles.popularityFillAccent)}
-          style={memoizedFillHeight}
+          style={fillHeightStyle}
         >
           {formatNumber(uses)}
         </div>

@@ -3,9 +3,7 @@
 
 .popularity {
   margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-column-gap: 11px;
+  display: flex;
   overflow-x: auto;
 
   &::-webkit-scrollbar {
@@ -20,6 +18,20 @@
   }
 }
 
+.popularityItemWrapper {
+  min-width: 100px;
+  flex-shrink: 0;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @include mobile-and-tablet {
+    min-width: 75px;
+  }
+}
+
 .popularityItem {
   height: 282px;
   background: $gray-surface;
@@ -27,10 +39,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-
-  @include mobile-and-tablet {
-    min-width: 92px;
-  }
 }
 
 .popularityFill {
@@ -47,6 +55,7 @@
 
 .popularityFillSkeleton {
   padding-bottom: 0;
+  height: 100%;
 }
 
 .popularitySkeleton {
