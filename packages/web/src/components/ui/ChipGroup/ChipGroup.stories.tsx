@@ -1,7 +1,6 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import ChipGroup from './ChipGroup';
-import styles from '../Card/Card.module.scss';
 import Chip from '../Chip/Chip';
 
 export default {
@@ -12,20 +11,30 @@ export default {
   },
 } as ComponentMeta<typeof ChipGroup>;
 
-const Template: ComponentStory<typeof ChipGroup> = (args) => <ChipGroup {...args} />;
-
-export const Default = Template.bind({});
-Default.args = {
-  chips: ['mdast-util-from-markdown', 'react', 'react-dom'],
-};
-
-export const WithMoreCounter = Template.bind({});
-const MoreCounter = (
-  <Chip className={styles.tag} variant='outlined' size='large'>
-    +45 packages
-  </Chip>
+export const Default: ComponentStory<typeof ChipGroup> = () => (
+  <ChipGroup>
+    {['mdast-util-from-markdown', 'react', 'react-dom'].map((chip) => (
+      <Chip key={chip}>{chip}</Chip>
+    ))}
+  </ChipGroup>
 );
-WithMoreCounter.args = {
-  chips: ['mdast-util-from-markdown', 'react', 'react-dom'],
-  children: MoreCounter,
-};
+
+export const Medium: ComponentStory<typeof ChipGroup> = () => (
+  <ChipGroup>
+    {['mdast-util-from-markdown', 'react', 'react-dom'].map((chip) => (
+      <Chip key={chip} size='medium' font='monospace'>
+        {chip}
+      </Chip>
+    ))}
+  </ChipGroup>
+);
+
+export const Large: ComponentStory<typeof ChipGroup> = () => (
+  <ChipGroup>
+    {['mdast-util-from-markdown', 'react', 'react-dom'].map((chip) => (
+      <Chip key={chip} size='large' font='monospace'>
+        {chip}
+      </Chip>
+    ))}
+  </ChipGroup>
+);

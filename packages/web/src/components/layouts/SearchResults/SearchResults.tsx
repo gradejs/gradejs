@@ -5,9 +5,7 @@ import Container from 'components/ui/Container/Container';
 import { Icon } from '../../ui/Icon/Icon';
 import PackagePreview from '../../ui/PackagePreview/PackagePreview';
 import SearchedResource from '../../ui/SearchedResource/SearchedResource';
-import { CardProps } from '../../ui/Card/Card';
 import CardGroup from '../../ui/CardGroup/CardGroup';
-import CardList from '../../ui/CardList/CardList';
 import CardGroups from 'components/ui/CardGroups/CardGroups';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResultsSidebar';
@@ -15,6 +13,10 @@ import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedReso
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
+import CardListChips from '../../ui/CardList/CardListChips';
+import { CardChipsProps } from '../../ui/Card/CardChips';
+import CardListPopular from '../../ui/CardList/CardListPopular';
+import { CardPopularProps } from '../../ui/Card/CardPopular';
 
 type Props = {
   pageLoading?: boolean;
@@ -41,107 +43,86 @@ export default function SearchResults({ pageLoading = false }: Props) {
   }, []);
 
   // TODO: mock data, remove later
-  const similarCards: CardProps[] = [
+  const similarCards: CardChipsProps[] = [
     {
       id: 'uExBVGuF',
       title: 'github.com',
       icon: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      packageTags: {
-        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
-        restPackages: 45,
-      },
+      chips: ['mdast-util-from-markdown', 'react', 'react-dom'],
+      restPackages: 45,
     },
     {
       id: '1EkL1u5g',
       title: 'fingerprint.com',
       icon: 'https://avatars.githubusercontent.com/u/67208791?s=200&v=4',
-      packageTags: {
-        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
-        restPackages: 45,
-      },
+      chips: ['mdast-util-from-markdown', 'react', 'react-dom'],
+      restPackages: 45,
     },
     {
       id: 'mhwO2bPM',
       title: 'facebook.com',
       icon: 'https://avatars.githubusercontent.com/u/69631?s=200&v=4',
-      packageTags: {
-        featuredPackages: ['react'],
-        restPackages: 45,
-      },
+      chips: ['react'],
+      restPackages: 45,
     },
   ];
 
   // TODO: mock data, remove later
-  const popularPackages: CardProps[] = [
+  const popularPackages: CardPopularProps[] = [
     {
       id: 'FPsBcl8R',
       title: '@team-griffin/react-heading-section',
       description: "This package's job is to automatically determine...",
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
+      imagesList: [
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      ],
+      numberOfUses: 5265,
     },
     {
       id: 'emtYcsUh',
       title: 'unist-util-generated',
       description: 'unist utility to check if a node is generated',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
+      imagesList: [
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      ],
+      numberOfUses: 5265,
     },
     {
       id: 'TYIwvAfy',
       title: 'react-smooth',
       description: 'is a animation library work on React',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
+      imagesList: [
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      ],
+      numberOfUses: 5265,
     },
     {
       id: 'Lq1pEEX7',
       title: 'unist-util-position',
       description: 'unist utility to get the positional info of nodes',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
+      imagesList: [
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      ],
+      numberOfUses: 5265,
     },
     {
       id: 'cWOgIbmp',
       title: 'vfile-message',
       description: 'Create vfile messages',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
-    },
-    {
-      id: 'UT97Vpoi',
-      title: 'Go to all Popular packages',
-      variant: 'toAll',
+      imagesList: [
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+      ],
+      numberOfUses: 5265,
     },
   ];
 
@@ -249,15 +230,17 @@ export default function SearchResults({ pageLoading = false }: Props) {
           </div>
         </div>
 
-        {/* TODO: Trying to fit separate domain entities within a single component seems like burden.
-                  Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='Similar sites'>
-            {loading ? <CardListSkeleton /> : <CardList cards={similarCards} />}
+            {loading ? <CardListSkeleton /> : <CardListChips cards={similarCards} />}
           </CardGroup>
 
           <CardGroup title='Popular packages'>
-            {loading ? <CardListSkeleton /> : <CardList cards={popularPackages} />}
+            {loading ? (
+              <CardListSkeleton numberOfElements={6} />
+            ) : (
+              <CardListPopular cards={popularPackages} />
+            )}
           </CardGroup>
         </CardGroups>
       </Container>

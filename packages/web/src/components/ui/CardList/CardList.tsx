@@ -1,19 +1,14 @@
 import React from 'react';
 import styles from './CardList.module.scss';
-import Card, { CardProps } from '../Card/Card';
 import clsx from 'clsx';
 
 type Props = {
-  cards: CardProps[];
-  variant?: 'default' | 'vertical';
+  className?: string;
+  children: React.ReactNode;
 };
 
-export default function CardList({ cards, variant = 'default' }: Props) {
-  return (
-    <div className={clsx(styles.grid, styles[variant])}>
-      {cards.map((card) => (
-        <Card key={card.id} {...card} />
-      ))}
-    </div>
-  );
-}
+const CardList = ({ className, children }: Props) => (
+  <div className={clsx(styles.grid, className)}>{children}</div>
+);
+
+export default CardList;

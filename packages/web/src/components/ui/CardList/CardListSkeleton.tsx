@@ -2,14 +2,18 @@ import React from 'react';
 import styles from './CardList.module.scss';
 import { repeat } from '../../../utils/helpers';
 import Skeleton from '../Skeleton/Skeleton';
-import Card from '../Card/Card';
+import CardCommon from '../Card/CardCommon';
 
-export const CardListSkeleton = () => (
+type Props = {
+  numberOfElements?: number;
+};
+
+export const CardListSkeleton = ({ numberOfElements = 3 }: Props) => (
   <div className={styles.grid}>
     {repeat(
-      3,
+      numberOfElements,
       <Skeleton width='100%' variant='rounded'>
-        <Card id='id1' title='title' />
+        <CardCommon />
       </Skeleton>
     )}
   </div>

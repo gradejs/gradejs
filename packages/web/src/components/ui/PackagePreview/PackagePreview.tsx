@@ -280,7 +280,13 @@ export default function PackagePreview({
                 {packageDetailsLoading ? (
                   <ChipGroupSkeleton />
                 ) : (
-                  <ChipGroup chips={dependencies} fontSize='small' />
+                  <ChipGroup>
+                    {dependencies.map((dependency) => (
+                      <Chip size='medium' fontSize='small' font='monospace'>
+                        {dependency}
+                      </Chip>
+                    ))}
+                  </ChipGroup>
                 )}
               </div>
             </div>
