@@ -4,92 +4,30 @@ import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
 import clsx from 'clsx';
 import ChipGroup from '../ChipGroup/ChipGroup';
-import SitesList from '../SitesList/SitesList';
 import { CSSTransition } from 'react-transition-group';
 import Button from '../Button/Button';
-import {
-  LicenceSkeleton,
-  LinksSkeleton,
-  RatingSkeleton,
-  ScriptSkeleton,
-} from './PackagePreviewSkeleton';
+import { LicenceSkeleton, LinksSkeleton, ScriptSkeleton } from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
-import { SitesListSkeleton } from '../SitesList/SitesListSkeleton';
-import BarChart from '../BarChart/BarChart';
-import BarChartSkeleton from '../BarChart/BarChartSkeleton';
-import { formatNumber } from 'utils/helpers';
-import Hint from '../Tooltip/Hint';
 import { useNavigate } from 'react-router-dom';
-
-type Problem = 'vulnerabilities' | 'duplicate' | 'outdated';
-
-type ExternalLink = {
-  href: string;
-  kind: 'repository' | 'link' | 'npm';
-  linkText?: string;
-};
+import { IdentifiedPackage } from 'store/selectors/websiteResults';
 
 type Props = {
-  /*
-  name: string;
-  version: string;
-  desc: string;
-  problems?: Problem[];
-  keywords: string[];
-  author: {
-    name: string;
-    image: string;
-  };
-  */
   opened?: boolean;
   detailsLoading?: boolean;
-  sites: Site[];
-  flags: {
-    vulnerable: boolean;
-    duplicate: boolean;
-    outdated: boolean;
-  };
-  pkg: {
-    name: string;
-    descriptionFull: string;
-    containingScriptUrl: string;
-    version: string;
-    license: string;
-    licenseDescription: string;
-    rating: number;
-    ratingDelta: number;
-    deps: string[]; // TODO: probably not just string[]
-    repositoryUrl?: string;
-    homePageUrl?: string;
-    npmUrl?: string;
-    keywords: Array<{
-      name: string;
-    }>;
-    author: {
-      name: string;
-      avatar: string;
-    };
-  };
-  totalRatedPackages: number;
+  // sites: Site[];
+  pkg: IdentifiedPackage;
 };
+
+function makeNpmUrl(pkg: IdentifiedPackage) {
+  return `https://www.npmjs.com/package/${pkg.name}`;
+}
 
 // TODO: refactor this (decomposition, props, memoization, etc)
 export default function PackagePreview({
-  /*  name,
-      version,
-      desc,
-      problems,
-      keywords,
-      author,
-      opened,
-      detailsLoading = false,
-      */
   opened,
-  sites,
-  flags,
+  //sites,
   pkg,
-  totalRatedPackages,
   detailsLoading = false,
 }: Props) {
   const [open, setOpen] = useState<boolean>(opened ?? false);
@@ -108,108 +46,10 @@ export default function PackagePreview({
     }
   };
 
-  // TODO: Mock API data, remove later
-  const externalLinks: ExternalLink[] = [
-    { kind: 'repository', href: 'https://github.com/facebook/react/', linkText: 'Repository' },
-    { kind: 'link', href: 'https://reactjs.org/', linkText: 'Homepage' },
-    { kind: 'npm', href: 'https://www.npmjs.com/package/react' },
-  ];
-
-  // TODO: Mock API data, remove later
-  const loadedData = {
-    script: '/rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz',
-    license: {
-      title: 'MIT license',
-      subtitle: 'freely distributable',
-    },
-    rating: {
-      place: 385,
-      rankingDelta: -4,
-      out: 12842,
-    },
-    dependencies: ['art', 'create-react-class', 'loose-envify', 'scheduler'],
-    packages: [
-      {
-        fill: 1,
-        uses: 89912,
-        moduleVersion: '21.3.0',
-      },
-      {
-        fill: 0.8,
-        uses: 67111,
-        moduleVersion: '18.2.0',
-        highlighted: true,
-      },
-      {
-        fill: 0.7,
-        uses: 44212,
-        moduleVersion: '20.1.0',
-      },
-      {
-        fill: 0.6,
-        uses: 41129,
-        moduleVersion: '18.0.0',
-      },
-      {
-        fill: 0.5,
-        uses: 40465,
-        moduleVersion: '19.11.2',
-      },
-      {
-        fill: 0.4,
-        uses: 38907,
-        moduleVersion: '8.1.2',
-        vulnerabilities: true,
-      },
-    ],
-    sites: [
-      {
-        id: '123',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '456',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '789',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '1231',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '12321',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '123123',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '12123132',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-    ],
-    links: externalLinks,
-  };
-
-  //const { script, license, rating, dependencies, packages, sites, links } = loadedData;
+  const deps = Object.keys(
+    pkg.registryMetadata?.versionSpecificValues?.[pkg.versionSet[pkg.versionSet.length - 1]]
+      .dependencies ?? {}
+  );
 
   return (
     <div className={clsx(styles.package, open && styles.open)}>
@@ -220,11 +60,11 @@ export default function PackagePreview({
               {pkg.name} <span className={styles.version}>{pkg.version}</span>
             </span>
 
-            {flags && ( // TODO deal with flags
+            {(pkg.vulnerable || pkg.outdated || pkg.duplicate) && (
               <span className={styles.problems}>
-                {problems.map((problem) => (
-                  <ProblemBadge key={problem} problem={problem} />
-                ))}
+                {pkg.vulnerable && <ProblemBadge problem='vulnerabilities' />}
+                {pkg.outdated && <ProblemBadge problem='outdated' />}
+                {/*pkg.duplicate && <ProblemBadge problem='duplicate' />*/}
               </span>
             )}
           </div>
@@ -241,7 +81,7 @@ export default function PackagePreview({
           </button>
         </div>
 
-        <div className={styles.desc}>{pkg.descriptionFull}</div>
+        <div className={styles.desc}>{pkg.registryMetadata?.fullDescription}</div>
       </div>
 
       <CSSTransition
@@ -253,6 +93,7 @@ export default function PackagePreview({
       >
         <div className={styles.content}>
           <div className={styles.contentInner}>
+            {/*
             <div className={styles.stat}>
               <div className={styles.statHeader}>
                 <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
@@ -271,6 +112,7 @@ export default function PackagePreview({
                 </a>
               )}
             </div>
+            */}
 
             <div className={styles.statList}>
               <div className={clsx(styles.stat, styles.statListItemSmall)}>
@@ -282,12 +124,16 @@ export default function PackagePreview({
                   <LicenceSkeleton />
                 ) : (
                   <>
-                    <div className={styles.statTitle}>{pkg.license}</div>
-                    <div className={styles.statSubtitle}>{pkg.licenseDescription}</div>
+                    <div className={styles.statTitle}>{pkg.registryMetadata?.license}</div>
+                    {/* TODO
+                    <div className={styles.statSubtitle}>
+                      {pkg.registryMetadata?.licenseDescription}
+                    </div>*/}
                   </>
                 )}
               </div>
 
+              {/*
               <div className={clsx(styles.stat, styles.statListItemSmall)}>
                 <div className={styles.statHeader}>
                   <Icon kind='rating' color='#8E8AA0' className={styles.statIcon} />
@@ -323,6 +169,7 @@ export default function PackagePreview({
                   </>
                 )}
               </div>
+              */}
 
               <div className={clsx(styles.stat, styles.statListItemLarge)}>
                 <div className={styles.statHeader}>
@@ -332,7 +179,7 @@ export default function PackagePreview({
                     <ChipGroupSkeleton />
                   ) : (
                     <ChipGroup>
-                      {pkg.deps.map((dependency) => (
+                      {deps.map((dependency) => (
                         <Chip size='medium' fontSize='small' font='monospace'>
                           {dependency}
                         </Chip>
@@ -357,6 +204,7 @@ export default function PackagePreview({
 
               {/* TODO: add Modules treemap here */}
 
+              {/*
               <div className={styles.stat}>
                 <div className={styles.statHeader}>Used on</div>
 
@@ -366,6 +214,7 @@ export default function PackagePreview({
                   <SitesList sites={sites} className={styles.usedOnList} />
                 )}
               </div>
+              */}
 
               <div className={styles.actions}>
                 <div className={styles.links}>
@@ -373,9 +222,9 @@ export default function PackagePreview({
                     <LinksSkeleton />
                   ) : (
                     <>
-                      {pkg.repositoryUrl && (
+                      {pkg.registryMetadata?.repositoryUrl && (
                         <a
-                          href={pkg.repositoryUrl}
+                          href={pkg.registryMetadata?.repositoryUrl}
                           className={styles.link}
                           target='_blank'
                           rel='noreferrer'
@@ -385,9 +234,9 @@ export default function PackagePreview({
                         </a>
                       )}
 
-                      {pkg.homePageUrl && (
+                      {pkg.registryMetadata?.homepageUrl && (
                         <a
-                          href={pkg.homePageUrl}
+                          href={pkg.registryMetadata?.homepageUrl}
                           className={styles.link}
                           target='_blank'
                           rel='noreferrer'
@@ -397,28 +246,26 @@ export default function PackagePreview({
                         </a>
                       )}
 
-                      {pkg.npmUrl && (
-                        <a
-                          href={pkg.npmUrl}
-                          className={styles.link}
-                          target='_blank'
-                          rel='noreferrer'
-                        >
-                          <Icon
-                            kind='npm'
-                            width={32}
-                            height={32}
-                            color='#212121'
-                            className={styles.linkIcon}
-                          />
-                        </a>
-                      )}
+                      <a
+                        href={makeNpmUrl(pkg)}
+                        className={styles.link}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        <Icon
+                          kind='npm'
+                          width={32}
+                          height={32}
+                          color='#212121'
+                          className={styles.linkIcon}
+                        />
+                      </a>
                     </>
                   )}
                 </div>
 
-                {/* TODO: should be a <a> link */}
-                <Button variant='arrow' onClick={() => navigate('/package/' + pkg.name)}>
+                {/* TODO: should be a <a> link w/ router support */}
+                <Button variant='arrow' onClick={() => navigate(`/package/${pkg.name}`)}>
                   Details
                 </Button>
               </div>
@@ -432,21 +279,28 @@ export default function PackagePreview({
           {/* TODO: not sure how to conditionally render maximum number of keywords (e.g. 5 for
                     desktop, 3/4 for tablet, 2 for mobile) based on viewport and update rest number
                     of keywords beyond current maximum in Chip */}
-          {pkg.keywords.slice(6).map((tag) => (
+          {/* ^ Nearly impossible thing for responsive markup rendered on server.
+                Maybe just avoid conditional render? // oklimenko */}
+          {pkg.registryMetadata?.keywords?.slice(6).map((tag) => (
             <a href='#' className={styles.tag}>
-              {tag.name}
+              {tag}
             </a>
           ))}
-          {pkg.keywords.length > 6 && (
+          {(pkg.registryMetadata?.keywords?.length ?? 0) > 6 && (
             <Chip variant='info' size='medium' fontWeight='semiBold'>
-              +{pkg.keywords.length - 6}
+              +{(pkg.registryMetadata?.keywords?.length ?? 0) - 6}
             </Chip>
           )}
         </div>
 
         <div className={styles.author}>
-          <span className={styles.authorName}>{pkg.author.name}</span>
-          <img className={styles.authorImage} src={pkg.author.avatar} alt='' />
+          {/* TODO: print all maintainers? Author is not a single entity */}
+          <span className={styles.authorName}>{pkg.registryMetadata?.maintainers?.[0].name}</span>
+          <img
+            className={styles.authorImage}
+            src={pkg.registryMetadata?.maintainers?.[0].avatar}
+            alt=''
+          />
         </div>
       </div>
     </div>

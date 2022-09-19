@@ -6,6 +6,7 @@ import { Icon } from '../Icon/Icon';
 import SearchBar from '../SearchBar/SearchBar';
 
 export type Props = {
+  searchQuery?: string;
   variant?: 'default' | 'light';
   showSearch?: boolean;
   className?: string;
@@ -14,8 +15,9 @@ export type Props = {
 
 export default function Header({
   variant = 'default',
-  showSearch = false,
+  searchQuery,
   className,
+  showSearch = false,
   children,
 }: Props) {
   return (
@@ -34,7 +36,7 @@ export default function Header({
 
           {showSearch && (
             <div className={styles.searchWrapper}>
-              <SearchBar />
+              <SearchBar value={searchQuery ?? ''} />
             </div>
           )}
 

@@ -3,14 +3,14 @@ import { client, GetWebPageScanOutput } from '../../services/apiClient';
 import { trackCustomEvent } from '../../services/analytics';
 
 type WebsiteResultsState = {
-  filters: typeof DefaultFiltersAndSorters;
+  filters: {}; // typeof DefaultFiltersAndSorters;
   isFailed: boolean;
   isLoading: boolean;
   detectionResult?: GetWebPageScanOutput;
 };
 
 const initialState: WebsiteResultsState = {
-  filters: { ...DefaultFiltersAndSorters },
+  filters: {}, // { ...DefaultFiltersAndSorters },
   isFailed: false,
   isLoading: false,
   detectionResult: undefined,
@@ -51,10 +51,12 @@ const websiteResults = createSlice({
   initialState,
   reducers: {
     resetFilters(state) {
-      state.filters = { ...DefaultFiltersAndSorters };
+      state.filters = {
+        /*...DefaultFiltersAndSorters*/
+      };
     },
-    applyFilters(state, action: PayloadAction<FiltersState>) {
-      state.filters = action.payload;
+    applyFilters(_state) {
+      // state.filters = action.payload;
     },
   },
   extraReducers(builder) {

@@ -16,13 +16,14 @@ export function WebsiteResultsPage() {
   const dispatch = useAppDispatch();
 
   /* TODO
-     - Отключить фильтры из селекторов (временно) ./
-     - Прокинуть данные из packages в packagePreview (все что есть), формализовать тип pkg ./
-     - Разобраться с тем как работают фильтрующие компоненты. Мб прикрутить их в отдельный redux-слайс для порядку.
-     - Сформулировать типы для фильтров и вернуть их обратно в селекторы.
-   */
+       - Отключить фильтры из селекторов (временно) ./
+       - Прокинуть данные из packages в packagePreview (все что есть), формализовать тип pkg ./
+       - Разобраться с тем как работают фильтрующие компоненты. Мб прикрутить их в отдельный redux-слайс для порядку.
+       - Сформулировать типы для фильтров и вернуть их обратно в селекторы.
+     */
 
-  const { vulnerabilities, keywordsList, status } = useAppSelector(selectors.default);
+  const { vulnerabilities, keywordsList, status, vulnerabilitiesCount, lastScanDate } =
+    useAppSelector(selectors.default);
   const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
   const packagesStats = useAppSelector(selectors.packagesStats);
   const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
@@ -117,8 +118,9 @@ export function WebsiteResultsPage() {
         packages={packagesFiltered}
         packagesStats={packagesStats}
         vulnerabilities={vulnerabilities ?? {}}
+        vulnerabilitiesCount={vulnerabilitiesCount}
         keywordsList={keywordsList}
-        status={status}
+        status={{ status, lastScanDate }}
       />
     </>
   );

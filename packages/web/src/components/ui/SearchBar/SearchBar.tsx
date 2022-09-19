@@ -4,14 +4,13 @@ import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
 
 type Props = {
-  value?: string;
+  value: string;
   size?: 'default' | 'large';
   placeholder?: string;
 };
 
-// TODO: connect search to redux and get/update with it
 export default function SearchBar({
-  value = 'pinterest.com',
+  value,
   size = 'default',
   placeholder = 'Start analyzing...',
 }: Props) {

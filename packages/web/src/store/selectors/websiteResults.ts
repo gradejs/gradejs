@@ -7,11 +7,26 @@ import { RootState } from '../';
 //import { SeverityWeightMap } from '../../components/ui/Vulnerability/Vulnerability';
 import type { ClientApi, GetWebPageScanOutput } from '../../services/apiClient';
 
+function semverListAsRange(versionList: string[]) {
+  if (!versionList.length) {
+    return '*';
+  }
+
+  if (versionList.length === 1) {
+    return versionList[0];
+  }
+
+  const sortedVersions = versionList.sort(semver.compare);
+
+  return `${sortedVersions[0]} - ${sortedVersions[sortedVersions.length - 1]}`;
+}
+
 export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
   approximateByteSize?: number;
   outdated?: boolean;
   vulnerable?: boolean;
   duplicate?: boolean;
+  version?: string;
 };
 
 const getFlags = (state: RootState) => ({
@@ -19,7 +34,10 @@ const getFlags = (state: RootState) => ({
   isFailed: state.webpageResults.isFailed,
 });
 
-const getScanStatus = (state: RootState) => state.webpageResults.detectionResult?.status;
+const getScanStatus = (state: RootState) => ({
+  status: state.webpageResults.detectionResult?.status,
+  lastScanDate: state.webpageResults.detectionResult?.finishedAt, // TODO: make sure this is accurate
+});
 export type ScanStatus = ReturnType<typeof getScanStatus>;
 
 const getPackagesMemoized = memoize((result: GetWebPageScanOutput['scanResult']) => {
@@ -38,6 +56,7 @@ const getPackagesMemoized = memoize((result: GetWebPageScanOutput['scanResult'])
       )
     );
     pkg.vulnerable = (result?.vulnerabilities[pkg.name]?.length ?? 0) > 0;
+    pkg.version = semverListAsRange(pkg.versionSet);
   }
   return packages;
 });
@@ -48,9 +67,9 @@ const getPackages = (state: RootState) =>
 const getVulnerabilities = (state: RootState) =>
   state.webpageResults.detectionResult?.scanResult?.vulnerabilities;
 
-const getSorting = (state: RootState) => state.webpageResults.filters.sort;
+// const getSorting = (state: RootState) => state.webpageResults.filters.sort;
 
-const getFilter = (state: RootState) => state.webpageResults.filters.filter;
+// const getFilter = (state: RootState) => state.webpageResults.filters.filter;
 
 const getKeywords = (state: RootState) => [
   ...new Set(
@@ -120,19 +139,25 @@ const filterModes: Record<
 export const selectors = {
   default: createSelector(
     [getScanStatus, getVulnerabilities, getKeywords],
-    (status, vulnerabilities, keywordsList) => ({
+    ({ status, lastScanDate }, vulnerabilities, keywordsList) => ({
       status,
+      lastScanDate,
       vulnerabilities,
       keywordsList,
+      vulnerabilitiesCount: new Set(
+        Object.values(vulnerabilities ?? {})
+          .flat()
+          .map((v) => v.osvId)
+      ).size,
     })
   ),
   stateFlags: createSelector(
     [getScanStatus, getPackages, getFlags],
-    (scanStatus, packages, flags) => ({
+    ({ status }, packages, flags) => ({
       ...flags,
       isInvalid: packages && packages.length === 0,
-      isPending: !scanStatus || scanStatus === 'pending',
-      isProtected: scanStatus === 'protected',
+      isPending: !status || status === 'pending',
+      isProtected: status === 'protected',
     })
   ),
   packagesStats: createSelector([getPackages], (packages = []) => ({
@@ -141,7 +166,7 @@ export const selectors = {
     outdated: packages.filter((pkg) => !!pkg.outdated).length,
   })),
   packagesSortedAndFiltered: createSelector(
-    [getPackages, getVulnerabilities, getSorting, getFilter],
+    [getPackages /*, getVulnerabilities, getSorting, getFilter*/],
     (packages /*, vulnerabilities, sorting, filter*/) => packages /* &&
       vulnerabilities &&
       filterModes[filter](sortingModes[sorting](packages, vulnerabilities))*/
