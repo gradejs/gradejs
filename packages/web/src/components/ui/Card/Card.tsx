@@ -16,7 +16,7 @@ const Card = ({ to, title, variant, icon, description, children }: CardCommonPro
   const Tag = to ? 'a' : 'div';
 
   return (
-    <Tag href={to} className={clsx(styles.card, variant && styles[variant])}>
+    <Tag href={to ?? undefined} className={clsx(styles.card, variant && styles[variant])}>
       <div className={styles.cardTop}>
         <div className={styles.header}>
           {icon && (
