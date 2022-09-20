@@ -5,7 +5,7 @@ import lines from '../../../assets/icons/sprite/lines.svg';
 import external from '../../../assets/icons/sprite/external.svg';
 import arrow from '../../../assets/icons/sprite/arrow.svg';
 import arrowDown from '../../../assets/icons/sprite/arrow-down.svg';
-import bug from '../../../assets/icons/sprite/bug.svg';
+import vulnerability from '../../../assets/icons/sprite/vulnerability.svg';
 import logo from '../../../assets/icons/sprite/logo.svg';
 import weight from '../../../assets/icons/sprite/weight.svg';
 import search from '../../../assets/icons/sprite/search.svg';
@@ -25,6 +25,7 @@ import ratingArrow from '../../../assets/icons/sprite/rating-arrow.svg';
 import check from '../../../assets/icons/sprite/check.svg';
 import arrowBack from '../../../assets/icons/sprite/arrow-back.svg';
 import filters from '../../../assets/icons/sprite/filters.svg';
+import questionMark from '../../../assets/icons/sprite/question-mark.svg';
 
 const icons = {
   githubLogo,
@@ -32,7 +33,7 @@ const icons = {
   lines,
   external,
   arrow,
-  bug,
+  vulnerability,
   logo,
   weight,
   search,
@@ -53,6 +54,7 @@ const icons = {
   check,
   arrowBack,
   filters,
+  questionMark,
 };
 
 export type IconProps = {

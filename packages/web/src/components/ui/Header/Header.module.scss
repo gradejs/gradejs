@@ -2,6 +2,10 @@
 @import '~styles/responsive.scss';
 
 .header {
+  transition: box-shadow $transition-duration $transition-timing-function;
+}
+
+.headerInner {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,11 +17,19 @@
 }
 
 .default {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: $white;
   color: $black;
 }
 
 .light {
   color: $white;
+}
+
+.shadow {
+  box-shadow: inset 0px -1px 0px 0px rgba($gray-border, 0.5);
 }
 
 .showSearch {

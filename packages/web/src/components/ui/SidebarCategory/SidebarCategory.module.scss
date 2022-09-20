@@ -73,14 +73,6 @@
   }
 }
 
-.sidebarChip {
-  margin-bottom: 8px;
-
-  &:not(:last-child) {
-    margin-right: 8px;
-  }
-}
-
 .sidebarChipActive {
   background-color: $black;
   color: $white;

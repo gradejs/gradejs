@@ -4,111 +4,58 @@ import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
 import clsx from 'clsx';
 import ChipGroup from '../ChipGroup/ChipGroup';
-import SitesList, { Site } from '../SitesList/SitesList';
+import SitesList from '../SitesList/SitesList';
 import { CSSTransition } from 'react-transition-group';
 import Button from '../Button/Button';
-import { formatNumber } from 'utils/helpers';
 import {
   LicenceSkeleton,
   LinksSkeleton,
-  PopularitySkeleton,
-  PopularityVersionSkeleton,
   RatingSkeleton,
   ScriptSkeleton,
 } from './PackagePreviewSkeleton';
+import ProblemBadge from '../ProblemBadge/ProblemBadge';
+import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
+import { SitesListSkeleton } from '../SitesList/SitesListSkeleton';
+import BarChart from '../BarChart/BarChart';
+import BarChartSkeleton from '../BarChart/BarChartSkeleton';
+import { formatNumber } from 'utils/helpers';
+import Hint from '../Tooltip/Hint';
+
+type Problem = 'vulnerabilities' | 'duplicate' | 'outdated';
+
+type ExternalLink = {
+  href: string;
+  kind: 'repository' | 'link' | 'npm';
+  linkText?: string;
+};
 
 type Props = {
   name: string;
   version: string;
+  desc: string;
+  problems?: Problem[];
+  keywords: string[];
+  author: {
+    name: string;
+    image: string;
+  };
   opened?: boolean;
   detailsLoading?: boolean;
 };
 
 // TODO: refactor this (decomposition, props, memoization, etc)
-export default function PackagePreview({ name, version, opened, detailsLoading = false }: Props) {
+export default function PackagePreview({
+  name,
+  version,
+  desc,
+  problems,
+  keywords,
+  author,
+  opened,
+  detailsLoading = false,
+}: Props) {
   const [open, setOpen] = useState<boolean>(opened ?? false);
   const [packageDetailsLoading, setPackageDetailsLoading] = useState<boolean>(detailsLoading);
-
-  // TODO: mock data, remove later
-  const sites: Site[] = [
-    {
-      id: '123',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
-      packagesCount: 151,
-    },
-    {
-      id: '456',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
-      packagesCount: 151,
-    },
-    {
-      id: '789',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
-      packagesCount: 151,
-    },
-    {
-      id: '1231',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
-      packagesCount: 151,
-    },
-    {
-      id: '12321',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
-      packagesCount: 151,
-    },
-    {
-      id: '123123',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
-      packagesCount: 151,
-    },
-    {
-      id: '12123132',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
-      packagesCount: 151,
-    },
-  ];
-
-  // TODO: mock data, remove later
-  const modules = [
-    {
-      fill: '100%',
-      uses: 89912,
-      moduleVersion: '21.3.0',
-    },
-    {
-      fill: '90%',
-      uses: 67111,
-      moduleVersion: '18.2.0',
-    },
-    {
-      fill: '80%',
-      uses: 44212,
-      moduleVersion: '20.1.0',
-    },
-    {
-      fill: '70%',
-      uses: 41129,
-      moduleVersion: '18.0.0',
-    },
-    {
-      fill: '60%',
-      uses: 40465,
-      moduleVersion: '19.11.2',
-    },
-    {
-      fill: '50%',
-      uses: 38907,
-      moduleVersion: '8.1.2',
-      bug: true,
-    },
-  ];
 
   const toggleOpen = () => {
     if (open) {
@@ -118,56 +65,138 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
       setPackageDetailsLoading(true);
 
       // FIXME: just for demo purposes
-      setTimeout(() => setPackageDetailsLoading(false), 60000);
+      setTimeout(() => setPackageDetailsLoading(false), 4000);
     }
   };
 
+  // TODO: Mock API data, remove later
+  const externalLinks: ExternalLink[] = [
+    { kind: 'repository', href: 'https://github.com/facebook/react/', linkText: 'Repository' },
+    { kind: 'link', href: 'https://reactjs.org/', linkText: 'Homepage' },
+    { kind: 'npm', href: 'https://www.npmjs.com/package/react' },
+  ];
+
+  // TODO: Mock API data, remove later
+  const loadedData = {
+    script: '/rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz',
+    license: {
+      title: 'MIT license',
+      subtitle: 'freely distributable',
+    },
+    rating: {
+      place: 385,
+      rankingDelta: -4,
+      out: 12842,
+    },
+    dependencies: ['art', 'create-react-class', 'loose-envify', 'scheduler'],
+    packages: [
+      {
+        fill: 1,
+        uses: 89912,
+        moduleVersion: '21.3.0',
+      },
+      {
+        fill: 0.8,
+        uses: 67111,
+        moduleVersion: '18.2.0',
+        highlighted: true,
+      },
+      {
+        fill: 0.7,
+        uses: 44212,
+        moduleVersion: '20.1.0',
+      },
+      {
+        fill: 0.6,
+        uses: 41129,
+        moduleVersion: '18.0.0',
+      },
+      {
+        fill: 0.5,
+        uses: 40465,
+        moduleVersion: '19.11.2',
+      },
+      {
+        fill: 0.4,
+        uses: 38907,
+        moduleVersion: '8.1.2',
+        vulnerabilities: true,
+      },
+    ],
+    sites: [
+      {
+        id: '123',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        name: 'pinterest.com',
+        packagesCount: 151,
+      },
+      {
+        id: '456',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        name: 'pinterest.com',
+        packagesCount: 151,
+      },
+      {
+        id: '789',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        name: 'pinterest.com',
+        packagesCount: 151,
+      },
+      {
+        id: '1231',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        name: 'pinterest.com',
+        packagesCount: 151,
+      },
+      {
+        id: '12321',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        name: 'pinterest.com',
+        packagesCount: 151,
+      },
+      {
+        id: '123123',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        name: 'pinterest.com',
+        packagesCount: 151,
+      },
+      {
+        id: '12123132',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
+        name: 'pinterest.com',
+        packagesCount: 151,
+      },
+    ],
+    links: externalLinks,
+  };
+
+  const { script, license, rating, dependencies, packages, sites, links } = loadedData;
+
   return (
     <div className={clsx(styles.package, open && styles.open)}>
-      <header className={styles.header}>
+      <div className={styles.header}>
         <div className={styles.top} onClick={toggleOpen}>
           <div className={styles.title}>
             <span className={styles.name}>
               {name} <span className={styles.version}>{version}</span>
             </span>
-            <span className={styles.problems}>
-              <Chip
-                variant='vulnerability'
-                size='badge'
-                icon={<Icon kind='bug' width={24} height={24} color='white' />}
-              >
-                Vulnerabilities
-              </Chip>
-              <Chip
-                variant='duplicate'
-                size='badge'
-                icon={<Icon kind='duplicate' width={24} height={24} color='white' />}
-              >
-                Duplicate
-              </Chip>
-              <Chip
-                variant='outdated'
-                size='badge'
-                icon={
-                  <Icon kind='outdated' width={24} height={24} color='white' stroke='#F1CE61' />
-                }
-              >
-                Outdated
-              </Chip>
-            </span>
+
+            {problems && (
+              <span className={styles.problems}>
+                {problems.map((problem) => (
+                  <ProblemBadge key={problem} problem={problem} />
+                ))}
+              </span>
+            )}
           </div>
 
           <button type='button' className={styles.arrowWrapper} onClick={toggleOpen}>
-            {/* FIXME: requires different smaller svg icon for mobile and makes button 24x24 */}
-            {/* which is probably not optimal UX */}
             <Icon kind='arrowDown' width={14} height={8} color='#8E8AA0' className={styles.arrow} />
           </button>
         </div>
 
-        <div className={styles.desc}>
-          The Lodash library exported as ES modules. Generated using lodash-cli
-        </div>
-      </header>
+        <div className={styles.desc}>{desc}</div>
+      </div>
 
       <CSSTransition
         in={open}
@@ -187,7 +216,7 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
                 <ScriptSkeleton />
               ) : (
                 <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
-                  /rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz
+                  {script}
                 </a>
               )}
             </div>
@@ -202,8 +231,8 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
                   <LicenceSkeleton />
                 ) : (
                   <>
-                    <div className={styles.statTitle}>MIT license</div>
-                    <div className={styles.statSubtitle}>freely distributable</div>
+                    <div className={styles.statTitle}>{license.title}</div>
+                    <div className={styles.statSubtitle}>{license.subtitle}</div>
                   </>
                 )}
               </div>
@@ -212,26 +241,33 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
                 <div className={styles.statHeader}>
                   <Icon kind='rating' color='#8E8AA0' className={styles.statIcon} />
                   Rating
+                  <span className={styles.statTooltip}>
+                    <Hint text='Rating based on our service' />
+                  </span>
                 </div>
                 {packageDetailsLoading ? (
                   <RatingSkeleton />
                 ) : (
-                  // TODO: What about adding a rankingDelta prop and deciding on class name based on number's sign?
                   <>
                     <div className={styles.statTitle}>
-                      385
-                      {/* or: <div className={clsx(styles.statRating, styles.statRatingRed)}> */}
-                      <div className={clsx(styles.statRating, styles.statRatingGreen)}>
+                      {rating.place}
+
+                      <div
+                        className={clsx(
+                          styles.statRating,
+                          rating.rankingDelta > 0 ? styles.statRatingGreen : styles.statRatingRed
+                        )}
+                      >
                         <Icon
                           kind='ratingArrow'
                           width={12}
                           height={12}
                           className={styles.statRatingArrow}
                         />
-                        +4
+                        {rating.rankingDelta}
                       </div>
                     </div>
-                    <div className={styles.statSubtitle}>out of 12 842</div>
+                    <div className={styles.statSubtitle}>out of {formatNumber(rating.out)}</div>
                   </>
                 )}
               </div>
@@ -239,13 +275,19 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
               <div className={clsx(styles.stat, styles.statListItemLarge)}>
                 <div className={styles.statHeader}>
                   <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
-                  {!packageDetailsLoading && 4} Dependency
+                  Dependencies
                 </div>
-                <ChipGroup
-                  chips={['art', 'create-react-class', 'loose-envify', 'scheduler']}
-                  fontSize='small'
-                  loading={packageDetailsLoading}
-                />
+                {packageDetailsLoading ? (
+                  <ChipGroupSkeleton />
+                ) : (
+                  <ChipGroup>
+                    {dependencies.map((dependency) => (
+                      <Chip size='medium' fontSize='small' font='monospace'>
+                        {dependency}
+                      </Chip>
+                    ))}
+                  </ChipGroup>
+                )}
               </div>
             </div>
 
@@ -256,41 +298,7 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
               </div>
 
               <div className={styles.popularity}>
-                {modules.map(({ fill, uses, moduleVersion, bug }) => (
-                  <div className={styles.popularityItemWrapper}>
-                    <div className={styles.popularityItem}>
-                      {packageDetailsLoading ? (
-                        // TODO: We should be on lookout for these deoptimizations,
-                        //       this should definitely be a component / top-level const.
-                        <div
-                          className={clsx(styles.popularityFill, styles.popularityFillSkeleton)}
-                          style={{ height: fill }}
-                        >
-                          <PopularitySkeleton />
-                        </div>
-                      ) : (
-                        <div className={styles.popularityFill} style={{ height: fill }}>
-                          {formatNumber(uses)}
-                        </div>
-                      )}
-                    </div>
-
-                    {packageDetailsLoading ? (
-                      <PopularityVersionSkeleton />
-                    ) : (
-                      <div className={styles.popularityVersion}>
-                        {moduleVersion}
-                        {bug && (
-                          <Icon
-                            kind='bugOutlined'
-                            color='#212121'
-                            className={styles.popularityVersionIcon}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                {packageDetailsLoading ? <BarChartSkeleton /> : <BarChart bars={packages} />}
               </div>
             </div>
 
@@ -299,11 +307,11 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
             <div className={styles.stat}>
               <div className={styles.statHeader}>Used on</div>
 
-              <SitesList
-                sites={sites}
-                className={styles.usedOnList}
-                loading={packageDetailsLoading}
-              />
+              {packageDetailsLoading ? (
+                <SitesListSkeleton className={styles.usedOnList} />
+              ) : (
+                <SitesList sites={sites} className={styles.usedOnList} />
+              )}
             </div>
 
             <div className={styles.actions}>
@@ -311,27 +319,24 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
                 {packageDetailsLoading ? (
                   <LinksSkeleton />
                 ) : (
-                  <>
-                    <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
-                      <Icon kind='repository' color='#212121' className={styles.linkIcon} />
-                      Repository
-                    </a>
-
-                    <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
-                      <Icon kind='link' color='#212121' className={styles.linkIcon} />
-                      Homepage
-                    </a>
-
-                    <a href='#' className={styles.link} target='_blank' rel='noreferrer'>
+                  links.map(({ href, kind, linkText }) => (
+                    <a
+                      key={href}
+                      href={href}
+                      className={styles.link}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
                       <Icon
-                        kind='npm'
-                        width={32}
-                        height={32}
+                        kind={kind}
+                        width={kind !== 'npm' ? 16 : 32}
+                        height={kind !== 'npm' ? 16 : 32}
                         color='#212121'
                         className={styles.linkIcon}
                       />
+                      {linkText}
                     </a>
-                  </>
+                  ))
                 )}
               </div>
 
@@ -341,33 +346,28 @@ export default function PackagePreview({ name, version, opened, detailsLoading =
         </div>
       </CSSTransition>
 
-      <footer className={styles.footer}>
+      <div className={styles.footer}>
         <div className={styles.tags}>
-          <a href='#' className={styles.tag}>
-            #moment
-          </a>
-          <a href='#' className={styles.tag}>
-            #date
-          </a>
-          <a href='#' className={styles.tag}>
-            #time
-          </a>
-          <a href='#' className={styles.tag}>
-            #parse
-          </a>
-          <a href='#' className={styles.tag}>
-            #format
-          </a>
-          <Chip variant='info' size='medium' fontWeight='semiBold'>
-            +45
-          </Chip>
+          {/* TODO: not sure how to conditionally render maximum number of keywords (e.g. 5 for
+                    desktop, 3/4 for tablet, 2 for mobile) based on viewport and update rest number
+                    of keywords beyond current maximum in Chip */}
+          {keywords.slice(0, 5).map((keyword) => (
+            <a key={keyword} href='#' className={styles.tag}>
+              {keyword}
+            </a>
+          ))}
+          {keywords.slice(5).length > 0 && (
+            <Chip variant='info' size='medium' fontWeight='semiBold'>
+              +{keywords.slice(5).length}
+            </Chip>
+          )}
         </div>
 
         <div className={styles.author}>
-          <span className={styles.authorName}>jdalton</span>
-          <img className={styles.authorImage} src='https://via.placeholder.com/36' alt='' />
+          <span className={styles.authorName}>{author.name}</span>
+          <img className={styles.authorImage} src={author.image} alt='' />
         </div>
-      </footer>
+      </div>
     </div>
   );
 }

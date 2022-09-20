@@ -1,40 +1,14 @@
 import React from 'react';
 import styles from './ChipGroup.module.scss';
-import Chip, { ChipProps } from '../Chip/Chip';
-import { ChipGroupSkeleton } from './ChipGroupSkeleton';
 
 type Props = {
-  chips: string[];
-  children?: React.ReactNode;
-  size?: ChipProps['size'];
-  font?: ChipProps['font'];
-  fontSize?: ChipProps['fontSize'];
-  loading?: boolean;
+  children: React.ReactNode;
 };
 
-export default function ChipGroup({
-  chips,
-  children,
-  size = 'medium',
-  font = 'monospace',
-  fontSize = 'regular',
-  loading,
-}: Props) {
+export default function ChipGroup({ children }: Props) {
   return (
     <div className={styles.chipsWrapper}>
-      <div className={styles.chips}>
-        {loading ? (
-          <ChipGroupSkeleton />
-        ) : (
-          chips.map((chip) => (
-            <Chip key={chip} className={styles.chip} size={size} font={font} fontSize={fontSize}>
-              {chip}
-            </Chip>
-          ))
-        )}
-
-        {children}
-      </div>
+      <div className={styles.chips}>{children}</div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export function formatNumber(x: number) {
-  return x.toLocaleString();
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 export function repeat(times: number, children: React.ReactNode) {

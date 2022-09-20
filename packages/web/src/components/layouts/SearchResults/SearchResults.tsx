@@ -5,16 +5,17 @@ import Container from 'components/ui/Container/Container';
 import { Icon } from '../../ui/Icon/Icon';
 import PackagePreview from '../../ui/PackagePreview/PackagePreview';
 import SearchedResource from '../../ui/SearchedResource/SearchedResource';
-import { CardProps } from '../../ui/Card/Card';
 import CardGroup from '../../ui/CardGroup/CardGroup';
-import CardList from '../../ui/CardList/CardList';
 import CardGroups from 'components/ui/CardGroups/CardGroups';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
-import DefaultHeader from '../../ui/Header/DefaultHeader';
 import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResultsSidebar';
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
+import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
+import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
+import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
+import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
 
 type Props = {
   pageLoading?: boolean;
@@ -41,110 +42,6 @@ export default function SearchResults({ pageLoading = false }: Props) {
   }, []);
 
   // TODO: mock data, remove later
-  const similarCards: CardProps[] = [
-    {
-      id: 'uExBVGuF',
-      title: 'github.com',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      packageTags: {
-        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
-        restPackages: 45,
-      },
-    },
-    {
-      id: '1EkL1u5g',
-      title: 'fingerprint.com',
-      icon: 'https://avatars.githubusercontent.com/u/67208791?s=200&v=4',
-      packageTags: {
-        featuredPackages: ['mdast-util-from-markdown', 'react', 'react-dom'],
-        restPackages: 45,
-      },
-    },
-    {
-      id: 'mhwO2bPM',
-      title: 'facebook.com',
-      icon: 'https://avatars.githubusercontent.com/u/69631?s=200&v=4',
-      packageTags: {
-        featuredPackages: ['react'],
-        restPackages: 45,
-      },
-    },
-  ];
-
-  // TODO: mock data, remove later
-  const popularPackages: CardProps[] = [
-    {
-      id: 'FPsBcl8R',
-      title: '@team-griffin/react-heading-section',
-      description: "This package's job is to automatically determine...",
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
-    },
-    {
-      id: 'emtYcsUh',
-      title: 'unist-util-generated',
-      description: 'unist utility to check if a node is generated',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
-    },
-    {
-      id: 'TYIwvAfy',
-      title: 'react-smooth',
-      description: 'is a animation library work on React',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
-    },
-    {
-      id: 'Lq1pEEX7',
-      title: 'unist-util-position',
-      description: 'unist utility to get the positional info of nodes',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
-    },
-    {
-      id: 'cWOgIbmp',
-      title: 'vfile-message',
-      description: 'Create vfile messages',
-      featuredSites: {
-        iconList: [
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-          'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        ],
-        numberOfUses: 5265,
-      },
-    },
-    {
-      id: 'UT97Vpoi',
-      title: 'Go to all Popular packages',
-      variant: 'toAll',
-    },
-  ];
-
   const metaItems = [
     {
       icon: <Icon kind='weight' width={24} height={24} />,
@@ -155,7 +52,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
       text: '50 scripts found',
     },
     {
-      icon: <Icon kind='bug' width={24} height={24} color='#F3512E' />,
+      icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,
       text: '6 vulnerabilities in 4 packages',
     },
     {
@@ -190,7 +87,7 @@ export default function SearchResults({ pageLoading = false }: Props) {
         />
       )}
 
-      <DefaultHeader showSearch />
+      <StickyDefaultHeader showSearch />
 
       <Container>
         <div className={styles.searchResults}>
@@ -224,26 +121,46 @@ export default function SearchResults({ pageLoading = false }: Props) {
             {loading ? (
               <PackagePreviewSkeleton />
             ) : (
-              <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
+              <PackagePreview
+                name='@team-griffin/react-heading-section'
+                version='3.0.0 - 4.16.4'
+                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
+                problems={['vulnerabilities']}
+                keywords={['#moment', '#date', '#time', '#parse', '#format', '#format', '#format']}
+                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
+              />
             )}
 
             {loading ? (
               <PackagePreviewSkeleton />
             ) : (
-              <PackagePreview name='@team-griffin/react-heading-section' version='3.0.0 - 4.16.4' />
+              <PackagePreview
+                name='@team-griffin/react-heading-section'
+                version='3.0.0 - 4.16.4'
+                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
+                problems={['vulnerabilities', 'duplicate', 'outdated']}
+                keywords={['#moment', '#date', '#time', '#parse', '#format']}
+                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
+              />
             )}
           </div>
         </div>
 
-        {/* TODO: Trying to fit separate domain entities within a single component seems like burden.
-                  Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='Similar sites'>
-            {loading ? <CardListSkeleton /> : <CardList cards={similarCards} />}
+            {loading ? (
+              <CardListSkeleton />
+            ) : (
+              <PackagesBySourceCardList cards={packagesBySourceListData} />
+            )}
           </CardGroup>
 
           <CardGroup title='Popular packages'>
-            {loading ? <CardListSkeleton /> : <CardList cards={popularPackages} />}
+            {loading ? (
+              <CardListSkeleton numberOfElements={6} />
+            ) : (
+              <PopularPackageCardList cards={popularPackageListData} />
+            )}
           </CardGroup>
         </CardGroups>
       </Container>

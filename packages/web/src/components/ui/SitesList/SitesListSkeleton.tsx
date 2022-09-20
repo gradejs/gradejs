@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './SitesList.module.scss';
 import Skeleton from '../Skeleton/Skeleton';
 import { repeat } from '../../../utils/helpers';
+import clsx from 'clsx';
 
 export const SiteSkeleton = () => (
   <div className={styles.site}>
@@ -15,4 +16,12 @@ export const SiteSkeleton = () => (
   </div>
 );
 
-export const SitesListSkeleton = () => <>{repeat(4, <SiteSkeleton />)}</>;
+type Props = {
+  className?: string;
+};
+
+export const SitesListSkeleton = ({ className }: Props) => (
+  <div className={styles.sitesListWrapper}>
+    <div className={clsx(styles.sitesList, className)}>{repeat(4, <SiteSkeleton />)}</div>
+  </div>
+);

@@ -1,43 +1,22 @@
 import React from 'react';
 import styles from './Card.module.scss';
 import clsx from 'clsx';
-import Chip from '../Chip/Chip';
-import ChipGroup from '../ChipGroup/ChipGroup';
-import AvatarGroup from '../AvatarGroup/AvatarGroup';
-import VulnerablePackage from '../VulnerablePackage/VulnerablePackage';
-import { Icon } from '../Icon/Icon';
 
-export type CardProps = {
-  id: string;
-  title: string;
+export type CardCommonProps = {
+  id?: string;
+  to?: string;
+  title?: string;
   icon?: string;
   description?: string;
-  packageTags?: {
-    featuredPackages: string[];
-    restPackages: number;
-  };
-  featuredSites?: {
-    iconList: string[];
-    numberOfUses: number;
-  };
-  vulnerablePackage?: {
-    name: string;
-    moreCount?: number;
-  };
-  variant?: 'toAll' | 'vulnerable';
+  variant?: 'placeholder' | 'small';
+  children?: React.ReactNode;
 };
 
-export default function Card({
-  title,
-  icon,
-  description,
-  packageTags,
-  featuredSites,
-  vulnerablePackage,
-  variant,
-}: CardProps) {
+const Card = ({ to, title, variant, icon, description, children }: CardCommonProps) => {
+  const Tag = to ? 'a' : 'div';
+
   return (
-    <div className={clsx(styles.card, variant && styles[variant])}>
+    <Tag href={to ?? undefined} className={clsx(styles.card, variant && styles[variant])}>
       <div className={styles.cardTop}>
         <div className={styles.header}>
           {icon && (
@@ -52,29 +31,9 @@ export default function Card({
         {description && <div className={styles.description}>{description}</div>}
       </div>
 
-      {variant === 'toAll' && (
-        <button className={styles.arrowBtn} type='button'>
-          <Icon kind='arrow' color='#212121' width={10} height={18} />
-        </button>
-      )}
-
-      {packageTags && (
-        <div className={styles.tagsWrapper}>
-          <ChipGroup chips={packageTags.featuredPackages} size='large'>
-            <Chip className={styles.tag} variant='outlined' size='large'>
-              +{packageTags.restPackages} packages
-            </Chip>
-          </ChipGroup>
-        </div>
-      )}
-
-      {featuredSites && (
-        <AvatarGroup avatarGroup={featuredSites.iconList} counter={featuredSites.numberOfUses} />
-      )}
-
-      {vulnerablePackage && (
-        <VulnerablePackage name={vulnerablePackage.name} moreTotal={vulnerablePackage.moreCount} />
-      )}
-    </div>
+      {children}
+    </Tag>
   );
-}
+};
+
+export default Card;
