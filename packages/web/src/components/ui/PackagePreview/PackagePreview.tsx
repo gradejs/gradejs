@@ -47,8 +47,8 @@ export default function PackagePreview({
   };
 
   const deps = Object.keys(
-    pkg.registryMetadata?.versionSpecificValues?.[pkg.versionSet[pkg.versionSet.length - 1]]
-      .dependencies ?? {}
+    pkg.registryMetadata?.versionSpecificValues?.[pkg.registryMetadata?.latestVersion]
+      ?.dependencies ?? {}
   );
 
   return (
@@ -295,10 +295,10 @@ export default function PackagePreview({
 
         <div className={styles.author}>
           {/* TODO: print all maintainers? Author is not a single entity */}
-          <span className={styles.authorName}>{pkg.registryMetadata?.maintainers?.[0].name}</span>
+          <span className={styles.authorName}>{pkg.registryMetadata?.maintainers?.[0]?.name}</span>
           <img
             className={styles.authorImage}
-            src={pkg.registryMetadata?.maintainers?.[0].avatar}
+            src={pkg.registryMetadata?.maintainers?.[0]?.avatar}
             alt=''
           />
         </div>

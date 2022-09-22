@@ -47,8 +47,8 @@ describe('routes / website', () => {
     const requestWebPageScanMock = jest.spyOn(systemApi, 'requestWebPageScan');
     requestWebPageScanMock.mockImplementation(async () => ({}));
 
-    const response = await api
-      .post('/client/requestWebPageScan')
+    await api
+      .post('/client/requestWebPageRescan')
       .set('Origin', 'http://localhost:3000')
       .send(JSON.stringify(siteUrl))
       .expect(200);
@@ -84,7 +84,13 @@ describe('routes / website', () => {
       siteUrl.toString(),
       webPageScan.id.toString()
     );
-    expect(response.body).toMatchObject({
+
+    const responseGet = await api
+      .get('/client/getWebPageScan')
+      .set('Origin', 'http://localhost:3000')
+      .send(JSON.stringify(siteUrl))
+      .expect(200);
+    expect(responseGet.body).toMatchObject({
       result: {
         data: {
           id: webPageScan.id.toString(),
@@ -119,14 +125,20 @@ describe('routes / website', () => {
       },
     });
 
-    const response = await api
-      .post('/client/requestWebPageScan')
+    await api
+      .post('/client/requestWebPageRescan')
       .set('Origin', 'http://localhost:3000')
       .send(JSON.stringify(siteUrl))
       .expect(200);
 
     expect(requestWebPageScanMock).toHaveBeenCalledTimes(0);
-    expect(response.body).toMatchObject({
+
+    const responseGet = await api
+      .get('/client/getWebPageScan')
+      .set('Origin', 'http://localhost:3000')
+      .send(JSON.stringify(siteUrl))
+      .expect(200);
+    expect(responseGet.body).toMatchObject({
       result: {
         data: {
           id: existingScan.id.toString(),

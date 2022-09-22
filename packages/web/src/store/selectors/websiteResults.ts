@@ -41,23 +41,25 @@ const getScanStatus = (state: RootState) => ({
 export type ScanStatus = ReturnType<typeof getScanStatus>;
 
 const getPackagesMemoized = memoize((result: GetWebPageScanOutput['scanResult']) => {
-  const packages: IdentifiedPackage[] = result?.identifiedPackages ?? [];
+  const packages: IdentifiedPackage[] = (result?.identifiedPackages ?? []).map((pkg) => {
+    return {
+      ...pkg,
+      approximateByteSize: pkg.moduleIds.reduce((acc: number, id) => {
+        const size: number = result?.identifiedModuleMap?.[id]?.approximateByteSize ?? 0;
+        return acc + size;
+      }, 0),
+      duplicate: false, // TODO
+      outdated: !!(
+        pkg.registryMetadata &&
+        !pkg.versionSet.some(
+          (ver) => pkg.registryMetadata && semver.eq(pkg.registryMetadata.latestVersion, ver)
+        )
+      ),
+      vulnerable: (result?.vulnerabilities[pkg.name]?.length ?? 0) > 0,
+      version: semverListAsRange(pkg.versionSet),
+    };
+  });
 
-  for (const pkg of packages) {
-    pkg.approximateByteSize = pkg.moduleIds.reduce((acc: number, id) => {
-      const size: number = result?.identifiedModuleMap?.[id]?.approximateByteSize ?? 0;
-      return acc + size;
-    }, 0);
-    pkg.duplicate = false; // TODO
-    pkg.outdated = !!(
-      pkg.registryMetadata &&
-      !pkg.versionSet.some(
-        (ver) => pkg.registryMetadata && semver.eq(pkg.registryMetadata.latestVersion, ver)
-      )
-    );
-    pkg.vulnerable = (result?.vulnerabilities[pkg.name]?.length ?? 0) > 0;
-    pkg.version = semverListAsRange(pkg.versionSet);
-  }
   return packages;
 });
 

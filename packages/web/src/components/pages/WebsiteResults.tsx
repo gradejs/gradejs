@@ -16,10 +16,10 @@ export function WebsiteResultsPage() {
   const dispatch = useAppDispatch();
 
   /* TODO
-       - Отключить фильтры из селекторов (временно) ./
-       - Прокинуть данные из packages в packagePreview (все что есть), формализовать тип pkg ./
-       - Разобраться с тем как работают фильтрующие компоненты. Мб прикрутить их в отдельный redux-слайс для порядку.
-       - Сформулировать типы для фильтров и вернуть их обратно в селекторы.
+     - Disable filters from selectors temporarity (done)
+     - Pass all data from `packages` to PackagePreview, formalize Package type (done)
+     - Connect filtering components, consider separate redux slice as a single source of truth about filters state
+     - Make up filters types, reenable filters
      */
 
   const { vulnerabilities, keywordsList, status, vulnerabilitiesCount, lastScanDate } =
