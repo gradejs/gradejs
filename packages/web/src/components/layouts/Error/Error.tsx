@@ -40,8 +40,6 @@ export default function Error({
           </div>
         </section>
 
-        {/* TODO: Trying to fit separate domain entities within a single component seems like burden.
-                  Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='But we have'>
             <PackagesBySourceCardList cards={packagesBySourceListData} />

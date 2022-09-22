@@ -47,8 +47,8 @@ describe('routes / website', () => {
     const requestWebPageScanMock = jest.spyOn(systemApi, 'requestWebPageScan');
     requestWebPageScanMock.mockImplementation(async () => ({}));
 
-    await api
-      .post('/client/requestWebPageRescan')
+    const response = await api
+      .post('/client/getOrRequestWebPageRescan')
       .set('Origin', 'http://localhost:3000')
       .send(JSON.stringify(siteUrl))
       .expect(200);
@@ -85,20 +85,14 @@ describe('routes / website', () => {
       webPageScan.id.toString()
     );
 
-    const url =
-      '/client/getWebPageScan?batch=1&input=' +
-      encodeURIComponent(JSON.stringify({ '0': siteUrl }));
-    const responseGet = await api.get(url).set('Origin', 'http://localhost:3000').expect(200);
-    expect(responseGet.body).toMatchObject([
-      {
-        result: {
-          data: {
-            id: webPageScan.id.toString(),
-            status: WebPageScan.Status.Pending,
-          },
+    expect(response.body).toMatchObject({
+      result: {
+        data: {
+          id: webPageScan.id.toString(),
+          status: WebPageScan.Status.Pending,
         },
       },
-    ]);
+    });
   });
 
   it('should return a cached scan if applicable', async () => {
@@ -126,37 +120,30 @@ describe('routes / website', () => {
       },
     });
 
-    await api
-      .post('/client/requestWebPageRescan')
+    const response = await api
+      .post('/client/getOrRequestWebPageScan')
       .set('Origin', 'http://localhost:3000')
       .send(JSON.stringify(siteUrl))
       .expect(200);
 
     expect(requestWebPageScanMock).toHaveBeenCalledTimes(0);
-
-    const url =
-      '/client/getWebPageScan?batch=1&input=' +
-      encodeURIComponent(JSON.stringify({ '0': siteUrl }));
-    const responseGet = await api.get(url).set('Origin', 'http://localhost:3000').expect(200);
-    expect(responseGet.body).toMatchObject([
-      {
-        result: {
-          data: {
-            id: existingScan.id.toString(),
-            status: WebPageScan.Status.Processed,
-            scanResult: {
-              identifiedModuleMap: {},
-              identifiedPackages: [
-                {
-                  name: 'react',
-                  versionSet: ['17.0.0'],
-                  moduleIds: [],
-                },
-              ],
-            },
+    expect(response.body).toMatchObject({
+      result: {
+        data: {
+          id: existingScan.id.toString(),
+          status: WebPageScan.Status.Processed,
+          scanResult: {
+            packages: [
+              {
+                name: 'react',
+                versionSet: ['17.0.0'],
+                versionRange: '17.0.0',
+                approximateByteSize: null,
+              },
+            ],
           },
         },
       },
-    ]);
+    });
   });
 });

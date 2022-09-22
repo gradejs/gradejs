@@ -1,58 +1,40 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Error as ErrorLayout, SearchResults } from 'components/layouts';
 import { trackCustomEvent } from '../../services/analytics';
-import {
-  useAppDispatch,
-  useAppSelector,
-  getScanResults,
-  websiteResultsSelectors as selectors,
-} from '../../store';
+import { useAppSelector, websiteResultsSelectors as selectors } from '../../store';
+import { useScanResult } from '../../store/hooks/useScanResult';
 
 export function WebsiteResultsPage() {
-  const { address } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const { hostname } = useParams();
 
-  /* TODO
-       - Disable filters from selectors temporarity (done)
-       - Pass all data from `packages` to PackagePreview, formalize Package type (done)
-       - Connect filtering components, consider separate redux slice as a single source of truth about filters state
-       - Make up filters types, reenable filters
-       */
+  const { normalizedUrl, scanResult } = useScanResult(hostname, true);
 
-  const { vulnerabilities, keywordsList, status, vulnerabilitiesCount } = useAppSelector(
-    selectors.default
-  );
-  const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
-  const packagesStats = useAppSelector(selectors.packagesStats);
-  const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
-    selectors.stateFlags
+  const packagesFiltered = useAppSelector((state) =>
+    selectors.packagesSortedAndFiltered(state, normalizedUrl)
   );
 
-  // TODO: discuss. Looks ugly
-  // Fetch data for SSR if host is already processed
-  if (__isServer__ && address) {
-    dispatch(getScanResults({ address, useRetry: false }));
+  const packagesStats = useAppSelector((state) => selectors.packagesStats(state, normalizedUrl));
+
+  const { packageKeywordList, vulnerabilityCount } = useAppSelector((state) =>
+    selectors.scanOverview(state, normalizedUrl)
+  );
+
+  const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector((state) =>
+    selectors.scanState(state, normalizedUrl)
+  );
+
+  if (isFailed) {
+    return (
+      <ErrorLayout
+        message='An unexpected error occurred. Try visiting us later.'
+        action='Would you like to try another URL or report an issue?'
+        actionTitle='Try another URL'
+        host={normalizedUrl ?? ''}
+      />
+    );
   }
-
-  useEffect(() => {
-    if (address && isPending && !isFailed) {
-      const promise = dispatch(getScanResults({ address }));
-      return function cleanup() {
-        promise.abort();
-      };
-    }
-    return () => {};
-  }, [address, isPending, isFailed]);
-
-  // TODO: properly handle history/routing
-  useEffect(() => {
-    if (!address || isFailed) {
-      navigate('/', { replace: true });
-    }
-  }, [address]);
 
   if (isProtected) {
     // TODO: move to tracking middleware?
@@ -62,16 +44,7 @@ export function WebsiteResultsPage() {
         message='The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions.'
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
-        host={address ?? ''}
-        /*
-        onRetryClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickRetry_Protected');
-          navigate('/', { replace: false });
-        }}
-        onReportClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickReport_Protected');
-        }}
-        */
+        host={normalizedUrl ?? ''}
       />
     );
   }
@@ -84,23 +57,14 @@ export function WebsiteResultsPage() {
         message='It looks like the entered website is not built with Webpack.'
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
-        host={address ?? ''}
-        /*
-        onRetryClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickRetry_Invalid');
-          navigate('/', { replace: false });
-        }}
-        onReportClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickReport_Invalid');
-        }}
-        */
+        host={normalizedUrl ?? ''}
       />
     );
   }
 
-  const title = `List of NPM packages that are used on ${address} - GradeJS`;
+  const title = `List of NPM packages that are used on ${normalizedUrl} - GradeJS`;
   const description =
-    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${address}` +
+    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${normalizedUrl}` +
     (packagesStats.vulnerable > 0 ? `, ${packagesStats.vulnerable} are vulnerable` : '') +
     (packagesStats.outdated > 0 ? `, ${packagesStats.outdated} are outdated` : '');
 
@@ -115,13 +79,13 @@ export function WebsiteResultsPage() {
       <SearchResults
         isLoading={isLoading}
         isPending={isPending}
-        searchQuery={address ?? ''}
-        packages={packagesFiltered}
+        vulnerabilities={scanResult?.scan?.scanResult?.vulnerabilities ?? {}}
+        searchQuery={normalizedUrl ?? ''}
+        packages={packagesFiltered ?? []}
         packagesStats={packagesStats}
-        vulnerabilities={vulnerabilities ?? {}}
-        vulnerabilitiesCount={vulnerabilitiesCount}
-        keywordsList={keywordsList}
-        status={status}
+        vulnerabilitiesCount={vulnerabilityCount}
+        keywordsList={packageKeywordList}
+        scanDate={scanResult?.scan?.finishedAt}
       />
     </>
   );

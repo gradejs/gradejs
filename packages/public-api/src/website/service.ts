@@ -40,32 +40,30 @@ export async function findOrCreateWebPage(url: URL, em: EntityManager) {
   return webPageEntity;
 }
 
-export async function getWebPageScan(url: string) {
+export async function getOrRequestWebPageScan(url: string, performScan = false) {
   const parsedUrl = new URL(url);
+
   const db = await getDatabaseConnection();
 
-  const webPageScanRepo = db.getRepository(WebPageScan);
-  const webPageEntity = await findOrCreateWebPage(parsedUrl, db.createEntityManager());
-
-  return await webPageScanRepo
-    .createQueryBuilder('scan')
-    .where('scan.web_page_id = :webPageId', { webPageId: webPageEntity.id })
-    .orderBy('scan.created_at', 'DESC')
-    .limit(1)
-    .getOne();
-}
-
-export async function requestWebPageRescan(url: string) {
-  const parsedUrl = new URL(url);
-  const db = await getDatabaseConnection();
-  const lastScan = await getWebPageScan(url);
-  if (lastScan && Date.now() - lastScan?.createdAt.getTime() < RESCAN_TIMEOUT_MS) {
-    return false;
-  }
-
-  return await db.transaction(async (em) => {
+  const result = await db.transaction(async (em) => {
     const webPageScanRepo = em.getRepository(WebPageScan);
+
     const webPageEntity = await findOrCreateWebPage(parsedUrl, em);
+
+    const mostRecentScan = await webPageScanRepo
+      .createQueryBuilder('scan')
+      .where('scan.web_page_id = :webPageId', { webPageId: webPageEntity.id })
+      .orderBy('scan.created_at', 'DESC')
+      .limit(1)
+      .getOne();
+
+    if (!performScan) {
+      return mostRecentScan;
+    }
+
+    if (mostRecentScan && Date.now() - mostRecentScan.createdAt.getTime() < RESCAN_TIMEOUT_MS) {
+      return mostRecentScan;
+    }
 
     const webPageScanEntity = await webPageScanRepo.save({
       webPage: webPageEntity,
@@ -73,8 +71,11 @@ export async function requestWebPageRescan(url: string) {
     });
 
     await systemApi.requestWebPageScan(parsedUrl.toString(), webPageScanEntity.id.toString());
-    return true;
+
+    return webPageScanEntity;
   });
+
+  return result;
 }
 
 export async function syncWebPageScanResult(scanReport: systemApi.ScanReport) {
