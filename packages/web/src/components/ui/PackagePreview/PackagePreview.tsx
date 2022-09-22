@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import ChipGroup from '../ChipGroup/ChipGroup';
 import { CSSTransition } from 'react-transition-group';
 import Button from '../Button/Button';
-import { LicenceSkeleton, LinksSkeleton, ScriptSkeleton } from './PackagePreviewSkeleton';
+import { LicenceSkeleton, LinksSkeleton } from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
 import { useNavigate } from 'react-router-dom';

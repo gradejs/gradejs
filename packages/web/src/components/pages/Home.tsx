@@ -26,13 +26,13 @@ export function HomePage() {
     return (
       <Error
         host={state.address}
-        onReportClick={() => {
+        /*onReportClick={() => {
           trackCustomEvent('HomePage', 'ClickReport');
         }}
         onRetryClick={() => {
           trackCustomEvent('HomePage', 'ClickRetry');
           dispatch(resetError());
-        }}
+        }}*/
       />
     );
   }

@@ -7,7 +7,7 @@ const parseWebsite = createAsyncThunk('home/submitWebsite', async (url: string) 
     url = `https://${url}`;
   }
 
-  await client.mutation('requestWebPageScan', url);
+  await client.mutation('requestWebPageRescan', url);
 });
 
 const home = createSlice({
