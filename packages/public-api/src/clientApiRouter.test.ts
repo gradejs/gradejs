@@ -85,19 +85,19 @@ describe('routes / website', () => {
       webPageScan.id.toString()
     );
 
+    const url = '/client/getWebPageScan?batch=1&input=' + encodeURIComponent(JSON.stringify({'0' : siteUrl}));
     const responseGet = await api
-      .get('/client/getWebPageScan')
+      .get(url)
       .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(siteUrl))
       .expect(200);
-    expect(responseGet.body).toMatchObject({
+    expect(responseGet.body).toMatchObject([{
       result: {
         data: {
           id: webPageScan.id.toString(),
           status: WebPageScan.Status.Pending,
         },
       },
-    });
+    }]);
   });
 
   it('should return a cached scan if applicable', async () => {
@@ -133,12 +133,12 @@ describe('routes / website', () => {
 
     expect(requestWebPageScanMock).toHaveBeenCalledTimes(0);
 
+    const url = '/client/getWebPageScan?batch=1&input=' + encodeURIComponent(JSON.stringify({'0' : siteUrl}));
     const responseGet = await api
-      .get('/client/getWebPageScan')
+      .get(url)
       .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(siteUrl))
       .expect(200);
-    expect(responseGet.body).toMatchObject({
+    expect(responseGet.body).toMatchObject([{
       result: {
         data: {
           id: existingScan.id.toString(),
@@ -155,6 +155,6 @@ describe('routes / website', () => {
           },
         },
       },
-    });
+    }]);
   });
 });
