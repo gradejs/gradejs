@@ -40,7 +40,7 @@ const getScanStatus = (state: RootState) => ({
 });
 export type ScanStatus = ReturnType<typeof getScanStatus>;
 
-const getPackagesMemoized = memoize((result: GetWebPageScanOutput['scanResult']) => {
+const getPackagesMemoized = memoize((result: NonNullable<GetWebPageScanOutput>['scanResult']) => {
   const packages: IdentifiedPackage[] = (result?.identifiedPackages ?? []).map((pkg) => {
     return {
       ...pkg,
@@ -141,9 +141,8 @@ const filterModes: Record<
 export const selectors = {
   default: createSelector(
     [getScanStatus, getVulnerabilities, getKeywords],
-    ({ status, lastScanDate }, vulnerabilities, keywordsList) => ({
+    (status, vulnerabilities, keywordsList) => ({
       status,
-      lastScanDate,
       vulnerabilities,
       keywordsList,
       vulnerabilitiesCount: new Set(

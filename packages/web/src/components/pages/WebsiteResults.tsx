@@ -22,8 +22,9 @@ export function WebsiteResultsPage() {
      - Make up filters types, reenable filters
      */
 
-  const { vulnerabilities, keywordsList, status, vulnerabilitiesCount, lastScanDate } =
-    useAppSelector(selectors.default);
+  const { vulnerabilities, keywordsList, status, vulnerabilitiesCount } = useAppSelector(
+    selectors.default
+  );
   const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
   const packagesStats = useAppSelector(selectors.packagesStats);
   const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
@@ -120,7 +121,7 @@ export function WebsiteResultsPage() {
         vulnerabilities={vulnerabilities ?? {}}
         vulnerabilitiesCount={vulnerabilitiesCount}
         keywordsList={keywordsList}
-        status={{ status, lastScanDate }}
+        status={status}
       />
     </>
   );

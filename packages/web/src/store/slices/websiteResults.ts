@@ -21,7 +21,7 @@ const sleep = (ms: number | undefined) =>
     setTimeout(r, ms);
   });
 
-const isScanPending = (result: GetWebPageScanOutput) => result.status === 'pending';
+const isScanPending = (result: GetWebPageScanOutput) => result?.status === 'pending';
 
 const getScanResults = createAsyncThunk(
   'scanResults/getScanResults',

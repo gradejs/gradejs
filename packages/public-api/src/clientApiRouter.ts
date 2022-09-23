@@ -64,7 +64,7 @@ export const appRouter = trpc
     async resolve({ input: url }) {
       const scan = await getWebPageScan(url);
       if (!scan) {
-        return { id: '', status: WebPageStatusNoData.NoData };
+        return null;
       }
 
       const scanResponse: RequestWebPageScanResponse = {
