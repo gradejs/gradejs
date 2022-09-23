@@ -44,7 +44,7 @@ WORKER_PID=$!
 
 echo "Starting queue puller script"
 AWS_REGION=test AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
-  ts-node --swc cli/localSqsPuller.ts 2>&1 &
+  ./node_modules/.bin/ts-node --swc cli/localSqsPuller.ts 2>&1 &
 PULLER_PID=$!
 
 echo "Starting public api package"

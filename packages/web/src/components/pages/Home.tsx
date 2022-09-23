@@ -7,22 +7,21 @@ import { trackCustomEvent } from '../../services/analytics';
 export function HomePage() {
   const navigate = useNavigate();
   const [requestedScanUrl, setRequestedScanUrl] = useState<string | undefined>(undefined);
-  const { normalizedUrl, scanResult } = useScanResult(requestedScanUrl);
+  const { displayUrl, scanResult } = useScanResult(requestedScanUrl);
 
   useEffect(() => {
-    if (scanResult && normalizedUrl && !scanResult.isLoading) {
-      navigate(`/scan/${normalizedUrl}`);
+    if (scanResult && displayUrl && !scanResult.isLoading) {
+      navigate(`/scan/${displayUrl}`);
     }
-  }, [scanResult, normalizedUrl]);
+  }, [scanResult, displayUrl]);
 
   const handleScanRequest = useCallback(async (address: string) => {
     trackCustomEvent('HomePage', 'WebsiteSubmitted');
     setRequestedScanUrl(address);
   }, []);
 
-  // TODO: This should be dropped in favour of error on result page
-  if (normalizedUrl && scanResult?.error) {
-    return <Error host={normalizedUrl} />;
+  if (displayUrl && scanResult?.error) {
+    return <Error host={displayUrl} />;
   }
 
   return <Home onSubmit={handleScanRequest} loading={scanResult?.isLoading} />;

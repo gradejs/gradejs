@@ -1,48 +1,52 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
 import styles from './SearchBar.module.scss';
 import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
 
 type Props = {
-  value: string;
   size?: 'default' | 'large';
   placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
 };
 
 export default function SearchBar({
-  value,
   size = 'default',
   placeholder = 'Start analyzing...',
+  value,
+  onChange,
+  onSubmit,
 }: Props) {
-  const [inputText, setInputText] = useState<string>(value);
+  const changeHandler = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.value);
+    },
+    [onChange]
+  );
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value);
-  };
-
-  const clearHandler = () => {
-    setInputText('');
-  };
+  const keyPressHandler = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      console.log(e);
+      if (e.key === 'Enter') {
+        onSubmit();
+      }
+    },
+    [onSubmit]
+  );
 
   return (
     <div className={clsx(styles.searchBar, styles[size])}>
       <input
         type='text'
         className={styles.input}
-        value={inputText}
-        onChange={changeHandler}
         placeholder={placeholder}
+        value={value}
+        onChange={changeHandler}
+        onKeyPress={keyPressHandler}
       />
-      {inputText ? (
-        <button type='button' className={styles.clear} onClick={clearHandler}>
-          {size === 'large' ? (
-            <Icon kind='cross' width={32} height={32} color='#8E8AA0' />
-          ) : (
-            <Icon kind='cross' width={24} height={24} color='#8E8AA0' />
-          )}
-        </button>
-      ) : (
-        <button type='submit' className={styles.submit}>
+      {!!value && (
+        <button type='submit' className={styles.submit} onClick={onSubmit}>
           {size === 'large' ? (
             <Icon kind='arrow' width={17} height={30} stroke='#8E8AA0' />
           ) : (

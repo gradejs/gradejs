@@ -67,7 +67,9 @@ export const selectors = {
     isFailed: !!scanResult?.error,
     isPending: scanResult?.scan?.status === 'pending',
     isProtected: scanResult?.scan?.status === 'protected',
-    isInvalid: scanResult?.scan?.scanResult?.identifiedPackages.length === 0,
+    isInvalid:
+      scanResult?.scan?.status === 'failed' ||
+      scanResult?.scan?.scanResult?.identifiedPackages.length === 0,
   })),
   scanOverview: createSelector([makeSelectScanResultByUrl()], (scanResult) => {
     const scanData = scanResult?.scan?.scanResult;
@@ -88,7 +90,6 @@ export const selectors = {
     );
 
     return {
-      vulnerabilities,
       vulnerabilityCount: uniqueVulnerabilities.size,
       packageKeywordList: Array.from(packageKeywords),
     };

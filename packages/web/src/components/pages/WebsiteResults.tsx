@@ -7,9 +7,9 @@ import { useAppSelector, websiteResultsSelectors as selectors } from '../../stor
 import { useScanResult } from '../../store/hooks/useScanResult';
 
 export function WebsiteResultsPage() {
-  const { hostname } = useParams();
+  const { '*': scanUrl } = useParams();
 
-  const { normalizedUrl, scanResult } = useScanResult(hostname, true);
+  const { displayUrl, normalizedUrl, scanResult } = useScanResult(scanUrl, true);
 
   const packagesFiltered = useAppSelector((state) =>
     selectors.packagesSortedAndFiltered(state, normalizedUrl)
@@ -31,7 +31,7 @@ export function WebsiteResultsPage() {
         message='An unexpected error occurred. Try visiting us later.'
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
-        host={normalizedUrl ?? ''}
+        host={displayUrl ?? ''}
       />
     );
   }
@@ -44,7 +44,7 @@ export function WebsiteResultsPage() {
         message='The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions.'
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
-        host={normalizedUrl ?? ''}
+        host={displayUrl ?? ''}
       />
     );
   }
@@ -57,14 +57,14 @@ export function WebsiteResultsPage() {
         message='It looks like the entered website is not built with Webpack.'
         action='Would you like to try another URL or report an issue?'
         actionTitle='Try another URL'
-        host={normalizedUrl ?? ''}
+        host={displayUrl ?? ''}
       />
     );
   }
 
-  const title = `List of NPM packages that are used on ${normalizedUrl} - GradeJS`;
+  const title = `List of NPM packages that are used on ${displayUrl} - GradeJS`;
   const description =
-    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${normalizedUrl}` +
+    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${displayUrl}` +
     (packagesStats.vulnerable > 0 ? `, ${packagesStats.vulnerable} are vulnerable` : '') +
     (packagesStats.outdated > 0 ? `, ${packagesStats.outdated} are outdated` : '');
 
@@ -77,10 +77,10 @@ export function WebsiteResultsPage() {
         <meta property='og:description' content={description} />
       </Helmet>
       <SearchResults
-        isLoading={isLoading}
-        isPending={isPending}
+        isLoading={isLoading || isPending}
+        isPending={isPending || isPending}
         vulnerabilities={scanResult?.scan?.scanResult?.vulnerabilities ?? {}}
-        searchQuery={normalizedUrl ?? ''}
+        searchQuery={displayUrl ?? ''}
         packages={packagesFiltered ?? []}
         packagesStats={packagesStats}
         vulnerabilitiesCount={vulnerabilityCount}

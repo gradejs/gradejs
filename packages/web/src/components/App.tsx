@@ -39,7 +39,7 @@ export function App({ locationChangeHandler }: AppProps) {
       </Helmet>
       <Routes>
         <Route index element={<HomePage />} />
-        <Route path='/scan/:address' element={<WebsiteResultsPage />} />
+        <Route path='/scan/*' element={<WebsiteResultsPage />} />
         <Route path='*' element={<Navigate replace to='/' />} />
       </Routes>
     </>

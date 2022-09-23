@@ -3,7 +3,8 @@ import styles from './Header.module.scss';
 import clsx from 'clsx';
 import Container from '../Container/Container';
 import { Icon } from '../Icon/Icon';
-import SearchBar from '../SearchBar/SearchBar';
+import SearchBarContainer from '../../containers/SearchBarContainer';
+import { Link } from 'react-router-dom';
 
 export type Props = {
   searchQuery?: string;
@@ -24,19 +25,18 @@ export default function Header({
     <header className={clsx(styles.header, styles[variant], className)}>
       <Container>
         <div className={clsx(styles.headerInner, showSearch && styles.showSearch)}>
-          {/* TODO: add Link from react router */}
-          <a href='/' className={styles.logo}>
+          <Link to='/' className={styles.logo}>
             <Icon
               kind='logo'
               width={129}
               height={25}
               color={variant === 'light' ? 'white' : '#212121'}
             />
-          </a>
+          </Link>
 
           {showSearch && (
             <div className={styles.searchWrapper}>
-              <SearchBar value={searchQuery ?? ''} />
+              <SearchBarContainer initialValue={searchQuery} />
             </div>
           )}
 

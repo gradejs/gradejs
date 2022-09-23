@@ -106,10 +106,12 @@ export async function syncWebPageScanResult(scanReport: systemApi.ScanReport) {
 
     await webPageScanRepo.save(scanEntity);
 
-    await Promise.all([
-      syncPackageUsageByHostname(scanEntity, em),
-      syncScansWithVulnerabilities(scanEntity, em),
-    ]);
+    if (scanEntity.status === 'processed') {
+      await Promise.all([
+        syncPackageUsageByHostname(scanEntity, em),
+        syncScansWithVulnerabilities(scanEntity, em),
+      ]);
+    }
 
     return scanEntity;
   });

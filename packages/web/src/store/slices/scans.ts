@@ -11,8 +11,8 @@ export type ScanResultsSlice = Record<string, ScanResultsState>;
 
 const requestWebPageScan = createAsyncThunk(
   'scans/requestWebPageScan',
-  async ({ normalizedUrl, rescan = false }: { normalizedUrl: string; rescan?: boolean }) => {
-    return client.mutation('getOrRequestWebPageScan', { url: normalizedUrl, rescan });
+  async ({ scanUrl, rescan = false }: { scanUrl: string; rescan?: boolean }) => {
+    return client.mutation('getOrRequestWebPageScan', { url: scanUrl, rescan });
   }
 );
 
@@ -23,11 +23,11 @@ const scans = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(requestWebPageScan.pending, (state, action) => {
-        const { normalizedUrl } = action.meta.arg;
+        const { scanUrl } = action.meta.arg;
 
-        const previousScanState = state[normalizedUrl] ?? null;
+        const previousScanState = state[scanUrl] ?? null;
 
-        state[normalizedUrl] = {
+        state[scanUrl] = {
           ...previousScanState,
           isLoading: true,
           error: undefined,
@@ -35,11 +35,11 @@ const scans = createSlice({
         };
       })
       .addCase(requestWebPageScan.rejected, (state, action) => {
-        const { normalizedUrl } = action.meta.arg;
+        const { scanUrl } = action.meta.arg;
 
-        const previousScanState = state[normalizedUrl] ?? null;
+        const previousScanState = state[scanUrl] ?? null;
 
-        state[normalizedUrl] = {
+        state[scanUrl] = {
           ...previousScanState,
           isLoading: false,
           error: action.error,
@@ -47,11 +47,11 @@ const scans = createSlice({
         };
       })
       .addCase(requestWebPageScan.fulfilled, (state, action) => {
-        const { normalizedUrl } = action.meta.arg;
+        const { scanUrl } = action.meta.arg;
 
-        const previousScanState = state[normalizedUrl] ?? null;
+        const previousScanState = state[scanUrl] ?? null;
 
-        state[normalizedUrl] = {
+        state[scanUrl] = {
           ...previousScanState,
           isLoading: false,
           error: undefined,

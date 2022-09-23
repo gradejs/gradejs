@@ -4,7 +4,7 @@ import { requestWebPageScan } from '../slices/scans';
 import { makeSelectScanResultByUrl } from '../selectors/websiteResults';
 
 export const useScanResult = (scanUrl: string | undefined, pollWhilePending = false) => {
-  const { normalizedUrl, fullUrl } = useMemo(() => {
+  const { displayUrl, normalizedUrl } = useMemo(() => {
     if (!scanUrl) {
       return {};
     }
@@ -16,9 +16,10 @@ export const useScanResult = (scanUrl: string | undefined, pollWhilePending = fa
           : scanUrl;
 
       const parsedUrl = new URL(prefixedScanUrl);
+      const shortenedUrl = `${parsedUrl.hostname}${parsedUrl.pathname}`;
       return {
-        normalizedUrl: `${parsedUrl.hostname}${parsedUrl.pathname}`,
-        fullUrl: prefixedScanUrl,
+        displayUrl: shortenedUrl.endsWith('/') ? shortenedUrl.slice(0, -1) : shortenedUrl,
+        normalizedUrl: prefixedScanUrl,
       };
     } catch (_) {
       return {};
@@ -31,15 +32,15 @@ export const useScanResult = (scanUrl: string | undefined, pollWhilePending = fa
   const scanResult = useAppSelector((state) => scanResultSelector(state, normalizedUrl));
 
   const requestScan = useCallback(async (requestedScanUrl) => {
-    return dispatch(requestWebPageScan(requestedScanUrl));
+    return dispatch(requestWebPageScan({ scanUrl: requestedScanUrl }));
   }, []);
 
   // Initial request if entity wasn't loaded
   useEffect(() => {
-    if (fullUrl && !scanResult?.scan && !scanResult?.isLoading && !scanResult?.error) {
-      requestScan(fullUrl);
+    if (normalizedUrl && !scanResult?.scan && !scanResult?.isLoading && !scanResult?.error) {
+      requestScan(normalizedUrl);
     }
-  }, [fullUrl, scanResult]);
+  }, [normalizedUrl, scanResult]);
 
   // Poll while scan is pending
   useEffect(() => {
@@ -51,12 +52,12 @@ export const useScanResult = (scanUrl: string | undefined, pollWhilePending = fa
       !scanResult?.error
     ) {
       timeoutId = window.setTimeout(() => {
-        requestScan(fullUrl);
+        requestScan(normalizedUrl);
       }, 1000);
     }
 
     return () => clearTimeout(timeoutId);
-  }, [pollWhilePending, fullUrl, scanResult]);
+  }, [pollWhilePending, normalizedUrl, scanResult]);
 
-  return { normalizedUrl, scanResult, requestScan };
+  return { normalizedUrl, displayUrl, scanResult, requestScan };
 };
