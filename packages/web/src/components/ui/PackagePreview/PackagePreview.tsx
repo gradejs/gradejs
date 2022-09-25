@@ -206,60 +206,59 @@ export default function PackagePreview({
                 )}
               </div>
               */}
-
-              <div className={styles.actions}>
-                <div className={styles.links}>
-                  {detailsLoading ? (
-                    <LinksSkeleton />
-                  ) : (
-                    <>
-                      {pkg.registryMetadata?.repositoryUrl && (
-                        <a
-                          href={pkg.registryMetadata?.repositoryUrl}
-                          className={styles.link}
-                          target='_blank'
-                          rel='noreferrer'
-                        >
-                          <Icon kind='repository' color='#212121' className={styles.linkIcon} />
-                          Repository
-                        </a>
-                      )}
-
-                      {pkg.registryMetadata?.homepageUrl && (
-                        <a
-                          href={pkg.registryMetadata?.homepageUrl}
-                          className={styles.link}
-                          target='_blank'
-                          rel='noreferrer'
-                        >
-                          <Icon kind='link' color='#212121' className={styles.linkIcon} />
-                          Homepage
-                        </a>
-                      )}
-
+            </div>
+            <div className={styles.actions}>
+              <div className={styles.links}>
+                {detailsLoading ? (
+                  <LinksSkeleton />
+                ) : (
+                  <>
+                    {pkg.registryMetadata?.repositoryUrl && (
                       <a
-                        href={makeNpmUrl(pkg)}
+                        href={pkg.registryMetadata?.repositoryUrl}
                         className={styles.link}
                         target='_blank'
                         rel='noreferrer'
                       >
-                        <Icon
-                          kind='npm'
-                          width={32}
-                          height={32}
-                          color='#212121'
-                          className={styles.linkIcon}
-                        />
+                        <Icon kind='repository' color='#212121' className={styles.linkIcon} />
+                        Repository
                       </a>
-                    </>
-                  )}
-                </div>
+                    )}
 
-                {/* TODO: should be a <a> link w/ router support */}
-                <Button variant='arrow' onClick={() => navigate(`/package/${pkg.name}`)}>
-                  Details
-                </Button>
+                    {pkg.registryMetadata?.homepageUrl && (
+                      <a
+                        href={pkg.registryMetadata?.homepageUrl}
+                        className={styles.link}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        <Icon kind='link' color='#212121' className={styles.linkIcon} />
+                        Homepage
+                      </a>
+                    )}
+
+                    <a
+                      href={makeNpmUrl(pkg)}
+                      className={styles.link}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <Icon
+                        kind='npm'
+                        width={32}
+                        height={32}
+                        color='#212121'
+                        className={styles.linkIcon}
+                      />
+                    </a>
+                  </>
+                )}
               </div>
+
+              {/* TODO: should be a <a> link w/ router support */}
+              <Button variant='arrow' onClick={() => navigate(`/package/${pkg.name}`)}>
+                Details
+              </Button>
             </div>
           </div>
         </div>
