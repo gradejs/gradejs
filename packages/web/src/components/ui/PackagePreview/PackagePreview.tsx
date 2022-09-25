@@ -31,19 +31,10 @@ export default function PackagePreview({
   detailsLoading = false,
 }: Props) {
   const [open, setOpen] = useState<boolean>(opened ?? false);
-  const [packageDetailsLoading, setPackageDetailsLoading] = useState<boolean>(detailsLoading);
   const navigate = useNavigate();
 
   const toggleOpen = () => {
-    if (open) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-      setPackageDetailsLoading(true);
-
-      // FIXME: just for demo purposes
-      setTimeout(() => setPackageDetailsLoading(false), 4000);
-    }
+    setOpen(!open);
   };
 
   const deps = Object.keys(
@@ -99,7 +90,7 @@ export default function PackagePreview({
                 <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
                 Script
               </div>
-              {packageDetailsLoading ? (
+              {detailsLoading ? (
                 <ScriptSkeleton />
               ) : (
                 <a
@@ -120,7 +111,7 @@ export default function PackagePreview({
                   <Icon kind='license' color='#8E8AA0' className={styles.statIcon} />
                   License
                 </div>
-                {packageDetailsLoading ? (
+                {detailsLoading ? (
                   <LicenceSkeleton />
                 ) : (
                   <>
@@ -142,7 +133,7 @@ export default function PackagePreview({
                     <Hint text='Rating based on our service' />
                   </span>
                 </div>
-                {packageDetailsLoading ? (
+                {detailsLoading ? (
                   <RatingSkeleton />
                 ) : (
                   <>
@@ -175,7 +166,7 @@ export default function PackagePreview({
                 <div className={styles.statHeader}>
                   <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
                   Dependencies
-                  {packageDetailsLoading ? (
+                  {detailsLoading ? (
                     <ChipGroupSkeleton />
                   ) : (
                     <ChipGroup>
@@ -197,7 +188,7 @@ export default function PackagePreview({
               </div>
 
               <div className={styles.popularity}>
-                {packageDetailsLoading ? <BarChartSkeleton /> : <BarChart bars={packages} />}
+                {detailsLoading ? <BarChartSkeleton /> : <BarChart bars={packages} />}
               </div>
             </div>
             */}
@@ -208,7 +199,7 @@ export default function PackagePreview({
               <div className={styles.stat}>
                 <div className={styles.statHeader}>Used on</div>
 
-                {packageDetailsLoading ? (
+                {detailsLoading ? (
                   <SitesListSkeleton className={styles.usedOnList} />
                 ) : (
                   <SitesList sites={sites} className={styles.usedOnList} />
@@ -218,7 +209,7 @@ export default function PackagePreview({
 
               <div className={styles.actions}>
                 <div className={styles.links}>
-                  {packageDetailsLoading ? (
+                  {detailsLoading ? (
                     <LinksSkeleton />
                   ) : (
                     <>
