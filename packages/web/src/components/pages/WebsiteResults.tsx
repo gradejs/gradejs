@@ -16,11 +16,11 @@ export function WebsiteResultsPage() {
   const dispatch = useAppDispatch();
 
   /* TODO
-     - Disable filters from selectors temporarity (done)
-     - Pass all data from `packages` to PackagePreview, formalize Package type (done)
-     - Connect filtering components, consider separate redux slice as a single source of truth about filters state
-     - Make up filters types, reenable filters
-     */
+       - Disable filters from selectors temporarity (done)
+       - Pass all data from `packages` to PackagePreview, formalize Package type (done)
+       - Connect filtering components, consider separate redux slice as a single source of truth about filters state
+       - Make up filters types, reenable filters
+       */
 
   const { vulnerabilities, keywordsList, status, vulnerabilitiesCount } = useAppSelector(
     selectors.default

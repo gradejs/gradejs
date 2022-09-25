@@ -9,6 +9,7 @@ import {
   PackageVulnerabilityData,
   SerializableEntity,
   toSerializable,
+  formatDate,
   WebPageScan,
 } from '@gradejs-public/shared';
 import { getPackageMetadataByPackageNames } from './packageMetadata/packageMetadataService';
@@ -41,9 +42,10 @@ enum WebPageStatusNoData {
 }
 type WebPageStatus = WebPageScan.Status | WebPageStatusNoData;
 
-type RequestWebPageScanResponse = Pick<WebPageScan, 'finishedAt'> & {
+type RequestWebPageScanResponse = {
   id: string;
   status: WebPageStatus;
+  finishedAt: string;
   scanResult?: {
     identifiedModuleMap: Record<string, WebPageScan.IdentifiedModule>;
     identifiedPackages: ScanResultPackageWithMetadata[];
@@ -70,7 +72,7 @@ export const appRouter = trpc
       const scanResponse: RequestWebPageScanResponse = {
         id: scan.id.toString(),
         status: scan.status,
-        finishedAt: scan.finishedAt,
+        finishedAt: formatDate(scan.finishedAt ?? new Date()),
         scanResult: undefined,
       };
 
