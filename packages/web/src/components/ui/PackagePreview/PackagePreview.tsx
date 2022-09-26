@@ -37,9 +37,9 @@ export default function PackagePreview({
     setOpen(!open);
   };
 
+  const versions = Object.keys(pkg.registryMetadata?.versionSpecificValues ?? {});
   const deps = Object.keys(
-    pkg.registryMetadata?.versionSpecificValues?.[pkg.registryMetadata?.latestVersion]
-      ?.dependencies ?? {}
+    pkg.registryMetadata?.versionSpecificValues?.[versions[versions.length - 1]]?.dependencies ?? {}
   );
 
   return (
@@ -65,7 +65,8 @@ export default function PackagePreview({
           </button>
         </div>
 
-        <div className={styles.desc}>{pkg.registryMetadata?.fullDescription}</div>
+        {/* TODO: where to put fullDescription? */}
+        <div className={styles.desc}>{pkg.registryMetadata?.description}</div>
       </div>
 
       <CSSTransition
@@ -108,6 +109,7 @@ export default function PackagePreview({
                   <LicenceSkeleton />
                 ) : (
                   <>
+                    {/* TODO: license may be a big string! How we deal with it?*/}
                     <div className={styles.statTitle}>{pkg.registryMetadata?.license}</div>
                     {/* TODO
                     <div className={styles.statSubtitle}>
