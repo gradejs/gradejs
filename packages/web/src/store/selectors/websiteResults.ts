@@ -156,7 +156,7 @@ export const selectors = {
     [getScanStatus, getPackages, getFlags],
     ({ status }, packages, flags) => ({
       ...flags,
-      isInvalid: packages && packages.length === 0,
+      isInvalid: status !== 'pending' && packages && packages.length === 0,
       isPending: !status || status === 'pending',
       isProtected: status === 'protected',
     })
