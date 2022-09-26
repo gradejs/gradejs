@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Error, Home } from 'components/layouts';
 import { useNavigate } from 'react-router-dom';
-import { useScanResult } from '../../store/hooks/useScanResult';
 import { trackCustomEvent } from '../../services/analytics';
+import { useScanResult } from '../../store/hooks/scan/useScanResult';
 
 export function HomePage() {
   const navigate = useNavigate();
   const [requestedScanUrl, setRequestedScanUrl] = useState<string | undefined>(undefined);
-  const { displayUrl, scanResult } = useScanResult(requestedScanUrl);
+  const { displayUrl, scanResult } = useScanResult(requestedScanUrl, false, true);
 
   useEffect(() => {
     if (scanResult && displayUrl && !scanResult.isLoading) {

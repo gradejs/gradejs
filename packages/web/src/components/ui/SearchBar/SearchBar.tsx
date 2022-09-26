@@ -27,7 +27,6 @@ export default function SearchBar({
 
   const keyPressHandler = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      console.log(e);
       if (e.key === 'Enter') {
         onSubmit();
       }

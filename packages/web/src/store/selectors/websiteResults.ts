@@ -12,7 +12,7 @@ function semverListAsRange(versionList: string[]) {
     return versionList[0];
   }
 
-  const sortedVersions = versionList.sort(semver.compare);
+  const sortedVersions = versionList.slice().sort(semver.compare);
 
   return `${sortedVersions[0]} - ${sortedVersions[sortedVersions.length - 1]}`;
 }
@@ -47,12 +47,11 @@ const makeSelectScanPackagesByUrl = () =>
           const size = scanData.identifiedModuleMap?.[id]?.approximateByteSize ?? 0;
           return acc + size;
         }, 0),
-        outdated: (
+        outdated:
           pkg.registryMetadata &&
           !pkg.versionSet.some(
             (ver) => pkg.registryMetadata && semver.eq(pkg.registryMetadata.latestVersion, ver)
-          )
-        ),
+          ),
         vulnerable: (scanData.vulnerabilities[pkg.name]?.length ?? 0) > 0,
         version: semverListAsRange(pkg.versionSet),
       };

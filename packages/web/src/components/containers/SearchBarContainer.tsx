@@ -1,28 +1,35 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useScanResult } from '../../store/hooks/useScanResult';
 import SearchBar from '../ui/SearchBar/SearchBar';
 import { useNavigate } from 'react-router-dom';
+import { useScanResult } from '../../store/hooks/scan/useScanResult';
+import { trackCustomEvent } from '../../services/analytics';
 
 type Props = {
+  initialValue?: string;
   size?: 'default' | 'large';
   placeholder?: string;
 };
 
 // TODO: Dedupe logic at Home component
-export default function SearchBarContainer({ size = 'default', placeholder }: Props) {
-  const [inputValue, setInputValue] = useState('');
+export default function SearchBarContainer({
+  size = 'default',
+  placeholder,
+  initialValue = '',
+}: Props) {
+  const [inputValue, setInputValue] = useState(initialValue);
   const [submittedValue, setSubmittedValue] = useState<string | undefined>(undefined);
 
   const submitHandler = useCallback(() => {
+    trackCustomEvent('SearchBar', 'WebsiteSubmitted');
     setSubmittedValue(inputValue);
   }, [inputValue]);
 
   const navigate = useNavigate();
-  const { displayUrl, scanResult } = useScanResult(submittedValue);
+  const { displayUrl, scanResult } = useScanResult(submittedValue, false, true);
 
   useEffect(() => {
     if (scanResult && displayUrl && !scanResult.isLoading) {
-      navigate(`/w/${displayUrl}`);
+      navigate(`/scan/${displayUrl}`);
     }
   }, [scanResult, displayUrl]);
 

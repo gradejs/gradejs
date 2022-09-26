@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Error as ErrorLayout, SearchResults } from 'components/layouts';
 import { trackCustomEvent } from '../../services/analytics';
 import { useAppSelector, websiteResultsSelectors as selectors } from '../../store';
-import { useScanResult } from '../../store/hooks/useScanResult';
+import { useScanResult } from '../../store/hooks/scan/useScanResult';
 
 export function WebsiteResultsPage() {
   const { '*': scanUrl } = useParams();
@@ -80,7 +80,7 @@ export function WebsiteResultsPage() {
         isLoading={isLoading || isPending}
         isPending={isPending || isPending}
         vulnerabilities={scanResult?.scan?.scanResult?.vulnerabilities ?? {}}
-        searchQuery={displayUrl ?? ''}
+        scanUrl={displayUrl ?? ''}
         packages={packagesFiltered ?? []}
         packagesStats={packagesStats}
         vulnerabilitiesCount={vulnerabilityCount}

@@ -2,6 +2,7 @@ import { TRPC_ERROR_CODES_BY_KEY } from '@trpc/server/rpc';
 import {
   getDatabaseConnection,
   Hostname,
+  PackageMetadata,
   systemApi,
   WebPage,
   WebPageScan,
@@ -48,9 +49,9 @@ describe('routes / website', () => {
     requestWebPageScanMock.mockImplementation(async () => ({}));
 
     const response = await api
-      .post('/client/getOrRequestWebPageRescan')
+      .post('/client/getOrRequestWebPageScan')
       .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(siteUrl))
+      .send(JSON.stringify({ url: siteUrl.toString(), rescan: true }))
       .expect(200);
 
     const hostname = await getRepository(Hostname).findOneOrFail({ hostname: siteUrl.hostname });
@@ -120,10 +121,20 @@ describe('routes / website', () => {
       },
     });
 
+    await em.getRepository(PackageMetadata).save({
+      name: 'react',
+      description: 'short description',
+      fullDescription: 'full description',
+      latestVersion: '17.0.1',
+      monthlyDownloads: 9001,
+      keywords: ['react'],
+      updateSeq: 1,
+    });
+
     const response = await api
       .post('/client/getOrRequestWebPageScan')
       .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(siteUrl))
+      .send(JSON.stringify({ url: siteUrl.toString(), rescan: false }))
       .expect(200);
 
     expect(requestWebPageScanMock).toHaveBeenCalledTimes(0);
@@ -133,12 +144,27 @@ describe('routes / website', () => {
           id: existingScan.id.toString(),
           status: WebPageScan.Status.Processed,
           scanResult: {
-            packages: [
+            vulnerabilities: {},
+            identifiedModuleMap: {},
+            identifiedPackages: [
               {
                 name: 'react',
                 versionSet: ['17.0.0'],
-                versionRange: '17.0.0',
-                approximateByteSize: null,
+                registryMetadata: {
+                  name: 'react',
+                  latestVersion: '17.0.1',
+                  monthlyDownloads: 9001,
+                  description: 'short description',
+                  fullDescription: 'full description',
+                  maintainers: [],
+                  keywords: ['react'],
+                  versionSpecificValues: {},
+                  homepageUrl: null,
+                  repositoryUrl: null,
+                  license: null,
+                  updateSeq: 1,
+                  updatedAt: null,
+                },
               },
             ],
           },
