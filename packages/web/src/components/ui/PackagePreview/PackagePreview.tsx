@@ -61,14 +61,7 @@ export default function PackagePreview({
           </div>
 
           <button type='button' className={styles.arrowWrapper} onClick={toggleOpen}>
-            <Icon
-              kind='arrowDown'
-              style={{ transform: opened ? 'rotate(180deg)' : 'rotate(0)' }}
-              width={14}
-              height={8}
-              color='#8E8AA0'
-              className={styles.arrow}
-            />
+            <Icon kind='arrowDown' width={14} height={8} color='#8E8AA0' className={styles.arrow} />
           </button>
         </div>
 
