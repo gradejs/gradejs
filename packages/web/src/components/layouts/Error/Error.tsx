@@ -36,7 +36,7 @@ export default function Error({
           </div>
 
           <div className={styles.searchWrapper}>
-            <SearchBar size='large' placeholder={actionTitle} />
+            <SearchBar size='large' value='' placeholder={actionTitle} />
           </div>
         </section>
 

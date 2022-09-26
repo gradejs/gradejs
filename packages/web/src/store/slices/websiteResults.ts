@@ -1,17 +1,16 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DefaultFiltersAndSorters, FiltersState } from '../../components/layouts/Filters/Filters';
-import { client, RequestWebPageScanOutput } from '../../services/apiClient';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { client, GetWebPageScanOutput } from '../../services/apiClient';
 import { trackCustomEvent } from '../../services/analytics';
 
 type WebsiteResultsState = {
-  filters: typeof DefaultFiltersAndSorters;
+  filters: {}; // typeof DefaultFiltersAndSorters;
   isFailed: boolean;
   isLoading: boolean;
-  detectionResult?: RequestWebPageScanOutput;
+  detectionResult?: GetWebPageScanOutput;
 };
 
 const initialState: WebsiteResultsState = {
-  filters: { ...DefaultFiltersAndSorters },
+  filters: {}, // { ...DefaultFiltersAndSorters },
   isFailed: false,
   isLoading: false,
   detectionResult: undefined,
@@ -22,21 +21,21 @@ const sleep = (ms: number | undefined) =>
     setTimeout(r, ms);
   });
 
-const isScanPending = (result: DetectionResult) => result && result.status === 'pending';
+const isScanPending = (result: GetWebPageScanOutput) => result?.status === 'pending';
 
-const getWebsite = createAsyncThunk(
-  'websiteResults/getWebsite',
-  async ({ hostname, useRetry = true }: { hostname: string; useRetry?: boolean }) => {
-    if (!hostname.startsWith('http://') && !hostname.startsWith('https://')) {
-      hostname = `https://${hostname}`;
+const getScanResults = createAsyncThunk(
+  'scanResults/getScanResults',
+  async ({ address, useRetry = true }: { address: string; useRetry?: boolean }) => {
+    if (!address.startsWith('http://') && !address.startsWith('https://')) {
+      address = `https://${address}`;
     }
 
     const loadStartTime = Date.now();
-    let results = await client.mutation('requestWebPageScan', hostname);
+    let results = await client.query('getWebPageScan', address);
     if (useRetry) {
       while (isScanPending(results)) {
         await sleep(5000);
-        results = await client.mutation('requestWebPageScan', hostname);
+        results = await client.query('getWebPageScan', address);
       }
     }
     // TODO: move to tracking middleware?
@@ -52,31 +51,33 @@ const websiteResults = createSlice({
   initialState,
   reducers: {
     resetFilters(state) {
-      state.filters = { ...DefaultFiltersAndSorters };
+      state.filters = {
+        /*...DefaultFiltersAndSorters*/
+      };
     },
-    applyFilters(state, action: PayloadAction<FiltersState>) {
-      state.filters = action.payload;
+    applyFilters(_state) {
+      // state.filters = action.payload;
     },
   },
   extraReducers(builder) {
     builder
-      .addCase(getWebsite.pending, (state) => {
+      .addCase(getScanResults.pending, (state) => {
         state.isLoading = true;
         state.isFailed = false;
         state.detectionResult = undefined;
       })
-      .addCase(getWebsite.fulfilled, (state, action) => {
+      .addCase(getScanResults.fulfilled, (state, action) => {
         state.isLoading = false;
         state.detectionResult = action.payload;
       })
-      .addCase(getWebsite.rejected, (state) => {
+      .addCase(getScanResults.rejected, (state) => {
         state.isFailed = true;
         state.isLoading = false;
       });
   },
 });
 
-export type DetectionResult = RequestWebPageScanOutput | undefined;
+export type DetectionResult = GetWebPageScanOutput;
 export const { resetFilters, applyFilters } = websiteResults.actions;
-export { getWebsite };
+export { getScanResults };
 export const websiteResultsReducer = websiteResults.reducer;

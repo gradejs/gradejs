@@ -4,173 +4,43 @@ import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
 import clsx from 'clsx';
 import ChipGroup from '../ChipGroup/ChipGroup';
-import SitesList from '../SitesList/SitesList';
 import { CSSTransition } from 'react-transition-group';
 import Button from '../Button/Button';
-import {
-  LicenceSkeleton,
-  LinksSkeleton,
-  RatingSkeleton,
-  ScriptSkeleton,
-} from './PackagePreviewSkeleton';
+import { LicenceSkeleton, LinksSkeleton } from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
-import { SitesListSkeleton } from '../SitesList/SitesListSkeleton';
-import BarChart from '../BarChart/BarChart';
-import BarChartSkeleton from '../BarChart/BarChartSkeleton';
-import { formatNumber } from 'utils/helpers';
-import Hint from '../Tooltip/Hint';
-
-type Problem = 'vulnerabilities' | 'duplicate' | 'outdated';
-
-type ExternalLink = {
-  href: string;
-  kind: 'repository' | 'link' | 'npm';
-  linkText?: string;
-};
+import { useNavigate } from 'react-router-dom';
+import { IdentifiedPackage } from 'store/selectors/websiteResults';
 
 type Props = {
-  name: string;
-  version: string;
-  desc: string;
-  problems?: Problem[];
-  keywords: string[];
-  author: {
-    name: string;
-    image: string;
-  };
   opened?: boolean;
   detailsLoading?: boolean;
+  // sites: Site[];
+  pkg: IdentifiedPackage;
 };
+
+function makeNpmUrl(pkg: IdentifiedPackage) {
+  return `https://www.npmjs.com/package/${pkg.name}`;
+}
 
 // TODO: refactor this (decomposition, props, memoization, etc)
 export default function PackagePreview({
-  name,
-  version,
-  desc,
-  problems,
-  keywords,
-  author,
   opened,
+  //sites,
+  pkg,
   detailsLoading = false,
 }: Props) {
   const [open, setOpen] = useState<boolean>(opened ?? false);
-  const [packageDetailsLoading, setPackageDetailsLoading] = useState<boolean>(detailsLoading);
+  const navigate = useNavigate();
 
   const toggleOpen = () => {
-    if (open) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-      setPackageDetailsLoading(true);
-
-      // FIXME: just for demo purposes
-      setTimeout(() => setPackageDetailsLoading(false), 4000);
-    }
+    setOpen(!open);
   };
 
-  // TODO: Mock API data, remove later
-  const externalLinks: ExternalLink[] = [
-    { kind: 'repository', href: 'https://github.com/facebook/react/', linkText: 'Repository' },
-    { kind: 'link', href: 'https://reactjs.org/', linkText: 'Homepage' },
-    { kind: 'npm', href: 'https://www.npmjs.com/package/react' },
-  ];
-
-  // TODO: Mock API data, remove later
-  const loadedData = {
-    script: '/rsrc.php/v3id044/yu/l/en_US/yD2XaVkWQHO.js?_nc_x=Ij3Wp8lg5Kz',
-    license: {
-      title: 'MIT license',
-      subtitle: 'freely distributable',
-    },
-    rating: {
-      place: 385,
-      rankingDelta: -4,
-      out: 12842,
-    },
-    dependencies: ['art', 'create-react-class', 'loose-envify', 'scheduler'],
-    packages: [
-      {
-        fill: 1,
-        uses: 89912,
-        moduleVersion: '21.3.0',
-      },
-      {
-        fill: 0.8,
-        uses: 67111,
-        moduleVersion: '18.2.0',
-        highlighted: true,
-      },
-      {
-        fill: 0.7,
-        uses: 44212,
-        moduleVersion: '20.1.0',
-      },
-      {
-        fill: 0.6,
-        uses: 41129,
-        moduleVersion: '18.0.0',
-      },
-      {
-        fill: 0.5,
-        uses: 40465,
-        moduleVersion: '19.11.2',
-      },
-      {
-        fill: 0.4,
-        uses: 38907,
-        moduleVersion: '8.1.2',
-        vulnerabilities: true,
-      },
-    ],
-    sites: [
-      {
-        id: '123',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '456',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '789',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '1231',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '12321',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '123123',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-      {
-        id: '12123132',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-        name: 'pinterest.com',
-        packagesCount: 151,
-      },
-    ],
-    links: externalLinks,
-  };
-
-  const { script, license, rating, dependencies, packages, sites, links } = loadedData;
+  const versions = Object.keys(pkg.registryMetadata?.versionSpecificValues ?? {});
+  const deps = Object.keys(
+    pkg.registryMetadata?.versionSpecificValues?.[versions[versions.length - 1]]?.dependencies ?? {}
+  );
 
   return (
     <div className={clsx(styles.package, open && styles.open)}>
@@ -178,14 +48,14 @@ export default function PackagePreview({
         <div className={styles.top} onClick={toggleOpen}>
           <div className={styles.title}>
             <span className={styles.name}>
-              {name} <span className={styles.version}>{version}</span>
+              {pkg.name} <span className={styles.version}>{pkg.version}</span>
             </span>
 
-            {problems && (
+            {(pkg.vulnerable || pkg.outdated || pkg.duplicate) && (
               <span className={styles.problems}>
-                {problems.map((problem) => (
-                  <ProblemBadge key={problem} problem={problem} />
-                ))}
+                {pkg.vulnerable && <ProblemBadge problem='vulnerabilities' />}
+                {pkg.outdated && <ProblemBadge problem='outdated' />}
+                {/*pkg.duplicate && <ProblemBadge problem='duplicate' />*/}
               </span>
             )}
           </div>
@@ -195,7 +65,8 @@ export default function PackagePreview({
           </button>
         </div>
 
-        <div className={styles.desc}>{desc}</div>
+        {/* TODO: where to put fullDescription? */}
+        <div className={styles.desc}>{pkg.registryMetadata?.description}</div>
       </div>
 
       <CSSTransition
@@ -207,19 +78,26 @@ export default function PackagePreview({
       >
         <div className={styles.content}>
           <div className={styles.contentInner}>
+            {/*
             <div className={styles.stat}>
               <div className={styles.statHeader}>
                 <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
                 Script
               </div>
-              {packageDetailsLoading ? (
+              {detailsLoading ? (
                 <ScriptSkeleton />
               ) : (
-                <a href='#' className={styles.statLink} target='_blank' rel='noreferrer'>
-                  {script}
+                <a
+                  href={pkg.containingScriptUrl}
+                  className={styles.statLink}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  {pkg.containingScriptUrl}
                 </a>
               )}
             </div>
+            */}
 
             <div className={styles.statList}>
               <div className={clsx(styles.stat, styles.statListItemSmall)}>
@@ -227,16 +105,21 @@ export default function PackagePreview({
                   <Icon kind='license' color='#8E8AA0' className={styles.statIcon} />
                   License
                 </div>
-                {packageDetailsLoading ? (
+                {detailsLoading ? (
                   <LicenceSkeleton />
                 ) : (
                   <>
-                    <div className={styles.statTitle}>{license.title}</div>
-                    <div className={styles.statSubtitle}>{license.subtitle}</div>
+                    {/* TODO: license may be a big string! How we deal with it?*/}
+                    <div className={styles.statTitle}>{pkg.registryMetadata?.license}</div>
+                    {/* TODO
+                    <div className={styles.statSubtitle}>
+                      {pkg.registryMetadata?.licenseDescription}
+                    </div>*/}
                   </>
                 )}
               </div>
 
+              {/*
               <div className={clsx(styles.stat, styles.statListItemSmall)}>
                 <div className={styles.statHeader}>
                   <Icon kind='rating' color='#8E8AA0' className={styles.statIcon} />
@@ -245,17 +128,16 @@ export default function PackagePreview({
                     <Hint text='Rating based on our service' />
                   </span>
                 </div>
-                {packageDetailsLoading ? (
+                {detailsLoading ? (
                   <RatingSkeleton />
                 ) : (
                   <>
                     <div className={styles.statTitle}>
-                      {rating.place}
-
+                      {pkg.rating}
                       <div
                         className={clsx(
                           styles.statRating,
-                          rating.rankingDelta > 0 ? styles.statRatingGreen : styles.statRatingRed
+                          pkg.ratingDelta > 0 ? styles.statRatingGreen : styles.statRatingRed
                         )}
                       >
                         <Icon
@@ -264,33 +146,36 @@ export default function PackagePreview({
                           height={12}
                           className={styles.statRatingArrow}
                         />
-                        {rating.rankingDelta}
+                        {pkg.ratingDelta}
                       </div>
                     </div>
-                    <div className={styles.statSubtitle}>out of {formatNumber(rating.out)}</div>
+                    <div className={styles.statSubtitle}>
+                      out of {formatNumber(totalRatedPackages)}
+                    </div>
                   </>
                 )}
               </div>
+              */}
 
               <div className={clsx(styles.stat, styles.statListItemLarge)}>
                 <div className={styles.statHeader}>
                   <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
                   Dependencies
+                  {detailsLoading ? (
+                    <ChipGroupSkeleton />
+                  ) : (
+                    <ChipGroup>
+                      {deps.map((dependency) => (
+                        <Chip size='medium' fontSize='small' font='monospace'>
+                          {dependency}
+                        </Chip>
+                      ))}
+                    </ChipGroup>
+                  )}
                 </div>
-                {packageDetailsLoading ? (
-                  <ChipGroupSkeleton />
-                ) : (
-                  <ChipGroup>
-                    {dependencies.map((dependency) => (
-                      <Chip size='medium' fontSize='small' font='monospace'>
-                        {dependency}
-                      </Chip>
-                    ))}
-                  </ChipGroup>
-                )}
               </div>
-            </div>
 
+              {/* TODO: separate component
             <div className={styles.stat}>
               <div className={styles.statHeader}>
                 <Icon kind='graph' color='#8E8AA0' className={styles.statIcon} />
@@ -298,49 +183,77 @@ export default function PackagePreview({
               </div>
 
               <div className={styles.popularity}>
-                {packageDetailsLoading ? <BarChartSkeleton /> : <BarChart bars={packages} />}
+                {detailsLoading ? <BarChartSkeleton /> : <BarChart bars={packages} />}
               </div>
             </div>
+            */}
 
-            {/* TODO: add Modules treemap here */}
+              {/* TODO: add Modules treemap here */}
 
-            <div className={styles.stat}>
-              <div className={styles.statHeader}>Used on</div>
+              {/*
+              <div className={styles.stat}>
+                <div className={styles.statHeader}>Used on</div>
 
-              {packageDetailsLoading ? (
-                <SitesListSkeleton className={styles.usedOnList} />
-              ) : (
-                <SitesList sites={sites} className={styles.usedOnList} />
-              )}
+                {detailsLoading ? (
+                  <SitesListSkeleton className={styles.usedOnList} />
+                ) : (
+                  <SitesList sites={sites} className={styles.usedOnList} />
+                )}
+              </div>
+              */}
             </div>
-
             <div className={styles.actions}>
               <div className={styles.links}>
-                {packageDetailsLoading ? (
+                {detailsLoading ? (
                   <LinksSkeleton />
                 ) : (
-                  links.map(({ href, kind, linkText }) => (
+                  <>
+                    {pkg.registryMetadata?.repositoryUrl && (
+                      <a
+                        href={pkg.registryMetadata?.repositoryUrl}
+                        className={styles.link}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        <Icon kind='repository' color='#212121' className={styles.linkIcon} />
+                        Repository
+                      </a>
+                    )}
+
+                    {pkg.registryMetadata?.homepageUrl && (
+                      <a
+                        href={pkg.registryMetadata?.homepageUrl}
+                        className={styles.link}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        <Icon kind='link' color='#212121' className={styles.linkIcon} />
+                        Homepage
+                      </a>
+                    )}
+
                     <a
-                      key={href}
-                      href={href}
+                      href={makeNpmUrl(pkg)}
                       className={styles.link}
                       target='_blank'
                       rel='noreferrer'
                     >
                       <Icon
-                        kind={kind}
-                        width={kind !== 'npm' ? 16 : 32}
-                        height={kind !== 'npm' ? 16 : 32}
+                        kind='npm'
+                        width={32}
+                        height={32}
                         color='#212121'
                         className={styles.linkIcon}
                       />
-                      {linkText}
                     </a>
-                  ))
+                  </>
                 )}
               </div>
 
-              <Button variant='arrow'>Details</Button>
+              {/* TODO: should be a <a> link w/ router support */}
+              <Button variant='arrow' onClick={() => navigate(`/package/${pkg.name}`)}>
+                Details
+              </Button>
             </div>
           </div>
         </div>
@@ -351,21 +264,28 @@ export default function PackagePreview({
           {/* TODO: not sure how to conditionally render maximum number of keywords (e.g. 5 for
                     desktop, 3/4 for tablet, 2 for mobile) based on viewport and update rest number
                     of keywords beyond current maximum in Chip */}
-          {keywords.slice(0, 5).map((keyword) => (
-            <a key={keyword} href='#' className={styles.tag}>
-              {keyword}
+          {/* ^ Nearly impossible thing for responsive markup rendered on server.
+                Maybe just avoid conditional render? // oklimenko */}
+          {pkg.registryMetadata?.keywords?.slice(6).map((tag) => (
+            <a href='#' className={styles.tag}>
+              {tag}
             </a>
           ))}
-          {keywords.slice(5).length > 0 && (
+          {(pkg.registryMetadata?.keywords?.length ?? 0) > 6 && (
             <Chip variant='info' size='medium' fontWeight='semiBold'>
-              +{keywords.slice(5).length}
+              +{(pkg.registryMetadata?.keywords?.length ?? 0) - 6}
             </Chip>
           )}
         </div>
 
         <div className={styles.author}>
-          <span className={styles.authorName}>{author.name}</span>
-          <img className={styles.authorImage} src={author.image} alt='' />
+          {/* TODO: print all maintainers? Author is not a single entity */}
+          <span className={styles.authorName}>{pkg.registryMetadata?.maintainers?.[0]?.name}</span>
+          <img
+            className={styles.authorImage}
+            src={pkg.registryMetadata?.maintainers?.[0]?.avatar}
+            alt=''
+          />
         </div>
       </div>
     </div>

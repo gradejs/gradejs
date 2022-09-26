@@ -27,7 +27,7 @@ type MetaItemProps = {
 type Props = {
   metaItems: MetaItemProps[];
   keyWords: string[];
-  vulnerabilities: string[];
+  problems: string[];
   authors: string[];
   loading: boolean;
 };
@@ -35,7 +35,7 @@ type Props = {
 export default function SearchResultsSidebar({
   metaItems,
   keyWords,
-  vulnerabilities,
+  problems,
   authors,
   loading,
 }: Props) {
@@ -113,7 +113,7 @@ export default function SearchResultsSidebar({
             resetGroup={() => setSelectedProblems([])}
           >
             <ProblemsList
-              keywordsList={vulnerabilities}
+              keywordsList={problems}
               selectedKeywords={selectedProblems}
               selectHandler={handleProblemsChange}
             />
@@ -182,7 +182,7 @@ export default function SearchResultsSidebar({
           ) : (
             <SidebarCategory categoryName='Problems' selectedKeywords={selectedProblems}>
               <ProblemsList
-                keywordsList={vulnerabilities}
+                keywordsList={problems}
                 selectedKeywords={selectedProblems}
                 selectHandler={handleProblemsChange}
               />

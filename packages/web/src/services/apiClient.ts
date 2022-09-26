@@ -27,6 +27,7 @@ export const client = createTRPCClient<ClientApiRouter>({
   },
 });
 
-export type RequestWebPageScanOutput = InferMutationOutput<'requestWebPageScan'>;
+export type RequestWebPageRescanOutput = InferMutationOutput<'requestWebPageRescan'>;
+export type GetWebPageScanOutput = InferQueryOutput<'getWebPageScan'>;
 export type { ClientApi };
 export type ApiClient = typeof client;

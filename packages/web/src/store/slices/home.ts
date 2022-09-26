@@ -7,7 +7,7 @@ const parseWebsite = createAsyncThunk('home/submitWebsite', async (url: string) 
     url = `https://${url}`;
   }
 
-  await client.mutation('requestWebPageScan', url);
+  await client.mutation('requestWebPageRescan', url);
 });
 
 const home = createSlice({
@@ -15,19 +15,19 @@ const home = createSlice({
   initialState: {
     isLoading: false,
     isFailed: false,
-    hostname: '',
+    address: '',
     loadError: null as SerializedError | null,
   },
   reducers: {
     resetError(state) {
-      state.hostname = '';
+      state.address = '';
       state.isFailed = false;
     },
   },
   extraReducers(builder) {
     builder
       .addCase(parseWebsite.pending, (state, action) => {
-        state.hostname = new URL(action.meta.arg).hostname;
+        state.address = new URL(action.meta.arg).toString();
         state.isLoading = true;
         state.isFailed = false;
         state.loadError = null;

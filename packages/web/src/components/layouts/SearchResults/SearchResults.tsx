@@ -1,82 +1,74 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styles from './SearchResults.module.scss';
 import Footer from 'components/ui/Footer/Footer';
 import Container from 'components/ui/Container/Container';
-import { Icon } from '../../ui/Icon/Icon';
 import PackagePreview from '../../ui/PackagePreview/PackagePreview';
 import SearchedResource from '../../ui/SearchedResource/SearchedResource';
-import CardGroup from '../../ui/CardGroup/CardGroup';
-import CardGroups from 'components/ui/CardGroups/CardGroups';
+import { Icon } from '../../ui/Icon/Icon';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResultsSidebar';
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
-import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
-import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
-import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
-import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
+import { ClientApi } from '../../../services/apiClient';
+import { ScanStatus, IdentifiedPackage } from 'store/selectors/websiteResults';
 
 type Props = {
-  pageLoading?: boolean;
+  isLoading: boolean;
+  isPending: boolean;
+  searchQuery: string;
+  packages: IdentifiedPackage[];
+  packagesStats: { total: number; vulnerable: number; outdated: number };
+  vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>;
+  vulnerabilitiesCount: number;
+  keywordsList: string[];
+  status: ScanStatus;
+  // siteFavicon: string;
 };
 
-export default function SearchResults({ pageLoading = false }: Props) {
-  const [loading, setLoading] = useState<boolean>(pageLoading);
-
-  const loadingRef = useRef<LoadingBarRef>(null);
-
-  // FIXME: just for demo purposes to show how loading bar works
+export default function SearchResults({
+  isLoading,
+  searchQuery,
+  packages,
+  packagesStats,
+  vulnerabilitiesCount,
+  keywordsList,
+  status,
+}: Props) {
   // Documentation: https://github.com/klendi/react-top-loading-bar
-  // Starts the loading indicator with a random starting value between 20-30 (or startingValue),
-  // then repetitively after an refreshRate (in milliseconds), increases it by a random value
-  // between 2-10. This continues until it reaches 90% of the indicator's width.
-  useEffect(() => {
-    loadingRef?.current?.continuousStart(10, 5000);
+  const loadingRef = useRef<LoadingBarRef>(null);
+  const host = new URL(searchQuery).hostname;
 
-    // After 10 seconds makes the loading indicator reach 100% of his width and then fade.
-    setTimeout(() => {
-      loadingRef?.current?.complete();
-      setLoading(false);
-    }, 60000);
-  }, []);
-
-  // TODO: mock data, remove later
   const metaItems = [
-    {
+    /*{
       icon: <Icon kind='weight' width={24} height={24} />,
       text: '159 kb webpack bundle size',
-    },
-    {
+    },*/
+    /*{
       icon: <Icon kind='search' width={24} height={24} color='#212121' />,
       text: '50 scripts found',
-    },
+    },*/
     {
       icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,
-      text: '6 vulnerabilities in 4 packages',
+      text: `${vulnerabilitiesCount} vulnerabilities in ${packagesStats.total} packages`,
     },
-    {
+    /*{
       icon: <Icon kind='duplicate' color='#F3812E' width={24} height={24} />,
-      text: '12 duplicate packages',
-    },
+      text: packagesStats.duplicate + ' duplicate packages',
+    },*/
     {
       icon: <Icon kind='outdated' color='#F1CE61' stroke='white' width={24} height={24} />,
-      text: '18 outdated packages',
+      text: `${packagesStats.outdated} outdated packages`,
     },
   ];
 
-  // TODO: mock data, remove later
-  const keyWords = ['#moment', '#date', '#react', '#parse', '#fb', '#angular', '#vue', '#ember'];
+  const authors: string[] = []; // TODO
 
-  // TODO: mock data, remove later
-  const vulnerabilities = ['Vulnerabilities', 'Outdated', 'Duplicate'];
-
-  // TODO: mock data, remove later
-  const authors = ['gaearon', 'acdlite', 'sophiebits', 'sebmarkbage', 'zpao', 'trueadm', 'bvaughn'];
+  const problems = ['Vulnerabilities', 'Outdated' /*'Duplicate'*/];
 
   return (
     <>
-      {pageLoading && (
+      {isLoading && (
         <LoadingBar
           ref={loadingRef}
           color='linear-gradient(90deg, #2638D9 0%, #B22AF2 100%)'
@@ -87,22 +79,22 @@ export default function SearchResults({ pageLoading = false }: Props) {
         />
       )}
 
-      <StickyDefaultHeader showSearch />
+      <StickyDefaultHeader showSearch searchQuery={searchQuery} />
 
       <Container>
         <div className={styles.searchResults}>
           <div className={styles.searchResultsResource}>
-            {loading ? (
+            {isLoading ? (
               <SearchedResourceSkeleton
                 image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
                 name='pinterest.com'
               />
             ) : (
               <SearchedResource
-                image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
-                name='pinterest.com'
-                totalPackages={6}
-                lastScanDate='21 feb in 21:30'
+                image={/*siteFavicon*/ ''}
+                name={host}
+                totalPackages={packagesStats.total}
+                lastScanDate={status.lastScanDate}
               />
             )}
           </div>
@@ -110,59 +102,39 @@ export default function SearchResults({ pageLoading = false }: Props) {
           <div className={styles.searchResultsSidebar}>
             <SearchResultsSidebar
               metaItems={metaItems}
-              keyWords={keyWords}
-              vulnerabilities={vulnerabilities}
+              keyWords={keywordsList}
+              problems={problems}
               authors={authors}
-              loading={loading}
+              loading={isLoading}
             />
           </div>
 
           <div className={styles.packages}>
-            {loading ? (
-              <PackagePreviewSkeleton />
+            {isLoading ? (
+              <>
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+                <PackagePreviewSkeleton />
+              </>
             ) : (
-              <PackagePreview
-                name='@team-griffin/react-heading-section'
-                version='3.0.0 - 4.16.4'
-                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
-                problems={['vulnerabilities']}
-                keywords={['#moment', '#date', '#time', '#parse', '#format', '#format', '#format']}
-                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
-              />
-            )}
-
-            {loading ? (
-              <PackagePreviewSkeleton />
-            ) : (
-              <PackagePreview
-                name='@team-griffin/react-heading-section'
-                version='3.0.0 - 4.16.4'
-                desc='The Lodash library exported as ES modules. Generated using lodash-cli'
-                problems={['vulnerabilities', 'duplicate', 'outdated']}
-                keywords={['#moment', '#date', '#time', '#parse', '#format']}
-                author={{ name: 'jdalton', image: 'https://via.placeholder.com/36' }}
-              />
+              packages.map((pkg, index) => <PackagePreview pkg={pkg} opened={index === 0} />)
             )}
           </div>
         </div>
-
+        {/*
         <CardGroups>
           <CardGroup title='Similar sites'>
-            {loading ? (
-              <CardListSkeleton />
-            ) : (
-              <PackagesBySourceCardList cards={packagesBySourceListData} />
-            )}
+            {isLoading ? <CardListSkeleton /> : <PackagesBySourceCardList cards={similarCards} />}
           </CardGroup>
 
           <CardGroup title='Popular packages'>
-            {loading ? (
-              <CardListSkeleton numberOfElements={6} />
-            ) : (
-              <PopularPackageCardList cards={popularPackageListData} />
-            )}
+            {isLoading ? <CardListSkeleton /> : <PopularPackageCardList cards={popularPackages} />}
           </CardGroup>
         </CardGroups>
+        */}
       </Container>
 
       <Footer />
