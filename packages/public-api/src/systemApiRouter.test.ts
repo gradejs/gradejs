@@ -19,6 +19,18 @@ describe('routes / systemApi', () => {
     await api.post('/system/scan').set('X-Api-Key', 'INVALID').send().expect(401);
   });
 
+  it('should handle large requests', async () => {
+    const buffer = new Uint8Array(512 * 1024);
+
+    await api
+      .post('/system/scan')
+      .set('X-Api-Key', getGradeJsApiKey())
+      .send({
+        payload: buffer.toString(),
+      })
+      .expect(400);
+  });
+
   it('should deny requests with invalid body', async () => {
     await api
       .post('/system/scan')
