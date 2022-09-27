@@ -9,7 +9,7 @@ export function createApp() {
   const app = express();
   app.get('/', (_, res) => res.send('gradejs-public-api')); // healthcheck path
 
-  // System scan reports maybe relatively big, so we need to increase the limit
+  // System scan reports may be relatively big, so we need to increase the limit
   app.use('/system', verifySystemApiToken, express.json({ limit: '2MB' }), systemApiRouter);
 
   app.use(
