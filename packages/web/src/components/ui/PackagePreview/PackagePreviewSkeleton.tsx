@@ -3,7 +3,9 @@ import styles from './PackagePreview.module.scss';
 import Skeleton from '../Skeleton/Skeleton';
 import { repeat } from '../../../utils/helpers';
 
-export const PackagePreviewSkeleton = () => <Skeleton className={styles.packageSkeleton} />;
+export const PackagePreviewSkeleton = () => (
+  <Skeleton variant='rounded' className={styles.packageSkeleton} />
+);
 
 export const ScriptSkeleton = () => <Skeleton width={354} />;
 

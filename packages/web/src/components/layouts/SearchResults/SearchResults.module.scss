@@ -8,7 +8,7 @@
   grid-column-gap: 60px;
   margin-top: 44px;
   padding-bottom: 108px;
-  border-bottom: 1px solid $gray-border;
+  border-bottom: 1px solid rgba($gray-border, 0.5);
   margin-bottom: 80px;
 
   @include xxl {
