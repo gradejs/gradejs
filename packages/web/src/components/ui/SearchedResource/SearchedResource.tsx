@@ -18,7 +18,9 @@ export default function SearchedResource({ image, name, totalPackages, lastScanD
         <h3 className={styles.searchedResourceTitle}>
           {name} <span className={styles.searchedResourceHighlight}>{totalPackages} packages</span>
         </h3>
-        <div className={styles.searchedResourceSubtitle}>Last scanning {lastScanDate}</div>
+        {!!lastScanDate && (
+          <div className={styles.searchedResourceSubtitle}>Last scanning {lastScanDate}</div>
+        )}
       </div>
     </div>
   );

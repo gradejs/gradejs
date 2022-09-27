@@ -11,33 +11,32 @@ import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedReso
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import { ClientApi } from '../../../services/apiClient';
-import { ScanStatus, IdentifiedPackage } from 'store/selectors/websiteResults';
+import { IdentifiedPackage } from 'store/selectors/websiteResults';
 
 type Props = {
   isLoading: boolean;
   isPending: boolean;
-  searchQuery: string;
+  scanUrl: string;
   packages: IdentifiedPackage[];
   packagesStats: { total: number; vulnerable: number; outdated: number };
   vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>;
   vulnerabilitiesCount: number;
   keywordsList: string[];
-  status: ScanStatus;
+  scanDate?: string;
   // siteFavicon: string;
 };
 
 export default function SearchResults({
   isLoading,
-  searchQuery,
+  scanUrl,
   packages,
   packagesStats,
   vulnerabilitiesCount,
   keywordsList,
-  status,
+  scanDate,
 }: Props) {
   // Documentation: https://github.com/klendi/react-top-loading-bar
   const loadingRef = useRef<LoadingBarRef>(null);
-  const host = new URL(searchQuery).hostname;
 
   const metaItems = [
     /*{
@@ -79,7 +78,7 @@ export default function SearchResults({
         />
       )}
 
-      <StickyDefaultHeader showSearch searchQuery={searchQuery} />
+      <StickyDefaultHeader showSearch searchQuery={scanUrl} />
 
       <Container>
         <div className={styles.searchResults}>
@@ -87,14 +86,14 @@ export default function SearchResults({
             {isLoading ? (
               <SearchedResourceSkeleton
                 image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
-                name='pinterest.com'
+                name={scanUrl}
               />
             ) : (
               <SearchedResource
                 image={/*siteFavicon*/ ''}
-                name={host}
+                name={scanUrl}
                 totalPackages={packagesStats.total}
-                lastScanDate={status.lastScanDate}
+                lastScanDate={scanDate}
               />
             )}
           </div>

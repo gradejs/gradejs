@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './Error.module.scss';
 import Container from 'components/ui/Container/Container';
-import SearchBar from '../../ui/SearchBar/SearchBar';
 import CardGroup from '../../ui/CardGroup/CardGroup';
 import CardGroups from '../../ui/CardGroups/CardGroups';
 import Footer from '../../ui/Footer/Footer';
@@ -9,6 +8,7 @@ import StickyErrorHeader from '../../ui/Header/StickyErrorHeader';
 import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
 import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
 import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
+import SearchBarContainer from '../../containers/SearchBarContainer';
 
 export type Props = {
   host: string;
@@ -36,12 +36,10 @@ export default function Error({
           </div>
 
           <div className={styles.searchWrapper}>
-            <SearchBar size='large' value='' placeholder={actionTitle} />
+            <SearchBarContainer size='large' placeholder={actionTitle} />
           </div>
         </section>
 
-        {/* TODO: Trying to fit separate domain entities within a single component seems like burden.
-                  Feels like these <CardList/>'s should be separate components. */}
         <CardGroups>
           <CardGroup title='But we have'>
             <PackagesBySourceCardList cards={packagesBySourceListData} />

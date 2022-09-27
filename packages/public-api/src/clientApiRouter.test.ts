@@ -2,6 +2,7 @@ import { TRPC_ERROR_CODES_BY_KEY } from '@trpc/server/rpc';
 import {
   getDatabaseConnection,
   Hostname,
+  PackageMetadata,
   systemApi,
   WebPage,
   WebPageScan,
@@ -47,10 +48,10 @@ describe('routes / website', () => {
     const requestWebPageScanMock = jest.spyOn(systemApi, 'requestWebPageScan');
     requestWebPageScanMock.mockImplementation(async () => ({}));
 
-    await api
-      .post('/client/requestWebPageRescan')
+    const response = await api
+      .post('/client/getOrRequestWebPageScan')
       .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(siteUrl))
+      .send(JSON.stringify({ url: siteUrl.toString(), rescan: true }))
       .expect(200);
 
     const hostname = await getRepository(Hostname).findOneOrFail({ hostname: siteUrl.hostname });
@@ -85,20 +86,14 @@ describe('routes / website', () => {
       webPageScan.id.toString()
     );
 
-    const url =
-      '/client/getWebPageScan?batch=1&input=' +
-      encodeURIComponent(JSON.stringify({ '0': siteUrl }));
-    const responseGet = await api.get(url).set('Origin', 'http://localhost:3000').expect(200);
-    expect(responseGet.body).toMatchObject([
-      {
-        result: {
-          data: {
-            id: webPageScan.id.toString(),
-            status: WebPageScan.Status.Pending,
-          },
+    expect(response.body).toMatchObject({
+      result: {
+        data: {
+          id: webPageScan.id.toString(),
+          status: WebPageScan.Status.Pending,
         },
       },
-    ]);
+    });
   });
 
   it('should return a cached scan if applicable', async () => {
@@ -126,37 +121,55 @@ describe('routes / website', () => {
       },
     });
 
-    await api
-      .post('/client/requestWebPageRescan')
+    await em.getRepository(PackageMetadata).save({
+      name: 'react',
+      description: 'short description',
+      fullDescription: 'full description',
+      latestVersion: '17.0.1',
+      monthlyDownloads: 9001,
+      keywords: ['react'],
+      updateSeq: 1,
+    });
+
+    const response = await api
+      .post('/client/getOrRequestWebPageScan')
       .set('Origin', 'http://localhost:3000')
-      .send(JSON.stringify(siteUrl))
+      .send(JSON.stringify({ url: siteUrl.toString(), rescan: false }))
       .expect(200);
 
     expect(requestWebPageScanMock).toHaveBeenCalledTimes(0);
-
-    const url =
-      '/client/getWebPageScan?batch=1&input=' +
-      encodeURIComponent(JSON.stringify({ '0': siteUrl }));
-    const responseGet = await api.get(url).set('Origin', 'http://localhost:3000').expect(200);
-    expect(responseGet.body).toMatchObject([
-      {
-        result: {
-          data: {
-            id: existingScan.id.toString(),
-            status: WebPageScan.Status.Processed,
-            scanResult: {
-              identifiedModuleMap: {},
-              identifiedPackages: [
-                {
+    expect(response.body).toMatchObject({
+      result: {
+        data: {
+          id: existingScan.id.toString(),
+          status: WebPageScan.Status.Processed,
+          scanResult: {
+            vulnerabilities: {},
+            identifiedModuleMap: {},
+            identifiedPackages: [
+              {
+                name: 'react',
+                versionSet: ['17.0.0'],
+                registryMetadata: {
                   name: 'react',
-                  versionSet: ['17.0.0'],
-                  moduleIds: [],
+                  latestVersion: '17.0.1',
+                  monthlyDownloads: 9001,
+                  description: 'short description',
+                  fullDescription: 'full description',
+                  maintainers: [],
+                  keywords: ['react'],
+                  versionSpecificValues: {},
+                  homepageUrl: null,
+                  repositoryUrl: null,
+                  license: null,
+                  updateSeq: 1,
+                  updatedAt: null,
                 },
-              ],
-            },
+              },
+            ],
           },
         },
       },
-    ]);
+    });
   });
 });
