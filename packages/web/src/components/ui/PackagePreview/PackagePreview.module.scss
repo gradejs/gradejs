@@ -23,10 +23,6 @@
   }
 }
 
-.header {
-  padding-bottom: 24px;
-}
-
 .top {
   cursor: pointer;
   display: flex;
@@ -36,6 +32,12 @@
 
 .title {
   padding-right: 24px;
+  font-size: 22px;
+
+  @include xxl {
+    font-size: 26px;
+    line-height: 1.54;
+  }
 
   @include mobile-and-tablet {
     display: flex;
@@ -44,28 +46,20 @@
 }
 
 .name {
-  font-size: 22px;
-  line-height: 1.35;
   font-weight: 500;
-
-  @include xxl {
-    font-size: 26px;
-  }
 }
 
 .version {
-  font-size: 26px;
   font-weight: 400;
   color: $gray-text;
   margin-right: 12px;
 }
 
 .problems {
-  vertical-align: text-bottom;
-  display: inline-flex;
-  align-items: center;
+  vertical-align: middle;
+  display: inline-block;
   font-size: 14px;
-  height: 33px;
+  padding-top: 2px;
 
   @include xxl {
     font-size: 16px;
@@ -82,6 +76,7 @@
   }
 
   @include mobile-and-tablet {
+    padding-top: 0;
     display: flex;
     flex-wrap: wrap;
     order: 1;
@@ -146,7 +141,7 @@
 }
 
 .contentInner {
-  margin-bottom: 24px;
+  padding-top: 24px;
 }
 
 .stat {
@@ -231,41 +226,23 @@
 }
 
 .statList {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding-right: 60px;
-
-  @include lg {
-    padding-right: 0;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  grid-gap: 32px 20px;
 
   @include mobile-and-tablet {
-    flex-wrap: wrap;
-    padding-right: 0;
-  }
-}
-
-.statListItemSmall {
-  flex: 0 0 auto;
-  width: 25%;
-
-  @include lg {
-    width: auto;
-    padding-right: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @include mobile-and-tablet {
-    width: 50%;
+  .stat {
+    margin-bottom: 0;
   }
 }
 
 .statListItemLarge {
-  flex: 0 0 auto;
-  width: 50%;
-
   @include mobile-and-tablet {
-    width: 100%;
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }
 
@@ -295,17 +272,23 @@
 }
 
 .actions {
-  margin-top: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  @include mobile-and-tablet {
-    margin-top: 44px;
+  &:not(:only-child) {
+    margin-top: 56px;
+
+    @include mobile-and-tablet {
+      margin-top: 44px;
+    }
+
+    @include sm {
+      margin-top: 32px;
+    }
   }
 
   @include sm {
-    margin-top: 32px;
     flex-direction: column-reverse;
     justify-content: flex-start;
     align-items: flex-end;
@@ -354,7 +337,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid $gray-border;
+  border-top: 1px solid rgba($gray-border, 0.5);
+  margin-top: 24px;
   padding-top: 24px;
 
   @include mobile-and-tablet {
@@ -368,6 +352,10 @@
 
   & > * + * {
     margin-left: 24px;
+
+    @include mobile-and-tablet {
+      margin-left: 18px;
+    }
   }
 }
 
@@ -387,6 +375,12 @@
 
   @include sm {
     &:nth-child(n + 4) {
+      display: none;
+    }
+  }
+
+  @include mobile {
+    &:nth-child(n + 3) {
       display: none;
     }
   }

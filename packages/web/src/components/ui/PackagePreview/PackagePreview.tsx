@@ -66,7 +66,9 @@ export default function PackagePreview({
         </div>
 
         {/* TODO: where to put fullDescription? */}
-        <div className={styles.desc}>{pkg.registryMetadata?.description}</div>
+        {pkg.registryMetadata?.description && (
+          <div className={styles.desc}>{pkg.registryMetadata?.description}</div>
+        )}
       </div>
 
       <CSSTransition
@@ -99,27 +101,30 @@ export default function PackagePreview({
             </div>
             */}
 
-            <div className={styles.statList}>
-              <div className={clsx(styles.stat, styles.statListItemSmall)}>
-                <div className={styles.statHeader}>
-                  <Icon kind='license' color='#8E8AA0' className={styles.statIcon} />
-                  License
-                </div>
-                {detailsLoading ? (
-                  <LicenceSkeleton />
-                ) : (
-                  <>
-                    {/* TODO: license may be a big string! How we deal with it?*/}
-                    <div className={styles.statTitle}>{pkg.registryMetadata?.license}</div>
-                    {/* TODO
+            {(pkg.registryMetadata?.license || deps.length > 0) && (
+              <div className={styles.statList}>
+                {pkg.registryMetadata?.license && (
+                  <div className={clsx(styles.stat, styles.statListItemSmall)}>
+                    <div className={styles.statHeader}>
+                      <Icon kind='license' color='#8E8AA0' className={styles.statIcon} />
+                      License
+                    </div>
+                    {detailsLoading ? (
+                      <LicenceSkeleton />
+                    ) : (
+                      <>
+                        {/* TODO: license may be a big string! How we deal with it?*/}
+                        <div className={styles.statTitle}>{pkg.registryMetadata?.license}</div>
+                        {/* TODO
                     <div className={styles.statSubtitle}>
                       {pkg.registryMetadata?.licenseDescription}
                     </div>*/}
-                  </>
+                      </>
+                    )}
+                  </div>
                 )}
-              </div>
 
-              {/*
+                {/*
               <div className={clsx(styles.stat, styles.statListItemSmall)}>
                 <div className={styles.statHeader}>
                   <Icon kind='rating' color='#8E8AA0' className={styles.statIcon} />
@@ -157,25 +162,30 @@ export default function PackagePreview({
               </div>
               */}
 
-              <div className={clsx(styles.stat, styles.statListItemLarge)}>
-                <div className={styles.statHeader}>
-                  <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
-                  Dependencies
-                  {detailsLoading ? (
-                    <ChipGroupSkeleton />
-                  ) : (
-                    <ChipGroup>
-                      {deps.map((dependency) => (
-                        <Chip size='medium' fontSize='small' font='monospace'>
-                          {dependency}
-                        </Chip>
-                      ))}
-                    </ChipGroup>
-                  )}
-                </div>
-              </div>
+                {deps.length > 0 && (
+                  <div className={clsx(styles.stat, styles.statListItemLarge)}>
+                    <div className={styles.statHeader}>
+                      <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
+                      Dependencies
+                    </div>
 
-              {/* TODO: separate component
+                    {detailsLoading ? (
+                      <ChipGroupSkeleton />
+                    ) : (
+                      <ChipGroup>
+                        {deps.map((dependency) => (
+                          <Chip size='medium' fontSize='small' font='monospace'>
+                            {dependency}
+                          </Chip>
+                        ))}
+                      </ChipGroup>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* TODO: separate component
             <div className={styles.stat}>
               <div className={styles.statHeader}>
                 <Icon kind='graph' color='#8E8AA0' className={styles.statIcon} />
@@ -188,9 +198,9 @@ export default function PackagePreview({
             </div>
             */}
 
-              {/* TODO: add Modules treemap here */}
+            {/* TODO: add Modules treemap here */}
 
-              {/*
+            {/*
               <div className={styles.stat}>
                 <div className={styles.statHeader}>Used on</div>
 
@@ -201,7 +211,6 @@ export default function PackagePreview({
                 )}
               </div>
               */}
-            </div>
             <div className={styles.actions}>
               <div className={styles.links}>
                 {detailsLoading ? (
@@ -259,35 +268,39 @@ export default function PackagePreview({
         </div>
       </CSSTransition>
 
-      <div className={styles.footer}>
-        <div className={styles.tags}>
-          {/* TODO: not sure how to conditionally render maximum number of keywords (e.g. 5 for
+      {(pkg.registryMetadata?.keywords || pkg.registryMetadata?.maintainers) && (
+        <div className={styles.footer}>
+          <div className={styles.tags}>
+            {/* TODO: not sure how to conditionally render maximum number of keywords (e.g. 5 for
                     desktop, 3/4 for tablet, 2 for mobile) based on viewport and update rest number
                     of keywords beyond current maximum in Chip */}
-          {/* ^ Nearly impossible thing for responsive markup rendered on server.
+            {/* ^ Nearly impossible thing for responsive markup rendered on server.
                 Maybe just avoid conditional render? // oklimenko */}
-          {pkg.registryMetadata?.keywords?.slice(6).map((tag) => (
-            <a href='#' className={styles.tag}>
-              {tag}
-            </a>
-          ))}
-          {(pkg.registryMetadata?.keywords?.length ?? 0) > 6 && (
-            <Chip variant='info' size='medium' fontWeight='semiBold'>
-              +{(pkg.registryMetadata?.keywords?.length ?? 0) - 6}
-            </Chip>
-          )}
-        </div>
+            {pkg.registryMetadata?.keywords?.slice(0, 5).map((tag) => (
+              <a href='#' className={styles.tag}>
+                {tag}
+              </a>
+            ))}
+            {(pkg.registryMetadata?.keywords?.length ?? 0) > 5 && (
+              <Chip variant='info' size='medium' fontWeight='semiBold'>
+                +{(pkg.registryMetadata?.keywords?.length ?? 0) - 5}
+              </Chip>
+            )}
+          </div>
 
-        <div className={styles.author}>
-          {/* TODO: print all maintainers? Author is not a single entity */}
-          <span className={styles.authorName}>{pkg.registryMetadata?.maintainers?.[0]?.name}</span>
-          <img
-            className={styles.authorImage}
-            src={pkg.registryMetadata?.maintainers?.[0]?.avatar}
-            alt=''
-          />
+          <div className={styles.author}>
+            {/* TODO: print all maintainers? Author is not a single entity */}
+            <span className={styles.authorName}>
+              {pkg.registryMetadata?.maintainers?.[0]?.name}
+            </span>
+            <img
+              className={styles.authorImage}
+              src={pkg.registryMetadata?.maintainers?.[0]?.avatar}
+              alt=''
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
