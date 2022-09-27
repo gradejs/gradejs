@@ -7,7 +7,7 @@ import { useScanResult } from '../../store/hooks/scan/useScanResult';
 export function HomePage() {
   const navigate = useNavigate();
   const [requestedScanUrl, setRequestedScanUrl] = useState<string | undefined>(undefined);
-  const { displayUrl, scanResult } = useScanResult(requestedScanUrl, false, true);
+  const { displayUrl, scanResult } = useScanResult(requestedScanUrl, { requestRescan: true });
 
   useEffect(() => {
     if (scanResult && displayUrl && !scanResult.isLoading) {

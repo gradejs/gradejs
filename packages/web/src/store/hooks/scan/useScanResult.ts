@@ -6,10 +6,9 @@ import { useScanRequest } from './useScanRequest';
 
 export const useScanResult = (
   scanUrl: string | undefined,
-  pollWhilePending = false,
-  requestRescan = false
+  { pollWhilePending = false, requestRescan = false } = {}
 ) => {
-  const { displayUrl, normalizedUrl } = useNormalizedScanUrl(scanUrl);
+  const { displayUrl, normalizedUrl, parsedUrl } = useNormalizedScanUrl(scanUrl);
 
   const scanResultSelector = useMemo(makeSelectScanResultByUrl, []);
   const scanResult = useAppSelector((state) => scanResultSelector(state, normalizedUrl));
@@ -41,5 +40,5 @@ export const useScanResult = (
     return () => clearTimeout(timeoutId);
   }, [pollWhilePending, normalizedUrl, scanResult]);
 
-  return { normalizedUrl, displayUrl, scanResult };
+  return { normalizedUrl, displayUrl, parsedUrl, scanResult };
 };

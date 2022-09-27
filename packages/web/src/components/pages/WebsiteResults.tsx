@@ -9,7 +9,9 @@ import { useScanResult } from '../../store/hooks/scan/useScanResult';
 export function WebsiteResultsPage() {
   const { '*': scanUrl } = useParams();
 
-  const { displayUrl, normalizedUrl, scanResult } = useScanResult(scanUrl, true);
+  const { displayUrl, normalizedUrl, parsedUrl, scanResult } = useScanResult(scanUrl, {
+    pollWhilePending: true,
+  });
 
   const packagesFiltered = useAppSelector((state) =>
     selectors.packagesSortedAndFiltered(state, normalizedUrl)
@@ -49,7 +51,7 @@ export function WebsiteResultsPage() {
     );
   }
 
-  if (isInvalid) {
+  if (!parsedUrl || isInvalid) {
     // TODO: move to tracking middleware?
     trackCustomEvent('HostnamePage', 'SiteInvalid');
     return (
@@ -62,9 +64,9 @@ export function WebsiteResultsPage() {
     );
   }
 
-  const title = `List of NPM packages that are used on ${displayUrl} - GradeJS`;
+  const title = `List of NPM packages that are used on ${parsedUrl.hostname} - GradeJS`;
   const description =
-    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${displayUrl}` +
+    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${parsedUrl.hostname}` +
     (packagesStats.vulnerable > 0 ? `, ${packagesStats.vulnerable} are vulnerable` : '') +
     (packagesStats.outdated > 0 ? `, ${packagesStats.outdated} are outdated` : '');
 

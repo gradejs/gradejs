@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 
-const errorState = { error: 'invalid.url', displayUrl: undefined, normalizedUrl: undefined };
+const errorState = {
+  error: 'invalid.url',
+  displayUrl: undefined,
+  normalizedUrl: undefined,
+  parsedUrl: undefined,
+};
 
 export const useNormalizedScanUrl = (scanUrl: string | undefined) =>
   useMemo(() => {
@@ -18,7 +23,8 @@ export const useNormalizedScanUrl = (scanUrl: string | undefined) =>
       const shortenedUrl = `${parsedUrl.hostname}${parsedUrl.pathname}`;
       return {
         displayUrl: shortenedUrl.endsWith('/') ? shortenedUrl.slice(0, -1) : shortenedUrl,
-        normalizedUrl: prefixedScanUrl,
+        normalizedUrl: parsedUrl.toString(),
+        parsedUrl,
       };
     } catch (_) {
       return errorState;

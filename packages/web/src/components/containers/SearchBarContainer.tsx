@@ -25,7 +25,7 @@ export default function SearchBarContainer({
   }, [inputValue]);
 
   const navigate = useNavigate();
-  const { displayUrl, scanResult } = useScanResult(submittedValue, false, true);
+  const { displayUrl, scanResult } = useScanResult(submittedValue, { requestRescan: true });
 
   useEffect(() => {
     if (scanResult && displayUrl && !scanResult.isLoading) {
