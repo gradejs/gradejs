@@ -15,12 +15,11 @@ export type InferQueryOutput<TRouteKey extends TQuery> = inferProcedureOutput<
   ClientApiRouter['_def']['queries'][TRouteKey]
 >;
 
-if (!process.env.API_ORIGIN) {
-  throw new Error('API_ORIGIN must be defined');
-}
+// Temporary fix for storybook
+const url = process.env.API_ORIGIN ? new URL('/client', process.env.API_ORIGIN) : '';
 
 export const client = createTRPCClient<ClientApiRouter>({
-  url: new URL('/client', process.env.API_ORIGIN).toString(),
+  url: url.toString(),
   fetch: typeof window === 'undefined' ? (f as any) : window.fetch.bind(window),
   headers: {
     Origin: process.env.CORS_ORIGIN,
