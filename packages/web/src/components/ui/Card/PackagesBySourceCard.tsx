@@ -17,7 +17,7 @@ const PackagesBySourceCard = ({
   packages,
   morePackagesCount,
 }: PackagesBySourceCardProps) => (
-  <Card title={sourceTitle} icon={sourceIcon}>
+  <Card title={sourceTitle} icon={sourceIcon} to={`/scan/${sourceTitle}`}>
     <div className={styles.tagsWrapper}>
       <ChipGroup>
         {packages.map((chip) => (
@@ -26,7 +26,7 @@ const PackagesBySourceCard = ({
           </Chip>
         ))}
 
-        {morePackagesCount && (
+        {!!morePackagesCount && (
           <Chip className={styles.chip} size='large' variant='outlined'>
             +{morePackagesCount} packages
           </Chip>

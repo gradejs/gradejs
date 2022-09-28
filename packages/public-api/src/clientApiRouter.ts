@@ -12,6 +12,7 @@ import {
   WebPageScan,
 } from '@gradejs-public/shared';
 import { getPackageMetadataByPackageNames } from './packageMetadata/packageMetadataService';
+import { getShowcaseData } from './showcase/showcaseService';
 
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
@@ -49,6 +50,43 @@ type RequestWebPageScanResponse = {
 
 export const appRouter = trpc
   .router<Context>()
+  .query('getShowcase', {
+    async resolve() {
+      const showcaseData = await getShowcaseData();
+
+      const showcasedScans = showcaseData.showcasedScans.map((showcasedScan) => ({
+        hostname: {
+          hostname: showcasedScan.scan.webPage.hostname.hostname,
+        },
+        webPage: {
+          path: showcasedScan.scan.webPage.path,
+        },
+        scanPreview: {
+          packageNames:
+            showcasedScan.scan.scanResult?.identifiedPackages.slice(0, 6).map((pkg) => pkg.name) ??
+            [],
+          totalCount: showcasedScan.scan.scanResult?.identifiedPackages.length ?? 0,
+        },
+      }));
+
+      const scansWithVulnerabilities = showcaseData.scansWithVulnerabilities.map(
+        (scanWithVulnerabilities) => ({
+          hostname: {
+            hostname: scanWithVulnerabilities.sourceScan.webPage.hostname.hostname,
+          },
+          webPage: {
+            path: scanWithVulnerabilities.sourceScan.webPage.path,
+          },
+          vulnerabilities: scanWithVulnerabilities.vulnerabilities,
+        })
+      );
+
+      return toSerializable({
+        showcasedScans,
+        scansWithVulnerabilities,
+      });
+    },
+  })
   .mutation('getOrRequestWebPageScan', {
     input: z.object({
       url: z.string().url(),

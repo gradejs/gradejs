@@ -2,6 +2,8 @@ import { TRPC_ERROR_CODES_BY_KEY } from '@trpc/server/rpc';
 import {
   getDatabaseConnection,
   Hostname,
+  ScansWithVulnerabilitiesProjection,
+  ShowcasedScan,
   PackageMetadata,
   systemApi,
   WebPage,
@@ -168,6 +170,133 @@ describe('routes / website', () => {
               },
             ],
           },
+        },
+      },
+    });
+  });
+
+  it('should return correct showcase dataset', async () => {
+    const db = await getDatabaseConnection();
+    const em = db.createEntityManager();
+
+    const scanRepo = em.getRepository(WebPageScan);
+    const showcasedScansRepo = em.getRepository(ShowcasedScan);
+    const scansWithVulnerabilitiesRepo = em.getRepository(ScansWithVulnerabilitiesProjection);
+
+    const mockHostname = 'test-mock.example.com';
+    const mockWebPagePath = '/testpage';
+
+    const mockPage = await findOrCreateWebPage(
+      new URL(`https://${mockHostname}${mockWebPagePath}`),
+      em
+    );
+
+    const mockScan = await scanRepo.save({
+      webPage: mockPage,
+      status: WebPageScan.Status.Processed,
+      finishedAt: new Date(),
+      scanResult: {
+        identifiedModuleMap: {},
+        identifiedPackages: [
+          {
+            name: 'mock-package-one',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+          {
+            name: 'mock-package-two',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+          {
+            name: 'mock-package-three',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+          {
+            name: 'mock-package-four',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+          {
+            name: 'mock-package-five',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+          {
+            name: 'mock-package-six',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+          {
+            name: 'mock-package-seven',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+        ],
+      },
+    });
+
+    await scansWithVulnerabilitiesRepo.save({
+      sourceScan: mockScan,
+      vulnerabilities: [
+        {
+          affectedPackageName: 'mock-package-one',
+          severity: 'CRITICAL',
+        },
+      ],
+    });
+
+    await showcasedScansRepo.save({
+      scan: mockScan,
+      order: 0,
+    });
+
+    const showcaseResponse = await api
+      .get('/client/getShowcase')
+      .set('Origin', 'http://localhost:3000')
+      .expect(200);
+
+    expect(showcaseResponse.body).toMatchObject({
+      result: {
+        data: {
+          showcasedScans: [
+            {
+              hostname: {
+                hostname: mockHostname,
+              },
+              webPage: {
+                path: mockWebPagePath,
+              },
+              scanPreview: {
+                packageNames: [
+                  'mock-package-one',
+                  'mock-package-two',
+                  'mock-package-three',
+                  'mock-package-four',
+                  'mock-package-five',
+                  'mock-package-six',
+                ],
+                totalCount: 7,
+              },
+            },
+          ],
+          scansWithVulnerabilities: [
+            {
+              hostname: {
+                hostname: mockHostname,
+              },
+              webPage: {
+                path: mockWebPagePath,
+              },
+              vulnerabilities: [
+                {
+                  affectedPackageName: 'mock-package-one',
+                  severity: 'CRITICAL',
+                },
+              ],
+            },
+          ],
         },
       },
     });

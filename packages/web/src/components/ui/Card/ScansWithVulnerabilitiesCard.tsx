@@ -13,7 +13,7 @@ const ScansWithVulnerabilitiesCard = ({
   vulnerablePackageName,
   additionalVulnerabilitiesCount,
 }: ScansWithVulnerabilitiesCardProps) => (
-  <Card title={sourcePageUrl} variant='small'>
+  <Card title={sourcePageUrl} variant='small' to={`/scan/${sourcePageUrl}`}>
     <VulnerablePackage name={vulnerablePackageName} moreTotal={additionalVulnerabilitiesCount} />
   </Card>
 );
