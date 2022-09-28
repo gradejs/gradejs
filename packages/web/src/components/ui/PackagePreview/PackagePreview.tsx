@@ -11,6 +11,8 @@ import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
 import { useNavigate } from 'react-router-dom';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
+import AvatarGroup from '../AvatarGroup/AvatarGroup';
+import Avatar from '../Avatar/Avatar';
 
 type Props = {
   opened?: boolean;
@@ -289,15 +291,12 @@ export default function PackagePreview({
           </div>
 
           <div className={styles.author}>
-            {/* TODO: print all maintainers? Author is not a single entity */}
-            <span className={styles.authorName}>
-              {pkg.registryMetadata?.maintainers?.[0]?.name}
-            </span>
-            <img
-              className={styles.authorImage}
-              src={pkg.registryMetadata?.maintainers?.[0]?.avatar}
-              alt=''
-            />
+            <AvatarGroup>
+              {(pkg.registryMetadata?.maintainers?.length ?? 0) > 0 &&
+                pkg.registryMetadata?.maintainers?.map((author) => (
+                  <Avatar alt={author.name} altAsTooltip={true} src={author.avatar} />
+                ))}
+            </AvatarGroup>
           </div>
         </div>
       )}
