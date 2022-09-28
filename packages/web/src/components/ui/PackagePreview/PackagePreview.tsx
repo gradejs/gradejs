@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './PackagePreview.module.scss';
 import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
@@ -30,7 +30,6 @@ export default function PackagePreview({
   pkg,
   detailsLoading = false,
 }: Props) {
-  const [open /*, setOpen*/] = useState<boolean>(opened ?? false);
   const navigate = useNavigate();
 
   // const toggleOpen = () => {
@@ -43,7 +42,7 @@ export default function PackagePreview({
   );
 
   return (
-    <div className={clsx(styles.package, open && styles.open)}>
+    <div className={clsx(styles.package, opened && styles.open)}>
       <div className={styles.header}>
         <div className={styles.top} /* onClick={toggleOpen}*/>
           <div className={styles.title}>
@@ -73,7 +72,7 @@ export default function PackagePreview({
       </div>
 
       <CSSTransition
-        in={open}
+        in={opened}
         timeout={600}
         classNames={{
           enterDone: styles.contentEnterDone,
