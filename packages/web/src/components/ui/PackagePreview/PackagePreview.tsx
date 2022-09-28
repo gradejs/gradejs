@@ -30,12 +30,12 @@ export default function PackagePreview({
   pkg,
   detailsLoading = false,
 }: Props) {
-  const [open, setOpen] = useState<boolean>(opened ?? false);
+  const [open /*, setOpen*/] = useState<boolean>(opened ?? false);
   const navigate = useNavigate();
 
-  const toggleOpen = () => {
-    setOpen(!open);
-  };
+  // const toggleOpen = () => {
+  //   setOpen(!open);
+  // };
 
   const versions = Object.keys(pkg.registryMetadata?.versionSpecificValues ?? {});
   const deps = Object.keys(
@@ -45,7 +45,7 @@ export default function PackagePreview({
   return (
     <div className={clsx(styles.package, open && styles.open)}>
       <div className={styles.header}>
-        <div className={styles.top} onClick={toggleOpen}>
+        <div className={styles.top} /* onClick={toggleOpen}*/>
           <div className={styles.title}>
             <span className={styles.name}>
               {pkg.name} <span className={styles.version}>{pkg.version}</span>
@@ -59,10 +59,11 @@ export default function PackagePreview({
               </span>
             )}
           </div>
-
+          {/*
           <button type='button' className={styles.arrowWrapper} onClick={toggleOpen}>
             <Icon kind='arrowDown' width={14} height={8} color='#8E8AA0' className={styles.arrow} />
           </button>
+          */}
         </div>
 
         {/* TODO: where to put fullDescription? */}

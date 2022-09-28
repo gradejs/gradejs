@@ -119,7 +119,9 @@ export default function SearchResults({
                 <PackagePreviewSkeleton />
               </>
             ) : (
-              packages.map((pkg, index) => <PackagePreview pkg={pkg} opened={index === 0} />)
+              packages.map((pkg, _index) => (
+                <PackagePreview pkg={pkg} opened={true /*index === 0*/} />
+              ))
             )}
           </div>
         </div>
