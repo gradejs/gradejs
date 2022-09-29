@@ -1,19 +1,19 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class ShowcasedScans1664181194347 implements MigrationInterface {
+export class ShowcasedWebPages1664181194347 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      create table "showcased_scan" (
+      create table "showcased_web_page" (
         "id" serial primary key,
         "display_order" smallint not null default 0,
-        "scan_id" integer not null references "web_page_scan"("id")
+        "web_page_id" integer not null references "web_page"("id")
       );
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      drop table if exists "showcased_scan";
+      drop table if exists "showcased_web_page";
     `);
   }
 }

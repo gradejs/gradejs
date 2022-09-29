@@ -56,16 +56,15 @@ export const appRouter = trpc
 
       const showcasedScans = showcaseData.showcasedScans.map((showcasedScan) => ({
         hostname: {
-          hostname: showcasedScan.scan.webPage.hostname.hostname,
+          hostname: showcasedScan.webPage.hostname.hostname,
         },
         webPage: {
-          path: showcasedScan.scan.webPage.path,
+          path: showcasedScan.webPage.path,
         },
         scanPreview: {
           packageNames:
-            showcasedScan.scan.scanResult?.identifiedPackages.slice(0, 6).map((pkg) => pkg.name) ??
-            [],
-          totalCount: showcasedScan.scan.scanResult?.identifiedPackages.length ?? 0,
+            showcasedScan.scanResult?.identifiedPackages.slice(0, 6).map((pkg) => pkg.name) ?? [],
+          totalCount: showcasedScan.scanResult?.identifiedPackages.length ?? 0,
         },
       }));
 

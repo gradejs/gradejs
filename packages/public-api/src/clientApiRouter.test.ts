@@ -3,7 +3,7 @@ import {
   getDatabaseConnection,
   Hostname,
   ScansWithVulnerabilitiesProjection,
-  ShowcasedScan,
+  ShowcasedWebPage,
   PackageMetadata,
   systemApi,
   WebPage,
@@ -180,7 +180,7 @@ describe('routes / website', () => {
     const em = db.createEntityManager();
 
     const scanRepo = em.getRepository(WebPageScan);
-    const showcasedScansRepo = em.getRepository(ShowcasedScan);
+    const showcasedWebPagesRepo = em.getRepository(ShowcasedWebPage);
     const scansWithVulnerabilitiesRepo = em.getRepository(ScansWithVulnerabilitiesProjection);
 
     const mockHostname = 'test-mock.example.com';
@@ -191,10 +191,28 @@ describe('routes / website', () => {
       em
     );
 
+    await scanRepo.save({
+      webPage: mockPage,
+      status: WebPageScan.Status.Processed,
+      createdAt: new Date(Date.now() - 2000),
+      finishedAt: new Date(Date.now() - 1000),
+      scanResult: {
+        identifiedModuleMap: {},
+        identifiedPackages: [
+          {
+            name: 'mock-package-one',
+            versionSet: ['1.0.0'],
+            moduleIds: [],
+          },
+        ],
+      },
+    });
+
     const mockScan = await scanRepo.save({
       webPage: mockPage,
       status: WebPageScan.Status.Processed,
-      finishedAt: new Date(),
+      createdAt: new Date(Date.now() - 100),
+      finishedAt: new Date(Date.now()),
       scanResult: {
         identifiedModuleMap: {},
         identifiedPackages: [
@@ -247,8 +265,8 @@ describe('routes / website', () => {
       ],
     });
 
-    await showcasedScansRepo.save({
-      scan: mockScan,
+    await showcasedWebPagesRepo.save({
+      webPage: mockPage,
       order: 0,
     });
 
