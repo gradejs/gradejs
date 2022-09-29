@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Footer.module.scss';
 import Container from '../Container/Container';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
@@ -8,7 +9,6 @@ export default function Footer() {
       <footer className={styles.footer}>
         <div className={styles.copyright}>
           <span className={styles.copyrightItem}>© 2022 GradeJS. All rights reserved.</span>
-          <span className={styles.copyrightItem}>Designed by MAX</span>
         </div>
         <div className={styles.links}>
           <a
@@ -28,6 +28,14 @@ export default function Footer() {
             Community
           </a>
           <a
+            href='https://github.com/gradejs/gradejs/discussions/8'
+            target='_blank'
+            rel='noreferrer'
+            className={styles.link}
+          >
+            Understanding accuracy
+          </a>
+          <a
             href='https://github.com/gradejs/gradejs'
             target='_blank'
             rel='noreferrer'
@@ -35,12 +43,9 @@ export default function Footer() {
           >
             Github
           </a>
-          <a href='#' className={styles.link}>
-            Popular packages
-          </a>
-          <a href='#' className={styles.link}>
+          <Link to='/' className={styles.link}>
             Go to search
-          </a>
+          </Link>
         </div>
       </footer>
     </Container>

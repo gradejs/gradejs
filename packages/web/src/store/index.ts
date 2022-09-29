@@ -1,10 +1,12 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { scansReducer } from './slices/scans';
+import { showcaseReducer } from './slices/showcase';
 
 export const store = configureStore({
   reducer: {
     scans: scansReducer,
+    showcase: showcaseReducer,
   },
   preloadedState: {},
 });

@@ -6,6 +6,7 @@ export * from './database/entities/packageMetadata';
 export * from './database/entities/packageVulnerability';
 export * from './database/entities/packageUsageByHostnameProjection';
 export * from './database/entities/scansWithVulnerabilitiesProjection';
+export * from './database/entities/showcasedWebPage';
 
 export * from './utils/aws';
 export * from './utils/env';

@@ -13,6 +13,7 @@
   min-height: 200px;
   display: flex;
   flex-direction: column;
+  color: $black;
 
   @include xxl {
     min-height: 248px;

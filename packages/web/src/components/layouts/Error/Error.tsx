@@ -1,14 +1,10 @@
 import React from 'react';
 import styles from './Error.module.scss';
 import Container from 'components/ui/Container/Container';
-import CardGroup from '../../ui/CardGroup/CardGroup';
-import CardGroups from '../../ui/CardGroups/CardGroups';
 import Footer from '../../ui/Footer/Footer';
 import StickyErrorHeader from '../../ui/Header/StickyErrorHeader';
-import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
-import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
-import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
 import SearchBarContainer from '../../containers/SearchBarContainer';
+import ShowcaseContainer from '../../containers/ShowcaseContainer';
 
 export type Props = {
   host: string;
@@ -40,15 +36,7 @@ export default function Error({
           </div>
         </section>
 
-        <CardGroups>
-          <CardGroup title='But we have'>
-            <PackagesBySourceCardList cards={packagesBySourceListData} />
-          </CardGroup>
-
-          <CardGroup title='Popular packages'>
-            <PopularPackageCardList cards={popularPackageListData} />
-          </CardGroup>
-        </CardGroups>
+        <ShowcaseContainer />
       </Container>
 
       <Footer />

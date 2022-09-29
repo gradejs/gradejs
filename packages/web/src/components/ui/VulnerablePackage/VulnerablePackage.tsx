@@ -17,7 +17,7 @@ export default function VulnerablePackage({ name, moreTotal }: Props) {
         </span>
         {name}
       </span>
-      {moreTotal && (
+      {!!moreTotal && (
         <span className={styles.vulnerableMore}>
           <Chip variant='secondary' size='medium'>
             +{moreTotal}
