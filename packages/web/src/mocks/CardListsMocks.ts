@@ -87,18 +87,21 @@ export const popularPackageListData: KeyedPopularPackageCardProps[] = [
 export const scansWithVulnerabilitiesListData: KeyedScansWithVulnerabilitiesCardProps[] = [
   {
     id: 'LnO9Xynn',
-    sourcePageUrl: 'disneyland.omsk.ru/signup',
+    sourceTitle: 'disneyland.omsk.ru/signup',
+    sourceUrl: 'disneyland.omsk.ru/signup',
     vulnerablePackageName: 'mdast-util-from-markdown',
   },
   {
     id: '-A74UAy8',
-    sourcePageUrl: 'disneyland.omsk.ru/signup',
+    sourceTitle: 'disneyland.omsk.ru/signup',
+    sourceUrl: 'disneyland.omsk.ru/signup',
     vulnerablePackageName: 'mdast-util-from-markdown',
     additionalVulnerabilitiesCount: 1,
   },
   {
     id: 'DPa05I2W',
-    sourcePageUrl: 'disneyland.omsk.ru/signup',
+    sourceTitle: 'disneyland.omsk.ru/signup',
+    sourceUrl: 'disneyland.omsk.ru/signup',
     vulnerablePackageName: 'mdast-util-from-markdown',
   },
 ];

@@ -3,17 +3,19 @@ import Card from './Card';
 import VulnerablePackage from '../VulnerablePackage/VulnerablePackage';
 
 export type ScansWithVulnerabilitiesCardProps = {
-  sourcePageUrl: string;
+  sourceTitle: string;
+  sourceUrl?: string;
   vulnerablePackageName: string;
   additionalVulnerabilitiesCount?: number;
 };
 
 const ScansWithVulnerabilitiesCard = ({
-  sourcePageUrl,
+  sourceTitle,
+  sourceUrl,
   vulnerablePackageName,
   additionalVulnerabilitiesCount,
 }: ScansWithVulnerabilitiesCardProps) => (
-  <Card title={sourcePageUrl} variant='small' to={`/scan/${sourcePageUrl}`}>
+  <Card title={sourceTitle} variant='small' to={sourceUrl}>
     <VulnerablePackage name={vulnerablePackageName} moreTotal={additionalVulnerabilitiesCount} />
   </Card>
 );

@@ -29,22 +29,23 @@ export default function ShowcaseContainer() {
 
   const popularQueries: KeyedPackagesBySourceCardProps[] = (
     showcase.showcase?.showcasedScans ?? []
-  ).map((showcasedScan, idx) => ({
+  ).map(({ hostname, webPage, scanPreview }, idx) => ({
     id: idx.toString(),
     sourceIcon: '',
-    sourceTitle: `${showcasedScan.hostname.hostname}${showcasedScan.webPage.path}`,
-    packages: showcasedScan.scanPreview.packageNames,
-    morePackagesCount:
-      showcasedScan.scanPreview.totalCount - showcasedScan.scanPreview.packageNames.length,
+    sourceTitle: `${hostname.hostname}${webPage.path}`,
+    sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
+    packages: scanPreview.packageNames,
+    morePackagesCount: scanPreview.totalCount - scanPreview.packageNames.length,
   }));
 
   const scansWithVulnerabilities: KeyedScansWithVulnerabilitiesCardProps[] = (
     showcase.showcase?.scansWithVulnerabilities ?? []
-  ).map((scanWithVulnerabilities, idx) => ({
+  ).map(({ hostname, webPage, vulnerabilities }, idx) => ({
     id: idx.toString(),
-    sourcePageUrl: `${scanWithVulnerabilities.hostname.hostname}${scanWithVulnerabilities.webPage.path}`,
-    vulnerablePackageName: scanWithVulnerabilities.vulnerabilities[0].affectedPackageName,
-    additionalVulnerabilitiesCount: scanWithVulnerabilities.vulnerabilities.length - 1,
+    sourceTitle: `${hostname.hostname}${webPage.path}`,
+    sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
+    vulnerablePackageName: vulnerabilities[0].affectedPackageName,
+    additionalVulnerabilitiesCount: vulnerabilities.length - 1,
   }));
 
   return (

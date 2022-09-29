@@ -7,6 +7,7 @@ import ChipGroup from '../ChipGroup/ChipGroup';
 export type PackagesBySourceCardProps = {
   sourceTitle: string;
   sourceIcon: string;
+  sourceUrl?: string;
   packages: string[];
   morePackagesCount?: number;
 };
@@ -14,10 +15,11 @@ export type PackagesBySourceCardProps = {
 const PackagesBySourceCard = ({
   sourceTitle,
   sourceIcon,
+  sourceUrl,
   packages,
   morePackagesCount,
 }: PackagesBySourceCardProps) => (
-  <Card title={sourceTitle} icon={sourceIcon} to={`/scan/${sourceTitle}`}>
+  <Card title={sourceTitle} icon={sourceIcon} to={sourceUrl}>
     <div className={styles.tagsWrapper}>
       <ChipGroup>
         {packages.map((chip) => (
