@@ -5,11 +5,9 @@ import Chip from '../Chip/Chip';
 import clsx from 'clsx';
 import ChipGroup from '../ChipGroup/ChipGroup';
 import { CSSTransition } from 'react-transition-group';
-import Button from '../Button/Button';
 import { LicenceSkeleton, LinksSkeleton } from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
-import { useNavigate } from 'react-router-dom';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 
 type Props = {
@@ -30,7 +28,7 @@ export default function PackagePreview({
   pkg,
   detailsLoading = false,
 }: Props) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // const toggleOpen = () => {
   //   setOpen(!open);
@@ -260,9 +258,11 @@ export default function PackagePreview({
               </div>
 
               {/* TODO: should be a <a> link w/ router support */}
+              {/*
               <Button variant='arrow' onClick={() => navigate(`/package/${pkg.name}`)}>
                 Details
               </Button>
+              */}
             </div>
           </div>
         </div>
