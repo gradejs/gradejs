@@ -13,7 +13,7 @@ const Template: ComponentStory<typeof ScansWithVulnerabilitiesCard> = (args) => 
 
 export const VulnerableSites = Template.bind({});
 VulnerableSites.args = {
-  sourcePageUrl: 'disneyland.omsk.ru/signup',
+  sourceTitle: 'disneyland.omsk.ru/signup',
   vulnerablePackageName: 'mdast-util-from-markdown',
   additionalVulnerabilitiesCount: 1,
 };
