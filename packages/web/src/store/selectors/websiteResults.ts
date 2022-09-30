@@ -23,6 +23,7 @@ export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
   vulnerable?: boolean;
   duplicate?: boolean;
   version?: string;
+  containingScripts?: string[];
   vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
 };
 
@@ -35,6 +36,7 @@ const makeSelectScanResultByUrl = () =>
 const makeSelectScanPackagesByUrl = () =>
   createSelector([makeSelectScanResultByUrl()], (scanResult) => {
     const scanData = scanResult?.scan?.scanResult;
+
     if (!scanData) {
       return undefined;
     }
@@ -56,6 +58,16 @@ const makeSelectScanPackagesByUrl = () =>
         vulnerable: (scanData.vulnerabilities[pkg.name]?.length ?? 0) > 0, // TODO: Drop
         vulnerabilities: scanData.vulnerabilities[pkg.name] ?? [],
         version: semverListAsRange(pkg.versionSet),
+        // TODO: memoize/simplify
+        containingScripts: pkg.moduleIds.reduce((acc: string[], id) => {
+          const script = scanResult?.scan?.scanResult?.processedScripts?.find((val) =>
+            val.moduleIds.includes(id)
+          );
+          if (script && script.status === 'processed') {
+            acc.push(script.url);
+          }
+          return acc;
+        }, []),
       };
     });
 
@@ -94,6 +106,12 @@ export const selectors = {
           vulnerable: identifiedPackages.filter((pkg) => !!pkg.vulnerable).length,
           outdated: identifiedPackages.filter((pkg) => !!pkg.outdated).length,
         },
+        scriptsCount: scanResult?.scan?.scanResult?.processedScripts?.filter(
+          (script) => script.status === 'processed'
+        ).length,
+        bundleSize: scanResult?.scan?.scanResult?.processedScripts?.reduce((acc, script) => {
+          return acc + script.byteSize;
+        }, 0),
       };
     }
   ),

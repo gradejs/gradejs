@@ -140,6 +140,8 @@ export function WebsiteResultsPage() {
         packages={packagesFilteredAndSorted}
         packagesStats={packageStats}
         vulnerabilitiesCount={scanOverview.vulnerabilities.total}
+        scriptsCount={scanOverview.scriptsCount ?? 0}
+        bundleSize={scanOverview.bundleSize ?? 0}
         scanDate={scanResult?.scan?.finishedAt}
         selectedFilters={selectedDisplayOptions.packageFilters}
         availableFilters={availableFilters}

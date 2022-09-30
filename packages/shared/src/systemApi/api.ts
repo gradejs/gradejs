@@ -15,8 +15,27 @@ export const identifiedPackageSchema = z.object({
   moduleIds: z.array(z.string()),
 });
 
-// TODO: add processed scripts
-// TODO: add identified bundler
+export const bundlerMetadata = z.object({
+  versionRange: z.optional(z.string()),
+  isBootstrap: z.boolean(),
+  isAsyncChunk: z.boolean(),
+  isLazyLoaded: z.boolean(),
+});
+
+export const processedScriptSchema = z.object({
+  status: z.enum(['processed', 'error']),
+  url: z.string(),
+  byteSize: z.number(),
+  checksum: z.string(),
+  hasSourcemap: z.boolean(),
+  moduleIds: z.array(z.string()),
+  bundlerMetadata,
+});
+
+export const identifiedBundlerSchema = z.object({
+  name: z.string(),
+  versionRange: z.string(),
+});
 
 export const apiScanReportSchema = z.union([
   z.object({
@@ -25,6 +44,8 @@ export const apiScanReportSchema = z.union([
     status: z.literal('ready'),
     identifiedModuleMap: z.record(identifiedModuleSchema),
     identifiedPackages: z.array(identifiedPackageSchema),
+    identifiedBundler: identifiedBundlerSchema,
+    processedScripts: z.array(processedScriptSchema),
   }),
   z.object({
     requestId: z.optional(z.string()),
@@ -36,6 +57,9 @@ export const apiScanReportSchema = z.union([
 export namespace ScanReport {
   export type IdentifiedPackage = z.infer<typeof identifiedPackageSchema>;
   export type IdentifiedModule = z.infer<typeof identifiedModuleSchema>;
+  export type ProcessedScript = z.infer<typeof processedScriptSchema>;
+  export type BundlerMetadata = z.infer<typeof bundlerMetadata>;
+  export type IdentifiedBundler = z.infer<typeof identifiedBundlerSchema>;
   export enum Status {
     Ready = 'ready',
     Error = 'error',

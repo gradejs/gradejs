@@ -49,9 +49,13 @@ export namespace WebPageScan {
 
   export type IdentifiedModule = systemApi.ScanReport.IdentifiedModule;
   export type IdentifiedPackage = systemApi.ScanReport.IdentifiedPackage;
+  export type ProcessedScript = systemApi.ScanReport.ProcessedScript;
+  export type IdentifiedBundler = systemApi.ScanReport.IdentifiedBundler;
 
   export type Result = {
     identifiedModuleMap: Record<string, IdentifiedModule>;
     identifiedPackages: IdentifiedPackage[];
+    processedScripts: ProcessedScript[];
+    identifierBundler: IdentifiedBundler;
   };
 }

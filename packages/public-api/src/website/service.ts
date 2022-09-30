@@ -101,6 +101,8 @@ export async function syncWebPageScanResult(scanReport: systemApi.ScanReport) {
       scanEntity.scanResult = {
         identifiedModuleMap: scanReport.identifiedModuleMap,
         identifiedPackages: scanReport.identifiedPackages,
+        processedScripts: scanReport.processedScripts,
+        identifierBundler: scanReport.identifiedBundler,
       };
     }
 
