@@ -7,9 +7,10 @@ import ChipGroup from '../ChipGroup/ChipGroup';
 type Props = {
   keywordsList: string[];
   selectedKeywords: string[];
-  selectHandler: (keyword: string) => void;
+  selectHandler: (newKeywords: string[]) => void;
 };
 
+// TODO: onChange Perf fixes
 export default function KeywordsList({ keywordsList, selectedKeywords, selectHandler }: Props) {
   return (
     <ChipGroup>
@@ -17,7 +18,13 @@ export default function KeywordsList({ keywordsList, selectedKeywords, selectHan
         <Chip
           key={keyword}
           className={clsx(selectedKeywords.includes(keyword) && styles.sidebarChipActive)}
-          onClick={() => selectHandler(keyword)}
+          onClick={() =>
+            selectHandler(
+              selectedKeywords.includes(keyword)
+                ? selectedKeywords.filter((it) => it !== keyword)
+                : [keyword, ...selectedKeywords]
+            )
+          }
           size='medium'
           font='monospace'
         >

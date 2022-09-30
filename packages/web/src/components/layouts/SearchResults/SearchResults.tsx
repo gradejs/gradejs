@@ -12,6 +12,7 @@ import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSk
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import { ClientApi } from '../../../services/apiClient';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
+import { PackageFilters } from '../../../store/slices/scanDisplayOptions';
 
 type Props = {
   isLoading: boolean;
@@ -21,7 +22,9 @@ type Props = {
   packagesStats: { total: number; vulnerable: number; outdated: number };
   vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>;
   vulnerabilitiesCount: number;
-  keywordsList: string[];
+  availableFilters: PackageFilters;
+  selectedFilters: PackageFilters;
+  onFiltersChange: (newFilters: PackageFilters | null) => void;
   scanDate?: string;
   // siteFavicon: string;
 };
@@ -33,7 +36,9 @@ export default function SearchResults({
   packagesStats,
   vulnerabilitiesCount,
   vulnerabilities,
-  keywordsList,
+  availableFilters,
+  selectedFilters,
+  onFiltersChange,
   scanDate,
 }: Props) {
   const metaItems = [
@@ -58,10 +63,6 @@ export default function SearchResults({
       text: `${packagesStats.outdated} outdated packages`,
     },
   ];
-
-  const authors: string[] = []; // TODO
-
-  const problems = ['Vulnerable', 'Outdated' /*'Duplicate'*/];
 
   return (
     <>
@@ -89,11 +90,11 @@ export default function SearchResults({
 
           <div className={styles.searchResultsSidebar}>
             <SearchResultsSidebar
-              metaItems={metaItems}
-              keyWords={keywordsList}
-              problems={problems}
-              authors={authors}
               loading={isLoading}
+              metaItems={metaItems}
+              availableFilters={availableFilters}
+              selectedFilters={selectedFilters}
+              onFiltersChanged={onFiltersChange}
             />
           </div>
 

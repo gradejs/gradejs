@@ -5,9 +5,10 @@ import Checkbox from '../Checkbox/Checkbox';
 type Props = {
   keywordsList: string[];
   selectedKeywords: string[];
-  selectHandler: (keyword: string) => void;
+  selectHandler: (newKeywords: string[]) => void;
 };
 
+// TODO: onChange Perf fixes
 export default function ProblemsList({ keywordsList, selectedKeywords, selectHandler }: Props) {
   return (
     <div className={styles.checkboxGroup}>
@@ -16,7 +17,13 @@ export default function ProblemsList({ keywordsList, selectedKeywords, selectHan
           key={name}
           label={name}
           checked={selectedKeywords.includes(name)}
-          onChange={() => selectHandler(name)}
+          onChange={() =>
+            selectHandler(
+              selectedKeywords.includes(name)
+                ? selectedKeywords.filter((it) => it !== name)
+                : [name, ...selectedKeywords]
+            )
+          }
         />
       ))}
     </div>

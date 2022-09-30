@@ -5,48 +5,48 @@ import { CSSTransition } from 'react-transition-group';
 import { Button } from '../index';
 
 type Props = {
-  show: boolean;
-  setShow: (value: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
   children?: React.ReactNode;
 };
 
-// TODO: block <body> scroll when modal is open
-export default function Modal({ children, show, setShow }: Props) {
-  const closeHandler = () => {
-    setShow(false);
-  };
+const backdropTransitionClassNames = {
+  enter: styles.modalEnter,
+  enterActive: styles.modalEnterActive,
+  enterDone: styles.modalEnterDone,
+  exit: styles.modalExit,
+  exitActive: styles.modalExitActive,
+  exitDone: styles.modalExitDone,
+};
 
+const contentTransitionClassNames = {
+  enter: styles.contentEnter,
+  enterActive: styles.contentEnterActive,
+  enterDone: styles.contentEnterDone,
+  exit: styles.contentExit,
+  exitActive: styles.contentExitActive,
+  exitDone: styles.contentExitDone,
+};
+
+// TODO: block <body> scroll when modal is open
+export default function Modal({ children, isOpen, onClose }: Props) {
   return (
     <PortalModal wrapperId='modal-root'>
       {/* TODO: simplify transition classes */}
       <CSSTransition
-        in={show}
+        in={isOpen}
         timeout={600}
-        classNames={{
-          enter: styles.modalEnter,
-          enterActive: styles.modalEnterActive,
-          enterDone: styles.modalEnterDone,
-          exit: styles.modalExit,
-          exitActive: styles.modalExitActive,
-          exitDone: styles.modalExitDone,
-        }}
+        classNames={backdropTransitionClassNames}
         unmountOnExit
       >
-        <div className={styles.modalBackdrop} onClick={closeHandler} />
+        <div className={styles.modalBackdrop} onClick={onClose} />
       </CSSTransition>
 
       {/* TODO: simplify transition classes */}
       <CSSTransition
-        in={show}
+        in={isOpen}
         timeout={600}
-        classNames={{
-          enter: styles.contentEnter,
-          enterActive: styles.contentEnterActive,
-          enterDone: styles.contentEnterDone,
-          exit: styles.contentExit,
-          exitActive: styles.contentExitActive,
-          exitDone: styles.contentExitDone,
-        }}
+        classNames={contentTransitionClassNames}
         unmountOnExit
       >
         <div className={styles.modal}>
@@ -54,7 +54,7 @@ export default function Modal({ children, show, setShow }: Props) {
             {children}
 
             <div className={styles.modalAction}>
-              <Button variant='arrow' onClick={closeHandler}>
+              <Button variant='arrow' onClick={onClose}>
                 Apply
               </Button>
             </div>

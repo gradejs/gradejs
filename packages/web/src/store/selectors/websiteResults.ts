@@ -23,6 +23,7 @@ export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
   vulnerable?: boolean;
   duplicate?: boolean;
   version?: string;
+  vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
 };
 
 const makeSelectScanResultByUrl = () =>
@@ -52,7 +53,8 @@ const makeSelectScanPackagesByUrl = () =>
           !pkg.versionSet.some(
             (ver) => pkg.registryMetadata && semver.eq(pkg.registryMetadata.latestVersion, ver)
           ),
-        vulnerable: (scanData.vulnerabilities[pkg.name]?.length ?? 0) > 0,
+        vulnerable: (scanData.vulnerabilities[pkg.name]?.length ?? 0) > 0, // TODO: Drop
+        vulnerabilities: scanData.vulnerabilities[pkg.name] ?? [],
         version: semverListAsRange(pkg.versionSet),
       };
     });
@@ -70,39 +72,47 @@ export const selectors = {
       scanResult?.scan?.status === 'failed' ||
       scanResult?.scan?.scanResult?.identifiedPackages.length === 0,
   })),
-  scanOverview: createSelector([makeSelectScanResultByUrl()], (scanResult) => {
-    const scanData = scanResult?.scan?.scanResult;
+  scanOverview: createSelector(
+    [makeSelectScanResultByUrl(), makeSelectScanPackagesByUrl()],
+    (scanResult, identifiedPackages = []) => {
+      const scanData = scanResult?.scan?.scanResult;
 
-    const vulnerabilities = scanData?.vulnerabilities ?? {};
-    const identifiedPackages = scanData?.identifiedPackages ?? [];
+      const vulnerabilities = scanData?.vulnerabilities ?? {};
 
-    const packageKeywords = new Set(
-      identifiedPackages.reduce((acc, pkg) => {
-        return acc.concat(pkg.registryMetadata?.keywords ?? []);
-      }, [] as string[])
-    );
+      const uniqueVulnerabilities = new Set(
+        Object.values(vulnerabilities ?? {})
+          .flat()
+          .map((v) => v.osvId)
+      );
 
-    const uniqueVulnerabilities = new Set(
-      Object.values(vulnerabilities ?? {})
-        .flat()
-        .map((v) => v.osvId)
-    );
+      return {
+        vulnerabilities: {
+          total: uniqueVulnerabilities.size,
+        },
+        packages: {
+          total: identifiedPackages.length,
+          vulnerable: identifiedPackages.filter((pkg) => !!pkg.vulnerable).length,
+          outdated: identifiedPackages.filter((pkg) => !!pkg.outdated).length,
+        },
+      };
+    }
+  ),
+  searchableScanEntities: createSelector([makeSelectScanPackagesByUrl()], (packages = []) => {
+    const packageKeywords = new Set<string>();
+    const packageAuthors = new Map<string, { name: string; avatar: string }>();
+
+    for (const pkg of packages) {
+      pkg.registryMetadata?.keywords?.forEach((keyword) => packageKeywords.add(keyword));
+      pkg.registryMetadata?.maintainers?.forEach((maintainer) =>
+        packageAuthors.set(maintainer.name, maintainer)
+      );
+    }
 
     return {
-      vulnerabilityCount: uniqueVulnerabilities.size,
-      packageKeywordList: Array.from(packageKeywords),
+      packageKeywords: Array.from(packageKeywords),
+      packageAuthors: Array.from(packageAuthors.values()),
     };
-  }),
-  packagesStats: createSelector([makeSelectScanPackagesByUrl()], (packages = []) => ({
-    total: packages.length,
-    vulnerable: packages.filter((pkg) => !!pkg.vulnerable).length,
-    outdated: packages.filter((pkg) => !!pkg.outdated).length,
-  })),
-  packagesSortedAndFiltered: createSelector([makeSelectScanPackagesByUrl()], (packages) => {
-    // TODO: Reimplement filters and sorters
-
-    return packages;
   }),
 };
 
-export { makeSelectScanResultByUrl };
+export { makeSelectScanResultByUrl, makeSelectScanPackagesByUrl };

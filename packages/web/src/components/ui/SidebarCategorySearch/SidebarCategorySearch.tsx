@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from './SidebarCategorySearch.module.scss';
 import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
@@ -46,7 +46,7 @@ type Props = {
   alphabeticalGroups: GroupItem[];
   selectedItems: string[];
   itemsWithImage?: boolean;
-  selectHandler: (name: string) => void;
+  selectHandler: (selectedKeywords: string[]) => void;
 };
 
 export default function SidebarCategorySearch({
@@ -58,6 +58,17 @@ export default function SidebarCategorySearch({
   itemsWithImage,
   selectHandler,
 }: Props) {
+  const itemSelectionHandler = useCallback(
+    (value: string) => {
+      if (selectedItems.includes(value)) {
+        return selectedItems.filter((it) => it !== value);
+      } else {
+        return [value, ...selectedItems];
+      }
+    },
+    [selectedItems, selectHandler]
+  );
+
   return (
     <>
       <div className={styles.searchWrapper}>
@@ -98,7 +109,7 @@ export default function SidebarCategorySearch({
                   key={item}
                   item={item}
                   selectedItems={selectedItems}
-                  selectHandler={selectHandler}
+                  selectHandler={itemSelectionHandler}
                   itemsWithImage={itemsWithImage}
                 />
               ))}

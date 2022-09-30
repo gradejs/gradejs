@@ -23,12 +23,12 @@ Default.args = {
       approximateByteSize: 123,
       outdated: true,
       vulnerable: true,
+      vulnerabilities: [],
       duplicate: false,
       version: '17.0.2',
     },
   ],
   vulnerabilities: {},
-  keywordsList: [],
 };
 
 export const Loading = Template.bind({});
@@ -37,5 +37,4 @@ Loading.args = {
   isLoading: true,
   packages: [],
   vulnerabilities: {},
-  keywordsList: [],
 };

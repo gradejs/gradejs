@@ -16,7 +16,7 @@ type Props = {
   categoryName: string;
   selectedKeywords: string[];
   keywordsList: string[];
-  selectHandler: (name: string) => void;
+  selectHandler: (selectedKeywords: string[]) => void;
   itemsWithImage?: boolean;
   searchOpen?: boolean;
   returnButton?: () => void;
