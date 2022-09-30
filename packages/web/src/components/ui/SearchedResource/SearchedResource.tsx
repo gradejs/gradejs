@@ -8,6 +8,13 @@ type Props = {
   lastScanDate?: string;
 };
 
+const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
 export default function SearchedResource({ image, name, totalPackages, lastScanDate }: Props) {
   return (
     <div className={styles.searchedResource}>
@@ -22,7 +29,9 @@ export default function SearchedResource({ image, name, totalPackages, lastScanD
           {name} <span className={styles.searchedResourceHighlight}>{totalPackages} packages</span>
         </h3>
         {!!lastScanDate && (
-          <div className={styles.searchedResourceSubtitle}>Last scanning {lastScanDate}</div>
+          <div className={styles.searchedResourceSubtitle}>
+            Last scanned on {dateTimeFormatter.format(new Date(lastScanDate)).replace(', ', ' at ')}
+          </div>
         )}
       </div>
     </div>

@@ -15,7 +15,7 @@ function ProblemBadge({ problem }: Props) {
           size='badge'
           icon={<Icon kind='vulnerability' width={24} height={24} color='white' />}
         >
-          Vulnerabilities
+          Vulnerable
         </Chip>
       );
     case 'duplicate':

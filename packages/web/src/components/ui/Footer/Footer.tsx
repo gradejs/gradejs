@@ -1,14 +1,13 @@
 import React from 'react';
 import styles from './Footer.module.scss';
 import Container from '../Container/Container';
-import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
     <Container>
       <footer className={styles.footer}>
         <div className={styles.copyright}>
-          <span className={styles.copyrightItem}>© 2022 GradeJS. All rights reserved.</span>
+          <span className={styles.copyrightItem}>© 2022 GradeJS.</span>
         </div>
         <div className={styles.links}>
           <a
@@ -43,9 +42,6 @@ export default function Footer() {
           >
             Github
           </a>
-          <Link to='/' className={styles.link}>
-            Go to search
-          </Link>
         </div>
       </footer>
     </Container>

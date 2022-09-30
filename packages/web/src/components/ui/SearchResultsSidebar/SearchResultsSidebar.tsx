@@ -180,7 +180,7 @@ export default function SearchResultsSidebar({
               <ProblemsListSkeleton />
             </>
           ) : (
-            <SidebarCategory categoryName='Problems' selectedKeywords={selectedProblems}>
+            <SidebarCategory categoryName='Issues' selectedKeywords={selectedProblems}>
               <ProblemsList
                 keywordsList={problems}
                 selectedKeywords={selectedProblems}

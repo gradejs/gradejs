@@ -63,7 +63,7 @@ export default function SearchResults({
 
   const authors: string[] = []; // TODO
 
-  const problems = ['Vulnerabilities', 'Outdated' /*'Duplicate'*/];
+  const problems = ['Vulnerable', 'Outdated' /*'Duplicate'*/];
 
   return (
     <>

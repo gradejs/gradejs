@@ -20,7 +20,7 @@ export default function ShowcaseContainer() {
           <CardListSkeleton />
         </CardGroup>
 
-        <CardGroup title='Vulnerable sites'>
+        <CardGroup title='Vulnerable websites'>
           <CardListSkeleton />
         </CardGroup>
       </CardGroups>
@@ -61,7 +61,7 @@ export default function ShowcaseContainer() {
       {/*</CardGroup>*/}
 
       {!!scansWithVulnerabilities.length && (
-        <CardGroup title='Vulnerable sites'>
+        <CardGroup title='Vulnerable websites'>
           <ScansWithVulnerabilitiesCardList cards={scansWithVulnerabilities} />
         </CardGroup>
       )}

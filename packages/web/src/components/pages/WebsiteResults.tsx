@@ -45,7 +45,7 @@ export function WebsiteResultsPage() {
       <ErrorLayout
         message='The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions.'
         action='Would you like to try another URL or report an issue?'
-        actionTitle='Try another URL'
+        actionTitle='Try another URL...'
         host={displayUrl ?? ''}
       />
     );
@@ -56,9 +56,9 @@ export function WebsiteResultsPage() {
     trackCustomEvent('HostnamePage', 'SiteInvalid');
     return (
       <ErrorLayout
-        message='It looks like the entered website is not built with Webpack.'
+        message='It looks like the website is not built with Webpack or protected by an anti-bot service.'
         action='Would you like to try another URL or report an issue?'
-        actionTitle='Try another URL'
+        actionTitle='Try another URL...'
         host={displayUrl ?? ''}
       />
     );

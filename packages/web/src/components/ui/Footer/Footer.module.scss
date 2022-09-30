@@ -71,12 +71,6 @@
   white-space: nowrap;
 
   &:nth-child(4) {
-    margin-left: 124px;
-
-    @include lg {
-      margin-left: 52px;
-    }
-
     @include sm {
       margin-left: 0;
     }

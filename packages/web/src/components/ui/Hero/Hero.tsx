@@ -4,6 +4,7 @@ import Container from '../Container/Container';
 import Chip from '../Chip/Chip';
 import DefaultHeader from '../Header/DefaultHeader';
 import { Icon } from '../Icon/Icon';
+import { Link } from 'react-router-dom';
 
 export type HeroProps = {
   loading?: boolean;
@@ -24,8 +25,9 @@ export default function Hero({ suggestions, onSubmit = () => {}, loading = false
         <div className={styles.content}>
           <h1 className={styles.title}>Analyze webpack production bundle</h1>
           <p className={styles.subtitle}>
-            GradeJS will analyze production JavaScript files and match webpack bundled modules to
-            1,826 indexed NPM libraries over 54,735 releases
+            GradeJS analyzes production JavaScript files and detects bundled modules and third-party
+            packages. It works even for tree-shaken bundles and without access to the source code of
+            a website or webpack stats files.
           </p>
 
           <div className={styles.search}>
@@ -41,7 +43,7 @@ export default function Hero({ suggestions, onSubmit = () => {}, loading = false
                 className={styles.input}
                 value={inputText}
                 onChange={(e) => setInputText(e.currentTarget.value)}
-                placeholder='Start analyzing...'
+                placeholder='Enter a website URL...'
               />
               <button type='submit' className={styles.submit}>
                 {/* TODO: use SVG loading component */}
@@ -63,9 +65,11 @@ export default function Hero({ suggestions, onSubmit = () => {}, loading = false
           {suggestions && (
             <div className={styles.suggestions}>
               {suggestions.map((suggestion) => (
-                <Chip key={suggestion} variant='suggest' size='medium'>
-                  {suggestion}
-                </Chip>
+                <Link to={`/scan/${suggestion}`}>
+                  <Chip key={suggestion} variant='suggest' size='medium'>
+                    {suggestion}
+                  </Chip>
+                </Link>
               ))}
             </div>
           )}

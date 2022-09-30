@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { trackCustomEvent } from '../../services/analytics';
 import { useScanResult } from '../../store/hooks/scan/useScanResult';
 
+const suggestions = ['twitch.tv', 'reddit.com', 'trello.com', 'npmjs.com', 'starbucks.com'];
+
 export function HomePage() {
   const navigate = useNavigate();
   const [requestedScanUrl, setRequestedScanUrl] = useState<string | undefined>(undefined);
@@ -24,5 +26,7 @@ export function HomePage() {
     return <Error host={displayUrl} />;
   }
 
-  return <Home onSubmit={handleScanRequest} loading={scanResult?.isLoading} />;
+  return (
+    <Home onSubmit={handleScanRequest} loading={scanResult?.isLoading} suggestions={suggestions} />
+  );
 }
