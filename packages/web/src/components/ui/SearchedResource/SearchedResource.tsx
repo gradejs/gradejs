@@ -9,6 +9,13 @@ type Props = {
 };
 
 export default function SearchedResource({ image, name, totalPackages, lastScanDate }: Props) {
+  const lastScanDay =
+    lastScanDate &&
+    new Date(lastScanDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long' });
+  const lastScanTime =
+    lastScanDate &&
+    new Date(lastScanDate).toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric' });
+
   return (
     <div className={styles.searchedResource}>
       {image && (
@@ -22,7 +29,9 @@ export default function SearchedResource({ image, name, totalPackages, lastScanD
           {name} <span className={styles.searchedResourceHighlight}>{totalPackages} packages</span>
         </h3>
         {!!lastScanDate && (
-          <div className={styles.searchedResourceSubtitle}>Last scanning {lastScanDate}</div>
+          <div className={styles.searchedResourceSubtitle}>
+            Last scanned on {lastScanDay} at {lastScanTime}
+          </div>
         )}
       </div>
     </div>
