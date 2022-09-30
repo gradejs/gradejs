@@ -8,14 +8,14 @@ type Props = {
   lastScanDate?: string;
 };
 
-export default function SearchedResource({ image, name, totalPackages, lastScanDate }: Props) {
-  const lastScanDay =
-    lastScanDate &&
-    new Date(lastScanDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long' });
-  const lastScanTime =
-    lastScanDate &&
-    new Date(lastScanDate).toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric' });
+const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
 
+export default function SearchedResource({ image, name, totalPackages, lastScanDate }: Props) {
   return (
     <div className={styles.searchedResource}>
       {image && (
@@ -30,7 +30,7 @@ export default function SearchedResource({ image, name, totalPackages, lastScanD
         </h3>
         {!!lastScanDate && (
           <div className={styles.searchedResourceSubtitle}>
-            Last scanned on {lastScanDay} at {lastScanTime}
+            Last scanned on {dateTimeFormatter.format(new Date(lastScanDate)).replace(', ', ' at ')}
           </div>
         )}
       </div>
