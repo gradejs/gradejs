@@ -65,7 +65,10 @@ export default function SearchResults({
 
   return (
     <>
-      <div className={clsx(styles.loadingBar, { [styles.loadingReady]: !isLoading })} />
+      <div
+        key={scanUrl}
+        className={clsx(styles.loadingBar, { [styles.loadingReady]: !isLoading })}
+      />
 
       <StickyDefaultHeader showSearch searchQuery={scanUrl} />
 
