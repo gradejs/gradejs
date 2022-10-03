@@ -352,21 +352,33 @@
 }
 
 .tags {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, auto) 53px;
+  grid-gap: 18px;
+  justify-content: start;
   align-items: center;
+  padding-right: 24px;
 
-  & > * + * {
-    margin-left: 24px;
+  @include lg {
+    grid-template-columns: repeat(4, auto) 53px;
+  }
 
-    @include mobile-and-tablet {
-      margin-left: 18px;
-    }
+  @include sm {
+    grid-template-columns: repeat(3, auto) 50px;
+    padding-right: 18px;
+  }
+
+  @include mobile {
+    grid-template-columns: repeat(2, auto) 50px;
   }
 }
 
 .tag {
   font-weight: 500;
   transition: opacity $transition-duration $transition-timing-function;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   &:hover {
     opacity: 0.6;

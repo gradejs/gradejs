@@ -3,6 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import PackagePreview from './PackagePreview';
 import { PackagePreviewSkeleton } from './PackagePreviewSkeleton';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
+import Container from '../Container/Container';
 
 export default {
   title: 'Interface / PackagePreview',
@@ -100,4 +101,16 @@ export const OpenedLoading: ComponentStory<typeof PackagePreview> = () => (
 
 export const Opened: ComponentStory<typeof PackagePreview> = () => (
   <PackagePreview pkg={pkg} opened />
+);
+
+export const InsideContainerClosed: ComponentStory<typeof PackagePreview> = () => (
+  <Container>
+    <PackagePreview pkg={pkg} />
+  </Container>
+);
+
+export const InsideContainerOpened: ComponentStory<typeof PackagePreview> = () => (
+  <Container>
+    <PackagePreview pkg={pkg} opened />
+  </Container>
 );
