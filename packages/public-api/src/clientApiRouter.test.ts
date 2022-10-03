@@ -293,7 +293,6 @@ describe('routes / website', () => {
                   'mock-package-three',
                   'mock-package-four',
                   'mock-package-five',
-                  'mock-package-six',
                 ],
                 totalCount: 7,
               },

@@ -48,13 +48,6 @@ type RequestWebPageScanResponse = {
   };
 };
 
-function sortByPackageNameLength(
-  a: WebPageScan.IdentifiedPackage,
-  b: WebPageScan.IdentifiedPackage
-) {
-  return a.name.length >= 5 ? a.name.length - b.name.length : Infinity;
-}
-
 export const appRouter = trpc
   .router<Context>()
   .query('getShowcase', {
@@ -71,8 +64,7 @@ export const appRouter = trpc
         scanPreview: {
           packageNames:
             showcasedScan.scanResult?.identifiedPackages
-              // TODO: sort by popularity rather than only name length
-              .sort(sortByPackageNameLength)
+              // TODO: sort by popularity
               .slice(0, 5)
               .map((pkg) => pkg.name) ?? [],
           totalCount: showcasedScan.scanResult?.identifiedPackages.length ?? 0,
