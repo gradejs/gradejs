@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import clsx from 'clsx';
 import styles from '../SidebarCategory/SidebarCategory.module.scss';
 import Chip from '../Chip/Chip';
@@ -12,9 +12,16 @@ type Props = {
 
 // TODO: onChange Perf fixes
 export default function KeywordsList({ keywordsList, selectedKeywords, selectHandler }: Props) {
+  const displayedKeywords = useMemo(() => {
+    const initialBatch = keywordsList.slice(0, 6);
+    const selectedBatch = selectedKeywords.filter((it) => !initialBatch.includes(it));
+
+    return [...initialBatch, ...selectedBatch];
+  }, [keywordsList, selectedKeywords]);
+
   return (
     <ChipGroup>
-      {keywordsList.slice(0, 6).map((keyword) => (
+      {displayedKeywords.map((keyword) => (
         <Chip
           key={keyword}
           className={clsx(selectedKeywords.includes(keyword) && styles.sidebarChipActive)}
@@ -22,7 +29,7 @@ export default function KeywordsList({ keywordsList, selectedKeywords, selectHan
             selectHandler(
               selectedKeywords.includes(keyword)
                 ? selectedKeywords.filter((it) => it !== keyword)
-                : [keyword, ...selectedKeywords]
+                : [...selectedKeywords, keyword]
             )
           }
           size='medium'

@@ -17,9 +17,11 @@ export default function Person({ image, name, checked, className, onClick }: Pro
       className={clsx(styles.person, checked && styles.personActive, className)}
       onClick={onClick}
     >
-      <div className={styles.personImageWrapper}>
-        <img className={styles.personImage} src={image} alt='' />
-      </div>
+      {!!image && (
+        <div className={styles.personImageWrapper}>
+          <img className={styles.personImage} src={image} alt='' />
+        </div>
+      )}
       <div className={styles.personText}>
         <span className={styles.personName}>{name}</span>
         {checked ? (

@@ -16,13 +16,14 @@ export default function PeopleList({ keywordsList, selectedKeywords, selectHandl
         <Person
           key={person}
           name={person}
-          image='https://via.placeholder.com/36'
+          // TODO: Add author avatars
+          // image='https://via.placeholder.com/36'
           checked={selectedKeywords.includes(person)}
           onClick={() =>
             selectHandler(
               selectedKeywords.includes(person)
                 ? selectedKeywords.filter((it) => it !== person)
-                : [person, ...selectedKeywords]
+                : [...selectedKeywords, person]
             )
           }
         />

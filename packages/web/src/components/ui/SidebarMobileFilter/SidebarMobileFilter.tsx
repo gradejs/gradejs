@@ -3,7 +3,6 @@ import styles from './SidebarMobileFilter.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Button } from '../index';
 import Badge from '../Badge/Badge';
-import { Simulate } from 'react-dom/test-utils';
 
 type ToggleList = {
   name: string;

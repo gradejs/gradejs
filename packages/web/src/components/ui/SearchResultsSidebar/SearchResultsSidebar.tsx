@@ -222,12 +222,12 @@ export default function SearchResultsSidebar({
               <PeopleListSkeleton />
             </>
           ) : (
+            // TODO: Add author avatars
             <SidebarCategoryWithSearch
               categoryName='Authors'
               keywordsList={availableFilters.authors}
               selectedKeywords={selectedFilters.authors}
               selectHandler={handleAuthorsFilterChange}
-              itemsWithImage
             >
               <PeopleList
                 keywordsList={availableFilters.authors}

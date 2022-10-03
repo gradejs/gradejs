@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './ProblemsList.module.scss';
 import Checkbox from '../Checkbox/Checkbox';
+import { capitalizeWord } from '../../../utils/helpers';
 
 type Props = {
   keywordsList: string[];
@@ -15,13 +16,13 @@ export default function ProblemsList({ keywordsList, selectedKeywords, selectHan
       {keywordsList?.map((name) => (
         <Checkbox
           key={name}
-          label={name}
+          label={capitalizeWord(name)}
           checked={selectedKeywords.includes(name)}
           onChange={() =>
             selectHandler(
               selectedKeywords.includes(name)
                 ? selectedKeywords.filter((it) => it !== name)
-                : [name, ...selectedKeywords]
+                : [...selectedKeywords, name]
             )
           }
         />

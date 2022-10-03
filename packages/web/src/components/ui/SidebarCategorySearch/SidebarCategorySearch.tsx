@@ -61,9 +61,9 @@ export default function SidebarCategorySearch({
   const itemSelectionHandler = useCallback(
     (value: string) => {
       if (selectedItems.includes(value)) {
-        return selectedItems.filter((it) => it !== value);
+        selectHandler(selectedItems.filter((it) => it !== value));
       } else {
-        return [value, ...selectedItems];
+        selectHandler([...selectedItems, value]);
       }
     },
     [selectedItems, selectHandler]
