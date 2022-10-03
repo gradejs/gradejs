@@ -49,6 +49,8 @@ describe('routes / systemApi', () => {
       url: 'http://test.com',
       status: systemApi.ScanReport.Status.Ready,
       identifiedModuleMap: {},
+      processedScripts: [],
+      identifiedBundler: { name: '', versionRange: '' },
       identifiedPackages: [
         {
           name: 'react',
