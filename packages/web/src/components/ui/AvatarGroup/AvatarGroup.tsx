@@ -4,25 +4,18 @@ import Avatar from '../Avatar/Avatar';
 
 type Props = {
   max?: number;
-  total?: number;
   children: React.ReactNode;
 };
 
-const AvatarGroup = ({ max = 5, total, children: childrenProp }: Props) => {
+const AvatarGroup = ({ max = 4, children: childrenProp }: Props) => {
   const children = React.Children.toArray(childrenProp).filter((child) =>
     React.isValidElement(child)
   );
 
-  let clampedMax = max < 2 ? 2 : max;
-  const totalAvatars = total ?? children.length;
+  const totalAvatars = children.length;
+  const clampedMax = Math.min(totalAvatars + 1, Math.max(max, 2));
 
-  if (totalAvatars === clampedMax) {
-    clampedMax += 1;
-  }
-
-  clampedMax = Math.min(totalAvatars + 1, clampedMax);
-
-  const maxAvatars = Math.min(children.length, clampedMax - 1);
+  const maxAvatars = Math.min(totalAvatars, clampedMax - 1);
   const extraAvatars = Math.max(totalAvatars - clampedMax, totalAvatars - maxAvatars, 0);
 
   return (

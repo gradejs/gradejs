@@ -304,14 +304,27 @@ export default function PackagePreview({
             )}
           </div>
 
-          <div className={styles.author}>
-            <AvatarGroup total={pkg.registryMetadata?.maintainers?.length}>
-              {(pkg.registryMetadata?.maintainers?.length ?? 0) > 0 &&
-                pkg.registryMetadata?.maintainers?.map((author) => (
-                  <Avatar alt={author.name} altAsTooltip={true} src={author.avatar} />
-                ))}
-            </AvatarGroup>
-          </div>
+          {(pkg.registryMetadata?.maintainers?.length ?? 0) > 0 && (
+            <div className={styles.author}>
+              {pkg.registryMetadata?.maintainers?.length === 1 ? (
+                <>
+                  <span>{pkg.registryMetadata.maintainers[0].name}</span>
+                  <span className={styles.authorImage}>
+                    <Avatar
+                      alt={pkg.registryMetadata.maintainers[0].name}
+                      src={pkg.registryMetadata.maintainers[0].avatar}
+                    />
+                  </span>
+                </>
+              ) : (
+                <AvatarGroup>
+                  {pkg.registryMetadata?.maintainers?.map((author) => (
+                    <Avatar alt={author.name} altAsTooltip={true} src={author.avatar} />
+                  ))}
+                </AvatarGroup>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

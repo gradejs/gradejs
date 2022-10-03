@@ -21,7 +21,7 @@ const Avatar = ({ variant, src, altAsTooltip = false, alt = '', children }: Prop
   return (
     <>
       <div className={clsx(styles.avatarItem, variant && styles[variant])} ref={setTriggerRef}>
-        {src && <img src={src} className={styles.avatarImage} alt={alt} />}
+        {src && <img src={src} className={styles.avatarImage} alt={alt} loading='lazy' />}
         {children}
       </div>
       {altAsTooltip && visible && (
