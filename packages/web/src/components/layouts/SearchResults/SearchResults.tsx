@@ -32,6 +32,7 @@ export default function SearchResults({
   packages,
   packagesStats,
   vulnerabilitiesCount,
+  vulnerabilities,
   keywordsList,
   scanDate,
 }: Props) {
@@ -120,7 +121,11 @@ export default function SearchResults({
               </>
             ) : (
               packages.map((pkg, _index) => (
-                <PackagePreview pkg={pkg} opened={true /*index === 0*/} />
+                <PackagePreview
+                  pkg={pkg}
+                  vulnerabilities={vulnerabilities[pkg.name]}
+                  opened={true /*index === 0*/}
+                />
               ))
             )}
           </div>
