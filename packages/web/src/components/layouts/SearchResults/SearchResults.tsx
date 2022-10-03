@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import clsx from 'clsx';
 import styles from './SearchResults.module.scss';
 import Footer from 'components/ui/Footer/Footer';
 import Container from 'components/ui/Container/Container';
 import PackagePreview from '../../ui/PackagePreview/PackagePreview';
 import SearchedResource from '../../ui/SearchedResource/SearchedResource';
 import { Icon } from '../../ui/Icon/Icon';
-import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResultsSidebar';
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
@@ -36,9 +36,6 @@ export default function SearchResults({
   keywordsList,
   scanDate,
 }: Props) {
-  // Documentation: https://github.com/klendi/react-top-loading-bar
-  const loadingRef = useRef<LoadingBarRef>(null);
-
   const metaItems = [
     /*{
       icon: <Icon kind='weight' width={24} height={24} />,
@@ -68,16 +65,7 @@ export default function SearchResults({
 
   return (
     <>
-      {isLoading && (
-        <LoadingBar
-          ref={loadingRef}
-          color='linear-gradient(90deg, #2638D9 0%, #B22AF2 100%)'
-          height={4}
-          shadow={false}
-          transitionTime={600}
-          loaderSpeed={600}
-        />
-      )}
+      <div className={clsx(styles.loadingBar, { [styles.loadingReady]: !isLoading })} />
 
       <StickyDefaultHeader showSearch searchQuery={scanUrl} />
 
@@ -85,10 +73,7 @@ export default function SearchResults({
         <div className={styles.searchResults}>
           <div className={styles.searchResultsResource}>
             {isLoading ? (
-              <SearchedResourceSkeleton
-                image='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg'
-                name={scanUrl}
-              />
+              <SearchedResourceSkeleton name={scanUrl} />
             ) : (
               <SearchedResource
                 image={/*siteFavicon*/ ''}

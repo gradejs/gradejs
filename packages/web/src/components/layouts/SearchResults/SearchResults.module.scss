@@ -68,3 +68,31 @@
     margin-right: -20px;
   }
 }
+
+.loadingBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 5%;
+  height: 4px;
+  z-index: 100;
+  background: linear-gradient(90deg, rgb(38, 56, 217) 0%, rgb(178, 42, 242) 100%);
+  transition: opacity 300ms ease 300ms;
+  opacity: 1;
+  animation: loadingAnimation 90s cubic-bezier(0, 0, 0, 1) forwards;
+
+  &.loadingReady {
+    opacity: 0;
+    animation: none;
+    width: 100%;
+  }
+
+  @keyframes loadingAnimation {
+    0% {
+      width: 5%;
+    }
+    100% {
+      width: 95%;
+    }
+  }
+}
