@@ -11,12 +11,15 @@ import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
+import { ClientApi } from 'services/apiClient';
+import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 
 type Props = {
   opened?: boolean;
   detailsLoading?: boolean;
   // sites: Site[];
   pkg: IdentifiedPackage;
+  vulnerabilities?: ClientApi.PackageVulnerabilityResponse[];
 };
 
 function makeNpmUrl(pkg: IdentifiedPackage) {
@@ -29,6 +32,7 @@ export default function PackagePreview({
   //sites,
   pkg,
   detailsLoading = false,
+  vulnerabilities,
 }: Props) {
   // const navigate = useNavigate();
 
@@ -182,6 +186,16 @@ export default function PackagePreview({
                     )}
                   </div>
                 )}
+              </div>
+            )}
+
+            {vulnerabilities?.length && (
+              <div className={clsx(styles.stat, styles.statListItemNewLine)}>
+                <div className={styles.statHeader}>
+                  <Icon kind='vulnerability' color='#8E8AA0' className={styles.statIcon} />
+                  Vulnerabilities
+                </div>
+                <Vulnerabilities vulnerabilities={vulnerabilities} />
               </div>
             )}
 
