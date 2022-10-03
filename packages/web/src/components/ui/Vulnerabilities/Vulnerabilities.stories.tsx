@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Vulnerabilities from './Vulnerabilities';
-import { GithubAdvisorySeverity } from '@gradejs-public/shared';
+import { GithubAdvisorySeverity } from '../../../../../shared/src';
 
 export default {
   title: 'Interface / Vulnerabilities',
