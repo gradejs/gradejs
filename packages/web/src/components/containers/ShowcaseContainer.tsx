@@ -32,7 +32,7 @@ export default function ShowcaseContainer() {
   ).map(({ hostname, webPage, scanPreview }, idx) => ({
     id: idx.toString(),
     sourceIcon: '',
-    sourceTitle: `${hostname.hostname}${webPage.path}`,
+    sourceTitle: `${hostname.hostname}`,
     sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
     packages: scanPreview.packageNames,
     morePackagesCount: scanPreview.totalCount - scanPreview.packageNames.length,
@@ -44,7 +44,7 @@ export default function ShowcaseContainer() {
     id: idx.toString(),
     sourceTitle: `${hostname.hostname}${webPage.path}`,
     sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
-    vulnerablePackageName: vulnerabilities[0].affectedPackageName,
+    vulnerablePackageName: vulnerabilities[0].packageName,
     additionalVulnerabilitiesCount: vulnerabilities.length - 1,
   }));
 

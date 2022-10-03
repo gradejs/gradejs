@@ -259,7 +259,7 @@ describe('routes / website', () => {
       sourceScan: mockScan,
       vulnerabilities: [
         {
-          affectedPackageName: 'mock-package-one',
+          packageName: 'mock-package-one',
           severity: 'CRITICAL',
         },
       ],
@@ -293,7 +293,6 @@ describe('routes / website', () => {
                   'mock-package-three',
                   'mock-package-four',
                   'mock-package-five',
-                  'mock-package-six',
                 ],
                 totalCount: 7,
               },
@@ -309,7 +308,7 @@ describe('routes / website', () => {
               },
               vulnerabilities: [
                 {
-                  affectedPackageName: 'mock-package-one',
+                  packageName: 'mock-package-one',
                   severity: 'CRITICAL',
                 },
               ],

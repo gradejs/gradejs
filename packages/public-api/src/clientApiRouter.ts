@@ -63,7 +63,10 @@ export const appRouter = trpc
         },
         scanPreview: {
           packageNames:
-            showcasedScan.scanResult?.identifiedPackages.slice(0, 6).map((pkg) => pkg.name) ?? [],
+            showcasedScan.scanResult?.identifiedPackages
+              // TODO: sort by popularity
+              .slice(0, 5)
+              .map((pkg) => pkg.name) ?? [],
           totalCount: showcasedScan.scanResult?.identifiedPackages.length ?? 0,
         },
       }));
