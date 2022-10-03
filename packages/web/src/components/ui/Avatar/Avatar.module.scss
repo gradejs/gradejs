@@ -2,8 +2,8 @@
 @import '~styles/responsive.scss';
 
 .avatarItem {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: 2px solid $white;
   border-radius: 50%;
   overflow: hidden;
@@ -37,4 +37,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.additionalAvatars {
+  font-weight: 500;
+  font-size: 14px;
+  background: $blue-additional;
+  color: $blue-accent;
+
+  @include xxl {
+    font-size: 16px;
+  }
 }

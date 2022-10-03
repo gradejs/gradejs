@@ -305,7 +305,7 @@ export default function PackagePreview({
           </div>
 
           <div className={styles.author}>
-            <AvatarGroup>
+            <AvatarGroup total={pkg.registryMetadata?.maintainers?.length}>
               {(pkg.registryMetadata?.maintainers?.length ?? 0) > 0 &&
                 pkg.registryMetadata?.maintainers?.map((author) => (
                   <Avatar alt={author.name} altAsTooltip={true} src={author.avatar} />
