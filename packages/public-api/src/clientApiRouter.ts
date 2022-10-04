@@ -99,8 +99,8 @@ export const appRouter = trpc
     async resolve({ input: { url, rescan } }) {
       const scan = await getOrRequestWebPageScan(url, rescan);
       if (!scan) {
-        // TODO: 404
-        throw new Error('Not found');
+        // TODO: proper 404
+        return null; // == 404
       }
 
       const scanResponse: RequestWebPageScanResponse = {

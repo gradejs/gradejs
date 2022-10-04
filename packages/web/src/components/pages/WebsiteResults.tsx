@@ -49,8 +49,8 @@ export function WebsiteResultsPage() {
     selectors.searchableScanEntities(state, normalizedUrl)
   );
 
-  const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector((state) =>
-    selectors.scanState(state, normalizedUrl)
+  const { isProtected, isPending, isLoading, isFailed, isNotFound, isInvalid } = useAppSelector(
+    (state) => selectors.scanState(state, normalizedUrl)
   );
 
   const availableFilters: PackageFilters = useMemo(
@@ -88,6 +88,17 @@ export function WebsiteResultsPage() {
     },
     [dispatch, normalizedUrl]
   );
+
+  if (isNotFound) {
+    return (
+      <ErrorLayout
+        message="We couldn't find requested website in our database."
+        action='Would you like to try same or another URL, or report an issue?'
+        actionTitle='Try again'
+        host={displayUrl ?? ''}
+      />
+    );
+  }
 
   if (isFailed) {
     return (
