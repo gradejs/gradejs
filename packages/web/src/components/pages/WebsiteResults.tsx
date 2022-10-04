@@ -14,7 +14,6 @@ import {
   resetScanDisplayOptions,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
-import semver from 'semver';
 
 export function WebsiteResultsPage() {
   const { '*': scanUrl } = useParams();

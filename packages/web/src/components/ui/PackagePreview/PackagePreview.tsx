@@ -90,8 +90,9 @@ export default function PackagePreview({
               {detailsLoading ? (
                 <ScriptSkeleton />
               ) : (
-                pkg.containingScripts?.map((containingScript) => (
+                pkg.containingScripts?.map((containingScript, index) => (
                   <a
+                    key={index}
                     href={containingScript}
                     className={styles.statLink}
                     target='_blank'
