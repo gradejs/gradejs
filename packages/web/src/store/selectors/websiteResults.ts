@@ -51,6 +51,7 @@ const makeSelectScanPackagesByUrl = () =>
           return acc + size;
         }, 0),
         outdated:
+          pkg.versionSet.length > 0 &&
           pkg.registryMetadata &&
           !pkg.versionSet.some(
             (ver) => pkg.registryMetadata && semver.eq(pkg.registryMetadata.latestVersion, ver)
