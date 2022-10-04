@@ -134,7 +134,7 @@ export function WebsiteResultsPage() {
 
   const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
   const accuracy = scanResult?.scan?.scanResult?.processedScripts?.some(
-    (script) => script.hasSourcemap
+    (script) => script.status === 'processed' && script.hasSourcemap
   )
     ? '91'
     : accuracyMap[webpackVersion] ?? '68.85';

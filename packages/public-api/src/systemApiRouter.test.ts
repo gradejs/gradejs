@@ -49,13 +49,32 @@ describe('routes / systemApi', () => {
       url: 'http://test.com',
       status: systemApi.ScanReport.Status.Ready,
       identifiedModuleMap: {},
-      processedScripts: [],
-      identifiedBundler: { name: '', versionRange: '' },
+      identifiedBundler: { name: 'webpack', versionRange: '3.x' },
       identifiedPackages: [
         {
           name: 'react',
           versionSet: ['17.0.0'],
           moduleIds: [],
+        },
+      ],
+      processedScripts: [
+        {
+          status: 'processed',
+          byteSize: 0,
+          checksum: 'sha1',
+          hasSourcemap: false,
+          moduleIds: [],
+          url: 'test',
+          bundlerMetadata: {
+            versionRange: '3.x',
+            isBootstrap: true,
+            isAsyncChunk: false,
+            isLazyLoaded: false,
+          },
+        },
+        {
+          status: 'error',
+          url: 'test-2',
         },
       ],
     };
