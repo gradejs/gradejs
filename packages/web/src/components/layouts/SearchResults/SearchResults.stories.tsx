@@ -28,7 +28,6 @@ Default.args = {
       version: '17.0.2',
     },
   ],
-  vulnerabilities: {},
 };
 
 export const Loading = Template.bind({});
@@ -36,5 +35,4 @@ Loading.args = {
   packagesStats: { total: 0, vulnerable: 0, outdated: 0 },
   isLoading: true,
   packages: [],
-  vulnerabilities: {},
 };

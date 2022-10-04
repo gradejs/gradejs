@@ -10,7 +10,6 @@ import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResul
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
-import { ClientApi } from '../../../services/apiClient';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import { PackageFilters } from '../../../store/slices/scanDisplayOptions';
 
@@ -20,7 +19,6 @@ type Props = {
   scanUrl: string;
   packages: IdentifiedPackage[];
   packagesStats: { total: number; vulnerable: number; outdated: number };
-  vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>;
   vulnerabilitiesCount: number;
   availableFilters: PackageFilters;
   selectedFilters: PackageFilters;
@@ -35,7 +33,6 @@ export default function SearchResults({
   packages,
   packagesStats,
   vulnerabilitiesCount,
-  vulnerabilities,
   availableFilters,
   selectedFilters,
   onFiltersChange,
@@ -110,11 +107,7 @@ export default function SearchResults({
               </>
             ) : (
               packages.map((pkg, _index) => (
-                <PackagePreview
-                  pkg={pkg}
-                  vulnerabilities={vulnerabilities[pkg.name]}
-                  opened={true /*index === 0*/}
-                />
+                <PackagePreview pkg={pkg} opened={true /*index === 0*/} />
               ))
             )}
           </div>

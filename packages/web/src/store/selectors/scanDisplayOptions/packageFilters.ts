@@ -15,12 +15,12 @@ type PackageFilterPredicate = (
 export const packageFilterPredicates: PackageFilterPredicate[] = [
   ({ keywords }, pkg) =>
     !!keywords.size &&
-    !!pkg?.registryMetadata?.keywords?.length &&
-    pkg?.registryMetadata?.keywords?.every((it) => !keywords.has(it)),
+    (!pkg?.registryMetadata?.keywords?.length ||
+      pkg?.registryMetadata?.keywords?.every((it) => !keywords.has(it))),
   ({ authors }, pkg) =>
     !!authors.size &&
-    !!pkg?.registryMetadata?.maintainers?.length &&
-    pkg?.registryMetadata?.maintainers?.every((it) => !authors.has(it.name)),
+    (!pkg?.registryMetadata?.maintainers?.length ||
+      pkg?.registryMetadata?.maintainers?.every((it) => !authors.has(it.name))),
   ({ traits }, pkg) => traits.has('vulnerable') && !pkg.vulnerable,
   ({ traits }, pkg) => traits.has('outdated') && !pkg.outdated,
 ];

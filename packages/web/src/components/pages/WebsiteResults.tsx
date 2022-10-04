@@ -136,7 +136,6 @@ export function WebsiteResultsPage() {
       <SearchResults
         isLoading={isLoading || isPending}
         isPending={isPending || isPending}
-        vulnerabilities={scanResult?.scan?.scanResult?.vulnerabilities ?? {}}
         scanUrl={displayUrl ?? ''}
         packages={packagesFilteredAndSorted}
         packagesStats={packageStats}
