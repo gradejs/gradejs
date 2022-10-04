@@ -120,6 +120,8 @@ describe('routes / website', () => {
             moduleIds: [],
           },
         ],
+        processedScripts: [],
+        identifiedBundler: { name: 'webpack', versionRange: '5.x' },
       },
     });
 
@@ -148,6 +150,8 @@ describe('routes / website', () => {
           scanResult: {
             vulnerabilities: {},
             identifiedModuleMap: {},
+            processedScripts: [],
+            identifiedBundler: { name: 'webpack', versionRange: '5.x' },
             identifiedPackages: [
               {
                 name: 'react',
