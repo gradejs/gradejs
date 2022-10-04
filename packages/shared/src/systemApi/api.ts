@@ -22,15 +22,23 @@ export const bundlerMetadata = z.object({
   isLazyLoaded: z.boolean(),
 });
 
-export const processedScriptSchema = z.object({
-  status: z.enum(['processed', 'error']),
-  url: z.string(),
-  byteSize: z.number(),
-  checksum: z.string(),
-  hasSourcemap: z.boolean(),
-  moduleIds: z.array(z.string()),
-  bundlerMetadata,
-});
+export const processedScriptSchema = z.union([
+  z.object({
+    status: z.literal('processed'),
+    url: z.string(),
+    byteSize: z.number(),
+    checksum: z.string(),
+    hasSourcemap: z.boolean(),
+    moduleIds: z.array(z.string()),
+    bundlerMetadata,
+  }),
+  z.object({
+    status: z.literal('error'),
+    url: z.string(),
+    byteSize: z.optional(z.number()),
+    checksum: z.optional(z.string()),
+  }),
+]);
 
 export const identifiedBundlerSchema = z.object({
   name: z.string(),

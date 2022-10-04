@@ -9,6 +9,8 @@ systemApiRouter.post('/scan', async (req, res, next) => {
     const scanReport = systemApi.apiScanReportSchema.parse(req.body);
     await syncWebPageScanResult(scanReport);
   } catch (e) {
+    // TODO: report to rollbar
+    console.log(e);
     next(e);
     return;
   }
