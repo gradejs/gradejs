@@ -4,16 +4,16 @@ import { Icon } from '../Icon/Icon';
 import { Button } from '../index';
 import Badge from '../Badge/Badge';
 
-type toggleList = {
+type ToggleList = {
   name: string;
-  state: [];
-  openModal: () => void;
+  count: number;
+  onOpen: () => void;
 };
 
 type Props = {
   isChanged: boolean;
   resetFilters: () => void;
-  filterTriggers: any[];
+  filterTriggers: ToggleList[];
 };
 
 export default function SidebarMobileFilter({ isChanged, resetFilters, filterTriggers }: Props) {
@@ -36,17 +36,15 @@ export default function SidebarMobileFilter({ isChanged, resetFilters, filterTri
         )}
       </div>
 
-      {filterTriggers.map(({ name, state, openModal }: toggleList) => (
+      {filterTriggers.map(({ name, count, onOpen }: ToggleList) => (
         <Button
           key={name}
           variant='secondary'
           size='small'
           className={styles.mobileFilterToggle}
-          onClick={openModal}
+          onClick={onOpen}
         >
-          {state.length > 0 && (
-            <Badge content={state.length} className={styles.mobileSelectedCounter} />
-          )}
+          {count > 0 && <Badge content={count} className={styles.mobileSelectedCounter} />}
           {name[0].toUpperCase() + name.slice(1)}
         </Button>
       ))}

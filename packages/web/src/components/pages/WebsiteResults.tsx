@@ -1,30 +1,85 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { Error as ErrorLayout, SearchResults } from 'components/layouts';
 import { trackCustomEvent } from '../../services/analytics';
-import { useAppSelector, websiteResultsSelectors as selectors } from '../../store';
+import { useAppDispatch, useAppSelector, websiteResultsSelectors as selectors } from '../../store';
 import { useScanResult } from '../../store/hooks/scan/useScanResult';
+import {
+  makeSelectScanDisplayOptions,
+  makeSelectSortedAndFilteredScanPackages,
+} from '../../store/selectors/scanDisplayOptions/scanDisplayOptions';
+import {
+  PackageFilters,
+  resetScanDisplayOptions,
+  setScanDisplayOptions,
+} from '../../store/slices/scanDisplayOptions';
 
 export function WebsiteResultsPage() {
   const { '*': scanUrl } = useParams();
+
+  const dispatch = useAppDispatch();
 
   const { displayUrl, normalizedUrl, parsedUrl, scanResult } = useScanResult(scanUrl, {
     pollWhilePending: true,
   });
 
-  const packagesFiltered = useAppSelector((state) =>
-    selectors.packagesSortedAndFiltered(state, normalizedUrl)
+  const selectScanDisplayOptions = useMemo(() => makeSelectScanDisplayOptions(), []);
+
+  const selectSortedAndFilteredPackages = useMemo(
+    () => makeSelectSortedAndFilteredScanPackages(),
+    []
   );
 
-  const packagesStats = useAppSelector((state) => selectors.packagesStats(state, normalizedUrl));
+  const packagesFilteredAndSorted = useAppSelector((state) =>
+    selectSortedAndFilteredPackages(state, normalizedUrl)
+  );
 
-  const { packageKeywordList, vulnerabilityCount } = useAppSelector((state) =>
-    selectors.scanOverview(state, normalizedUrl)
+  const scanOverview = useAppSelector((state) => selectors.scanOverview(state, normalizedUrl));
+  const packageStats = scanOverview.packages;
+
+  const searchableEntities = useAppSelector((state) =>
+    selectors.searchableScanEntities(state, normalizedUrl)
   );
 
   const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector((state) =>
     selectors.scanState(state, normalizedUrl)
+  );
+
+  const availableFilters: PackageFilters = useMemo(
+    () => ({
+      authors: searchableEntities.packageAuthors.map((it) => it.name),
+      keywords: searchableEntities.packageKeywords,
+      traits: ['vulnerable', 'outdated'],
+    }),
+    [searchableEntities]
+  );
+
+  const selectedDisplayOptions = useAppSelector((state) =>
+    selectScanDisplayOptions(state, normalizedUrl)
+  );
+
+  const handleFiltersChange = useCallback(
+    (newFilters: PackageFilters | null) => {
+      if (!normalizedUrl) {
+        return;
+      }
+
+      if (newFilters) {
+        dispatch(
+          setScanDisplayOptions({
+            scanUrl: normalizedUrl,
+            options: {
+              ...selectedDisplayOptions,
+              packageFilters: newFilters,
+            },
+          })
+        );
+      } else {
+        dispatch(resetScanDisplayOptions({ scanUrl: normalizedUrl }));
+      }
+    },
+    [dispatch, normalizedUrl]
   );
 
   if (isFailed) {
@@ -66,9 +121,9 @@ export function WebsiteResultsPage() {
 
   const title = `List of NPM packages that are used on ${parsedUrl.hostname} - GradeJS`;
   const description =
-    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${parsedUrl.hostname}` +
-    (packagesStats.vulnerable > 0 ? `, ${packagesStats.vulnerable} are vulnerable` : '') +
-    (packagesStats.outdated > 0 ? `, ${packagesStats.outdated} are outdated` : '');
+    `GradeJS has discovered ${packageStats.total} NPM packages used on ${parsedUrl.hostname}` +
+    (packageStats.vulnerable > 0 ? `, ${packageStats.vulnerable} are vulnerable` : '') +
+    (packageStats.outdated > 0 ? `, ${packageStats.outdated} are outdated` : '');
 
   return (
     <>
@@ -81,13 +136,14 @@ export function WebsiteResultsPage() {
       <SearchResults
         isLoading={isLoading || isPending}
         isPending={isPending || isPending}
-        vulnerabilities={scanResult?.scan?.scanResult?.vulnerabilities ?? {}}
         scanUrl={displayUrl ?? ''}
-        packages={packagesFiltered ?? []}
-        packagesStats={packagesStats}
-        vulnerabilitiesCount={vulnerabilityCount}
-        keywordsList={packageKeywordList}
+        packages={packagesFilteredAndSorted}
+        packagesStats={packageStats}
+        vulnerabilitiesCount={scanOverview.vulnerabilities.total}
         scanDate={scanResult?.scan?.finishedAt}
+        selectedFilters={selectedDisplayOptions.packageFilters}
+        availableFilters={availableFilters}
+        onFiltersChange={handleFiltersChange}
       />
     </>
   );

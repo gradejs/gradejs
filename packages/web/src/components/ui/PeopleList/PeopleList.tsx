@@ -5,9 +5,10 @@ import Person from '../Person/Person';
 type Props = {
   keywordsList: string[];
   selectedKeywords: string[];
-  selectHandler: (keyword: string) => void;
+  selectHandler: (newKeywords: string[]) => void;
 };
 
+// TODO: onChange Perf fixes
 export default function PeopleList({ keywordsList, selectedKeywords, selectHandler }: Props) {
   return (
     <div className={styles.authors}>
@@ -15,9 +16,16 @@ export default function PeopleList({ keywordsList, selectedKeywords, selectHandl
         <Person
           key={person}
           name={person}
-          image='https://via.placeholder.com/36'
+          // TODO: Add author avatars
+          // image='https://via.placeholder.com/36'
           checked={selectedKeywords.includes(person)}
-          onClick={() => selectHandler(person)}
+          onClick={() =>
+            selectHandler(
+              selectedKeywords.includes(person)
+                ? selectedKeywords.filter((it) => it !== person)
+                : [...selectedKeywords, person]
+            )
+          }
         />
       ))}
     </div>

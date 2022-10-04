@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styles from './SearchResultsSidebar.module.scss';
 import modalStyles from '../Modal/Modal.module.scss';
 import clsx from 'clsx';
@@ -18,6 +18,7 @@ import { Button } from '../index';
 import { IconProps } from '../Icon/Icon';
 import { SidebarMetaSkeleton } from '../SidebarMeta/SidebarMetaSkeleton';
 import { SidebarMobileFilterSkeleton } from '../SidebarMobileFilter/SidebarMobileFilterSkeleton';
+import { PackageFilters, PackageTrait } from '../../../store/slices/scanDisplayOptions';
 
 type MetaItemProps = {
   icon: React.ReactElement<IconProps>;
@@ -25,110 +26,134 @@ type MetaItemProps = {
 };
 
 type Props = {
+  loading?: boolean;
   metaItems: MetaItemProps[];
-  keyWords: string[];
-  problems: string[];
-  authors: string[];
-  loading: boolean;
+  availableFilters: PackageFilters;
+  selectedFilters: PackageFilters;
+  onFiltersChanged: (newFilters: PackageFilters | null) => void;
 };
 
 export default function SearchResultsSidebar({
   metaItems,
-  keyWords,
-  problems,
-  authors,
+  availableFilters,
+  selectedFilters,
+  onFiltersChanged,
   loading,
 }: Props) {
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
-  const [selectedProblems, setSelectedProblems] = useState<string[]>([]);
-  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
+  const [activeModal, setActiveModal] = useState<'keywords' | 'authors' | 'traits' | null>(null);
+  const closeModalHandler = useCallback(() => setActiveModal(null), []);
 
-  const [modalKeywordsOpen, setModalKeywordsOpen] = useState<boolean>(false);
-  const [modalProblemsOpen, setModalProblemsOpen] = useState<boolean>(false);
-  const [modalAuthorsOpen, setModalAuthorsOpen] = useState<boolean>(false);
+  const anyFiltersActive = useMemo(
+    () => Object.values(selectedFilters).some((it) => !!it.length),
+    [selectedFilters]
+  );
 
-  const handleFiltersChange = (
-    name: string,
-    state: string[],
-    setState: React.SetStateAction<any>
-  ) => {
-    const temp = [...state];
+  const mobileFilterTriggers = useMemo(
+    () => [
+      {
+        name: 'Problems',
+        count: selectedFilters.traits.length,
+        onOpen: () => setActiveModal('traits'),
+      },
+      {
+        name: 'Keywords',
+        count: selectedFilters.keywords.length,
+        onOpen: () => setActiveModal('keywords'),
+      },
+      {
+        name: 'Authors',
+        count: selectedFilters.authors.length,
+        onOpen: () => setActiveModal('authors'),
+      },
+    ],
+    []
+  );
 
-    if (temp.includes(name)) {
-      const filtered = temp.filter((item) => item !== name);
-      setState(filtered);
-    } else {
-      temp.push(name);
-      setState(temp);
-    }
-  };
+  const handleFilterReset = useCallback(() => onFiltersChanged(null), [onFiltersChanged]);
 
-  const handleKeywordsChange = (name: string) => {
-    handleFiltersChange(name, selectedKeywords, setSelectedKeywords);
-  };
-
-  const handleProblemsChange = (name: string) => {
-    handleFiltersChange(name, selectedProblems, setSelectedProblems);
-  };
-
-  const handleAuthorsChange = (name: string) => {
-    handleFiltersChange(name, selectedAuthors, setSelectedAuthors);
-  };
-
-  const resetFilters = () => {
-    setSelectedKeywords([]);
-    setSelectedProblems([]);
-    setSelectedAuthors([]);
-  };
-
-  const filterTriggers = [
-    { name: 'keywords', state: selectedKeywords, openModal: () => setModalKeywordsOpen(true) },
-    { name: 'problems', state: selectedProblems, openModal: () => setModalProblemsOpen(true) },
-    { name: 'authors', state: selectedAuthors, openModal: () => setModalAuthorsOpen(true) },
-  ];
-
-  const isChanged =
-    selectedKeywords.length > 0 || selectedProblems.length > 0 || selectedAuthors.length > 0;
+  // TODO: Refactor this through restructuring underlying components properly
+  const {
+    handleTraitsFilterChange,
+    handleTraitsFilterReset,
+    handleKeywordsFilterChange,
+    handleKeywordsFilterReset,
+    handleAuthorsFilterChange,
+    handleAuthorsFilterReset,
+  } = useMemo(
+    () => ({
+      handleTraitsFilterChange: (newTraits: string[]) =>
+        onFiltersChanged({
+          ...selectedFilters,
+          traits: newTraits as PackageTrait[],
+        }),
+      handleTraitsFilterReset: () =>
+        onFiltersChanged({
+          ...selectedFilters,
+          traits: [],
+        }),
+      handleKeywordsFilterChange: (newKeywords: string[]) =>
+        onFiltersChanged({
+          ...selectedFilters,
+          keywords: newKeywords,
+        }),
+      handleKeywordsFilterReset: () =>
+        onFiltersChanged({
+          ...selectedFilters,
+          keywords: [],
+        }),
+      handleAuthorsFilterChange: (newAuthors: string[]) =>
+        onFiltersChanged({
+          ...selectedFilters,
+          authors: newAuthors,
+        }),
+      handleAuthorsFilterReset: () =>
+        onFiltersChanged({
+          ...selectedFilters,
+          authors: [],
+        }),
+    }),
+    [onFiltersChanged, selectedFilters]
+  );
 
   return (
     <>
-      <Modal show={modalKeywordsOpen} setShow={setModalKeywordsOpen}>
+      <Modal isOpen={activeModal === 'keywords'} onClose={closeModalHandler}>
         <SidebarCategoryWithSearch
           categoryName='Keywords'
-          keywordsList={keyWords}
-          selectedKeywords={selectedKeywords}
-          selectHandler={handleKeywordsChange}
-          returnButton={() => setModalKeywordsOpen(false)}
-          resetGroup={() => setSelectedKeywords([])}
+          keywordsList={availableFilters.keywords}
+          selectedKeywords={selectedFilters.keywords}
+          selectHandler={handleKeywordsFilterChange}
+          returnButton={closeModalHandler}
+          resetGroup={handleKeywordsFilterReset}
           searchOpen
         />
       </Modal>
 
-      <Modal show={modalProblemsOpen} setShow={setModalProblemsOpen}>
+      <Modal isOpen={activeModal === 'traits'} onClose={closeModalHandler}>
         <div className={modalStyles.modalContentWrapper}>
           <SidebarCategory
             categoryName='Problems'
-            selectedKeywords={selectedProblems}
-            returnButton={() => setModalProblemsOpen(false)}
-            resetGroup={() => setSelectedProblems([])}
+            selectedKeywords={selectedFilters.traits}
+            returnButton={closeModalHandler}
+            resetGroup={handleTraitsFilterReset}
           >
             <ProblemsList
-              keywordsList={problems}
-              selectedKeywords={selectedProblems}
-              selectHandler={handleProblemsChange}
+              keywordsList={availableFilters.traits}
+              selectedKeywords={selectedFilters.traits}
+              selectHandler={handleTraitsFilterChange}
             />
           </SidebarCategory>
         </div>
       </Modal>
 
-      <Modal show={modalAuthorsOpen} setShow={setModalAuthorsOpen}>
+      <Modal isOpen={activeModal === 'authors'} onClose={closeModalHandler}>
         <SidebarCategoryWithSearch
           categoryName='Authors'
-          keywordsList={authors}
-          selectedKeywords={selectedAuthors}
-          selectHandler={handleAuthorsChange}
-          returnButton={() => setModalAuthorsOpen(false)}
-          resetGroup={() => setSelectedAuthors([])}
+          keywordsList={availableFilters.authors}
+          selectedKeywords={selectedFilters.authors}
+          selectHandler={handleAuthorsFilterChange}
+          returnButton={closeModalHandler}
+          resetGroup={handleAuthorsFilterReset}
           itemsWithImage
           searchOpen
         />
@@ -144,9 +169,9 @@ export default function SearchResultsSidebar({
             <SidebarMobileFilterSkeleton />
           ) : (
             <SidebarMobileFilter
-              isChanged={isChanged}
-              resetFilters={resetFilters}
-              filterTriggers={filterTriggers}
+              isChanged={anyFiltersActive}
+              resetFilters={handleFilterReset}
+              filterTriggers={mobileFilterTriggers}
             />
           )}
         </div>
@@ -160,14 +185,14 @@ export default function SearchResultsSidebar({
           ) : (
             <SidebarCategoryWithSearch
               categoryName='Keywords'
-              keywordsList={keyWords}
-              selectedKeywords={selectedKeywords}
-              selectHandler={handleKeywordsChange}
+              keywordsList={availableFilters.keywords}
+              selectedKeywords={selectedFilters.keywords}
+              selectHandler={handleKeywordsFilterChange}
             >
               <KeywordsList
-                keywordsList={keyWords}
-                selectedKeywords={selectedKeywords}
-                selectHandler={handleKeywordsChange}
+                keywordsList={availableFilters.keywords}
+                selectedKeywords={selectedFilters.keywords}
+                selectHandler={handleKeywordsFilterChange}
               />
             </SidebarCategoryWithSearch>
           )}
@@ -180,11 +205,11 @@ export default function SearchResultsSidebar({
               <ProblemsListSkeleton />
             </>
           ) : (
-            <SidebarCategory categoryName='Issues' selectedKeywords={selectedProblems}>
+            <SidebarCategory categoryName='Issues' selectedKeywords={selectedFilters.traits}>
               <ProblemsList
-                keywordsList={problems}
-                selectedKeywords={selectedProblems}
-                selectHandler={handleProblemsChange}
+                keywordsList={availableFilters.traits}
+                selectedKeywords={selectedFilters.traits}
+                selectHandler={handleTraitsFilterChange}
               />
             </SidebarCategory>
           )}
@@ -197,25 +222,25 @@ export default function SearchResultsSidebar({
               <PeopleListSkeleton />
             </>
           ) : (
+            // TODO: Add author avatars
             <SidebarCategoryWithSearch
               categoryName='Authors'
-              keywordsList={authors}
-              selectedKeywords={selectedAuthors}
-              selectHandler={handleAuthorsChange}
-              itemsWithImage
+              keywordsList={availableFilters.authors}
+              selectedKeywords={selectedFilters.authors}
+              selectHandler={handleAuthorsFilterChange}
             >
               <PeopleList
-                keywordsList={authors}
-                selectedKeywords={selectedAuthors}
-                selectHandler={handleAuthorsChange}
+                keywordsList={availableFilters.authors}
+                selectedKeywords={selectedFilters.authors}
+                selectHandler={handleAuthorsFilterChange}
               />
             </SidebarCategoryWithSearch>
           )}
         </div>
 
-        {isChanged && (
+        {anyFiltersActive && (
           <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
-            <Button variant='secondary' size='small' onClick={resetFilters}>
+            <Button variant='secondary' size='small' onClick={handleFilterReset}>
               Reset filters
             </Button>
           </div>

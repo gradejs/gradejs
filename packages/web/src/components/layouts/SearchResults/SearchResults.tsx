@@ -10,8 +10,8 @@ import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResul
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
-import { ClientApi } from '../../../services/apiClient';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
+import { PackageFilters } from '../../../store/slices/scanDisplayOptions';
 
 type Props = {
   isLoading: boolean;
@@ -19,9 +19,10 @@ type Props = {
   scanUrl: string;
   packages: IdentifiedPackage[];
   packagesStats: { total: number; vulnerable: number; outdated: number };
-  vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>;
   vulnerabilitiesCount: number;
-  keywordsList: string[];
+  availableFilters: PackageFilters;
+  selectedFilters: PackageFilters;
+  onFiltersChange: (newFilters: PackageFilters | null) => void;
   scanDate?: string;
   // siteFavicon: string;
 };
@@ -32,8 +33,9 @@ export default function SearchResults({
   packages,
   packagesStats,
   vulnerabilitiesCount,
-  vulnerabilities,
-  keywordsList,
+  availableFilters,
+  selectedFilters,
+  onFiltersChange,
   scanDate,
 }: Props) {
   const metaItems = [
@@ -58,10 +60,6 @@ export default function SearchResults({
       text: `${packagesStats.outdated} outdated packages`,
     },
   ];
-
-  const authors: string[] = []; // TODO
-
-  const problems = ['Vulnerable', 'Outdated' /*'Duplicate'*/];
 
   return (
     <>
@@ -89,11 +87,11 @@ export default function SearchResults({
 
           <div className={styles.searchResultsSidebar}>
             <SearchResultsSidebar
-              metaItems={metaItems}
-              keyWords={keywordsList}
-              problems={problems}
-              authors={authors}
               loading={isLoading}
+              metaItems={metaItems}
+              availableFilters={availableFilters}
+              selectedFilters={selectedFilters}
+              onFiltersChanged={onFiltersChange}
             />
           </div>
 
@@ -109,11 +107,7 @@ export default function SearchResults({
               </>
             ) : (
               packages.map((pkg, _index) => (
-                <PackagePreview
-                  pkg={pkg}
-                  vulnerabilities={vulnerabilities[pkg.name]}
-                  opened={true /*index === 0*/}
-                />
+                <PackagePreview pkg={pkg} opened={true /*index === 0*/} />
               ))
             )}
           </div>

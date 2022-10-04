@@ -17,6 +17,7 @@ const pkg: IdentifiedPackage = {
   name: '@team-griffin/react-heading-section',
   version: '3.0.0 - 4.16.4',
   versionSet: ['3.0.0', '3.0.1', '4.16.4'],
+  vulnerabilities: [],
   outdated: false,
   vulnerable: false,
   duplicate: false,
