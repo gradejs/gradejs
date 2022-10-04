@@ -122,6 +122,7 @@ export const appRouter = trpc
           identifiedModuleMap: scan.scanResult.identifiedModuleMap,
           identifiedPackages: mergeRegistryMetadata(scan.scanResult.identifiedPackages, metadata),
           processedScripts: scan.scanResult.processedScripts,
+          identifiedBundler: scan.scanResult.identifiedBundler,
           vulnerabilities,
         };
       }
