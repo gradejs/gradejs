@@ -45,6 +45,8 @@ type RequestWebPageScanResponse = {
     identifiedModuleMap: Record<string, WebPageScan.IdentifiedModule>;
     identifiedPackages: ScanResultPackageWithMetadata[];
     vulnerabilities: Record<string, PackageVulnerabilityData[]>;
+    processedScripts: WebPageScan.ProcessedScript[];
+    identifiedBundler?: WebPageScan.IdentifiedBundler;
   };
 };
 
@@ -119,6 +121,7 @@ export const appRouter = trpc
         scanResponse.scanResult = {
           identifiedModuleMap: scan.scanResult.identifiedModuleMap,
           identifiedPackages: mergeRegistryMetadata(scan.scanResult.identifiedPackages, metadata),
+          processedScripts: scan.scanResult.processedScripts,
           vulnerabilities,
         };
       }

@@ -20,12 +20,30 @@ type Props = {
   packages: IdentifiedPackage[];
   packagesStats: { total: number; vulnerable: number; outdated: number };
   vulnerabilitiesCount: number;
+  scriptsCount: number;
+  bundleSize: number;
   availableFilters: PackageFilters;
   selectedFilters: PackageFilters;
   onFiltersChange: (newFilters: PackageFilters | null) => void;
   scanDate?: string;
+  webpackVersion?: string;
+  accuracy: string;
   // siteFavicon: string;
 };
+
+function getReadableSizeString(sizeInBytes: number) {
+  if (sizeInBytes === 0) {
+    return '0 KB';
+  }
+  let i = -1;
+  const byteUnits = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  do {
+    sizeInBytes = sizeInBytes / 1024;
+    i++;
+  } while (sizeInBytes > 1024);
+
+  return `${Math.max(sizeInBytes, 0.1).toFixed(1)} ${byteUnits[i]}`;
+}
 
 export default function SearchResults({
   isLoading,
@@ -33,20 +51,28 @@ export default function SearchResults({
   packages,
   packagesStats,
   vulnerabilitiesCount,
+  scriptsCount,
+  bundleSize,
   availableFilters,
   selectedFilters,
   onFiltersChange,
   scanDate,
+  webpackVersion,
+  accuracy,
 }: Props) {
   const metaItems = [
-    /*{
+    {
+      icon: <Icon kind={'webpackLogo'} width={24} height={24} />,
+      text: `Webpack v${webpackVersion}`,
+    },
+    {
       icon: <Icon kind='weight' width={24} height={24} />,
-      text: '159 kb webpack bundle size',
-    },*/
-    /*{
+      text: `${getReadableSizeString(bundleSize)} webpack bundle size`,
+    },
+    {
       icon: <Icon kind='search' width={24} height={24} color='#212121' />,
-      text: '50 scripts found',
-    },*/
+      text: `${scriptsCount} scripts processed`,
+    },
     {
       icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,
       text: `${vulnerabilitiesCount} vulnerabilities in ${packagesStats.total} packages`,
@@ -58,6 +84,10 @@ export default function SearchResults({
     {
       icon: <Icon kind='outdated' color='#F1CE61' stroke='white' width={24} height={24} />,
       text: `${packagesStats.outdated} outdated packages`,
+    },
+    {
+      icon: <Icon kind={'check'} width={24} height={24} />,
+      text: `~${accuracy}% estimated accuracy`,
     },
   ];
 

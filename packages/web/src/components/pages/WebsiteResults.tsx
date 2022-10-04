@@ -15,6 +15,13 @@ import {
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
 
+const accuracyMap: Record<string, string> = {
+  // TODO: remove hardcode
+  '3.x': '73.7',
+  '4.x': '68.85',
+  '5.x': '63.59',
+};
+
 export function WebsiteResultsPage() {
   const { '*': scanUrl } = useParams();
 
@@ -125,6 +132,13 @@ export function WebsiteResultsPage() {
     (packageStats.vulnerable > 0 ? `, ${packageStats.vulnerable} are vulnerable` : '') +
     (packageStats.outdated > 0 ? `, ${packageStats.outdated} are outdated` : '');
 
+  const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
+  const accuracy = scanResult?.scan?.scanResult?.processedScripts.some(
+    (script) => script.hasSourcemap
+  )
+    ? '91'
+    : accuracyMap[webpackVersion] ?? '68.85';
+
   return (
     <>
       <Helmet>
@@ -140,10 +154,14 @@ export function WebsiteResultsPage() {
         packages={packagesFilteredAndSorted}
         packagesStats={packageStats}
         vulnerabilitiesCount={scanOverview.vulnerabilities.total}
+        scriptsCount={scanOverview.scriptsCount ?? 0}
+        bundleSize={scanOverview.bundleSize ?? 0}
         scanDate={scanResult?.scan?.finishedAt}
         selectedFilters={selectedDisplayOptions.packageFilters}
         availableFilters={availableFilters}
         onFiltersChange={handleFiltersChange}
+        webpackVersion={webpackVersion}
+        accuracy={accuracy}
       />
     </>
   );

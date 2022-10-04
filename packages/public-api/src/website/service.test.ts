@@ -38,6 +38,8 @@ describe('website / service', () => {
           moduleIds: ['moduleId'],
         },
       ],
+      identifiedBundler: { name: '', versionRange: '' },
+      processedScripts: [],
     });
 
     const updatedScan = await em.getRepository(WebPageScan).findOneOrFail({ id: scan.id });
@@ -78,6 +80,8 @@ describe('website / service', () => {
           moduleIds: [],
         },
       ],
+      identifiedBundler: { name: '', versionRange: '' },
+      processedScripts: [],
     });
 
     expect(scan).toMatchObject({
@@ -110,6 +114,8 @@ describe('website / service', () => {
           moduleIds: [],
         },
       ],
+      identifiedBundler: { name: '', versionRange: '' },
+      processedScripts: [],
     });
 
     await expect(syncPromise).rejects.toThrow();

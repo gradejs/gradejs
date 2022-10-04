@@ -5,7 +5,7 @@ import Chip from '../Chip/Chip';
 import clsx from 'clsx';
 import ChipGroup from '../ChipGroup/ChipGroup';
 import { CSSTransition } from 'react-transition-group';
-import { LicenceSkeleton, LinksSkeleton } from './PackagePreviewSkeleton';
+import { LicenceSkeleton, LinksSkeleton, ScriptSkeleton } from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
@@ -82,7 +82,6 @@ export default function PackagePreview({
       >
         <div className={styles.content}>
           <div className={styles.contentInner}>
-            {/*
             <div className={styles.stat}>
               <div className={styles.statHeader}>
                 <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
@@ -91,17 +90,19 @@ export default function PackagePreview({
               {detailsLoading ? (
                 <ScriptSkeleton />
               ) : (
-                <a
-                  href={pkg.containingScriptUrl}
-                  className={styles.statLink}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  {pkg.containingScriptUrl}
-                </a>
+                pkg.containingScripts?.map((containingScript, index) => (
+                  <a
+                    key={index}
+                    href={containingScript}
+                    className={styles.statLink}
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    {containingScript}
+                  </a>
+                ))
               )}
             </div>
-            */}
 
             {(pkg.registryMetadata?.license || deps.length > 0) && (
               <div className={styles.statList}>
