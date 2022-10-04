@@ -61,9 +61,7 @@ const makeSelectScanPackagesByUrl = () =>
         // TODO: memoize/simplify
         containingScripts: Array.from(
           pkg.moduleIds.reduce((acc: Set<string>, id) => {
-            const script = scanResult?.scan?.scanResult?.processedScripts?.find((val) =>
-              val.moduleIds.includes(id)
-            );
+            const script = scanData?.processedScripts?.find((val) => val.moduleIds.includes(id));
             if (script && script.status === 'processed') {
               acc.add(script.url);
             }
@@ -108,10 +106,9 @@ export const selectors = {
           vulnerable: identifiedPackages.filter((pkg) => !!pkg.vulnerable).length,
           outdated: identifiedPackages.filter((pkg) => !!pkg.outdated).length,
         },
-        scriptsCount: scanResult?.scan?.scanResult?.processedScripts?.filter(
-          (script) => script.status === 'processed'
-        ).length,
-        bundleSize: scanResult?.scan?.scanResult?.processedScripts?.reduce((acc, script) => {
+        scriptsCount: scanData?.processedScripts?.filter((script) => script.status === 'processed')
+          .length,
+        bundleSize: scanData?.processedScripts?.reduce((acc, script) => {
           return acc + script.byteSize;
         }, 0),
       };
