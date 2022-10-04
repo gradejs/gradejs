@@ -82,27 +82,29 @@ export default function PackagePreview({
       >
         <div className={styles.content}>
           <div className={styles.contentInner}>
-            <div className={styles.stat}>
-              <div className={styles.statHeader}>
-                <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
-                Script
+            {!!pkg.containingScripts?.length && (
+              <div className={styles.stat}>
+                <div className={styles.statHeader}>
+                  <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
+                  Script
+                </div>
+                {detailsLoading ? (
+                  <ScriptSkeleton />
+                ) : (
+                  pkg.containingScripts?.map((containingScript, index) => (
+                    <a
+                      key={index}
+                      href={containingScript}
+                      className={styles.statLink}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      {containingScript}
+                    </a>
+                  ))
+                )}
               </div>
-              {detailsLoading ? (
-                <ScriptSkeleton />
-              ) : (
-                pkg.containingScripts?.map((containingScript, index) => (
-                  <a
-                    key={index}
-                    href={containingScript}
-                    className={styles.statLink}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    {containingScript}
-                  </a>
-                ))
-              )}
-            </div>
+            )}
 
             {(pkg.registryMetadata?.license || deps.length > 0) && (
               <div className={styles.statList}>
