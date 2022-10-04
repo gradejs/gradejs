@@ -133,7 +133,7 @@ export function WebsiteResultsPage() {
     (packageStats.outdated > 0 ? `, ${packageStats.outdated} are outdated` : '');
 
   const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
-  const accuracy = scanResult?.scan?.scanResult?.processedScripts.some(
+  const accuracy = scanResult?.scan?.scanResult?.processedScripts?.some(
     (script) => script.hasSourcemap
   )
     ? '91'
