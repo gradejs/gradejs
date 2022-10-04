@@ -102,7 +102,7 @@ export async function syncWebPageScanResult(scanReport: systemApi.ScanReport) {
         identifiedModuleMap: scanReport.identifiedModuleMap,
         identifiedPackages: scanReport.identifiedPackages,
         processedScripts: scanReport.processedScripts,
-        identifierBundler: scanReport.identifiedBundler,
+        identifiedBundler: scanReport.identifiedBundler,
       };
     }
 

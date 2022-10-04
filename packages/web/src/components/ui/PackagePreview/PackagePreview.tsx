@@ -42,7 +42,6 @@ export default function PackagePreview({
   const deps = Object.keys(
     pkg.registryMetadata?.versionSpecificValues?.[versions[versions.length - 1]]?.dependencies ?? {}
   );
-  const containingScript = pkg.containingScripts?.[0]; // TODO, more than one containing script?
 
   return (
     <div className={clsx(styles.package, opened && styles.open)}>
@@ -83,15 +82,15 @@ export default function PackagePreview({
       >
         <div className={styles.content}>
           <div className={styles.contentInner}>
-            {containingScript && (
-              <div className={styles.stat}>
-                <div className={styles.statHeader}>
-                  <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
-                  Script
-                </div>
-                {detailsLoading ? (
-                  <ScriptSkeleton />
-                ) : (
+            <div className={styles.stat}>
+              <div className={styles.statHeader}>
+                <Icon kind='script' color='#8E8AA0' className={styles.statIcon} />
+                Script
+              </div>
+              {detailsLoading ? (
+                <ScriptSkeleton />
+              ) : (
+                pkg.containingScripts?.map((containingScript) => (
                   <a
                     href={containingScript}
                     className={styles.statLink}
@@ -100,9 +99,9 @@ export default function PackagePreview({
                   >
                     {containingScript}
                   </a>
-                )}
-              </div>
-            )}
+                ))
+              )}
+            </div>
 
             {(pkg.registryMetadata?.license || deps.length > 0) && (
               <div className={styles.statList}>
