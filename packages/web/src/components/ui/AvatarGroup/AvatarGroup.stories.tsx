@@ -20,3 +20,16 @@ export const Primary: ComponentStory<typeof AvatarGroup> = () => (
     </AvatarGroup>
   </div>
 );
+
+export const MoreThanMax: ComponentStory<typeof AvatarGroup> = () => (
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <AvatarGroup max={4}>
+      <Avatar src='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg' />
+      <Avatar src='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg' />
+      <Avatar src='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg' />
+      <Avatar src='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg' />
+      <Avatar src='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg' />
+      <Avatar src='https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg' />
+    </AvatarGroup>
+  </div>
+);

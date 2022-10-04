@@ -410,20 +410,5 @@
 }
 
 .authorImage {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
   margin-left: 16px;
-
-  @include mobile-and-tablet {
-    width: 32px;
-    height: 32px;
-  }
-}
-
-.authorName {
-  @include mobile-and-tablet {
-    display: none;
-  }
 }
