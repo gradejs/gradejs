@@ -5,7 +5,7 @@ import type { ClientApi } from '../../services/apiClient';
 
 function semverListAsRange(versionList: string[]) {
   if (!versionList.length) {
-    return '*';
+    return 'x.x.x';
   }
 
   if (versionList.length === 1) {

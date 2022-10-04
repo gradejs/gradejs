@@ -1,5 +1,6 @@
 import React from 'react';
 import githubLogo from '../../../assets/icons/sprite/github.svg';
+import webpackLogo from '../../../assets/icons/sprite/webpack.svg';
 import grid from '../../../assets/icons/sprite/grid.svg';
 import lines from '../../../assets/icons/sprite/lines.svg';
 import external from '../../../assets/icons/sprite/external.svg';
@@ -55,6 +56,7 @@ const icons = {
   arrowBack,
   filters,
   questionMark,
+  webpackLogo,
 };
 
 export type IconProps = {

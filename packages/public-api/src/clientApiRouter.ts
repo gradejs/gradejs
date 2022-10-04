@@ -46,6 +46,7 @@ type RequestWebPageScanResponse = {
     identifiedPackages: ScanResultPackageWithMetadata[];
     vulnerabilities: Record<string, PackageVulnerabilityData[]>;
     processedScripts: WebPageScan.ProcessedScript[];
+    identifiedBundler?: WebPageScan.IdentifiedBundler;
   };
 };
 

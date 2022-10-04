@@ -14,6 +14,7 @@ import {
   resetScanDisplayOptions,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
+import semver from 'semver';
 
 export function WebsiteResultsPage() {
   const { '*': scanUrl } = useParams();
@@ -125,6 +126,15 @@ export function WebsiteResultsPage() {
     (packageStats.vulnerable > 0 ? `, ${packageStats.vulnerable} are vulnerable` : '') +
     (packageStats.outdated > 0 ? `, ${packageStats.outdated} are outdated` : '');
 
+  const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
+  const accuracy = // TODO: remove hardcode
+    {
+      '3.x': '31.56',
+      '4.x': '47.94',
+      '5.x': '52.71',
+      '4.x || 5.x': '49.73',
+    }[webpackVersion] ?? '46.73';
+
   return (
     <>
       <Helmet>
@@ -146,6 +156,8 @@ export function WebsiteResultsPage() {
         selectedFilters={selectedDisplayOptions.packageFilters}
         availableFilters={availableFilters}
         onFiltersChange={handleFiltersChange}
+        webpackVersion={webpackVersion}
+        accuracy={accuracy}
       />
     </>
   );

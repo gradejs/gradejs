@@ -26,6 +26,8 @@ type Props = {
   selectedFilters: PackageFilters;
   onFiltersChange: (newFilters: PackageFilters | null) => void;
   scanDate?: string;
+  webpackVersion?: string;
+  accuracy: string;
   // siteFavicon: string;
 };
 
@@ -55,8 +57,14 @@ export default function SearchResults({
   selectedFilters,
   onFiltersChange,
   scanDate,
+  webpackVersion,
+  accuracy,
 }: Props) {
   const metaItems = [
+    {
+      icon: <Icon kind={'webpackLogo'} width={24} height={24} />,
+      text: `Webpack v${webpackVersion}`,
+    },
     {
       icon: <Icon kind='weight' width={24} height={24} />,
       text: `${getReadableSizeString(bundleSize)} webpack bundle size`,
@@ -76,6 +84,10 @@ export default function SearchResults({
     {
       icon: <Icon kind='outdated' color='#F1CE61' stroke='white' width={24} height={24} />,
       text: `${packagesStats.outdated} outdated packages`,
+    },
+    {
+      icon: <Icon kind={'check'} width={24} height={24} />,
+      text: `~${accuracy}% accuracy`,
     },
   ];
 
