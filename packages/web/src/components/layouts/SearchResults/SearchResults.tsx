@@ -30,8 +30,11 @@ type Props = {
 };
 
 function getReadableSizeString(sizeInBytes: number) {
+  if (sizeInBytes === 0) {
+    return '0 KB';
+  }
   let i = -1;
-  const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const byteUnits = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   do {
     sizeInBytes = sizeInBytes / 1024;
     i++;
@@ -60,7 +63,7 @@ export default function SearchResults({
     },
     {
       icon: <Icon kind='search' width={24} height={24} color='#212121' />,
-      text: `${scriptsCount} scripts found`,
+      text: `${scriptsCount} scripts processed`,
     },
     {
       icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,

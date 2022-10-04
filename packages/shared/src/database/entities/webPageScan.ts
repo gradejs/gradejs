@@ -56,6 +56,6 @@ export namespace WebPageScan {
     identifiedModuleMap: Record<string, IdentifiedModule>;
     identifiedPackages: IdentifiedPackage[];
     processedScripts: ProcessedScript[];
-    identifierBundler: IdentifiedBundler;
+    identifierBundler?: IdentifiedBundler;
   };
 }

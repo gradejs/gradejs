@@ -59,15 +59,17 @@ const makeSelectScanPackagesByUrl = () =>
         vulnerabilities: scanData.vulnerabilities[pkg.name] ?? [],
         version: semverListAsRange(pkg.versionSet),
         // TODO: memoize/simplify
-        containingScripts: pkg.moduleIds.reduce((acc: string[], id) => {
-          const script = scanResult?.scan?.scanResult?.processedScripts?.find((val) =>
-            val.moduleIds.includes(id)
-          );
-          if (script && script.status === 'processed') {
-            acc.push(script.url);
-          }
-          return acc;
-        }, []),
+        containingScripts: Array.from(
+          pkg.moduleIds.reduce((acc: Set<string>, id) => {
+            const script = scanResult?.scan?.scanResult?.processedScripts?.find((val) =>
+              val.moduleIds.includes(id)
+            );
+            if (script && script.status === 'processed') {
+              acc.add(script.url);
+            }
+            return acc;
+          }, new Set<string>())
+        ),
       };
     });
 

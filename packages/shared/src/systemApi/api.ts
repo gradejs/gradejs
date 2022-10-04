@@ -44,7 +44,7 @@ export const apiScanReportSchema = z.union([
     status: z.literal('ready'),
     identifiedModuleMap: z.record(identifiedModuleSchema),
     identifiedPackages: z.array(identifiedPackageSchema),
-    identifiedBundler: identifiedBundlerSchema,
+    identifiedBundler: z.optional(identifiedBundlerSchema),
     processedScripts: z.array(processedScriptSchema),
   }),
   z.object({
