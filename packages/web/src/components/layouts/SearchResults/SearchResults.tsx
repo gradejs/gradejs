@@ -87,7 +87,7 @@ export default function SearchResults({
     },
     {
       icon: <Icon kind={'check'} width={24} height={24} />,
-      text: `~${accuracy}% accuracy`,
+      text: `~${accuracy}% estimated accuracy`,
     },
   ];
 

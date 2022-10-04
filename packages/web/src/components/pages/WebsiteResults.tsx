@@ -15,6 +15,13 @@ import {
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
 
+const accuracyMap: Record<string, string> = {
+  // TODO: remove hardcode
+  '3.x': '73.7',
+  '4.x': '68.85',
+  '5.x': '63.59',
+};
+
 export function WebsiteResultsPage() {
   const { '*': scanUrl } = useParams();
 
@@ -126,13 +133,11 @@ export function WebsiteResultsPage() {
     (packageStats.outdated > 0 ? `, ${packageStats.outdated} are outdated` : '');
 
   const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
-  const accuracy = // TODO: remove hardcode
-    {
-      '3.x': '31.56',
-      '4.x': '47.94',
-      '5.x': '52.71',
-      '4.x || 5.x': '49.73',
-    }[webpackVersion] ?? '46.73';
+  const accuracy = scanResult?.scan?.scanResult?.processedScripts.some(
+    (script) => script.hasSourcemap
+  )
+    ? '91'
+    : accuracyMap[webpackVersion] ?? '68.85';
 
   return (
     <>
