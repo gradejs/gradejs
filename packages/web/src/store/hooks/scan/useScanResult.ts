@@ -17,7 +17,13 @@ export const useScanResult = (
 
   // Initial request if entity wasn't loaded
   useEffect(() => {
-    if (normalizedUrl && !scanResult?.scan && !scanResult?.isLoading && !scanResult?.error) {
+    if (
+      normalizedUrl &&
+      !scanResult?.scan &&
+      scanResult?.scan !== null &&
+      !scanResult?.isLoading &&
+      !scanResult?.error
+    ) {
       requestScan(normalizedUrl, requestRescan);
     }
   }, [normalizedUrl, scanResult, requestRescan]);
