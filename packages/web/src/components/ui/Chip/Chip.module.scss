@@ -2,6 +2,7 @@
 @import '~styles/responsive.scss';
 
 .chip {
+  max-width: 100%;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -132,4 +133,10 @@
 .smallFont {
   font-size: 14px;
   line-height: 20px;
+}
+
+.text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

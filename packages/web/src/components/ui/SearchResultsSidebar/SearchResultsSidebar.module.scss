@@ -4,6 +4,7 @@
 .sidebar {
   display: grid;
   grid-gap: 24px;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .sidebarItem {

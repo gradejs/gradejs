@@ -201,7 +201,13 @@ export default function PackagePreview({
                     ) : (
                       <ChipGroup>
                         {deps.map((dependency) => (
-                          <Chip size='medium' fontSize='small' font='monospace'>
+                          <Chip
+                            key={dependency}
+                            title={dependency}
+                            size='medium'
+                            fontSize='small'
+                            font='monospace'
+                          >
                             {dependency}
                           </Chip>
                         ))}
