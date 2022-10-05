@@ -75,7 +75,7 @@ export default function SearchResults({
     },
     {
       icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,
-      text: `${vulnerabilitiesCount} vulnerabilities in ${packagesStats.total} packages`,
+      text: `${packagesStats.vulnerable} packages with ${vulnerabilitiesCount} vulnerabilities`,
     },
     /*{
       icon: <Icon kind='duplicate' color='#F3812E' width={24} height={24} />,
