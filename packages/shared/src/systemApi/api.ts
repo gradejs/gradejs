@@ -118,10 +118,12 @@ export async function fetchEndpoint<T>(
   data?: Record<string, unknown>
 ) {
   const requestUrl = new URL(endpoint, getInternalApiRootUrl());
-  const requestInit: RequestInit = { method };
+  const requestInit: RequestInit = {
+    method,
+    headers: { 'Content-Type': 'application/json', 'X-Api-Key': getGradeJsApiKey() },
+  };
 
   if (method === 'POST' || method === 'PATCH') {
-    requestInit.headers = { 'Content-Type': 'application/json', 'X-Api-Key': getGradeJsApiKey() };
     requestInit.body = JSON.stringify(data);
   } else if (method === 'GET' && data) {
     for (const key of Object.keys(data)) {
