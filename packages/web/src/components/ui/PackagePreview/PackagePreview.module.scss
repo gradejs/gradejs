@@ -227,7 +227,7 @@
 
 .statList {
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
   grid-gap: 32px 20px;
 
   @include mobile-and-tablet {
