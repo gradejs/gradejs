@@ -16,6 +16,13 @@ export const LicenceSkeleton = () => (
   </>
 );
 
+export const FootprintSkeleton = () => (
+  <>
+    <Skeleton width={103} height={26} variant='rectangular' className={styles.statHeader} />
+    <Skeleton width={135} />
+  </>
+);
+
 export const RatingSkeleton = () => (
   <>
     <Skeleton width={62} height={26} variant='rectangular' className={styles.statHeader} />

@@ -12,7 +12,7 @@ import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSk
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import { PackageFilters } from '../../../store/slices/scanDisplayOptions';
-import { plural } from '../../../utils/helpers';
+import { getReadableSizeString, plural } from '../../../utils/helpers';
 
 type Props = {
   isLoading: boolean;
@@ -31,20 +31,6 @@ type Props = {
   accuracy: string;
   // siteFavicon: string;
 };
-
-function getReadableSizeString(sizeInBytes: number) {
-  if (sizeInBytes === 0) {
-    return '0 KB';
-  }
-  let i = -1;
-  const byteUnits = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  do {
-    sizeInBytes = sizeInBytes / 1024;
-    i++;
-  } while (sizeInBytes > 1024);
-
-  return `${Math.max(sizeInBytes, 0.1).toFixed(1)} ${byteUnits[i]}`;
-}
 
 export default function SearchResults({
   isLoading,
@@ -67,7 +53,7 @@ export default function SearchResults({
       text: `Webpack v${webpackVersion}`,
     },
     {
-      icon: <Icon kind='weight' width={24} height={24} />,
+      icon: <Icon kind='weight' width={24} height={24} color='#212121' />,
       text: `${getReadableSizeString(bundleSize)} webpack bundle size`,
     },
     {
