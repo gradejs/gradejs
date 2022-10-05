@@ -61,12 +61,22 @@ export default function SearchResults({
       text: plural(scriptsCount, 'script processed', 'scripts processed'),
     },
     {
-      icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,
-      text: `${plural(packagesStats.vulnerable, 'package', 'packages')} with ${plural(
-        vulnerabilitiesCount,
-        'vulnerability',
-        'vulnerabilities'
-      )}`,
+      icon: (
+        <Icon
+          kind='vulnerability'
+          width={24}
+          height={24}
+          color={packagesStats.vulnerable === 0 ? '#49D581' : '#F3512E'}
+        />
+      ),
+      text:
+        packagesStats.vulnerable === 0
+          ? 'No vulnerabilities detected'
+          : `${plural(packagesStats.vulnerable, 'package', 'packages')} with ${plural(
+              vulnerabilitiesCount,
+              'vulnerability',
+              'vulnerabilities'
+            )}`,
     },
     /*{
       icon: <Icon kind='duplicate' color='#F3812E' width={24} height={24} />,
