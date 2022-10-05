@@ -14,6 +14,7 @@ import {
   resetScanDisplayOptions,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
+import { plural } from '../../utils/helpers';
 
 const accuracyMap: Record<string, string> = {
   // TODO: remove hardcode
@@ -139,9 +140,15 @@ export function WebsiteResultsPage() {
 
   const title = `List of NPM packages that are used on ${parsedUrl.hostname} - GradeJS`;
   const description =
-    `GradeJS has discovered ${packageStats.total} NPM packages used on ${parsedUrl.hostname}` +
-    (packageStats.vulnerable > 0 ? `, ${packageStats.vulnerable} are vulnerable` : '') +
-    (packageStats.outdated > 0 ? `, ${packageStats.outdated} are outdated` : '');
+    `GradeJS has discovered ${plural(packageStats.total, 'NPM package', 'NPM packages')} used on ${
+      parsedUrl.hostname
+    }` +
+    (packageStats.vulnerable > 0
+      ? `, ${plural(packageStats.vulnerable, 'is vulnerable', 'are vulnerable')}`
+      : '') +
+    (packageStats.outdated > 0
+      ? `, ${plural(packageStats.outdated, 'is outdated', 'are outdated')}`
+      : '');
 
   const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
   const accuracy = scanResult?.scan?.scanResult?.processedScripts?.some(
