@@ -20,6 +20,7 @@ export type ChipProps = {
   fontWeight?: 'normal' | 'semiBold';
   fontSize?: 'small' | 'regular';
   icon?: React.ReactElement<IconProps>;
+  title?: string;
   onClick?: React.MouseEventHandler<HTMLSpanElement>;
 };
 
@@ -32,6 +33,7 @@ export default function Chip({
   fontWeight = 'normal',
   fontSize = 'regular',
   icon,
+  title,
   onClick,
 }: ChipProps) {
   return (
@@ -45,10 +47,11 @@ export default function Chip({
         fontSize === 'small' && styles.smallFont,
         className
       )}
+      title={title}
       onClick={onClick}
     >
-      <span className={styles.icon}>{icon}</span>
-      {children}
+      {icon && <span className={styles.icon}>{icon}</span>}
+      <span className={styles.text}>{children}</span>
     </span>
   );
 }

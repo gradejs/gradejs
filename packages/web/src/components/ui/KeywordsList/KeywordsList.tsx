@@ -24,6 +24,7 @@ export default function KeywordsList({ keywordsList, selectedKeywords, selectHan
       {displayedKeywords.map((keyword) => (
         <Chip
           key={keyword}
+          title={keyword}
           className={clsx(selectedKeywords.includes(keyword) && styles.sidebarChipActive)}
           onClick={() =>
             selectHandler(

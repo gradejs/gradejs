@@ -65,8 +65,8 @@ export default function Hero({ suggestions, onSubmit = () => {}, loading = false
           {suggestions && (
             <div className={styles.suggestions}>
               {suggestions.map((suggestion) => (
-                <Link to={`/scan/${suggestion}`}>
-                  <Chip key={suggestion} variant='suggest' size='medium'>
+                <Link key={suggestion} to={`/scan/${suggestion}`}>
+                  <Chip title={suggestion} variant='suggest' size='medium'>
                     {suggestion}
                   </Chip>
                 </Link>

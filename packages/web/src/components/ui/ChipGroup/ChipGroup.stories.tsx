@@ -13,16 +13,18 @@ export default {
 
 export const Default: ComponentStory<typeof ChipGroup> = () => (
   <ChipGroup>
-    {['mdast-util-from-markdown', 'react', 'react-dom'].map((chip) => (
-      <Chip key={chip}>{chip}</Chip>
+    {['@reflectivechimp/gatsby-remark-normalize-paths', 'react', 'react-dom'].map((chip) => (
+      <Chip key={chip} title={chip}>
+        {chip}
+      </Chip>
     ))}
   </ChipGroup>
 );
 
 export const Medium: ComponentStory<typeof ChipGroup> = () => (
   <ChipGroup>
-    {['mdast-util-from-markdown', 'react', 'react-dom'].map((chip) => (
-      <Chip key={chip} size='medium' font='monospace'>
+    {['@reflectivechimp/gatsby-remark-normalize-paths', 'react', 'react-dom'].map((chip) => (
+      <Chip key={chip} title={chip} size='medium' font='monospace'>
         {chip}
       </Chip>
     ))}
@@ -31,8 +33,8 @@ export const Medium: ComponentStory<typeof ChipGroup> = () => (
 
 export const Large: ComponentStory<typeof ChipGroup> = () => (
   <ChipGroup>
-    {['mdast-util-from-markdown', 'react', 'react-dom'].map((chip) => (
-      <Chip key={chip} size='large' font='monospace'>
+    {['@reflectivechimp/gatsby-remark-normalize-paths', 'react', 'react-dom'].map((chip) => (
+      <Chip key={chip} title={chip} size='large' font='monospace'>
         {chip}
       </Chip>
     ))}
