@@ -131,15 +131,19 @@ export async function fetchEndpoint<T>(
 
   return fetch(requestUrl.toString(), requestInit)
     .then((response) => {
-      if (response.status !== 204) {
+      if (response.status === 204) {
+        return { data: {} };
+      }
+
+      if (response.status === 200) {
         return response.json();
       }
 
-      return { data: {} };
+      throw new Error(`Invalid response status: ${response.status}`);
     })
     .then((json: any) => {
       if (!json.data) {
-        throw new Error('Invalid response format');
+        throw new Error(`Invalid response format: ${JSON.stringify(json)}`);
       }
 
       return json.data as T;
