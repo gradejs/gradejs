@@ -12,6 +12,7 @@ import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
+import { plural } from '../../../utils/helpers';
 
 type Props = {
   opened?: boolean;
@@ -171,7 +172,7 @@ export default function PackagePreview({
                   <div className={clsx(styles.stat, styles.statListItemLarge)}>
                     <div className={styles.statHeader}>
                       <Icon kind='dependency' color='#8E8AA0' className={styles.statIcon} />
-                      Dependencies
+                      {plural(deps.length, 'dependency', 'dependencies')}
                     </div>
 
                     {detailsLoading ? (

@@ -12,6 +12,7 @@ import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSk
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import { PackageFilters } from '../../../store/slices/scanDisplayOptions';
+import { plural } from '../../../utils/helpers';
 
 type Props = {
   isLoading: boolean;
@@ -71,11 +72,15 @@ export default function SearchResults({
     },
     {
       icon: <Icon kind='search' width={24} height={24} color='#212121' />,
-      text: `${scriptsCount} scripts processed`,
+      text: plural(scriptsCount, 'script processed', 'scripts processed'),
     },
     {
       icon: <Icon kind='vulnerability' width={24} height={24} color='#F3512E' />,
-      text: `${packagesStats.vulnerable} packages with ${vulnerabilitiesCount} vulnerabilities`,
+      text: `${plural(packagesStats.vulnerable, 'package', 'packages')} with ${plural(
+        vulnerabilitiesCount,
+        'vulnerability',
+        'vulnerabilities'
+      )}`,
     },
     /*{
       icon: <Icon kind='duplicate' color='#F3812E' width={24} height={24} />,
@@ -83,7 +88,7 @@ export default function SearchResults({
     },*/
     {
       icon: <Icon kind='outdated' color='#F1CE61' stroke='white' width={24} height={24} />,
-      text: `${packagesStats.outdated} outdated packages`,
+      text: plural(packagesStats.outdated, 'outdated package', 'outdated packages'),
     },
     {
       icon: <Icon kind={'check'} width={24} height={24} />,
