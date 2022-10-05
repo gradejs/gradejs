@@ -1,131 +1,138 @@
 import semver from 'semver';
-import memoize from 'lodash.memoize';
 import { createSelector } from '@reduxjs/toolkit';
-import { GithubAdvisorySeverity } from '@gradejs-public/shared';
 import { RootState } from '../';
-import { FiltersState } from '../../components/layouts/Filters/Filters';
-import { SeverityWeightMap } from '../../components/ui/Vulnerability/Vulnerability';
 import type { ClientApi } from '../../services/apiClient';
 
-const getFlags = (state: RootState) => ({
-  isLoading: state.webpageResults.isLoading,
-  isFailed: state.webpageResults.isFailed,
-});
-const getScanStatus = (state: RootState) => state.webpageResults.detectionResult?.status;
-const getPackages = (state: RootState) =>
-  state.webpageResults.detectionResult?.scanResult?.packages;
-const getVulnerabilities = (state: RootState) =>
-  state.webpageResults.detectionResult?.scanResult?.vulnerabilities;
-const getSorting = (state: RootState) => state.webpageResults.filters.sort;
-const getFilter = (state: RootState) => state.webpageResults.filters.filter;
-const getPackageNameFilter = (state: RootState) => state.webpageResults.filters.filterPackageName;
+function semverListAsRange(versionList: string[]) {
+  if (!versionList.length) {
+    return 'x.x.x';
+  }
 
-const compareByPopularity = (
-  left: ClientApi.ScanResultPackageResponse,
-  right: ClientApi.ScanResultPackageResponse
-) =>
-  (right.registryMetadata?.monthlyDownloads ?? 0) - (left.registryMetadata?.monthlyDownloads ?? 0);
+  if (versionList.length === 1) {
+    return versionList[0];
+  }
 
-const pickHighestSeverity = memoize(
-  (
-    packageName: string,
-    vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>
-  ) =>
-    (vulnerabilities[packageName] ?? [])
-      .map((it) => it.severity)
-      .filter((it): it is GithubAdvisorySeverity => !!it)
-      .reduce(
-        (acc, val) => (val && SeverityWeightMap[acc] > SeverityWeightMap[val] ? acc : val),
-        'UNKNOWN'
-      )
-);
+  const sortedVersions = versionList.slice().sort(semver.compare);
 
-const sortingModes: Record<
-  FiltersState['sort'],
-  (
-    packages: ClientApi.ScanResultPackageResponse[],
-    vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>
-  ) => ClientApi.ScanResultPackageResponse[]
-> = {
-  // TODO
-  confidenceScore: (packages) => packages,
-  // TODO
-  importDepth: (packages) => packages,
-  severity: (packages, vulnerabilities) =>
-    [...packages].sort((left, right) => {
-      const leftSeverity = pickHighestSeverity(left.name, vulnerabilities);
-      const rightSeverity = pickHighestSeverity(right.name, vulnerabilities);
+  return `${sortedVersions[0]} - ${sortedVersions[sortedVersions.length - 1]}`;
+}
 
-      if (leftSeverity !== rightSeverity) {
-        return SeverityWeightMap[rightSeverity] - SeverityWeightMap[leftSeverity];
-      }
-
-      return compareByPopularity(left, right);
-    }),
-  size: (packages) =>
-    [...packages].sort(
-      (left, right) => (right.approximateByteSize ?? 0) - (left.approximateByteSize ?? 0)
-    ),
-  name: (packages) => [...packages].sort((left, right) => left.name.localeCompare(right.name)),
-  packagePopularity: (packages) => [...packages].sort(compareByPopularity),
+export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
+  approximateByteSize?: number;
+  outdated?: boolean;
+  vulnerable?: boolean;
+  duplicate?: boolean;
+  version?: string;
+  containingScripts?: string[];
+  vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
 };
 
-const filterModes: Record<
-  FiltersState['filter'],
-  (
-    packages: ClientApi.ScanResultPackageResponse[],
-    vulnerabilities: Record<string, ClientApi.PackageVulnerabilityResponse[]>,
-    packageName?: string
-  ) => ClientApi.ScanResultPackageResponse[]
-> = {
-  name: (packages, vulnerabilities, packageName) => {
-    if (!packageName) {
-      return packages;
+const makeSelectScanResultByUrl = () =>
+  createSelector(
+    [(state: RootState) => state.scans, (state: RootState, url: string | undefined) => url],
+    (scans, url) => (url ? scans[url] : undefined)
+  );
+
+const makeSelectScanPackagesByUrl = () =>
+  createSelector([makeSelectScanResultByUrl()], (scanResult) => {
+    const scanData = scanResult?.scan?.scanResult;
+
+    if (!scanData) {
+      return undefined;
     }
-    return packages.filter((pkg) => pkg.name.includes(packageName));
-  },
-  outdated: (packages) =>
-    packages.filter(
-      (pkg) =>
-        pkg.registryMetadata && semver.gtr(pkg.registryMetadata.latestVersion, pkg.versionRange)
-    ),
-  vulnerable: (packages, vulnerabilities) => packages.filter((pkg) => !!vulnerabilities[pkg.name]),
-  all: (packages) => packages,
-};
+
+    const rawPackages = scanData.identifiedPackages;
+
+    const packages: IdentifiedPackage[] = rawPackages.map((pkg) => {
+      return {
+        ...pkg,
+        approximateByteSize: pkg.moduleIds.reduce((acc: number, id) => {
+          const size = scanData.identifiedModuleMap?.[id]?.approximateByteSize ?? 0;
+          return acc + size;
+        }, 0),
+        outdated:
+          pkg.versionSet.length > 0 &&
+          pkg.registryMetadata &&
+          !pkg.versionSet.some(
+            (ver) => pkg.registryMetadata && semver.eq(pkg.registryMetadata.latestVersion, ver)
+          ),
+        vulnerable: (scanData.vulnerabilities[pkg.name]?.length ?? 0) > 0, // TODO: Drop
+        vulnerabilities: scanData.vulnerabilities[pkg.name] ?? [],
+        version: semverListAsRange(pkg.versionSet),
+        // TODO: memoize/simplify
+        containingScripts: Array.from(
+          pkg.moduleIds.reduce((acc: Set<string>, id) => {
+            const script = scanData?.processedScripts?.find(
+              (val) => val.status === 'processed' && val.moduleIds.includes(id)
+            );
+            if (script) {
+              acc.add(script.url);
+            }
+            return acc;
+          }, new Set<string>())
+        ),
+      };
+    });
+
+    return packages;
+  });
 
 export const selectors = {
-  default: createSelector([getScanStatus, getVulnerabilities], (scanStatus, vulnerabilities) => ({
-    status: scanStatus,
-    vulnerabilities,
+  scanState: createSelector([makeSelectScanResultByUrl()], (scanResult) => ({
+    isLoading: scanResult?.isLoading ?? true,
+    isFailed: !!scanResult?.error,
+    isNotFound: !(scanResult?.isLoading ?? true) && scanResult?.scan === undefined,
+    isPending: scanResult?.scan?.status === 'pending',
+    isProtected: scanResult?.scan?.status === 'protected',
+    isInvalid:
+      scanResult?.scan?.status === 'failed' ||
+      scanResult?.scan?.scanResult?.identifiedPackages.length === 0,
   })),
-  stateFlags: createSelector(
-    [getScanStatus, getPackages, getFlags],
-    (scanStatus, packages, flags) => ({
-      ...flags,
-      isInvalid: packages && packages.length === 0,
-      isPending: !scanStatus || scanStatus === 'pending',
-      isProtected: scanStatus === 'protected',
-    })
+  scanOverview: createSelector(
+    [makeSelectScanResultByUrl(), makeSelectScanPackagesByUrl()],
+    (scanResult, identifiedPackages = []) => {
+      const scanData = scanResult?.scan?.scanResult;
+
+      const vulnerabilities = scanData?.vulnerabilities ?? {};
+
+      const uniqueVulnerabilities = new Set(
+        Object.values(vulnerabilities ?? {})
+          .flat()
+          .map((v) => v.osvId)
+      );
+
+      return {
+        vulnerabilities: {
+          total: uniqueVulnerabilities.size,
+        },
+        packages: {
+          total: identifiedPackages.length,
+          vulnerable: identifiedPackages.filter((pkg) => !!pkg.vulnerable).length,
+          outdated: identifiedPackages.filter((pkg) => !!pkg.outdated).length,
+        },
+        scriptsCount: scanData?.processedScripts?.length,
+        bundleSize: scanData?.processedScripts?.reduce((acc, script) => {
+          return acc + (script.byteSize ?? 0);
+        }, 0),
+      };
+    }
   ),
-  packagesStats: createSelector([getPackages, getVulnerabilities], (packages = [], vulnerabilities = {}) => ({
-    total: packages.length,
-    vulnerable: packages.filter((pkg) => (vulnerabilities[pkg.name]?.length ?? 0) > 0)
-      .length,
-    outdated: packages.filter(
-      (pkg) =>
-        pkg.registryMetadata &&
-        semver.gtr(pkg.registryMetadata.latestVersion, pkg.versionRange)
-    ).length,
-  })),
-  packagesSortedAndFiltered: createSelector(
-    [getPackages, getVulnerabilities, getSorting, getFilter, getPackageNameFilter],
-    (packages, vulnerabilities, sorting, filter, packageNameFilter) =>
-      packages &&
-      vulnerabilities &&
-      filterModes[filter](
-        sortingModes[sorting](packages, vulnerabilities),
-        vulnerabilities,
-        packageNameFilter
-      )
-  ),
+  searchableScanEntities: createSelector([makeSelectScanPackagesByUrl()], (packages = []) => {
+    const packageKeywords = new Set<string>();
+    const packageAuthors = new Map<string, { name: string; avatar: string }>();
+
+    for (const pkg of packages) {
+      pkg.registryMetadata?.keywords?.forEach((keyword) => packageKeywords.add(keyword));
+      pkg.registryMetadata?.maintainers?.forEach((maintainer) =>
+        packageAuthors.set(maintainer.name, maintainer)
+      );
+    }
+
+    return {
+      packageKeywords: Array.from(packageKeywords),
+      packageAuthors: Array.from(packageAuthors.values()),
+    };
+  }),
 };
+
+export { makeSelectScanResultByUrl, makeSelectScanPackagesByUrl };

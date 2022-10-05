@@ -1,0 +1,143 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.card {
+  flex-shrink: 0;
+  position: relative;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: $shadow;
+  width: 100%;
+  max-width: 600px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  color: $black;
+
+  @include xxl {
+    min-height: 248px;
+    padding: 24px;
+  }
+
+  @include mobile-and-tablet {
+    scroll-snap-align: start;
+    max-width: 314px;
+    min-height: 204px;
+    box-shadow: $shadow-small;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+  margin-right: 16px;
+  display: inline-flex;
+}
+
+.icon {
+  width: 100%;
+  max-width: 42px;
+  object-fit: cover;
+
+  @include xxl {
+    max-width: 52px;
+  }
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.54;
+
+  @include xxl {
+    font-size: 26px;
+  }
+
+  @include mobile-and-tablet {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+}
+
+.description {
+  margin-top: 4px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: $gray-text;
+}
+
+.tagsWrapper {
+  margin-top: 20px;
+
+  @include xxl {
+    margin-top: 28px;
+  }
+}
+
+.placeholder {
+  cursor: pointer;
+  color: $black;
+  background-color: $gray-surface;
+}
+
+.arrowBtn {
+  cursor: pointer;
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  bottom: 24px;
+  right: 24px;
+  background: $white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow;
+  border: none;
+  appearance: none;
+  padding: 0 0 0 2px;
+}
+
+.small {
+  min-height: 116px;
+  justify-content: space-between;
+  max-width: initial;
+
+  @include mobile-and-tablet {
+    min-height: 136px;
+  }
+}
+
+.avatarsWrapper {
+  flex: 1;
+  align-self: flex-start;
+  display: flex;
+  align-items: flex-end;
+}
+
+.avatarSites {
+  display: flex;
+  align-items: center;
+}
+
+.counter {
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 30px;
+  margin-left: 14px;
+
+  @include xxl {
+    font-size: 19px;
+  }
+
+  @include mobile-and-tablet {
+    font-size: 16px;
+    line-height: 1.62;
+  }
+}

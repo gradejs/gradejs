@@ -13,3 +13,9 @@ export const Default = (args: Props) => <Button {...args} />;
 Default.args = {
   children: 'Button',
 };
+
+export const Arrow = (args: Props) => <Button {...args} />;
+Arrow.args = {
+  children: 'Button',
+  variant: 'arrow',
+};

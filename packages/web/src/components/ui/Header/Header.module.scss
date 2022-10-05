@@ -1,50 +1,93 @@
+@import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
-.container {
-  width: 100%;
-  max-width: 1024px;
-  padding: 34px;
-  display: flex;
-  box-sizing: border-box;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 auto;
+.header {
+  transition: box-shadow $transition-duration $transition-timing-function;
+}
 
-  @include mobile {
-    padding: 24px;
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 96px;
+
+  @include mobile-and-tablet {
+    min-height: 72px;
+  }
+}
+
+.default {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: $white;
+  color: $black;
+}
+
+.light {
+  color: $white;
+}
+
+.shadow {
+  box-shadow: inset 0px -1px 0px 0px rgba($gray-border, 0.5);
+}
+
+.showSearch {
+  @include mobile-and-tablet {
+    padding: 20px 0;
+    min-height: initial;
+    display: grid;
+    grid-row-gap: 22px;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 28px 52px;
+  }
+}
+
+.logo {
+  display: flex;
+  width: 129px;
+
+  @include mobile-and-tablet {
+    width: 82px;
+  }
+}
+
+.searchWrapper {
+  flex-grow: 1;
+  padding: 0 40px;
+
+  @include mobile-and-tablet {
+    grid-column: 1 / -1;
+    grid-row: 2 / -1;
+    padding: 0;
   }
 }
 
 .nav {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+
+  & > * + * {
+    margin-left: 40px;
+
+    @include mobile-and-tablet {
+      margin-left: 20px;
+    }
+  }
 }
 
 .navLink {
-  font-size: 14px;
-  line-height: 18px;
-  color: #0f0f0f;
-  text-decoration: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-left: 20px;
-
-  @include mobile {
-    display: none;
-  }
+  display: flex;
+  color: inherit;
 }
 
-.githubButton {
-  background: url('~assets/icons/github.svg') 10px center / 25px 24px no-repeat #ffffff;
-  padding: 12px 10px 12px 45px;
-  border: 1px solid #e6e6e6;
-  transition: border-color 0.2s;
+.githubIcon {
+  width: 32px;
+  height: 32px;
 
-  @include mobile {
-    display: block;
-  }
-
-  &:hover {
-    border-color: #a5a5a5;
+  @include mobile-and-tablet {
+    width: 28px;
+    height: 28px;
   }
 }

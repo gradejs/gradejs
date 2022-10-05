@@ -1,5 +1,4 @@
 import React from 'react';
-import webpackIcon from 'assets/icons/webpack.svg';
 import HighlightTech, { Props } from './HighlightTech';
 
 export default {
@@ -14,5 +13,4 @@ export const Default = (args: Props) => <HighlightTech {...args} />;
 Default.args = {
   description: 'Source build system',
   title: 'Webpack',
-  icon: webpackIcon,
 };

@@ -1,0 +1,13 @@
+@import '~styles/responsive.scss';
+
+.title {
+  margin-bottom: 24px;
+
+  @include xxl {
+    margin-bottom: 36px;
+  }
+
+  @include mobile-and-tablet {
+    margin-bottom: 0;
+  }
+}

@@ -1,46 +1,45 @@
-/* eslint-disable react/button-has-type */
 import React from 'react';
-import { Button, Header, Section } from 'components/ui';
 import styles from './Error.module.scss';
+import Container from 'components/ui/Container/Container';
+import Footer from '../../ui/Footer/Footer';
+import StickyErrorHeader from '../../ui/Header/StickyErrorHeader';
+import SearchBarContainer from '../../containers/SearchBarContainer';
+import ShowcaseContainer from '../../containers/ShowcaseContainer';
 
 export type Props = {
   host: string;
   message?: string;
   action?: string;
   actionTitle?: string;
-  onRetryClick: () => unknown;
-  onReportClick: () => unknown;
 };
 
 export default function Error({
   host,
-  onRetryClick,
-  onReportClick,
-  message = 'Unfortunately, something went wrong.',
-  action = 'Would you like to retry or report an issue?',
-  actionTitle = 'Try again',
+  message = 'It looks like the entered website is not built with Webpack',
+  action = 'GradeJS will analyze production JavaScript files and match webpack bundled modules to 1,826 indexed NPM libraries over 54,735 releases',
+  actionTitle,
 }: Props) {
   return (
     <>
-      <Header />
-      <Section>
-        <h1 className={styles.heading}>{host}</h1>
-        <p className={styles.primary}>{message}</p>
-        <p className={styles.secondary}>{action}</p>
-        <Button onClick={onRetryClick} className={styles.retry}>
-          {actionTitle}
-        </Button>
-        <a
-          href='https://github.com/gradejs/gradejs/issues'
-          target='_blank'
-          rel='noreferrer'
-          onClick={onReportClick}
-        >
-          <Button className={styles.button} variant='action'>
-            Report an issue
-          </Button>
-        </a>
-      </Section>
+      <StickyErrorHeader />
+
+      <Container>
+        <section className={styles.errorPage}>
+          <div className={styles.textContent}>
+            <p className={styles.host}>{host}</p>
+            <h2 className={styles.heading}>{message}</h2>
+            {action && <p className={styles.desc}>{action}</p>}
+          </div>
+
+          <div className={styles.searchWrapper}>
+            <SearchBarContainer size='large' placeholder={actionTitle} />
+          </div>
+        </section>
+
+        <ShowcaseContainer />
+      </Container>
+
+      <Footer />
     </>
   );
 }

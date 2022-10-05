@@ -1,0 +1,37 @@
+@import '~styles/responsive.scss';
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-gap: 20px;
+
+  @include lg {
+    grid-gap: 16px;
+  }
+
+  @include mobile-and-tablet {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: 24px 20px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding: 20px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.vertical {
+  @include mobile-and-tablet {
+    flex-direction: column;
+    overflow: initial;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

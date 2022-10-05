@@ -12,15 +12,15 @@ import {
   WebPageScan,
 } from '@gradejs-public/shared';
 import { getPackageMetadataByPackageNames } from './packageMetadata/packageMetadataService';
-
-// const hostnameRe =
-//   /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$/;
+import { getShowcaseData } from './showcase/showcaseService';
 
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
 type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
-type ScanResultPackageWithMetadata = WebPageScan.Package & { registryMetadata?: PackageMetadata };
+type ScanResultPackageWithMetadata = WebPageScan.IdentifiedPackage & {
+  registryMetadata?: PackageMetadata;
+};
 
 export namespace ClientApi {
   export type PackageVulnerabilityResponse = SerializableEntity<PackageVulnerabilityData>;
@@ -28,7 +28,7 @@ export namespace ClientApi {
 }
 
 function mergeRegistryMetadata(
-  packages: WebPageScan.Package[],
+  packages: WebPageScan.IdentifiedPackage[],
   registryMetadata: Record<string, PackageMetadata>
 ) {
   return packages.map((it) => ({
@@ -37,30 +37,81 @@ function mergeRegistryMetadata(
   }));
 }
 
-type RequestWebPageScanResponse = Pick<WebPageScan, 'status' | 'finishedAt'> & {
+type RequestWebPageScanResponse = {
   id: string;
+  status: WebPageScan.Status;
+  finishedAt?: string;
   scanResult?: {
-    packages: ScanResultPackageWithMetadata[];
+    identifiedModuleMap: Record<string, WebPageScan.IdentifiedModule>;
+    identifiedPackages: ScanResultPackageWithMetadata[];
     vulnerabilities: Record<string, PackageVulnerabilityData[]>;
+    processedScripts: WebPageScan.ProcessedScript[];
+    identifiedBundler?: WebPageScan.IdentifiedBundler;
   };
 };
 
 export const appRouter = trpc
   .router<Context>()
-  .mutation('requestWebPageScan', {
-    input: z.string().url(),
-    async resolve({ input: url }) {
-      const scan = await getOrRequestWebPageScan(url);
+  .query('getShowcase', {
+    async resolve() {
+      const showcaseData = await getShowcaseData();
+
+      const showcasedScans = showcaseData.showcasedScans.map((showcasedScan) => ({
+        hostname: {
+          hostname: showcasedScan.webPage.hostname.hostname,
+        },
+        webPage: {
+          path: showcasedScan.webPage.path,
+        },
+        scanPreview: {
+          packageNames:
+            showcasedScan.scanResult?.identifiedPackages
+              // TODO: sort by popularity
+              .slice(0, 5)
+              .map((pkg) => pkg.name) ?? [],
+          totalCount: showcasedScan.scanResult?.identifiedPackages.length ?? 0,
+        },
+      }));
+
+      const scansWithVulnerabilities = showcaseData.scansWithVulnerabilities.map(
+        (scanWithVulnerabilities) => ({
+          hostname: {
+            hostname: scanWithVulnerabilities.sourceScan.webPage.hostname.hostname,
+          },
+          webPage: {
+            path: scanWithVulnerabilities.sourceScan.webPage.path,
+          },
+          vulnerabilities: scanWithVulnerabilities.vulnerabilities,
+        })
+      );
+
+      return toSerializable({
+        showcasedScans,
+        scansWithVulnerabilities,
+      });
+    },
+  })
+  .mutation('getOrRequestWebPageScan', {
+    input: z.object({
+      url: z.string().url(),
+      rescan: z.boolean().optional(),
+    }),
+    async resolve({ input: { url, rescan } }) {
+      const scan = await getOrRequestWebPageScan(url, rescan);
+      if (!scan) {
+        // TODO: proper 404
+        return null; // == 404
+      }
 
       const scanResponse: RequestWebPageScanResponse = {
         id: scan.id.toString(),
         status: scan.status,
-        finishedAt: scan.finishedAt,
+        finishedAt: scan.finishedAt?.toString(),
         scanResult: undefined,
       };
 
       if (scan.scanResult) {
-        const packageNames = scan.scanResult.packages.map((it) => it.name);
+        const packageNames = scan.scanResult.identifiedPackages.map((it) => it.name);
 
         const [metadata, vulnerabilities] = await Promise.all([
           getPackageMetadataByPackageNames(packageNames),
@@ -68,7 +119,10 @@ export const appRouter = trpc
         ]);
 
         scanResponse.scanResult = {
-          packages: mergeRegistryMetadata(scan.scanResult.packages, metadata),
+          identifiedModuleMap: scan.scanResult.identifiedModuleMap,
+          identifiedPackages: mergeRegistryMetadata(scan.scanResult.identifiedPackages, metadata),
+          processedScripts: scan.scanResult.processedScripts,
+          identifiedBundler: scan.scanResult.identifiedBundler,
           vulnerabilities,
         };
       }

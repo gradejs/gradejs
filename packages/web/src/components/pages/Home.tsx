@@ -1,46 +1,32 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Error, Home } from 'components/layouts';
-import { trackCustomEvent } from '../../services/analytics';
-import {
-  useAppDispatch,
-  parseWebsite,
-  resetError,
-  useAppSelector,
-  homeDefaultSelector,
-} from '../../store';
 import { useNavigate } from 'react-router-dom';
+import { trackCustomEvent } from '../../services/analytics';
+import { useScanResult } from '../../store/hooks/scan/useScanResult';
+
+const suggestions = ['twitch.tv', 'reddit.com', 'trello.com', 'npmjs.com', 'starbucks.com'];
 
 export function HomePage() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const state = useAppSelector(homeDefaultSelector);
+  const [requestedScanUrl, setRequestedScanUrl] = useState<string | undefined>(undefined);
+  const { displayUrl, scanResult } = useScanResult(requestedScanUrl, { requestRescan: true });
 
-  const handleDetectStart = useCallback(async (data: { address: string }) => {
+  useEffect(() => {
+    if (scanResult && displayUrl && !scanResult.isLoading) {
+      navigate(`/scan/${displayUrl}`);
+    }
+  }, [scanResult, displayUrl]);
+
+  const handleScanRequest = useCallback(async (address: string) => {
     trackCustomEvent('HomePage', 'WebsiteSubmitted');
-    await dispatch(parseWebsite(data.address));
+    setRequestedScanUrl(address);
   }, []);
 
-  if (state.isFailed) {
-    return (
-      <Error
-        host={state.hostname}
-        onReportClick={() => {
-          trackCustomEvent('HomePage', 'ClickReport');
-        }}
-        onRetryClick={() => {
-          trackCustomEvent('HomePage', 'ClickRetry');
-          dispatch(resetError());
-        }}
-      />
-    );
+  if (displayUrl && scanResult?.error) {
+    return <Error host={displayUrl} />;
   }
 
-  // TODO: properly handle history/routing
-  useEffect(() => {
-    if (!state.isLoading && !state.isFailed && state.hostname) {
-      navigate(`/w/${state.hostname}`, { replace: true });
-    }
-  });
-
-  return <Home onSubmit={handleDetectStart} isLoading={state.isLoading} />;
+  return (
+    <Home onSubmit={handleScanRequest} loading={scanResult?.isLoading} suggestions={suggestions} />
+  );
 }

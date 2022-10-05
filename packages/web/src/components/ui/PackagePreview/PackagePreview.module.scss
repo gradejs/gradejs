@@ -1,0 +1,414 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.packageSkeleton {
+  border-radius: 24px;
+  min-height: 224px;
+  transform: scale(1);
+}
+
+.package {
+  width: 100%;
+  padding: 24px;
+  border-radius: 24px;
+  background: $white;
+  box-shadow: $shadow;
+
+  @include xxl {
+    padding: 32px 36px;
+  }
+
+  @include mobile-and-tablet {
+    padding: 20px;
+  }
+}
+
+.top {
+  //cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.title {
+  padding-right: 24px;
+  font-size: 22px;
+
+  @include xxl {
+    font-size: 26px;
+    line-height: 1.54;
+  }
+
+  @include mobile-and-tablet {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+
+.name {
+  font-weight: 500;
+}
+
+.version {
+  font-weight: 400;
+  color: $gray-text;
+  margin-right: 12px;
+}
+
+.problems {
+  vertical-align: middle;
+  display: inline-block;
+  font-size: 14px;
+  padding-top: 2px;
+
+  @include xxl {
+    font-size: 16px;
+  }
+
+  & > * {
+    &:not(:last-child) {
+      margin-right: 6px;
+    }
+
+    @include mobile-and-tablet {
+      margin-bottom: 6px;
+    }
+  }
+
+  @include mobile-and-tablet {
+    padding-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    order: 1;
+    height: initial;
+    margin-bottom: 2px;
+  }
+}
+
+.arrowWrapper {
+  //cursor: pointer;
+  appearance: none;
+  border: none;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $gray-surface;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  @include mobile-and-tablet {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.arrow {
+  transition: transform 0.3s ease-out;
+
+  .open & {
+    transform: rotate(180deg);
+  }
+
+  @include mobile-and-tablet {
+    width: 10px;
+    height: 7px;
+  }
+}
+
+.desc {
+  margin-top: 8px;
+  color: $gray-text;
+}
+
+.content {
+  max-height: 0;
+  overflow: hidden;
+  transition-duration: $transition-duration;
+  transition-timing-function: $transition-timing-function;
+
+  .open & {
+    max-height: 9000px;
+    transition-duration: $transition-duration;
+    transition-timing-function: ease-in;
+  }
+}
+
+.contentEnterDone {
+  overflow: visible;
+}
+
+.contentInner {
+  padding-top: 24px;
+}
+
+.stat {
+  margin-bottom: 32px;
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 18px;
+  color: $gray-text;
+  font-weight: 500;
+  margin-bottom: 8px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 12px;
+  }
+}
+
+.statIcon {
+  margin-right: 8px;
+}
+
+.statTooltip {
+  margin-left: 8px;
+}
+
+.statLink {
+  display: block;
+  line-height: 20px;
+  color: $blue-accent;
+  font-weight: 500;
+  transition: opacity $transition-duration $transition-timing-function;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.statTitle {
+  display: flex;
+  align-items: flex-end;
+  font-size: 26px;
+  line-height: 40px;
+  font-weight: 500;
+}
+
+.statRating {
+  position: relative;
+  align-items: flex-end;
+  margin-left: 4px;
+  font-size: 16px;
+  line-height: 1.625;
+}
+
+.statRatingGreen {
+  color: $green-accent;
+
+  .statRatingArrow {
+    color: $green-accent;
+  }
+}
+
+.statRatingRed {
+  color: $red-accent;
+
+  .statRatingArrow {
+    color: $red-accent;
+    transform: rotate(90deg);
+  }
+}
+
+.statRatingArrow {
+  top: -8px;
+  right: 0;
+  position: absolute;
+}
+
+.statSubtitle {
+  color: $gray-text;
+}
+
+.statList {
+  display: grid;
+  // grid-template-columns: 1fr 1fr 2fr; // TODO: change back when all stats are uncommented
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 32px 20px;
+
+  @include mobile-and-tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat {
+    margin-bottom: 0;
+  }
+}
+
+.statListItemLarge {
+  @include mobile-and-tablet {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+.statListItemNewLine {
+  margin-top: 16px;
+}
+
+.popularity {
+  margin-top: 16px;
+
+  @include mobile {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+}
+
+.usedOnList {
+  margin-top: 10px;
+  margin: 0 -24px;
+  padding: 0 24px;
+
+  @include xxl {
+    margin: 0 -32px;
+    padding: 0 32px;
+  }
+
+  @include mobile-and-tablet {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:not(:only-child) {
+    margin-top: 56px;
+
+    @include mobile-and-tablet {
+      margin-top: 44px;
+    }
+
+    @include sm {
+      margin-top: 32px;
+    }
+  }
+
+  @include sm {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+}
+
+.links {
+  display: flex;
+  align-items: center;
+
+  @include sm {
+    margin-top: 24px;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  & > * + * {
+    margin-left: 62px;
+
+    @include mobile-and-tablet {
+      margin-left: 40px;
+    }
+
+    @include sm {
+      margin-left: 0;
+    }
+  }
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  color: $black;
+  font-weight: 500;
+}
+
+.linkIcon {
+  margin-right: 8px;
+}
+
+.details {
+  display: block;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba($gray-border, 0.5);
+  margin-top: 24px;
+  padding-top: 24px;
+
+  @include mobile-and-tablet {
+    padding-top: 20px;
+  }
+}
+
+.tags {
+  display: grid;
+  grid-template-columns: repeat(5, auto) 53px;
+  grid-gap: 18px;
+  justify-content: start;
+  align-items: center;
+  padding-right: 24px;
+
+  @include lg {
+    grid-template-columns: repeat(4, auto) 53px;
+  }
+
+  @include sm {
+    grid-template-columns: repeat(3, auto) 50px;
+    padding-right: 18px;
+  }
+
+  @include mobile {
+    grid-template-columns: repeat(2, auto) 50px;
+  }
+}
+
+.tag {
+  font-weight: 500;
+  transition: opacity $transition-duration $transition-timing-function;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.6;
+  }
+
+  @include lg {
+    &:nth-child(n + 5) {
+      display: none;
+    }
+  }
+
+  @include sm {
+    &:nth-child(n + 4) {
+      display: none;
+    }
+  }
+
+  @include mobile {
+    &:nth-child(n + 3) {
+      display: none;
+    }
+  }
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  color: $gray-text;
+}
+
+.authorImage {
+  margin-left: 16px;
+}

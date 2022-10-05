@@ -1,0 +1,44 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.vulnerableWrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  margin-right: -9px;
+}
+
+.vulnerablePackage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+  font-family: $font-monospace;
+  color: $red-accent;
+
+  @include xxl {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  @include mobile-and-tablet {
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
+.vulnerableIcon {
+  display: flex;
+  margin-right: 12px;
+}
+
+.vulnerableMore {
+  margin-left: 12px;
+}
+
+.vulnerableMoreText {
+  @include mobile-and-tablet {
+    display: none;
+  }
+}

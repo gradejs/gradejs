@@ -1,51 +1,115 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Error as ErrorLayout, Website } from 'components/layouts';
+import { useParams } from 'react-router-dom';
+import { Error as ErrorLayout, SearchResults } from 'components/layouts';
 import { trackCustomEvent } from '../../services/analytics';
+import { useAppDispatch, useAppSelector, websiteResultsSelectors as selectors } from '../../store';
+import { useScanResult } from '../../store/hooks/scan/useScanResult';
 import {
-  useAppDispatch,
-  useAppSelector,
-  applyFilters,
-  getWebsite,
-  websiteResultsSelectors as selectors,
-} from '../../store';
-import { FiltersState } from '../layouts/Filters/Filters';
+  makeSelectScanDisplayOptions,
+  makeSelectSortedAndFilteredScanPackages,
+} from '../../store/selectors/scanDisplayOptions/scanDisplayOptions';
+import {
+  PackageFilters,
+  resetScanDisplayOptions,
+  setScanDisplayOptions,
+} from '../../store/slices/scanDisplayOptions';
+
+const accuracyMap: Record<string, string> = {
+  // TODO: remove hardcode
+  '3.x': '73.7',
+  '4.x': '68.85',
+  '5.x': '63.59',
+};
 
 export function WebsiteResultsPage() {
-  const { hostname } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { vulnerabilities } = useAppSelector(selectors.default);
-  const packagesFiltered = useAppSelector(selectors.packagesSortedAndFiltered);
-  const packagesStats = useAppSelector(selectors.packagesStats);
-  const { isProtected, isPending, isLoading, isFailed, isInvalid } = useAppSelector(
-    selectors.stateFlags
-  );
-  const setFilters = (filters: FiltersState) => dispatch(applyFilters(filters));
+  const { '*': scanUrl } = useParams();
 
-  // TODO: discuss. Looks ugly
-  // Fetch data for SSR if host is already processed
-  if (__isServer__ && hostname) {
-    dispatch(getWebsite({ hostname, useRetry: false }));
+  const dispatch = useAppDispatch();
+
+  const { displayUrl, normalizedUrl, parsedUrl, scanResult } = useScanResult(scanUrl, {
+    pollWhilePending: true,
+  });
+
+  const selectScanDisplayOptions = useMemo(() => makeSelectScanDisplayOptions(), []);
+
+  const selectSortedAndFilteredPackages = useMemo(
+    () => makeSelectSortedAndFilteredScanPackages(),
+    []
+  );
+
+  const packagesFilteredAndSorted = useAppSelector((state) =>
+    selectSortedAndFilteredPackages(state, normalizedUrl)
+  );
+
+  const scanOverview = useAppSelector((state) => selectors.scanOverview(state, normalizedUrl));
+  const packageStats = scanOverview.packages;
+
+  const searchableEntities = useAppSelector((state) =>
+    selectors.searchableScanEntities(state, normalizedUrl)
+  );
+
+  const { isProtected, isPending, isLoading, isFailed, isNotFound, isInvalid } = useAppSelector(
+    (state) => selectors.scanState(state, normalizedUrl)
+  );
+
+  const availableFilters: PackageFilters = useMemo(
+    () => ({
+      authors: searchableEntities.packageAuthors.map((it) => it.name),
+      keywords: searchableEntities.packageKeywords,
+      traits: ['vulnerable', 'outdated'],
+    }),
+    [searchableEntities]
+  );
+
+  const selectedDisplayOptions = useAppSelector((state) =>
+    selectScanDisplayOptions(state, normalizedUrl)
+  );
+
+  const handleFiltersChange = useCallback(
+    (newFilters: PackageFilters | null) => {
+      if (!normalizedUrl) {
+        return;
+      }
+
+      if (newFilters) {
+        dispatch(
+          setScanDisplayOptions({
+            scanUrl: normalizedUrl,
+            options: {
+              ...selectedDisplayOptions,
+              packageFilters: newFilters,
+            },
+          })
+        );
+      } else {
+        dispatch(resetScanDisplayOptions({ scanUrl: normalizedUrl }));
+      }
+    },
+    [dispatch, normalizedUrl]
+  );
+
+  if (isNotFound) {
+    return (
+      <ErrorLayout
+        message="We couldn't find requested website in our database."
+        action='Would you like to try same or another URL, or report an issue?'
+        actionTitle='Try again'
+        host={displayUrl ?? ''}
+      />
+    );
   }
 
-  useEffect(() => {
-    if (hostname && isPending && !isFailed) {
-      const promise = dispatch(getWebsite({ hostname }));
-      return function cleanup() {
-        promise.abort();
-      };
-    }
-    return () => {};
-  }, [hostname, isPending, isFailed]);
-
-  // TODO: properly handle history/routing
-  useEffect(() => {
-    if (!hostname || isFailed) {
-      navigate('/', { replace: true });
-    }
-  }, [hostname]);
+  if (isFailed) {
+    return (
+      <ErrorLayout
+        message='An unexpected error occurred. Try visiting us later.'
+        action='Would you like to try another URL or report an issue?'
+        actionTitle='Try another URL'
+        host={displayUrl ?? ''}
+      />
+    );
+  }
 
   if (isProtected) {
     // TODO: move to tracking middleware?
@@ -54,44 +118,37 @@ export function WebsiteResultsPage() {
       <ErrorLayout
         message='The entered website appears to be protected by a third-party service, such as DDoS prevention, password protection or geolocation restrictions.'
         action='Would you like to try another URL or report an issue?'
-        actionTitle='Try another URL'
-        host={hostname ?? ''}
-        onRetryClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickRetry_Protected');
-          navigate('/', { replace: false });
-        }}
-        onReportClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickReport_Protected');
-        }}
+        actionTitle='Try another URL...'
+        host={displayUrl ?? ''}
       />
     );
   }
 
-  if (isInvalid) {
+  if (!parsedUrl || isInvalid) {
     // TODO: move to tracking middleware?
     trackCustomEvent('HostnamePage', 'SiteInvalid');
     return (
       <ErrorLayout
-        message='It looks like the entered website is not built with Webpack.'
+        message='It looks like the website is not built with Webpack or protected by an anti-bot service.'
         action='Would you like to try another URL or report an issue?'
-        actionTitle='Try another URL'
-        host={hostname ?? ''}
-        onRetryClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickRetry_Invalid');
-          navigate('/', { replace: false });
-        }}
-        onReportClick={() => {
-          trackCustomEvent('HostnamePage', 'ClickReport_Invalid');
-        }}
+        actionTitle='Try another URL...'
+        host={displayUrl ?? ''}
       />
     );
   }
 
-  const title = `List of NPM packages that are used on ${hostname} - GradeJS`;
+  const title = `List of NPM packages that are used on ${parsedUrl.hostname} - GradeJS`;
   const description =
-    `GradeJS has discovered ${packagesStats.total} NPM packages used on ${hostname}` +
-    (packagesStats.vulnerable > 0 ? `, ${packagesStats.vulnerable} are vulnerable` : '') +
-    (packagesStats.outdated > 0 ? `, ${packagesStats.outdated} are outdated` : '');
+    `GradeJS has discovered ${packageStats.total} NPM packages used on ${parsedUrl.hostname}` +
+    (packageStats.vulnerable > 0 ? `, ${packageStats.vulnerable} are vulnerable` : '') +
+    (packageStats.outdated > 0 ? `, ${packageStats.outdated} are outdated` : '');
+
+  const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
+  const accuracy = scanResult?.scan?.scanResult?.processedScripts?.some(
+    (script) => script.status === 'processed' && script.hasSourcemap
+  )
+    ? '91'
+    : accuracyMap[webpackVersion] ?? '68.85';
 
   return (
     <>
@@ -101,13 +158,21 @@ export function WebsiteResultsPage() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
       </Helmet>
-      <Website
-        isLoading={isLoading}
-        isPending={isPending}
-        packages={packagesFiltered ?? []}
-      host={hostname ?? ''}
-      vulnerabilities={vulnerabilities ?? {}}
-        onFiltersApply={setFilters}
+      <SearchResults
+        isLoading={isLoading || isPending}
+        isPending={isPending || isPending}
+        scanUrl={displayUrl ?? ''}
+        packages={packagesFilteredAndSorted}
+        packagesStats={packageStats}
+        vulnerabilitiesCount={scanOverview.vulnerabilities.total}
+        scriptsCount={scanOverview.scriptsCount ?? 0}
+        bundleSize={scanOverview.bundleSize ?? 0}
+        scanDate={scanResult?.scan?.finishedAt}
+        selectedFilters={selectedDisplayOptions.packageFilters}
+        availableFilters={availableFilters}
+        onFiltersChange={handleFiltersChange}
+        webpackVersion={webpackVersion}
+        accuracy={accuracy}
       />
     </>
   );

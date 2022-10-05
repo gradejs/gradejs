@@ -1,43 +1,48 @@
-/* eslint-disable react/button-has-type */
 import React from 'react';
-import clsx from 'clsx';
-import Logo from '../Logo/Logo';
 import styles from './Header.module.scss';
-import { trackCustomEvent } from '../../../services/analytics';
+import clsx from 'clsx';
+import Container from '../Container/Container';
+import { Icon } from '../Icon/Icon';
+import SearchBarContainer from '../../containers/SearchBarContainer';
+import { Link } from 'react-router-dom';
 
-export default function Header() {
+export type Props = {
+  searchQuery?: string;
+  variant?: 'default' | 'light';
+  showSearch?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+};
+
+export default function Header({
+  variant = 'default',
+  searchQuery,
+  className,
+  showSearch = false,
+  children,
+}: Props) {
   return (
-    <header className={styles.container}>
-      <Logo />
-      <div className={styles.nav}>
-        <a
-          href='https://github.com/gradejs/gradejs/discussions/6'
-          target='_blank'
-          rel='norefferer noreferrer'
-          className={styles.navLink}
-          onClick={() => trackCustomEvent('ClickExternalLink', 'About')}
-        >
-          About
-        </a>
-        <a
-          href='https://github.com/gradejs/gradejs/discussions'
-          target='_blank'
-          rel='norefferer noreferrer'
-          className={styles.navLink}
-          onClick={() => trackCustomEvent('ClickExternalLink', 'Community')}
-        >
-          Community
-        </a>
-        <a
-          href='https://github.com/gradejs/gradejs'
-          target='_blank'
-          rel='norefferer noreferrer'
-          className={clsx(styles.navLink, styles.githubButton)}
-          onClick={() => trackCustomEvent('ClickExternalLink', 'SourceCode')}
-        >
-          Source Code
-        </a>
-      </div>
+    <header className={clsx(styles.header, styles[variant], className)}>
+      <Container>
+        <div className={clsx(styles.headerInner, showSearch && styles.showSearch)}>
+          <Link to='/' className={styles.logo}>
+            <Icon
+              kind='logo'
+              width={129}
+              height={25}
+              color={variant === 'light' ? 'white' : '#212121'}
+            />
+          </Link>
+
+          {showSearch && (
+            <div className={styles.searchWrapper}>
+              <SearchBarContainer initialValue={searchQuery} />
+            </div>
+          )}
+
+          <div className={styles.nav}>{children}</div>
+        </div>
+      </Container>
     </header>
   );
 }

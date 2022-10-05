@@ -1,0 +1,14 @@
+.checkboxGroup {
+  display: grid;
+  grid-gap: 18px;
+}
+
+.checkboxSkeleton {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxSkeletonCheck {
+  flex-shrink: 0;
+  margin-right: 14px;
+}

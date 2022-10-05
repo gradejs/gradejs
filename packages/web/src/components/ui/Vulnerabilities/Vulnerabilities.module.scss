@@ -1,0 +1,42 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.vulnerabilities {
+  background: $gray-surface;
+  border-radius: 24px;
+  padding: 0 20px;
+}
+
+.vulnerability {
+  padding-top: 20px;
+  padding-bottom: 16px;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid rgba($gray-border, 0.5);
+  }
+}
+
+.vulnerabilityTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.vulnerabilityTitle {
+  font-size: 19px;
+  line-height: 26px;
+  font-weight: 500;
+  margin-bottom: 2px;
+
+  @include mobile-and-tablet {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+}
+
+.vulnerabilityText {
+  @include mobile-and-tablet {
+    font-size: 16px;
+  }
+}

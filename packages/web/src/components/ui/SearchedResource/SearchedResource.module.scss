@@ -1,0 +1,65 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.searchedResource {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24px;
+
+  @include xxl {
+    margin-bottom: 36px;
+  }
+
+  @include mobile-and-tablet {
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+}
+
+.searchedResourceImageWrapper {
+  display: flex;
+  flex-shrink: 0;
+  margin-right: 24px;
+  max-width: 42px;
+
+  @include xxl {
+    max-width: 52px;
+  }
+
+  @include mobile-and-tablet {
+    max-width: 44px;
+    margin-right: 0;
+    margin-bottom: 24px;
+  }
+}
+
+.searchedResourceImage {
+  width: 100%;
+  object-fit: cover;
+}
+
+.searchedResourceContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchedResourceTitle {
+  margin-bottom: 12px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 8px;
+  }
+}
+
+.searchedResourceHighlight {
+  color: $gray-text;
+}
+
+.searchedResourceHighlightSkeleton {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.searchedResourceSubtitle {
+  color: $gray-text;
+}

@@ -30,6 +30,6 @@ export class ScansWithVulnerabilitiesProjection extends BaseEntity {
 }
 
 export type CompactVulnerabilityDescription = {
-  affectedPackageName: string;
+  packageName: string;
   severity: string;
 };

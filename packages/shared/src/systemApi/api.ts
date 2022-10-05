@@ -1,25 +1,82 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { getGradeJsApiKey, getInternalApiRootUrl } from '../utils/env';
+import { z } from 'zod';
 
-export type DetectedPackage = {
-  name: string;
-  versionSet: string[];
-  versionRange: string;
-  approximateByteSize: number | null;
-};
+export const identifiedModuleSchema = z.object({
+  packageName: z.string(),
+  packageVersionSet: z.array(z.string()),
+  packageFile: z.string(),
+  approximateByteSize: z.number(),
+});
 
-export namespace WebPageScan {
+export const identifiedPackageSchema = z.object({
+  name: z.string(),
+  versionSet: z.array(z.string()),
+  moduleIds: z.array(z.string()),
+});
+
+export const bundlerMetadata = z.object({
+  versionRange: z.optional(z.string()),
+  isBootstrap: z.boolean(),
+  isAsyncChunk: z.boolean(),
+  isLazyLoaded: z.boolean(),
+});
+
+export const processedScriptSchema = z.union([
+  z.object({
+    status: z.literal('processed'),
+    url: z.string(),
+    byteSize: z.number(),
+    checksum: z.string(),
+    hasSourcemap: z.boolean(),
+    moduleIds: z.array(z.string()),
+    bundlerMetadata,
+  }),
+  z.object({
+    status: z.literal('error'),
+    url: z.string(),
+    byteSize: z.optional(z.number()),
+    checksum: z.optional(z.string()),
+  }),
+]);
+
+export const identifiedBundlerSchema = z.object({
+  name: z.string(),
+  versionRange: z.string(),
+});
+
+export const apiScanReportSchema = z.union([
+  z.object({
+    requestId: z.optional(z.string()),
+    url: z.string().url(),
+    status: z.literal('ready'),
+    identifiedModuleMap: z.record(identifiedModuleSchema),
+    identifiedPackages: z.array(identifiedPackageSchema),
+    identifiedBundler: z.optional(identifiedBundlerSchema),
+    processedScripts: z.array(processedScriptSchema),
+  }),
+  z.object({
+    requestId: z.optional(z.string()),
+    url: z.string().url(),
+    status: z.literal('error'),
+  }),
+]);
+
+export namespace ScanReport {
+  export type IdentifiedPackage = z.infer<typeof identifiedPackageSchema>;
+  export type IdentifiedModule = z.infer<typeof identifiedModuleSchema>;
+  export type ProcessedScript = z.infer<typeof processedScriptSchema>;
+  export type BundlerMetadata = z.infer<typeof bundlerMetadata>;
+  export type IdentifiedBundler = z.infer<typeof identifiedBundlerSchema>;
   export enum Status {
-    Created = 'created',
-    InProgress = 'in-progress',
     Ready = 'ready',
-    Failed = 'failed',
-    Invalid = 'invalid',
-    Protected = 'protected',
+    Error = 'error',
   }
 }
 
-export interface Package {
+export type ScanReport = z.infer<typeof apiScanReportSchema>;
+
+export interface PackageRequest {
   name: string;
   latestVersion: string;
 }
@@ -30,7 +87,7 @@ export interface PackageIndexRequest {
   [key: string]: unknown;
 }
 
-type Paginaton = {
+export type PaginatonRequest = {
   offset: number;
   limit: number;
   total: number;
@@ -41,10 +98,14 @@ export async function requestWebPageScan(url: string, requestId: string) {
 }
 
 export async function fetchPackageIndex(offset = 0, limit = 0) {
-  return fetchEndpoint<{ pagination: Paginaton; packages: Package[] }>('GET', '/package/index', {
-    offset,
-    limit,
-  });
+  return fetchEndpoint<{ pagination: PaginatonRequest; packages: PackageRequest[] }>(
+    'GET',
+    '/package/index',
+    {
+      offset,
+      limit,
+    }
+  );
 }
 
 export async function requestPackageIndexing(payload: PackageIndexRequest) {

@@ -1,0 +1,135 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.chip {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  line-height: 1.25;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all $transition-duration $transition-timing-function;
+
+  @include xxl {
+    border-radius: 31px;
+  }
+
+  @include mobile-and-tablet {
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+
+.icon {
+  display: inline-flex;
+  margin-right: 2px;
+}
+
+.primary {
+  background-color: $gray-surface;
+
+  &:hover {
+    background-color: $gray-border;
+  }
+}
+
+.secondary {
+  color: $gray-text;
+  background-color: $gray-surface;
+
+  &:hover {
+    background-color: $gray-border;
+  }
+}
+
+.outlined {
+  border: 1px solid $gray-border;
+  background-color: transparent;
+}
+
+.suggest {
+  background: rgba($white, 0.1);
+  color: rgba($white, 0.8);
+}
+
+.badge {
+  padding: 0 9px 0 3px;
+
+  @include mobile-and-tablet {
+    font-size: 15px;
+    line-height: 17px;
+    padding: 2px 10px 2px 2px;
+
+    .icon svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.default {
+  padding: 4px 11px;
+}
+
+.medium {
+  padding: 7px 11px;
+
+  @include mobile-and-tablet {
+    padding: 4px 11px;
+  }
+}
+
+.large {
+  padding: 12px 15px;
+
+  @include xxl {
+    padding: 15px 19px;
+  }
+
+  @include mobile-and-tablet {
+    padding: 10px 15px;
+  }
+}
+
+.sans-serif {
+  font-family: $font-sans-serif;
+}
+
+.monospace {
+  font-family: $font-monospace;
+}
+
+.normal {
+  font-weight: normal;
+}
+
+.semiBold {
+  font-weight: 500;
+}
+
+.vulnerabilities {
+  background-color: $red-accent;
+  color: $white;
+}
+
+.duplicate {
+  background-color: $orange-accent;
+  color: $white;
+}
+
+.outdated {
+  background-color: $yellow-accent;
+  color: $white;
+}
+
+.info {
+  background-color: $blue-additional;
+  color: $blue-accent;
+}
+
+.smallFont {
+  font-size: 14px;
+  line-height: 20px;
+}

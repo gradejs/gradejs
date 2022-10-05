@@ -1,0 +1,56 @@
+@import '~styles/_vars.scss';
+
+.skeleton {
+  display: block;
+  background: $gray-surface;
+  border-radius: 4px;
+  height: 1.35rem;
+  animation: 1.5s ease-in-out 0.5s infinite normal none running pulse;
+}
+
+.text {
+  transform-origin: 0 55%;
+  transform: scale(1, 0.75);
+
+  &:empty::before {
+    content: '\00a0';
+  }
+}
+
+.rounded {
+  border-radius: 24px;
+}
+
+.circular {
+  border-radius: 50%;
+}
+
+.rectangular {
+  border-radius: 4px;
+}
+
+.hasChildren {
+  & > * {
+    visibility: hidden;
+  }
+}
+
+.hasChildrenNoHeight {
+  height: auto;
+}
+
+.hasChildrenNoWidth {
+  max-width: fit-content;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,21 @@
+@import '~styles/responsive.scss';
+
+.container {
+  width: 100%;
+  max-width: 1320px;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include xxl {
+    max-width: 1470px;
+    padding-left: 52px;
+    padding-right: 52px;
+  }
+
+  @include mobile-and-tablet {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

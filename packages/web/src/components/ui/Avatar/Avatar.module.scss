@@ -1,0 +1,51 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.avatarItem {
+  width: 36px;
+  height: 36px;
+  border: 2px solid $white;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  margin-left: -7px;
+
+  @include xxl {
+    width: 44px;
+    height: 44px;
+  }
+
+  &:not(:first-child) {
+    margin-left: -7px;
+  }
+
+  &:last-child {
+    margin-left: 0;
+  }
+
+  @include mobile-and-tablet {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.additionalAvatars {
+  font-weight: 500;
+  font-size: 14px;
+  background: $blue-additional;
+  color: $blue-accent;
+
+  @include xxl {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,101 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.modal {
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  overflow-y: auto;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.modalBackdrop {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($black, 0.16);
+  opacity: 0;
+}
+
+.modalContent {
+  pointer-events: auto;
+  border-radius: 20px 20px 0 0;
+  background-color: #fff;
+  padding: 20px 24px;
+}
+
+.modalContentWrapper {
+  padding-bottom: 80px;
+}
+
+.modalAction {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.modalEnter {
+  opacity: 0;
+}
+
+.modalEnterActive {
+  opacity: 1;
+  transition: opacity $transition-duration $transition-timing-function;
+}
+
+.modalEnterDone {
+  opacity: 1;
+}
+
+.modalExit {
+  opacity: 1;
+}
+
+.modalExitActive {
+  opacity: 0;
+  transition: opacity $transition-duration ease;
+}
+
+.modalExitDone {
+  opacity: 0;
+}
+
+.contentEnter {
+  transform: translateY(100%);
+}
+
+.contentEnterActive {
+  transform: translateY(0);
+  transition: transform $transition-duration $transition-timing-function;
+}
+
+.contentEnterDone {
+  transform: translateY(0);
+}
+
+.contentExit {
+  transform: translateY(0);
+}
+
+.contentExitActive {
+  transform: translateY(100%);
+  transition: transform $transition-duration ease;
+}
+
+.contentExitDone {
+  transform: translateY(100%);
+}

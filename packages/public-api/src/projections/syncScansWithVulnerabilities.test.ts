@@ -24,12 +24,11 @@ describe('projections / scansWithVulnerabilities', () => {
       webPage,
       status: WebPageScan.Status.Processed,
       scanResult: {
-        packages: [
+        identifiedPackages: [
           {
             name: 'react',
             versionSet: ['17.0.0'],
-            versionRange: '17.0.0',
-            approximateByteSize: null,
+            moduleIds: [],
           },
         ],
       },

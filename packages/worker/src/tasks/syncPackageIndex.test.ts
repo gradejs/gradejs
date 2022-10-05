@@ -1,4 +1,4 @@
-import { internalApi } from '@gradejs-public/shared';
+import { systemApi } from '@gradejs-public/shared';
 import { expectQueuedTasks } from '@gradejs-public/test-utils';
 import { syncPackageIndex } from './syncPackageIndex';
 
@@ -12,7 +12,7 @@ describe('task / syncPackageIndex', () => {
     }));
 
     const fetchPackageIndexMock = jest
-      .spyOn(internalApi, 'fetchPackageIndex')
+      .spyOn(systemApi, 'fetchPackageIndex')
       .mockImplementation((offset = 0, limit = 0) =>
         Promise.resolve({
           pagination: { offset, limit, total: mockPackages.length },

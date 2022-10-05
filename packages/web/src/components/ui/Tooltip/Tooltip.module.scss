@@ -1,0 +1,126 @@
+@import '~styles/_vars.scss';
+
+.tooltipTrigger {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: $gray-text;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tooltipContainer {
+  background-color: $black;
+  border-radius: 10px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.04), 0 4px 32px rgba(0, 0, 0, 0.16);
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  padding: 9px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  transition: opacity 0.3s;
+  z-index: 9999;
+  max-width: 180px;
+}
+
+.tooltipContainer[data-popper-interactive='false'] {
+  pointer-events: none;
+}
+
+.tooltipArrow {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+}
+
+.tooltipArrow::before {
+  border-style: solid;
+  content: '';
+  display: block;
+  height: 0;
+  margin: auto;
+  width: 0;
+}
+
+.tooltipArrow::after {
+  border-style: solid;
+  content: '';
+  display: block;
+  height: 0;
+  margin: auto;
+  position: absolute;
+  width: 0;
+}
+
+.tooltipContainer[data-popper-placement*='bottom'] .tooltipArrow {
+  left: 0;
+  margin-top: -0.4rem;
+  top: 0;
+}
+
+.tooltipContainer[data-popper-placement*='bottom'] .tooltipArrow::before {
+  border-color: transparent transparent $black transparent;
+  border-width: 0 0.5rem 0.4rem 0.5rem;
+  position: absolute;
+  top: -1px;
+}
+
+.tooltipContainer[data-popper-placement*='bottom'] .tooltipArrow::after {
+  border-color: transparent transparent $black transparent;
+  border-width: 0 0.5rem 0.4rem 0.5rem;
+}
+
+.tooltipContainer[data-popper-placement*='top'] .tooltipArrow {
+  bottom: 0;
+  left: 0;
+  margin-bottom: -1rem;
+}
+
+.tooltipContainer[data-popper-placement*='top'] .tooltipArrow::before {
+  border-color: $black transparent transparent transparent;
+  border-width: 0.5rem 0.5rem 0 0.5rem;
+  position: absolute;
+  top: 0;
+}
+
+.tooltipContainer[data-popper-placement*='top'] .tooltipArrow::after {
+  border-color: $black transparent transparent transparent;
+  border-width: 0.5rem 0.5rem 0 0.5rem;
+}
+
+.tooltipContainer[data-popper-placement*='right'] .tooltipArrow {
+  left: 0;
+  margin-left: -0.7rem;
+}
+
+.tooltipContainer[data-popper-placement*='right'] .tooltipArrow::before {
+  border-color: transparent $black transparent transparent;
+  border-width: 0.5rem 0.4rem 0.5rem 0;
+}
+
+.tooltipContainer[data-popper-placement*='right'] .tooltipArrow::after {
+  border-color: transparent $black transparent transparent;
+  border-width: 0.5rem 0.4rem 0.5rem 0;
+  left: 6px;
+  top: 0;
+}
+
+.tooltipContainer[data-popper-placement*='left'] .tooltipArrow {
+  margin-right: -0.7rem;
+  right: 0;
+}
+
+.tooltipContainer[data-popper-placement*='left'] .tooltipArrow::before {
+  border-color: transparent transparent transparent $black;
+  border-width: 0.5rem 0 0.5rem 0.4em;
+}
+
+.tooltipContainer[data-popper-placement*='left'] .tooltipArrow::after {
+  border-color: transparent transparent transparent $black;
+  border-width: 0.5rem 0 0.5rem 0.4em;
+  left: 3px;
+  top: 0;
+}
