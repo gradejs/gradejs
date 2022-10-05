@@ -5,14 +5,19 @@ import Chip from '../Chip/Chip';
 import clsx from 'clsx';
 import ChipGroup from '../ChipGroup/ChipGroup';
 import { CSSTransition } from 'react-transition-group';
-import { LicenceSkeleton, LinksSkeleton, ScriptSkeleton } from './PackagePreviewSkeleton';
+import {
+  FootprintSkeleton,
+  LicenceSkeleton,
+  LinksSkeleton,
+  ScriptSkeleton,
+} from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
-import { plural } from '../../../utils/helpers';
+import { getReadableSizeString, plural } from '../../../utils/helpers';
 
 type Props = {
   opened?: boolean;
@@ -126,6 +131,22 @@ export default function PackagePreview({
                       {pkg.registryMetadata?.licenseDescription}
                     </div>*/}
                       </>
+                    )}
+                  </div>
+                )}
+
+                {!!pkg.approximateByteSize && (
+                  <div className={clsx(styles.stat, styles.statListItemSmall)}>
+                    <div className={styles.statHeader}>
+                      <Icon kind='weight' color='#8E8AA0' className={styles.statIcon} />
+                      Footprint
+                    </div>
+                    {detailsLoading ? (
+                      <FootprintSkeleton />
+                    ) : (
+                      <div className={styles.statTitle}>
+                        {getReadableSizeString(pkg.approximateByteSize)}
+                      </div>
                     )}
                   </div>
                 )}

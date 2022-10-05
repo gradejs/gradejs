@@ -227,8 +227,7 @@
 
 .statList {
   display: grid;
-  // grid-template-columns: 1fr 1fr 2fr; // TODO: change back when all stats are uncommented
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: 1fr 1fr 2fr;
   grid-gap: 32px 20px;
 
   @include mobile-and-tablet {
