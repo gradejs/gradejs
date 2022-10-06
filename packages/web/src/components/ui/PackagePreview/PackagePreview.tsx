@@ -18,6 +18,7 @@ import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
+import AvatarSites from '../AvatarSites/AvatarSites';
 
 type Props = {
   opened?: boolean;
@@ -76,6 +77,16 @@ export default function PackagePreview({
         {/* TODO: where to put fullDescription? */}
         {pkg.registryMetadata?.description && (
           <div className={styles.desc}>{pkg.registryMetadata?.description}</div>
+        )}
+
+        {pkg.hostsFaviconList && (
+          <div className={styles.avatarSites}>
+            <AvatarSites
+              max={6}
+              hostsFaviconList={pkg.hostsFaviconList}
+              totalUsageCount={pkg.totalUsageCount}
+            />
+          </div>
         )}
       </div>
 
@@ -337,7 +348,9 @@ export default function PackagePreview({
             <div className={styles.author}>
               {pkg.registryMetadata?.maintainers?.length === 1 ? (
                 <>
-                  <span>{pkg.registryMetadata.maintainers[0].name}</span>
+                  <span className={styles.authorName}>
+                    {pkg.registryMetadata.maintainers[0].name}
+                  </span>
                   <span className={styles.authorImage}>
                     <Avatar
                       alt={pkg.registryMetadata.maintainers[0].name}

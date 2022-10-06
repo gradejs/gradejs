@@ -1,72 +1,66 @@
-/* eslint-disable react/button-has-type */
-import React, { useState, MouseEvent, MouseEventHandler } from 'react';
-import clsx from 'clsx';
+import React, { useRef, useState } from 'react';
 import styles from './Dropdown.module.scss';
+import clsx from 'clsx';
+import Button from '../Button/Button';
+import { useOnClickOutside } from 'hooks/useOutsideAlerter';
+import { Icon } from '../Icon/Icon';
 
-export type Props = {
+type Props = {
+  triggerText?: string;
+  size?: 'small' | 'medium';
+  position?: 'left' | 'center' | 'right';
   className?: string;
-  children: React.ReactNode;
-  TriggerComponent: React.FunctionComponent<{
-    onClick: MouseEventHandler;
-    children: React.ReactNode;
-  }>;
-  triggerChildren?: React.ReactNode;
-  triggerArgs?: any;
-  triggerType?: 'click' | 'hover';
-  position: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
-  // eslint-disable-next-line no-unused-vars
-  getHideHandle?: (_handle: () => void) => void;
-  onOpen?: () => void;
+  children?: React.ReactNode;
 };
 
-export default function Dropdown({
+const Dropdown = ({
+  triggerText,
+  size = 'small',
+  position = 'left',
   className,
-  TriggerComponent,
-  triggerChildren,
-  triggerArgs,
   children,
-  position,
-  triggerType = 'click',
-  getHideHandle,
-  onOpen,
-}: Props) {
-  const [visible, setVisible] = useState(false);
-  getHideHandle?.(() => setVisible(false));
+}: Props) => {
+  const containerRef = useRef(null);
+  const [opened, setOpened] = useState(false);
+
+  const clickOutsideHandler = () => {
+    setOpened(false);
+  };
+
+  useOnClickOutside(containerRef, clickOutsideHandler);
+
   return (
     <div
-      style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={
-        triggerType === 'hover'
-          ? () => {
-              setVisible(true);
-              onOpen?.();
-            }
-          : undefined
-      }
-      onMouseLeave={triggerType === 'hover' ? () => setVisible(false) : undefined}
+      ref={containerRef}
+      className={clsx(
+        styles.container,
+        opened && styles.containerOpen,
+        size === 'small' && styles.small,
+        size === 'medium' && styles.medium,
+        position === 'left' && styles.positionLeft,
+        position === 'center' && styles.positionCenter,
+        position === 'right' && styles.positionRight,
+        className
+      )}
     >
-      <TriggerComponent
-        {...triggerArgs}
-        onClick={
-          triggerType === 'click'
-            ? (e: MouseEvent) => {
-                e.stopPropagation();
-                if (!visible) {
-                  onOpen?.();
-                }
-                setVisible(!visible);
-              }
-            : undefined
-        }
+      <Button
+        variant='secondary'
+        size='small'
+        onClick={() => setOpened(!opened)}
+        className={styles.triggerButton}
       >
-        {triggerChildren}
-      </TriggerComponent>
-      <div
-        className={clsx(styles.basic, styles[position], className, { [styles.visible]: visible })}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {children}
-      </div>
+        {triggerText}
+        <Icon
+          kind='arrowDown'
+          width={10}
+          height={6}
+          color='#212121'
+          className={styles.triggerIcon}
+        />
+      </Button>
+      {opened && <div className={styles.content}>{children}</div>}
     </div>
   );
-}
+};
+
+export default Dropdown;

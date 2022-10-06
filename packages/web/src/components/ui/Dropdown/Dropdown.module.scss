@@ -1,37 +1,53 @@
-.basic {
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.container {
+  position: relative;
+}
+
+.triggerButton {
+  .containerOpen & {
+    background: rgba($gray-border, 0.8);
+  }
+}
+
+.triggerIcon {
+  flex-shrink: 0;
+  margin-left: 8px;
+
+  .containerOpen & {
+    transform: rotate(180deg);
+  }
+}
+
+.content {
   position: absolute;
-  width: max-content;
-  transition: opacity 200ms ease-in-out;
-  opacity: 0;
-  height: 0;
-  padding: 0;
-  overflow: hidden;
-  display: block;
-  z-index: 1;
-}
-
-.visible {
-  box-shadow: 2px 2px 3px 0 #e6e6e6;
-  border: 1px solid #e6e6e6;
-  border-radius: 2px;
-  height: auto;
-  opacity: 1;
-}
-
-.topleft {
-  left: 0;
-}
-
-.topright {
-  right: 0;
-}
-
-.bottomleft {
+  z-index: 10;
   top: 100%;
-  left: 0;
-}
+  margin-top: 12px;
+  background: $white;
+  box-shadow: $shadow;
+  border-radius: 24px;
+  padding: 16px;
 
-.bottomright {
-  top: 100%;
-  right: 0;
+  .small & {
+    min-width: 160px;
+  }
+
+  .medium & {
+    min-width: 290px;
+  }
+
+  .positionLeft & {
+    left: 0;
+  }
+
+  .positionCenter & {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .positionRight & {
+    right: 0;
+  }
 }

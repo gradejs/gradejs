@@ -1,0 +1,178 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.packagesPage {
+  margin-top: 58px;
+  margin-bottom: 80px;
+
+  @include mobile-and-tablet {
+    margin-top: 20px;
+    margin-bottom: 64px;
+  }
+}
+
+.packagesPageTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 48px;
+
+  @include mobile-and-tablet {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+}
+
+// TODO: create and use mixin for heading types here (h2 in this case) to cut repetitions
+.pageTitle {
+  font-size: 40px;
+  line-height: 46px;
+  margin-bottom: 0;
+
+  @include xxl {
+    font-size: 48px;
+    line-height: 58px;
+  }
+
+  @include mobile-and-tablet {
+    font-size: 28px;
+    line-height: 36px;
+    margin-bottom: 24px;
+  }
+}
+
+.controls {
+}
+
+.controlsTop {
+  display: none;
+
+  @include mobile-and-tablet {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 500;
+    color: $gray-text;
+    margin-bottom: 12px;
+  }
+}
+
+.controlsTopIcon {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.controlsList {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controlItem {
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+
+  @include mobile-and-tablet {
+    margin-bottom: 8px;
+  }
+}
+
+.radioGroup {
+  display: grid;
+  grid-gap: 18px;
+}
+
+.packages {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-gap: 16px;
+}
+
+.numberedPackageInner {
+  background: $gray-surface;
+  border-radius: 0 24px 24px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    .numberedPackageContent {
+      transform: scale(0.9875, 0.93);
+    }
+  }
+}
+
+.numberedPackageNumber {
+  z-index: -1;
+  position: relative;
+  width: 60px;
+  height: 56px;
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  background: $gray-surface;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 26px;
+  line-height: 40px;
+  padding-top: 9px;
+  font-weight: 500;
+
+  &::after {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    content: '';
+    width: 28px;
+    height: 28px;
+    background-image: url('../../../assets/icons/number-shadow.svg');
+    transform: translateX(100%);
+  }
+
+  @include mobile-and-tablet {
+    width: 40px;
+    height: 36px;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    font-size: 19px;
+    line-height: 26px;
+    padding-top: 7px;
+
+    &::after {
+      width: 23px;
+      height: 23px;
+    }
+  }
+}
+
+.numberedPackageContent {
+  width: 100%;
+  transition: all $transition-timing-function $transition-duration;
+}
+
+.pagination {
+  margin-top: 64px;
+  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include mobile-and-tablet {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: 64px;
+  }
+}
+
+.moreButton {
+  @include mobile-and-tablet {
+    display: flex;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+}
