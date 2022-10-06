@@ -14,7 +14,6 @@ import {
   resetScanDisplayOptions,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
-import { plural } from '../../utils/helpers';
 
 const accuracyMap: Record<string, string> = {
   // TODO: remove hardcode
@@ -139,16 +138,8 @@ export function WebsiteResultsPage() {
   }
 
   const title = `List of NPM packages that are used on ${parsedUrl.hostname} - GradeJS`;
-  const description =
-    `GradeJS has discovered ${plural(packageStats.total, 'NPM package', 'NPM packages')} used on ${
-      parsedUrl.hostname
-    }` +
-    (packageStats.vulnerable > 0
-      ? `, ${plural(packageStats.vulnerable, 'is vulnerable', 'are vulnerable')}`
-      : '') +
-    (packageStats.outdated > 0
-      ? `, ${plural(packageStats.outdated, 'is outdated', 'are outdated')}`
-      : '');
+  // TODO: revert description change [https://github.com/gradejs/gradejs/pull/98] in #222
+  const description = `View packages discovered by GradeJS on ${parsedUrl.hostname}`;
 
   const webpackVersion = scanResult?.scan?.scanResult?.identifiedBundler?.versionRange ?? 'x.x';
   const accuracy = scanResult?.scan?.scanResult?.processedScripts?.some(
