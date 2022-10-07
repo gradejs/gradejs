@@ -3,6 +3,7 @@ export enum Env {
   Node = 'NODE_ENV',
   Port = 'PORT',
   DatabaseUrl = 'DB_URL',
+  ProdEnv = 'PROD_ENV', // staging or production
 
   // Web related
   PublicApiOrigin = 'API_ORIGIN',
@@ -29,15 +30,16 @@ export enum Env {
 
 export const getNodeEnv = () => {
   const env = getEnvUnsafe(Env.Node);
-  if (!env || !['production', 'staging', 'development', 'test'].includes(env)) {
+  if (!env || !['production', 'development', 'test'].includes(env)) {
     return 'development';
   }
-  return env as 'production' | 'staging' | 'development' | 'test';
+  return env as 'production' | 'development' | 'test';
 };
+const getProdEnv = () => (getEnvUnsafe(Env.ProdEnv) === 'staging' ? 'staging' : 'production');
 export const getPort = (defaultPort: number) => Number(getEnv(Env.Port, defaultPort.toString()));
 
-export const isProduction = () => getNodeEnv() === 'production';
-export const isStaging = () => getNodeEnv() === 'staging';
+export const isProduction = () => getNodeEnv() === 'production' && getProdEnv() === 'production';
+export const isStaging = () => getNodeEnv() === 'production' && getProdEnv() === 'staging';
 export const isDevelopment = () => getNodeEnv() === 'development';
 export const isTest = () => getNodeEnv() === 'test';
 

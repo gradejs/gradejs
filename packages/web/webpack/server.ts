@@ -58,7 +58,10 @@ export const serverConfig: (options: WebpackConfigOptions) => Configuration = ({
   plugins: [
     ...pluginsCommon(mode, true),
     new CopyPlugin({
-      patterns: [{ from: 'robots.txt', to: 'robots.txt' }],
+      patterns: [
+        { from: 'robots.txt', to: 'robots.txt' },
+        { from: 'robots.staging.txt', to: 'robots.staging.txt' },
+      ],
     }),
   ],
   output: {

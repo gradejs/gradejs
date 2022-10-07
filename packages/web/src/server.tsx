@@ -5,7 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
 import { StaticRouter } from 'react-router-dom/server';
 // TODO: fix import from different monorepo package
-import { getPort, getClientVars } from '../../shared/src/utils/env';
+import { getPort, getClientVars, isStaging } from '../../shared/src/utils/env';
 import { store } from './store';
 import { App } from './components/App';
 import path from 'path';
@@ -17,14 +17,18 @@ const staticDir = '/static';
 
 app.use(staticDir, express.static(path.join(__dirname, 'static')));
 app.get('/robots.txt', (_, res) =>
-  readFile(path.join(__dirname, '/robots.txt'), { encoding: 'utf-8' }, (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      res.status(404);
-      res.send(null);
+  readFile(
+    path.join(__dirname, isStaging() ? '/robots.staging.txt' : '/robots.txt'),
+    { encoding: 'utf-8' },
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+      } else {
+        res.status(404);
+        res.send(null);
+      }
     }
-  })
+  )
 );
 
 function getScripts(statsStr: string) {
