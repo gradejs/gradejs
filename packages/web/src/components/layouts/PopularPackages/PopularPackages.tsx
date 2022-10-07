@@ -1,7 +1,7 @@
-// @ts-nocheck
-
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styles from './PopularPackages.module.scss';
+import modalStyles from '../../ui/Modal/Modal.module.scss';
+import clsx from 'clsx';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import Container from 'components/ui/Container/Container';
 import Footer from '../../ui/Footer/Footer';
@@ -13,10 +13,22 @@ import Dropdown from 'components/ui/Dropdown/Dropdown';
 import Radio from '../../ui/Radio/Radio';
 import KeywordsList from '../../ui/KeywordsList/KeywordsList';
 import SidebarCategoryWithSearch from '../../ui/SidebarCategory/SidebarCategoryWithSearch';
+import Modal from '../../ui/Modal/Modal';
+import Badge from '../../ui/Badge/Badge';
+import SidebarCategory from '../../ui/SidebarCategory/SidebarCategory';
+import PeriodsList from '../../ui/PeriodsList/PeriodsList';
 
 export default function PopularPackages() {
-  const [period, setPeriod] = useState('all');
+  const [selectedPeriod, setSelectedPeriod] = useState('all');
   const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+
+  const [activeModal, setActiveModal] = useState<'period' | 'keywords' | 'authors' | null>(null);
+  const closeModalHandler = useCallback(() => setActiveModal(null), []);
+
+  const anyFiltersActive = useMemo(
+    () => Object.values(selectedKeywords).some((it) => !!it.length),
+    [selectedKeywords]
+  );
 
   const mockPackage = {
     name: 'react-art',
@@ -71,15 +83,64 @@ export default function PopularPackages() {
   ];
 
   const availableFilters = {
+    periods: ['All time', '1 day', '1 week', '1 month', '6 month', '1 year'],
     keywords: ['react', 'object', 'assign', 'extend', 'properties', 'es2015'],
+  };
+
+  const handlePeriodsFilterChange = (value: string) => {
+    setSelectedPeriod(value);
   };
 
   const handleKeywordsFilterChange = (value: string[]) => {
     setSelectedKeywords(value);
   };
 
+  const handleKeywordsFilterReset = () => {
+    setSelectedKeywords([]);
+  };
+
   return (
     <>
+      <Modal isOpen={activeModal === 'period'} onClose={closeModalHandler}>
+        <div className={modalStyles.modalContentWrapper}>
+          <SidebarCategory
+            categoryName='Problems'
+            returnButton={closeModalHandler}
+            resetGroup={handleKeywordsFilterReset}
+          >
+            <PeriodsList
+              periodsList={periodFilter}
+              selectedPeriod={selectedPeriod}
+              selectHandler={handlePeriodsFilterChange}
+            />
+          </SidebarCategory>
+        </div>
+      </Modal>
+
+      <Modal isOpen={activeModal === 'keywords'} onClose={closeModalHandler}>
+        <SidebarCategoryWithSearch
+          categoryName='Keywords'
+          keywordsList={availableFilters.keywords}
+          selectedKeywords={selectedKeywords}
+          selectHandler={handleKeywordsFilterChange}
+          returnButton={closeModalHandler}
+          resetGroup={handleKeywordsFilterReset}
+          searchOpen
+        />
+      </Modal>
+
+      <Modal isOpen={activeModal === 'authors'} onClose={closeModalHandler}>
+        <SidebarCategoryWithSearch
+          categoryName='Authors'
+          keywordsList={availableFilters.keywords}
+          selectedKeywords={selectedKeywords}
+          selectHandler={handleKeywordsFilterChange}
+          returnButton={closeModalHandler}
+          resetGroup={handleKeywordsFilterReset}
+          searchOpen
+        />
+      </Modal>
+
       <StickyDefaultHeader showSearch />
 
       <section className={styles.packagesPage}>
@@ -89,10 +150,72 @@ export default function PopularPackages() {
 
             <div className={styles.controls}>
               <div className={styles.controlsTop}>
-                <Icon kind='filters' className={styles.controlsTopIcon} />
-                <span>Filters</span>
+                <span className={styles.controlsTopTitle}>
+                  <Icon kind='filters' className={styles.controlsTopIcon} />
+                  <span>Filters</span>
+                </span>
+
+                {anyFiltersActive && (
+                  <span className={styles.mobileFiltersReset} onClick={handleKeywordsFilterReset}>
+                    Reset
+                  </span>
+                )}
               </div>
-              <div className={styles.controlsList}>
+              <div className={clsx(styles.controlsList, styles.controlsListMobile)}>
+                <div className={styles.controlItem}>
+                  <Button variant='secondary' size='small' onClick={() => setActiveModal('period')}>
+                    Dynamic period
+                  </Button>
+                </div>
+                <div className={styles.controlItem}>
+                  <Button
+                    variant='secondary'
+                    size='small'
+                    onClick={() => setActiveModal('keywords')}
+                  >
+                    {selectedKeywords.length > 0 && (
+                      <Badge
+                        content={selectedKeywords.length}
+                        className={styles.controlItemBadge}
+                      />
+                    )}
+                    Keywords
+                  </Button>
+                </div>
+                <div className={styles.controlItem}>
+                  <Button
+                    variant='secondary'
+                    size='small'
+                    onClick={() => setActiveModal('authors')}
+                  >
+                    {selectedKeywords.length > 0 && (
+                      <Badge
+                        content={selectedKeywords.length}
+                        className={styles.controlItemBadge}
+                      />
+                    )}
+                    Authors
+                  </Button>
+                </div>
+              </div>
+              <div className={clsx(styles.controlsList, styles.controlsListDesktop)}>
+                {anyFiltersActive && (
+                  <div className={styles.controlItem}>
+                    <span
+                      className={styles.desktopFiltersReset}
+                      onClick={handleKeywordsFilterReset}
+                    >
+                      Reset
+                      <Icon
+                        kind='crossOpaque'
+                        color='#212121'
+                        width={20}
+                        height={20}
+                        className={styles.desktopFiltersIcon}
+                      />
+                    </span>
+                  </div>
+                )}
                 <div className={styles.controlItem}>
                   <Dropdown triggerText='Dynamic period'>
                     <div className={styles.radioGroup}>
@@ -101,8 +224,8 @@ export default function PopularPackages() {
                           key={value}
                           name='period'
                           value='all'
-                          checked={period === value}
-                          onChange={() => setPeriod(value)}
+                          checked={selectedPeriod === value}
+                          onChange={() => setSelectedPeriod(value)}
                         >
                           {label}
                         </Radio>
@@ -111,7 +234,12 @@ export default function PopularPackages() {
                   </Dropdown>
                 </div>
                 <div className={styles.controlItem}>
-                  <Dropdown triggerText='Keywords' size='medium' position='center'>
+                  <Dropdown
+                    triggerText='Keywords'
+                    size='medium'
+                    position='center'
+                    selectedKeywords={selectedKeywords}
+                  >
                     <SidebarCategoryWithSearch
                       categoryName='Keywords'
                       keywordsList={availableFilters.keywords}
@@ -128,7 +256,12 @@ export default function PopularPackages() {
                   </Dropdown>
                 </div>
                 <div className={styles.controlItem}>
-                  <Dropdown triggerText='Authors' size='medium' position='right'>
+                  <Dropdown
+                    triggerText='Authors'
+                    size='medium'
+                    position='right'
+                    selectedKeywords={selectedKeywords}
+                  >
                     <SidebarCategoryWithSearch
                       categoryName='Authors'
                       keywordsList={availableFilters.keywords}
@@ -153,6 +286,7 @@ export default function PopularPackages() {
               <div className={styles.numberedPackageNumber}>1</div>
               <div className={styles.numberedPackageInner}>
                 <div className={styles.numberedPackageContent}>
+                  {/* @ts-expect-error */}
                   <PackagePreview pkg={mockPackage} />
                 </div>
               </div>
@@ -162,6 +296,7 @@ export default function PopularPackages() {
               <div className={styles.numberedPackageNumber}>2</div>
               <div className={styles.numberedPackageInner}>
                 <div className={styles.numberedPackageContent}>
+                  {/* @ts-expect-error */}
                   <PackagePreview pkg={mockPackage} />
                 </div>
               </div>
@@ -171,6 +306,7 @@ export default function PopularPackages() {
               <div className={styles.numberedPackageNumber}>3</div>
               <div className={styles.numberedPackageInner}>
                 <div className={styles.numberedPackageContent}>
+                  {/* @ts-expect-error */}
                   <PackagePreview pkg={mockPackage} />
                 </div>
               </div>

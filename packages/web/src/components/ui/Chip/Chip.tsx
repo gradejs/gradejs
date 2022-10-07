@@ -14,7 +14,8 @@ export type ChipProps = {
     | 'vulnerabilities'
     | 'duplicate'
     | 'outdated'
-    | 'info';
+    | 'info'
+    | 'active';
   size?: 'badge' | 'default' | 'medium' | 'large';
   font?: 'sans-serif' | 'monospace';
   fontWeight?: 'normal' | 'semiBold';

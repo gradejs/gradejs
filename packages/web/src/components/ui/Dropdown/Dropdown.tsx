@@ -4,12 +4,14 @@ import clsx from 'clsx';
 import Button from '../Button/Button';
 import { useOnClickOutside } from 'hooks/useOutsideAlerter';
 import { Icon } from '../Icon/Icon';
+import Badge from '../Badge/Badge';
 
 type Props = {
   triggerText?: string;
   size?: 'small' | 'medium';
   position?: 'left' | 'center' | 'right';
   className?: string;
+  selectedKeywords?: string[];
   children?: React.ReactNode;
 };
 
@@ -18,6 +20,7 @@ const Dropdown = ({
   size = 'small',
   position = 'left',
   className,
+  selectedKeywords,
   children,
 }: Props) => {
   const containerRef = useRef(null);
@@ -49,6 +52,9 @@ const Dropdown = ({
         onClick={() => setOpened(!opened)}
         className={styles.triggerButton}
       >
+        {selectedKeywords && selectedKeywords.length > 0 && (
+          <Badge content={selectedKeywords.length} className={styles.triggerCounter} />
+        )}
         {triggerText}
         <Icon
           kind='arrowDown'

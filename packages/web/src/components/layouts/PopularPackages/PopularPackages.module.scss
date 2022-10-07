@@ -52,12 +52,18 @@
   @include mobile-and-tablet {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     font-size: 14px;
     line-height: 22px;
     font-weight: 500;
     color: $gray-text;
     margin-bottom: 12px;
   }
+}
+
+.controlsTopTitle {
+  display: flex;
+  align-items: center;
 }
 
 .controlsTopIcon {
@@ -71,6 +77,37 @@
   flex-wrap: wrap;
 }
 
+.controlsListMobile {
+  display: none;
+
+  @include mobile-and-tablet {
+    display: flex;
+  }
+}
+
+.controlsListDesktop {
+  display: flex;
+
+  @include mobile-and-tablet {
+    display: none;
+  }
+}
+
+.desktopFiltersReset {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.desktopFiltersIcon {
+  margin-left: 10px;
+}
+
+.mobileFiltersReset {
+  color: $black;
+}
+
 .controlItem {
   &:not(:last-child) {
     margin-right: 8px;
@@ -79,6 +116,10 @@
   @include mobile-and-tablet {
     margin-bottom: 8px;
   }
+}
+
+.controlItemBadge {
+  margin-right: 8px;
 }
 
 .radioGroup {
