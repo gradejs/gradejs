@@ -27,6 +27,7 @@ import check from '../../../assets/icons/sprite/check.svg';
 import arrowBack from '../../../assets/icons/sprite/arrow-back.svg';
 import filters from '../../../assets/icons/sprite/filters.svg';
 import questionMark from '../../../assets/icons/sprite/question-mark.svg';
+import modules from '../../../assets/icons/sprite/modules.svg';
 
 const icons = {
   githubLogo,
@@ -57,6 +58,7 @@ const icons = {
   filters,
   questionMark,
   webpackLogo,
+  modules,
 };
 
 export type IconProps = {

@@ -148,6 +148,15 @@
   margin-bottom: 32px;
 }
 
+.statModules {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.statModulesWrapper {
+  margin-top: 18px;
+}
+
 .statHeader {
   display: flex;
   align-items: center;
@@ -160,6 +169,14 @@
   @include mobile-and-tablet {
     margin-bottom: 12px;
   }
+}
+
+.statHeaderAdditional {
+  flex-grow: 1;
+  text-align: right;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 400;
 }
 
 .statIcon {

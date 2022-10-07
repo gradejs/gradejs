@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './PackagePreview.module.scss';
 import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
@@ -18,6 +18,19 @@ import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
+import TreeMap from '../TreeMap/TreeMap';
+import { useScanResult } from '../../../store/hooks/scan/useScanResult';
+import { useParams } from 'react-router-dom';
+
+type Module = {
+  name: string;
+  value: number;
+};
+
+type ModulesTree = {
+  name: string;
+  children: Module[];
+};
 
 type Props = {
   opened?: boolean;
@@ -37,6 +50,13 @@ export default function PackagePreview({
   pkg,
   detailsLoading = false,
 }: Props) {
+  const { '*': scanUrl } = useParams();
+  const { scanResult } = useScanResult(scanUrl);
+
+  const [modulesTreeData, setModulesTreeData] = useState<null | ModulesTree>(null);
+  const [smallestModuleSize, setSmallestModuleSize] = useState(0);
+  const [largestModuleSize, setLargestModuleSize] = useState(0);
+
   // const navigate = useNavigate();
 
   // const toggleOpen = () => {
@@ -48,6 +68,42 @@ export default function PackagePreview({
   const deps = Object.keys(
     pkg.registryMetadata?.versionSpecificValues?.[versions[versions.length - 1]]?.dependencies ?? {}
   );
+
+  useEffect(() => {
+    const identifiedModuleMap = scanResult?.scan?.scanResult?.identifiedModuleMap;
+
+    const moduleIds = Object.keys(identifiedModuleMap!);
+    const moduleValues = Object.values(identifiedModuleMap!);
+    const filteredModules = moduleValues
+      .filter((module) => {
+        return module.packageName === pkg.name && pkg.moduleIds.some((p) => moduleIds.includes(p));
+      })
+      .map((module) => {
+        return {
+          name: module.packageFile,
+          value: module.approximateByteSize,
+        };
+      });
+
+    if (filteredModules.length > 0) {
+      const modulesData = {
+        name: 'Modules',
+        children: filteredModules,
+      };
+
+      const smallestModule = filteredModules.reduce((prev, current) => {
+        return prev.value < current.value ? prev : current;
+      });
+
+      const largestModule = filteredModules.reduce((prev, current) => {
+        return prev.value > current.value ? prev : current;
+      });
+
+      setModulesTreeData(modulesData);
+      setSmallestModuleSize(smallestModule.value);
+      setLargestModuleSize(largestModule.value);
+    }
+  }, []);
 
   return (
     <div className={clsx(styles.package, opened && styles.open)}>
@@ -241,7 +297,23 @@ export default function PackagePreview({
             </div>
             */}
 
-            {/* TODO: add Modules treemap here */}
+            {modulesTreeData && modulesTreeData.children.length > 1 && (
+              <div className={clsx(styles.stat, styles.statModules)}>
+                <div className={styles.statHeader}>
+                  <Icon kind='modules' color='#8E8AA0' className={styles.statIcon} />
+                  Modules
+                  {/*<span className={styles.statHeaderAdditional}>Matching 80%</span>*/}
+                </div>
+
+                <div className={styles.statModulesWrapper}>
+                  <TreeMap
+                    data={modulesTreeData}
+                    smallestModuleSize={smallestModuleSize}
+                    largestModuleSize={largestModuleSize}
+                  />
+                </div>
+              </div>
+            )}
 
             {/*
               <div className={styles.stat}>

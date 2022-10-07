@@ -1,0 +1,20 @@
+@import '~styles/_vars.scss';
+
+.svgWrapper {
+  display: block;
+}
+
+.treemap {
+  fill: currentColor;
+}
+
+.treemapTitle {
+  font-size: 14px;
+  font-family: $font-monospace;
+  font-weight: 500;
+}
+
+.treemapValue {
+  font-size: 14px;
+  font-weight: 500;
+}
