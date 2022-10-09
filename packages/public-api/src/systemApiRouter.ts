@@ -1,4 +1,4 @@
-import { systemApi } from '@gradejs-public/shared';
+import { logger, systemApi } from '@gradejs-public/shared';
 import { Router } from 'express';
 import { syncWebPageScanResult } from './website/service';
 
@@ -9,8 +9,7 @@ systemApiRouter.post('/scan', async (req, res, next) => {
     const scanReport = systemApi.apiScanReportSchema.parse(req.body);
     await syncWebPageScanResult(scanReport);
   } catch (e) {
-    // TODO: report to rollbar
-    console.log(e);
+    logger.error(e);
     next(e);
     return;
   }

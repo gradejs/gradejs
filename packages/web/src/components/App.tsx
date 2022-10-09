@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HomePage } from './pages/Home';
 import { WebsiteResultsPage } from './pages/WebsiteResults';
+import { RollbarContext } from '@rollbar/react';
 type AppProps = {
   locationChangeHandler: (url?: string | URL) => void;
 };
@@ -38,8 +39,22 @@ export function App({ locationChangeHandler }: AppProps) {
         <meta property='og:image' content='/static/sharing-image.png' />
       </Helmet>
       <Routes>
-        <Route index element={<HomePage />} />
-        <Route path='/scan/*' element={<WebsiteResultsPage />} />
+        <Route
+          index
+          element={
+            <RollbarContext context='/'>
+              <HomePage />
+            </RollbarContext>
+          }
+        />
+        <Route
+          path='/scan/*'
+          element={
+            <RollbarContext context='/scan/'>
+              <WebsiteResultsPage />
+            </RollbarContext>
+          }
+        />
         <Route path='*' element={<Navigate replace to='/' />} />
       </Routes>
     </>

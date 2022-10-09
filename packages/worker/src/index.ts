@@ -4,6 +4,8 @@ import {
   getPort,
   checkRequiredEnvironmentVariables,
   Env,
+  initRollbarLogger,
+  logger,
 } from '@gradejs-public/shared';
 
 checkRequiredEnvironmentVariables([
@@ -11,12 +13,15 @@ checkRequiredEnvironmentVariables([
   Env.DatabaseUrl,
   Env.InternalApiRootUrl,
   Env.SqsWorkerQueueUrl,
+  Env.RollbarApiKey,
 ]);
 
 const port = getPort(8080);
 
+initRollbarLogger();
+
 initDatabase({ runMigrations: true }).then(() => {
   createWorker().listen(port, () => {
-    console.log(`gradejs worker started, listening on port ${port}`);
+    logger.info(`gradejs worker started, listening on port ${port}`);
   });
 });
