@@ -1,0 +1,30 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.progressBar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.progressBarWrapper {
+  width: 100%;
+  margin-right: 5px;
+  background: $blue-secondary;
+  border-radius: 10px;
+}
+
+.progressBarPercentage {
+  background: $blue-accent;
+  height: 6px;
+  border-radius: inherit;
+}
+
+.progressBarValue {
+  min-width: 36px;
+  flex-shrink: 0;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: $blue-accent;
+}

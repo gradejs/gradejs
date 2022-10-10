@@ -77,6 +77,10 @@
 .medium {
   padding: 7px 11px;
 
+  @include xxl {
+    padding: 11px 15px;
+  }
+
   @include mobile-and-tablet {
     padding: 4px 11px;
   }
@@ -133,6 +137,11 @@
 .smallFont {
   font-size: 14px;
   line-height: 20px;
+}
+
+.sort {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .text {

@@ -19,6 +19,7 @@ import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
 import TreeMap from '../TreeMap/TreeMap';
+// import { usedOnSitesData } from 'mocks/SitesListMocks';
 
 type Props = {
   opened?: boolean;
@@ -69,7 +70,13 @@ export default function PackagePreview({
           </div>
           {/*
           <button type='button' className={styles.arrowWrapper} onClick={toggleOpen}>
-            <Icon kind='arrowDown' width={14} height={8} color='#8E8AA0' className={styles.arrow} />
+            <Icon
+              kind='chevronDown'
+              width={14}
+              height={8}
+              color='#8E8AA0'
+              className={styles.arrow}
+            />
           </button>
           */}
         </div>
@@ -256,17 +263,16 @@ export default function PackagePreview({
               </div>
             )}
 
-            {/*
-              <div className={styles.stat}>
-                <div className={styles.statHeader}>Used on</div>
+            {/*<div className={styles.stat}>*/}
+            {/*  <div className={styles.statHeader}>Used on</div>*/}
 
-                {detailsLoading ? (
-                  <SitesListSkeleton className={styles.usedOnList} />
-                ) : (
-                  <SitesList sites={sites} className={styles.usedOnList} />
-                )}
-              </div>
-              */}
+            {/*  {detailsLoading ? (*/}
+            {/*    <SitesListSkeleton className={styles.usedOnList} />*/}
+            {/*  ) : (*/}
+            {/*    <SitesList sites={usedOnSitesData} className={styles.usedOnList} />*/}
+            {/*  )}*/}
+            {/*</div>*/}
+
             <div className={styles.actions}>
               <div className={styles.links}>
                 {detailsLoading ? (
@@ -305,8 +311,8 @@ export default function PackagePreview({
                     >
                       <Icon
                         kind='npm'
-                        width={32}
-                        height={32}
+                        width={30}
+                        height={13}
                         color='#212121'
                         className={styles.linkIcon}
                       />

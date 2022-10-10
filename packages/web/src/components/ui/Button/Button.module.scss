@@ -107,12 +107,16 @@
   padding: 10px 18px;
 }
 
+.medium {
+  padding: 9px 20px;
+}
+
 .secondary {
   background-color: $gray-surface;
   color: $black;
   transition: background-color $transition-duration $transition-timing-function;
 
-  &:hover {
+  &:not(:disabled):hover {
     background-color: $gray-border;
   }
 }
