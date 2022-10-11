@@ -85,6 +85,7 @@ app.get('*', (req, res) => {
     });
   } catch (e) {
     logger.error(e);
+    res.status(500).send();
   }
 });
 
