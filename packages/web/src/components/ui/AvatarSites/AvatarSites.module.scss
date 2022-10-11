@@ -1,0 +1,30 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.avatarsWrapper {
+  flex: 1;
+  align-self: flex-start;
+  display: flex;
+  align-items: flex-end;
+}
+
+.avatarSites {
+  display: flex;
+  align-items: center;
+}
+
+.counter {
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 30px;
+  margin-left: 14px;
+
+  @include xxl {
+    font-size: 19px;
+  }
+
+  @include mobile-and-tablet {
+    font-size: 16px;
+    line-height: 1.62;
+  }
+}

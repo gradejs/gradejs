@@ -1,20 +1,15 @@
-/* eslint-disable react/button-has-type */
 import React from 'react';
-import clsx from 'clsx';
-import { UseFormRegister } from 'react-hook-form';
 import styles from './Radio.module.scss';
+import clsx from 'clsx';
 
 export type Props = {
   className?: string;
   name: string;
   value: string;
   children: React.ReactNode;
-  register?: UseFormRegister<any>;
   disabled?: boolean;
-  appearance: 'default' | 'justify';
-  labelPosition?: 'left' | 'right';
-  // eslint-disable-next-line no-unused-vars
-  onSelect?: (_value: string) => void;
+  checked?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function Radio({
@@ -22,29 +17,22 @@ export default function Radio({
   name,
   value,
   disabled,
-  appearance,
-  register,
-  labelPosition,
-  onSelect,
+  checked,
+  onChange,
   children,
 }: Props) {
   return (
-    <label className={clsx(styles.container, styles[appearance])}>
-      {(!labelPosition || labelPosition === 'left') && (
-        <span className={clsx(styles.labelContent, styles.labelLeft)}>{children}</span>
-      )}
+    <label className={clsx(styles.container, className)}>
       <input
         type='radio'
-        {...(name && register ? register(name) : {})}
-        onSelect={() => onSelect?.(value)}
+        onChange={onChange}
         name={name}
         value={value}
-        className={clsx(styles.control, styles[appearance], className)}
+        className={clsx(styles.input, className)}
         disabled={disabled}
+        checked={checked}
       />
-      {labelPosition && labelPosition === 'right' && (
-        <span className={clsx(styles.labelContent, styles.labelRight)}>{children}</span>
-      )}
+      <span className={styles.text}>{children}</span>
     </label>
   );
 }

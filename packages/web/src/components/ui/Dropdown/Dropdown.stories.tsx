@@ -1,17 +1,13 @@
 import React from 'react';
-import Dropdown, { Props } from './Dropdown';
-import { Button } from '../index';
+import Dropdown from './Dropdown';
 
 export default {
   title: 'Interface / Dropdown',
   component: Dropdown,
-  parameters: {
-    layout: 'centered',
-  },
 };
 
-export const Default = (args: Props) => (
-  <Dropdown {...args}>
+export const Default = () => (
+  <Dropdown>
     <div>some content</div>
     <div>some content</div>
     <div>some content</div>
@@ -19,6 +15,4 @@ export const Default = (args: Props) => (
 );
 Default.args = {
   children: 'Dropdown',
-  TriggerComponent: Button,
-  triggerChildren: 'Filter',
 };

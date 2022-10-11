@@ -140,3 +140,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.active {
+  background: $black;
+  color: $white;
+  border-color: $black;
+}

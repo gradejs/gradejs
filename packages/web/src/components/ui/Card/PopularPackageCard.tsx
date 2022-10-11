@@ -1,9 +1,6 @@
 import React from 'react';
-import styles from './Card.module.scss';
 import Card from './Card';
-import AvatarGroup from '../AvatarGroup/AvatarGroup';
-import Avatar from '../Avatar/Avatar';
-import { formatNumber } from '../../../utils/helpers';
+import AvatarSites from '../AvatarSites/AvatarSites';
 
 export type PopularPackageCardProps = {
   packageName: string;
@@ -19,17 +16,7 @@ const PopularPackageCard = ({
   totalUsageCount,
 }: PopularPackageCardProps) => (
   <Card title={packageName} description={packageDescription}>
-    <div className={styles.avatarsWrapper}>
-      <div className={styles.avatarSites}>
-        <AvatarGroup>
-          {hostsFaviconList.map((icon) => (
-            <Avatar src={icon} />
-          ))}
-        </AvatarGroup>
-
-        <div className={styles.counter}>+ {formatNumber(totalUsageCount)} sites use</div>
-      </div>
-    </div>
+    <AvatarSites hostsFaviconList={hostsFaviconList} totalUsageCount={totalUsageCount} />
   </Card>
 );
 

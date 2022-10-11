@@ -13,6 +13,7 @@ import search from '../../../assets/icons/sprite/search.svg';
 import duplicate from '../../../assets/icons/sprite/duplicate.svg';
 import outdated from '../../../assets/icons/sprite/outdated.svg';
 import cross from '../../../assets/icons/sprite/cross.svg';
+import crossOpaque from '../../../assets/icons/sprite/cross-opaque.svg';
 import script from '../../../assets/icons/sprite/script.svg';
 import license from '../../../assets/icons/sprite/license.svg';
 import bugOutlined from '../../../assets/icons/sprite/bug-outlined.svg';
@@ -42,6 +43,7 @@ const icons = {
   outdated,
   arrowDown,
   cross,
+  crossOpaque,
   script,
   license,
   bugOutlined,

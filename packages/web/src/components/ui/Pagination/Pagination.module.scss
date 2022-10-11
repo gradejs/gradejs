@@ -1,0 +1,60 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.pagination {
+  @include mobile-and-tablet {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.paginationButton {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 38px;
+  background: $gray-surface;
+  font-weight: 500;
+  margin: 0 4px;
+  padding: 0 18px;
+  border: none;
+  font-size: 16px;
+  line-height: 26px;
+
+  @include mobile-and-tablet {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+
+  @include mobile-and-tablet {
+    min-width: 40px;
+    height: 40px;
+  }
+}
+
+.paginationButtonActive {
+  background: $black;
+  color: $white;
+}
+
+.paginationItem {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  font-weight: 500;
+  margin: 0 4px;
+  border: none;
+}

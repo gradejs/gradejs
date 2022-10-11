@@ -408,6 +408,16 @@
   color: $gray-text;
 }
 
+.authorName {
+  @include mobile-and-tablet {
+    display: none;
+  }
+}
+
 .authorImage {
   margin-left: 16px;
+}
+
+.avatarSites {
+  margin-top: 16px;
 }

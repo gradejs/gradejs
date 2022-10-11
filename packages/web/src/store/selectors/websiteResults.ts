@@ -24,6 +24,9 @@ export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
   duplicate?: boolean;
   version?: string;
   containingScripts?: string[];
+  // TODO: new optional parameters
+  hostsFaviconList?: string[];
+  totalUsageCount?: number;
   vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
 };
 

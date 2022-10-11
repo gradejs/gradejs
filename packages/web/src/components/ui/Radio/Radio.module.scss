@@ -1,45 +1,60 @@
-.control {
-  appearance: none;
-  margin: 0;
-
-  font: inherit;
-  color: currentColor;
-  width: 10px;
-  height: 10px;
-  background-color: #e6e6e6;
-  border-radius: 50%;
-
-  display: grid;
-}
-
-.control::before {
-  content: '';
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  transform: scale(0);
-  transition: 200ms transform ease-in-out;
-  box-shadow: inset 1em 1em #666666;
-}
-
-.control:checked::before {
-  transform: scale(1);
-}
-
-.labelContent {
-  margin: 0 5px;
-}
-.labelLeft {
-  margin-left: 0;
-}
-.labelRight {
-  margin-right: 0;
-}
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
 
 .container {
-  display: flex;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
   align-items: center;
+  padding-left: 36px;
+  line-height: 20px;
 }
-.container.justify {
-  justify-content: space-between;
+
+.input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+}
+
+.text {
+  display: inline-block;
+  padding-top: 2px;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+  }
+
+  &::before {
+    background: rgba($gray-border, 0.5);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+  }
+
+  &::after {
+    top: 8px;
+    left: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $black;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.input:checked ~ .text {
+  font-weight: 500;
+
+  &::after {
+    opacity: 1;
+    visibility: visible;
+  }
 }
