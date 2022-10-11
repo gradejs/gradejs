@@ -12,19 +12,10 @@
   align-items: center;
   justify-content: center;
   user-select: none;
-  margin-left: -7px;
 
   @include xxl {
     width: 44px;
     height: 44px;
-  }
-
-  &:not(:first-child) {
-    margin-left: -7px;
-  }
-
-  &:last-child {
-    margin-left: 0;
   }
 
   @include mobile-and-tablet {

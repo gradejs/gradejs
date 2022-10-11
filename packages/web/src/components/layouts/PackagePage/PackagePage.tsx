@@ -6,7 +6,6 @@ import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import Container from 'components/ui/Container/Container';
 import { SitesListSkeleton } from '../../ui/SitesList/SitesListSkeleton';
 import SitesList from '../../ui/SitesList/SitesList';
-import { usedOnSitesData } from '../../../mocks/SitesListMocks';
 import { Icon } from '../../ui/Icon/Icon';
 import ChipGroup from '../../ui/ChipGroup/ChipGroup';
 import Chip from 'components/ui/Chip/Chip';
@@ -23,13 +22,16 @@ import Footer from '../../ui/Footer/Footer';
 import PackageVersion from '../../ui/PackageVersion/PackageVersion';
 import Skeleton from '../../ui/Skeleton/Skeleton';
 import { repeat } from 'utils/helpers';
-import { entriesData, modulesData, vulnerabilitiesData } from '../../../mocks/PackageVersionMocks';
+import { loadedPackagePageData } from 'mocks/PackagePageMocks';
+import AvatarGroup from '../../ui/AvatarGroup/AvatarGroup';
+import Avatar from '../../ui/Avatar/Avatar';
 
 type Props = {
   pageLoading?: boolean;
+  packageName: string;
 };
 
-const PackagePage = ({ pageLoading = false }: Props) => {
+const PackagePage = ({ packageName, pageLoading = false }: Props) => {
   const [loading, setLoading] = useState(pageLoading);
   const [sortDirection, setSortDirection] = useState('asc');
   const [sortField, setSortField] = useState('versions');
@@ -45,55 +47,23 @@ const PackagePage = ({ pageLoading = false }: Props) => {
 
   const sorts = ['weight', 'popularity', 'versions'];
 
-  const loadedData = {
-    currentVersion: '20.1.0',
-    lastUpdate: '2 month ago',
-    desc: 'Copies non-react specific statics from a child component to a parent component. Similar to Object.assign, but with React static keywords blacklisted from being overridden.',
-    fullDesc:
-      'Copies non-react specific statics from a child component to a parent component. Similar to Object.assign, but with React static keywords blacklisted from being overridden. This package uses Object.defineProperty which has a broken implementation in IE8. In order to use this package in IE8, you will need a polyfill that fixes this method.',
-    usedOnList: usedOnSitesData,
-    delta: 4,
-    dependencies: ['art', 'create-react-class', 'scheduler', 'loose-envify'],
-    dependents: [
-      'ant-design-draggable-modal-4',
-      'aesthetic-react',
-      'samanage-redux-form',
-      'hoist-non-react-statics-es',
-      'react-reformed',
-      'yo-router',
-      '@canner/page-wrapper',
-      'react-falcor',
-    ],
-    keywords: [
-      '#moment',
-      '#date',
-      '#format',
-      '#time',
-      '#validate',
-      '#parse',
-      '#ender',
-      '#i18n',
-      '#l10n',
-    ],
-    modules: modulesData,
-    entries: entriesData,
-    vulnerabilities: vulnerabilitiesData,
-  };
-
   const {
     delta,
     currentVersion,
     lastUpdate,
+    shortDesc,
     desc,
     fullDesc,
     usedOnList,
-    modules,
     vulnerabilities,
     dependencies,
     dependents,
-    entries,
     keywords,
-  } = loadedData;
+    versions,
+    homepageUrl,
+    repositoryUrl,
+    maintainers,
+  } = loadedPackagePageData;
 
   const requestSort = (sortName: string) => {
     let direction = 'asc';
@@ -166,7 +136,7 @@ const PackagePage = ({ pageLoading = false }: Props) => {
         <Container>
           <div className={styles.packagePageGrid}>
             <div className={styles.content}>
-              <h1>hoist-non-react-statics</h1>
+              <h1>{packageName}</h1>
 
               <div className={styles.packageMeta}>
                 {loading ? (
@@ -284,34 +254,22 @@ const PackagePage = ({ pageLoading = false }: Props) => {
                 </div>
 
                 <div className={styles.packages}>
-                  {loading ? (
-                    repeat(5, <Skeleton width='100%' height={100} variant='rounded' />)
-                  ) : (
-                    <>
-                      <PackageVersion
-                        version='18.2.0'
-                        updateDate='2 month ago'
-                        uses={23987}
-                        size={160}
-                        sizeUnit='B'
-                        sizeUnitShorthand='Byte'
-                        modulesCount={50}
-                        modules={modules}
-                        entries={entries}
-                      />
-                      <PackageVersion
-                        version='18.2.0'
-                        updateDate='2 month ago'
-                        uses={23987}
-                        size={160}
-                        sizeUnit='B'
-                        sizeUnitShorthand='Byte'
-                        modulesCount={50}
-                        modules={modules}
-                        entries={entries}
-                      />
-                    </>
-                  )}
+                  {loading
+                    ? repeat(5, <Skeleton width='100%' height={100} variant='rounded' />)
+                    : versions.map((version) => (
+                        <PackageVersion
+                          key={version.version}
+                          version={version.version}
+                          updateDate={version.updateDate}
+                          uses={version.uses}
+                          size={version.size}
+                          sizeUnit={version.sizeUnit}
+                          sizeUnitShorthand={version.sizeUnitShorthand}
+                          modulesCount={version.modulesCount}
+                          modules={version.modules}
+                          entries={version.entries}
+                        />
+                      ))}
                 </div>
 
                 {!loading && <button className={styles.link}>Show +3 more</button>}
@@ -382,7 +340,7 @@ const PackagePage = ({ pageLoading = false }: Props) => {
                     ) : (
                       <>
                         <a
-                          href='https://www.npmjs.com/package/hoist-non-react-statics'
+                          href={`https://www.npmjs.com/package/${packageName}`}
                           className={styles.externalLink}
                           target='_blank'
                           rel='noreferrer'
@@ -396,29 +354,33 @@ const PackagePage = ({ pageLoading = false }: Props) => {
                           />
                         </a>
 
-                        <a
-                          href='https://github.com/mridgway/hoist-non-react-statics'
-                          className={styles.externalLink}
-                          target='_blank'
-                          rel='noreferrer'
-                        >
-                          <Icon
-                            kind='repository'
-                            color='#8E8AA0'
-                            className={styles.externalLinkIcon}
-                          />
-                          Repository
-                        </a>
+                        {repositoryUrl && (
+                          <a
+                            href={repositoryUrl}
+                            className={styles.externalLink}
+                            target='_blank'
+                            rel='noreferrer'
+                          >
+                            <Icon
+                              kind='repository'
+                              color='#8E8AA0'
+                              className={styles.externalLinkIcon}
+                            />
+                            Repository
+                          </a>
+                        )}
 
-                        <a
-                          href='https://github.com/mridgway/hoist-non-react-statics'
-                          className={styles.externalLink}
-                          target='_blank'
-                          rel='noreferrer'
-                        >
-                          <Icon kind='link' color='#8E8AA0' className={styles.externalLinkIcon} />
-                          Homepage
-                        </a>
+                        {homepageUrl && (
+                          <a
+                            href={homepageUrl}
+                            className={styles.externalLink}
+                            target='_blank'
+                            rel='noreferrer'
+                          >
+                            <Icon kind='link' color='#8E8AA0' className={styles.externalLinkIcon} />
+                            Homepage
+                          </a>
+                        )}
                       </>
                     )}
                   </div>
@@ -437,10 +399,7 @@ const PackagePage = ({ pageLoading = false }: Props) => {
                   ) : (
                     <>
                       <div className={styles.sidebarItemTitle}>About</div>
-                      <p className={styles.sidebarItemText}>
-                        A JavaScript date library for parsing, validating, manipulating, and
-                        formatting dates
-                      </p>
+                      <p className={styles.sidebarItemText}>{shortDesc}</p>
                       <button className={styles.link}>Go down to full description</button>
                     </>
                   )}
@@ -470,20 +429,39 @@ const PackagePage = ({ pageLoading = false }: Props) => {
                       )
                     ) : (
                       <>
-                        <div className={styles.stat}>
-                          <div className={styles.statImagePlaceholder}>
-                            <img
-                              className={styles.statImage}
-                              src='https://via.placeholder.com/52'
-                              alt=''
-                            />
-                          </div>
+                        {(maintainers?.length ?? 0) > 0 &&
+                          (maintainers?.length === 1 ? (
+                            <div className={styles.stat}>
+                              <div className={styles.statImagePlaceholder}>
+                                <img
+                                  className={styles.statImage}
+                                  src={maintainers[0].avatar}
+                                  alt={maintainers[0].name}
+                                />
+                              </div>
 
-                          <div className={styles.statContent}>
-                            <span className={styles.statTitle}>Author</span>
-                            <span className={styles.statValue}>jdalton</span>
-                          </div>
-                        </div>
+                              <div className={styles.statContent}>
+                                <span className={styles.statTitle}>Author</span>
+                                <span className={styles.statValue}>{maintainers[0].name}</span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className={styles.sidebarItemSubtitle}>Collaborators</div>
+                              <div className={styles.sidebarCollaboratorsGroup}>
+                                <AvatarGroup>
+                                  {maintainers?.map((author) => (
+                                    <Avatar
+                                      alt={author.name}
+                                      altAsTooltip={true}
+                                      src={author.avatar}
+                                    />
+                                  ))}
+                                </AvatarGroup>
+                              </div>
+                            </div>
+                          ))}
+
                         <div className={styles.stat}>
                           <div className={styles.statImagePlaceholder}>
                             <Icon kind='license' width={20} height={20} />
@@ -494,6 +472,7 @@ const PackagePage = ({ pageLoading = false }: Props) => {
                             <span className={styles.statValue}>MIT License</span>
                           </div>
                         </div>
+
                         <div className={styles.stat}>
                           <div className={styles.statImagePlaceholder}>
                             <Icon kind='rating' />

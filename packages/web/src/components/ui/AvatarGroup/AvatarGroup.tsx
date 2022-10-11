@@ -20,10 +20,14 @@ const AvatarGroup = ({ max = 4, children: childrenProp }: Props) => {
 
   return (
     <div className={styles.avatars}>
-      {extraAvatars ? <Avatar variant='additionalAvatars'>+{extraAvatars}</Avatar> : null}
-      {children
-        .slice(0, maxAvatars)
-        .map((child) => React.cloneElement(child as React.ReactElement))}
+      {extraAvatars ? (
+        <div className={styles.avatarItem}>
+          <Avatar variant='additionalAvatars'>+{extraAvatars}</Avatar>
+        </div>
+      ) : null}
+      {children.slice(0, maxAvatars).map((child) => (
+        <div className={styles.avatarItem}>{React.cloneElement(child as React.ReactElement)}</div>
+      ))}
     </div>
   );
 };

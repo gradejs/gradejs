@@ -13,8 +13,12 @@ export default {
 const Template: ComponentStory<typeof PackagePage> = (args) => <PackagePage {...args} />;
 
 export const Default = Template.bind({});
+Default.args = {
+  packageName: 'hoist-non-react-statics',
+};
 
 export const Loading = Template.bind({});
 Loading.args = {
+  packageName: 'hoist-non-react-statics',
   pageLoading: true,
 };

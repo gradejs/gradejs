@@ -171,6 +171,11 @@ h2 {
   }
 }
 
+.sidebarItemSubtitle {
+  color: $gray-text;
+  margin-bottom: 10px;
+}
+
 .sidebarItemTitleDesktop {
   display: none;
 
@@ -480,4 +485,10 @@ h2 {
   @include mobile-and-tablet {
     font-size: 16px;
   }
+}
+
+.sidebarCollaboratorsGroup {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }

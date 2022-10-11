@@ -79,10 +79,10 @@ const PackageVersion = ({
             )}
           >
             <span className={styles.packageTitle}>
-              {formatNumber(size)} <span className={styles.mobileHidden}>{sizeUnit}</span>
+              {formatNumber(size)} <span className={styles.mobileHidden}>{sizeUnitShorthand}</span>
             </span>
             <span className={styles.packageSubtitle}>
-              <span className={styles.mobileHidden}>Weight,</span> {sizeUnitShorthand}
+              <span className={styles.mobileHidden}>Weight,</span> {sizeUnit}
             </span>
           </div>
           <div
