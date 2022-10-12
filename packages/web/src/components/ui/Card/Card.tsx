@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './Card.module.scss';
 import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 
 export type CardCommonProps = {
   id?: string;
@@ -13,10 +14,22 @@ export type CardCommonProps = {
 };
 
 const Card = ({ to, title, variant, icon, description, children }: CardCommonProps) => {
-  const Tag = to ? 'a' : 'div';
+  const CardRoot: React.FC = useMemo(() => {
+    const rootClassName = clsx(styles.card, variant && styles[variant]);
+
+    if (to) {
+      return ({ children: innerChildren }) => (
+        <Link to={to} className={rootClassName}>
+          {innerChildren}
+        </Link>
+      );
+    }
+
+    return ({ children: innerChildren }) => <div className={rootClassName}>{innerChildren}</div>;
+  }, [to, variant]);
 
   return (
-    <Tag href={to ?? undefined} className={clsx(styles.card, variant && styles[variant])}>
+    <CardRoot>
       <div className={styles.cardTop}>
         <div className={styles.header}>
           {icon && (
@@ -34,7 +47,7 @@ const Card = ({ to, title, variant, icon, description, children }: CardCommonPro
       </div>
 
       {children}
-    </Tag>
+    </CardRoot>
   );
 };
 
