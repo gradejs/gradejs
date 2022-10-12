@@ -1,69 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './PackagePage.module.scss';
 import modalStyles from '../../ui/Modal/Modal.module.scss';
 import clsx from 'clsx';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import Container from 'components/ui/Container/Container';
-import { SitesListSkeleton } from '../../ui/SitesList/SitesListSkeleton';
-import SitesList from '../../ui/SitesList/SitesList';
 import { Icon } from '../../ui/Icon/Icon';
 import ChipGroup from '../../ui/ChipGroup/ChipGroup';
 import Chip from 'components/ui/Chip/Chip';
 import { Button } from 'components/ui';
 import Modal from '../../ui/Modal/Modal';
 import SidebarCategorySort from 'components/ui/SidebarCategory/SidebarCategorySort';
-import CardGroups from '../../ui/CardGroups/CardGroups';
-import CardGroup from '../../ui/CardGroup/CardGroup';
-import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
-import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
-import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
-import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
 import Footer from '../../ui/Footer/Footer';
 import PackageVersion from '../../ui/PackageVersion/PackageVersion';
 import Skeleton from '../../ui/Skeleton/Skeleton';
-import { repeat } from 'utils/helpers';
-import { loadedPackagePageData } from 'mocks/PackagePageMocks';
+import { plural, repeat } from 'utils/helpers';
 import AvatarGroup from '../../ui/AvatarGroup/AvatarGroup';
 import Avatar from '../../ui/Avatar/Avatar';
+import { GetPackageInfoOutput } from '../../../services/apiClient';
+import { SitesListSkeleton } from '../../ui/SitesList/SitesListSkeleton';
+import SitesList from '../../ui/SitesList/SitesList';
+import semver from 'semver';
+const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
 
 type Props = {
-  pageLoading?: boolean;
-  packageName: string;
+  loading?: boolean;
+  packageInfo?: GetPackageInfoOutput;
 };
 
-const PackagePage = ({ packageName, pageLoading = false }: Props) => {
-  const [loading, setLoading] = useState(pageLoading);
+const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [sortDirection, setSortDirection] = useState('asc');
   const [sortField, setSortField] = useState('versions');
   const [fullDescVisible, setFullDescVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
 
-  // FIXME: just for demo purpose
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 5000);
-  }, []);
-
   const sorts = ['weight', 'popularity', 'versions'];
 
   const {
-    delta,
-    currentVersion,
-    lastUpdate,
-    shortDesc,
-    desc,
-    fullDesc,
-    usedOnList,
+    name: packageName,
     vulnerabilities,
-    dependencies,
-    dependents,
+    fullDescription,
+    description,
+    latestVersion,
+    maintainers,
     keywords,
-    versions,
+    versionSpecificValues,
     homepageUrl,
     repositoryUrl,
-    maintainers,
-  } = loadedPackagePageData;
+    license,
+    popularity,
+    usage,
+  } = packageInfo ?? {};
 
   const requestSort = (sortName: string) => {
     let direction = 'asc';
@@ -79,6 +70,66 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
   const closeModalHandler = () => {
     setModalSortOpen(false);
   };
+
+  const deps = Object.values(versionSpecificValues?.[latestVersion!]?.dependencies ?? {});
+
+  const formattedVulnerabilities = useMemo(
+    () =>
+      vulnerabilities?.map((v) => ({
+        id: v.id,
+        severity: (v.osvData?.database_specific as any | undefined)?.severity, // TODO: proper typing
+        linkPath: `https://github.com/advisories/${v.osvId}`,
+        linkText: v.osvId,
+        title: v.osvData?.summary,
+        fixedAfter: v.packageVersionRange, // TODO: fair last version
+      })),
+    [vulnerabilities]
+  );
+
+  const formattedSitesUsage = useMemo(
+    () =>
+      (usage ?? []).map((item) => ({
+        id: item.hostname.hostname,
+        image: '', // TODO,
+        name: item.hostname.hostname,
+        packageCount: item.sourceScan?.scanResult?.identifiedPackages.length,
+      })),
+    [usage]
+  );
+
+  const formattedVersions = useMemo(
+    () =>
+      Object.entries(versionSpecificValues ?? {})
+        .map(([version, data]) => ({
+          version,
+          updateDate: data.updateDate,
+          uses: popularity?.byVersion.find((item) => item.package_version === version)?.count,
+          size: data.unpackedSize,
+          modulesCount: data.registryModulesCount, // TODO: detected modules count?
+          modules: [], // TODO
+          entries: [], // TODO
+        }))
+        .sort((a, b) => {
+          let sort: number;
+          switch (sortField) {
+            case 'weight':
+              sort = (b.size ?? 0) - (a.size ?? 0);
+              break;
+            case 'popularity':
+              sort = (b.uses ?? 0) - (a.uses ?? 0);
+              break;
+            case 'versions':
+            default:
+              sort = semver.compare(b.version, a.version);
+          }
+          return sortDirection === 'desc' ? -1 * sort : sort;
+        }),
+    [versionSpecificValues, popularity, sortDirection, sortDirection]
+  );
+
+  const updateDate =
+    versionSpecificValues?.[latestVersion!]?.updateDate &&
+    dateTimeFormatter.format(new Date(versionSpecificValues?.[latestVersion!]?.updateDate ?? ''));
 
   return (
     <>
@@ -97,31 +148,8 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   onClick={() => requestSort(name)}
                 >
                   {name[0].toUpperCase() + name.slice(1)}
-
-                  {/* TODO: not sure how to handle it better right now by using <Icon> component */}
                   {sortField === name && (
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M11 14L7 18M7 18L3 14M7 18L7 8'
-                        stroke={sortDirection === 'asc' ? '#212121' : '#DDDCE3'}
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M21 10L17 6M17 6L13 10M17 6L17 16'
-                        stroke={sortDirection === 'desc' ? '#212121' : '#DDDCE3'}
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
+                    <Icon kind={sortDirection === 'desc' ? 'sortDesc' : 'sortAsc'} />
                   )}
                 </button>
               ))}
@@ -143,8 +171,8 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   <Skeleton width={189} />
                 ) : (
                   <>
-                    <span className={styles.packageMetaItem}>{currentVersion}</span>
-                    <span className={styles.packageMetaItem}>{lastUpdate}</span>
+                    <span className={styles.packageMetaItem}>{latestVersion}</span>
+                    <span className={styles.packageMetaItem}>{updateDate}</span>
                   </>
                 )}
               </div>
@@ -169,7 +197,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   ) : (
                     <>
                       <div className={styles.packageDescriptionCol}>
-                        {fullDescVisible ? fullDesc : desc}
+                        {fullDescVisible ? fullDescription : description}
                       </div>
                     </>
                   )}
@@ -188,7 +216,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                 {loading ? (
                   <SitesListSkeleton className={styles.usedOnList} />
                 ) : (
-                  <SitesList sites={usedOnList} className={styles.usedOnList} />
+                  <SitesList sites={formattedSitesUsage} className={styles.usedOnList} />
                 )}
               </section>
 
@@ -256,15 +284,15 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                 <div className={styles.packages}>
                   {loading
                     ? repeat(5, <Skeleton width='100%' height={100} variant='rounded' />)
-                    : versions.map((version) => (
+                    : formattedVersions.map((version) => (
                         <PackageVersion
                           key={version.version}
                           version={version.version}
-                          updateDate={version.updateDate}
+                          updateDate={
+                            version.updateDate && dateTimeFormatter.format(version.updateDate)
+                          }
                           uses={version.uses}
                           size={version.size}
-                          sizeUnit={version.sizeUnit}
-                          sizeUnitShorthand={version.sizeUnitShorthand}
                           modulesCount={version.modulesCount}
                           modules={version.modules}
                           entries={version.entries}
@@ -272,7 +300,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                       ))}
                 </div>
 
-                {!loading && <button className={styles.link}>Show +3 more</button>}
+                {/*{!loading && <button className={styles.link}>Show +3 more</button>}*/}
               </section>
 
               {/* TODO: there are no skeletons for vulnerabilities in design,
@@ -282,33 +310,35 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   <h2>Vulnerabilities</h2>
 
                   <div className={styles.vulnerabilities}>
-                    {vulnerabilities.map(({ id, label, title, text, linkText, linkPath }) => (
-                      <div key={id} className={styles.vulnerability}>
-                        <div className={styles.vulnerabilityTop}>
-                          <Chip
-                            variant='vulnerabilities'
-                            size='badge'
-                            fontWeight='semiBold'
-                            icon={
-                              <Icon kind='vulnerability' width={24} height={24} color='white' />
-                            }
-                          >
-                            {label}
-                          </Chip>
+                    {formattedVulnerabilities?.map(
+                      ({ id, severity, linkPath, linkText, title, fixedAfter }) => (
+                        <div key={id} className={styles.vulnerability}>
+                          <div className={styles.vulnerabilityTop}>
+                            <Chip
+                              variant='vulnerabilities'
+                              size='badge'
+                              fontWeight='semiBold'
+                              icon={
+                                <Icon kind='vulnerability' width={24} height={24} color='white' />
+                              }
+                            >
+                              {severity}
+                            </Chip>
 
-                          <a
-                            href={linkPath}
-                            target='_blank'
-                            rel='noreferrer'
-                            className={styles.vulnerabilityLink}
-                          >
-                            {linkText}
-                          </a>
+                            <a
+                              href={linkPath}
+                              target='_blank'
+                              rel='noreferrer'
+                              className={styles.vulnerabilityLink}
+                            >
+                              {linkText}
+                            </a>
+                          </div>
+                          <div className={styles.vulnerabilityTitle}>{title}</div>
+                          <div className={styles.vulnerabilityText}>{fixedAfter}</div>
                         </div>
-                        <div className={styles.vulnerabilityTitle}>{title}</div>
-                        <div className={styles.vulnerabilityText}>{text}</div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 </section>
               )}
@@ -399,7 +429,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   ) : (
                     <>
                       <div className={styles.sidebarItemTitle}>About</div>
-                      <p className={styles.sidebarItemText}>{shortDesc}</p>
+                      <p className={styles.sidebarItemText}>{description}</p>
                       <button className={styles.link}>Go down to full description</button>
                     </>
                   )}
@@ -468,41 +498,43 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                           </div>
 
                           <div className={styles.statContent}>
-                            <span className={styles.statTitle}>Freely distributable</span>
-                            <span className={styles.statValue}>MIT License</span>
+                            <span className={styles.statTitle}>License</span>
+                            <span className={styles.statValue}>{license}</span>
                           </div>
                         </div>
 
-                        <div className={styles.stat}>
-                          <div className={styles.statImagePlaceholder}>
-                            <Icon kind='rating' />
-                          </div>
+                        {/*<div className={styles.stat}>*/}
+                        {/*  <div className={styles.statImagePlaceholder}>*/}
+                        {/*    <Icon kind='rating' />*/}
+                        {/*  </div>*/}
 
-                          <div className={styles.statContent}>
-                            <span className={styles.statTitle}>Rating</span>
-                            <span className={styles.statValue}>
-                              457{' '}
-                              <span
-                                className={clsx(
-                                  delta > 0 ? styles.statRatingGreen : styles.statRatingRed
-                                )}
-                              >
-                                {delta > 0 ? `+${delta}` : delta}
-                              </span>
-                            </span>
-                          </div>
-                        </div>
+                        {/*  <div className={styles.statContent}>*/}
+                        {/*    <span className={styles.statTitle}>Rating</span>*/}
+                        {/*    <span className={styles.statValue}>*/}
+                        {/*      457{' '}*/}
+                        {/*      <span*/}
+                        {/*        className={clsx(*/}
+                        {/*          delta > 0 ? styles.statRatingGreen : styles.statRatingRed*/}
+                        {/*        )}*/}
+                        {/*      >*/}
+                        {/*        {delta > 0 ? `+${delta}` : delta}*/}
+                        {/*      </span>*/}
+                        {/*    </span>*/}
+                        {/*  </div>*/}
+                        {/*</div>*/}
                       </>
                     )}
                   </div>
                 </div>
 
                 <div className={styles.sidebarItem}>
-                  <div className={styles.sidebarItemTitle}>{!loading && 4} Dependency</div>
+                  <div className={styles.sidebarItemTitle}>
+                    {!loading && deps.length} {plural(deps.length, 'Dependency', 'Dependencies')}
+                  </div>
                   <ChipGroup>
                     {loading
                       ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
-                      : dependencies.map((dependency) => (
+                      : deps.map((dependency) => (
                           <Chip key={dependency} font='monospace' size='medium' fontSize='small'>
                             {dependency}
                           </Chip>
@@ -510,25 +542,25 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   </ChipGroup>
                 </div>
 
-                <div className={styles.sidebarItem}>
-                  <div className={styles.sidebarItemTitle}>198 Dependents</div>
+                {/*<div className={styles.sidebarItem}>*/}
+                {/*  <div className={styles.sidebarItemTitle}>198 Dependents</div>*/}
 
-                  <ChipGroup>
-                    {loading
-                      ? repeat(6, <Skeleton variant='rounded' width={108} height={36} />)
-                      : dependents.map((dependency) => (
-                          <Chip key={dependency} font='monospace' size='medium' fontSize='small'>
-                            {dependency}
-                          </Chip>
-                        ))}
-                  </ChipGroup>
+                {/*  <ChipGroup>*/}
+                {/*    {loading*/}
+                {/*      ? repeat(6, <Skeleton variant='rounded' width={108} height={36} />)*/}
+                {/*      : dependents.map((dependency) => (*/}
+                {/*          <Chip key={dependency} font='monospace' size='medium' fontSize='small'>*/}
+                {/*            {dependency}*/}
+                {/*          </Chip>*/}
+                {/*        ))}*/}
+                {/*  </ChipGroup>*/}
 
-                  {!loading && (
-                    <button className={clsx(styles.link, styles.sidebarItemAction)}>
-                      View all
-                    </button>
-                  )}
-                </div>
+                {/*  {!loading && (*/}
+                {/*    <button className={clsx(styles.link, styles.sidebarItemAction)}>*/}
+                {/*      View all*/}
+                {/*    </button>*/}
+                {/*  )}*/}
+                {/*</div>*/}
 
                 <div className={styles.sidebarItem}>
                   <div className={styles.sidebarItemTitle}>Keywords</div>
@@ -536,7 +568,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   <ChipGroup>
                     {loading
                       ? repeat(9, <Skeleton variant='rounded' width={89} height={36} />)
-                      : keywords.map((keyword) => (
+                      : keywords?.map((keyword) => (
                           <Chip key={keyword} size='medium'>
                             {keyword}
                           </Chip>
@@ -547,23 +579,23 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
             </aside>
           </div>
 
-          <CardGroups>
-            <CardGroup title='Popular search queries'>
-              {loading ? (
-                <CardListSkeleton />
-              ) : (
-                <PackagesBySourceCardList cards={packagesBySourceListData} />
-              )}
-            </CardGroup>
+          {/*<CardGroups>*/}
+          {/*  <CardGroup title='Popular search queries'>*/}
+          {/*    {loading ? (*/}
+          {/*      <CardListSkeleton />*/}
+          {/*    ) : (*/}
+          {/*      <PackagesBySourceCardList cards={packagesBySourceListData} />*/}
+          {/*    )}*/}
+          {/*  </CardGroup>*/}
 
-            <CardGroup title='Popular packages'>
-              {loading ? (
-                <CardListSkeleton numberOfElements={6} />
-              ) : (
-                <PopularPackageCardList cards={popularPackageListData} />
-              )}
-            </CardGroup>
-          </CardGroups>
+          {/*  <CardGroup title='Popular packages'>*/}
+          {/*    {loading ? (*/}
+          {/*      <CardListSkeleton numberOfElements={6} />*/}
+          {/*    ) : (*/}
+          {/*      <PopularPackageCardList cards={popularPackageListData} />*/}
+          {/*    )}*/}
+          {/*  </CardGroup>*/}
+          {/*</CardGroups>*/}
         </Container>
       </div>
 

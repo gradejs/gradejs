@@ -39,6 +39,7 @@ AWS_REGION=test PORT=8084 DB_URL=postgres://gradejs:gradejs@localhost:5432/grade
   SQS_LOCAL_PORT=29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
   INTERNAL_API_ROOT_URL=http://localhost:8082 \
   GRADEJS_API_KEY=TEST_API_KEY \
+  ROLLBAR_API_KEY=test \
   npm run debug --prefix packages/worker 2>&1 &
 WORKER_PID=$!
 
@@ -53,12 +54,19 @@ AWS_REGION=test PORT=8083 DB_URL=postgres://gradejs:gradejs@localhost:5432/grade
   SQS_LOCAL_PORT=29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
   CORS_ALLOWED_ORIGIN=http://localhost:3000 \
   INTERNAL_API_ROOT_URL=http://localhost:8082 \
+  ROLLBAR_API_KEY=test \
   GRADEJS_API_KEY=TEST_API_KEY \
   npm run debug --prefix packages/public-api 2>&1 &
 API_PID=$!
 
 echo "Starting web package dev server"
-PORT=3000 PUBLIC_ROOT_URL=http://localhost:3000 API_ORIGIN=http://localhost:8083 CORS_ORIGIN=http://localhost:3000 PLAUSIBLE_DOMAIN= GA_ID= DUMP_ANALYTICS= \
+PORT=3000 PUBLIC_ROOT_URL=http://localhost:3000 \
+  API_ORIGIN=http://localhost:8083 \
+  CORS_ORIGIN=http://localhost:3000 \
+  PLAUSIBLE_DOMAIN= \
+  GA_ID= \
+  DUMP_ANALYTICS= \
+  ROLLBAR_API_KEY=test \
   npm run dev:start --prefix packages/web 2>&1 &
 WEB_PID=$!
 

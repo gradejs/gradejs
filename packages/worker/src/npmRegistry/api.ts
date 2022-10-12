@@ -1,6 +1,7 @@
 import nano from 'nano';
 import { createHash } from 'crypto';
 import fetch from 'node-fetch';
+import { VersionData } from '@gradejs-public/shared';
 
 // We use the relicate API since the `registry.npmjs.com`
 // does not support `local_seq` parameter and the `/changes` endpoint.
@@ -38,6 +39,7 @@ type DocumentScope = {
       peerDependencies?: Record<string, string>;
       dist: {
         unpackedSize?: number;
+        fileCount?: number;
       };
     }
   >;
@@ -91,9 +93,11 @@ export async function fetchPackageMetadata(name: string) {
           ...(document.versions?.[el].peerDependencies ?? {}),
         },
         unpackedSize: document.versions?.[el].dist.unpackedSize,
+        updateDate: new Date(document.time[el]),
+        registryModulesCount: document.versions?.[el].dist.fileCount,
       };
       return acc;
-    }, {} as Record<string, { dependencies: Record<string, string>; unpackedSize?: number }>),
+    }, {} as Record<string, VersionData>),
   };
 }
 

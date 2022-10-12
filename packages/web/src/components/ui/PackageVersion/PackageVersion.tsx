@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Icon } from '../Icon/Icon';
 import CircularProgress from '../CircularProgress/CircularProgress';
 import ProgressBar from '../ProgressBar/ProgressBar';
-import { formatNumber } from 'utils/helpers';
+import { formatNumber, getReadableSizeString } from 'utils/helpers';
 
 type Module = {
   path: string;
@@ -21,12 +21,10 @@ type EntryPoint = {
 
 type Props = {
   version: string;
-  updateDate: string;
-  uses: number;
-  size: number;
-  sizeUnitShorthand: string;
-  sizeUnit: string;
-  modulesCount: number;
+  updateDate?: string;
+  uses?: number;
+  size?: number;
+  modulesCount?: number;
   modules: Module[];
   entries: EntryPoint[];
   opened?: boolean;
@@ -37,8 +35,6 @@ const PackageVersion = ({
   updateDate,
   uses,
   size,
-  sizeUnit,
-  sizeUnitShorthand,
   modulesCount,
   modules,
   entries,
@@ -61,40 +57,44 @@ const PackageVersion = ({
             </span>
             <span className={styles.packageSubtitle}>{updateDate}</span>
           </div>
-          <div
-            className={clsx(
-              styles.packageTopCol,
-              styles.packageTopColMinor,
-              styles.packageTopColSites
-            )}
-          >
-            <span className={styles.packageTitle}>{formatNumber(uses)}</span>
-            <span className={styles.packageSubtitle}>Sites used</span>
-          </div>
-          <div
-            className={clsx(
-              styles.packageTopCol,
-              styles.packageTopColMinor,
-              styles.packageTopColSize
-            )}
-          >
-            <span className={styles.packageTitle}>
-              {formatNumber(size)} <span className={styles.mobileHidden}>{sizeUnitShorthand}</span>
-            </span>
-            <span className={styles.packageSubtitle}>
-              <span className={styles.mobileHidden}>Weight,</span> {sizeUnit}
-            </span>
-          </div>
-          <div
-            className={clsx(
-              styles.packageTopCol,
-              styles.packageTopColMinor,
-              styles.packageTopColModules
-            )}
-          >
-            <span className={styles.packageTitle}>{formatNumber(modulesCount)}</span>
-            <span className={styles.packageSubtitle}>Modules</span>
-          </div>
+          {uses && (
+            <div
+              className={clsx(
+                styles.packageTopCol,
+                styles.packageTopColMinor,
+                styles.packageTopColSites
+              )}
+            >
+              <span className={styles.packageTitle}>{formatNumber(uses)}</span>
+              <span className={styles.packageSubtitle}>Sites used</span>
+            </div>
+          )}
+          {size && (
+            <div
+              className={clsx(
+                styles.packageTopCol,
+                styles.packageTopColMinor,
+                styles.packageTopColSize
+              )}
+            >
+              <span className={styles.packageTitle}>{getReadableSizeString(size)}</span>
+              <span className={styles.packageSubtitle}>
+                <span className={styles.mobileHidden}>Footprint</span>
+              </span>
+            </div>
+          )}
+          {modulesCount && (
+            <div
+              className={clsx(
+                styles.packageTopCol,
+                styles.packageTopColMinor,
+                styles.packageTopColModules
+              )}
+            >
+              <span className={styles.packageTitle}>{formatNumber(modulesCount)}</span>
+              <span className={styles.packageSubtitle}>Modules</span>
+            </div>
+          )}
         </div>
 
         <button className={styles.packageArrowButton}>

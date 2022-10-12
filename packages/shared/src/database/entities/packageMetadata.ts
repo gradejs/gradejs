@@ -5,7 +5,12 @@ type Maintainer = {
   email: string;
   avatar: string;
 };
-type VersionData = { dependencies: Record<string, string>; unpackedSize?: number };
+export type VersionData = {
+  dependencies: Record<string, string>;
+  unpackedSize?: number;
+  updateDate?: Date;
+  registryModulesCount?: number;
+};
 
 @Entity({ name: 'package_metadata' })
 @Index(['name'], { unique: true })

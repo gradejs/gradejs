@@ -24,5 +24,6 @@ export const client = createTRPCClient<ClientApiRouter>({
 
 export type GetOrRequestWebPageRescanOutput = InferMutationOutput<'getOrRequestWebPageScan'>;
 export type GetShowcaseOutput = InferQueryOutput<'getShowcase'>;
+export type GetPackageInfoOutput = InferQueryOutput<'getPackageInfo'>;
 export type { ClientApi };
 export type ApiClient = typeof client;
