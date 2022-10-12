@@ -8,6 +8,7 @@ import {
 
 checkRequiredEnvironmentVariables([
   Env.AwsRegion,
+  Env.AwsS3Bucket,
   Env.DatabaseUrl,
   Env.InternalApiRootUrl,
   Env.SqsWorkerQueueUrl,

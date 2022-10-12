@@ -4,8 +4,15 @@ import { Provider } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
 import { StaticRouter } from 'react-router-dom/server';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 // TODO: fix import from different monorepo package
-import { getPort, getClientVars, isStaging } from '../../shared/src/utils/env';
+import {
+  getPort,
+  getClientVars,
+  isStaging,
+  getAwsRegion,
+  getAwsS3Bucket,
+} from '../../shared/src/utils/env';
 import { store } from './store';
 import { App } from './components/App';
 import path from 'path';
@@ -16,6 +23,7 @@ const app = express();
 const staticDir = '/static';
 
 app.use(staticDir, express.static(path.join(__dirname, 'static')));
+
 app.get('/robots.txt', (_, res) =>
   readFile(
     path.join(__dirname, isStaging() ? '/robots.staging.txt' : '/robots.txt'),
@@ -30,6 +38,28 @@ app.get('/robots.txt', (_, res) =>
     }
   )
 );
+
+app.get('/sitemaps/*', async (req, res) => {
+  try {
+    const requestUrl = new URL(req.url);
+    const s3client = new S3Client({ region: getAwsRegion() });
+    const s3command = new GetObjectCommand({
+      Bucket: getAwsS3Bucket(),
+      Key: requestUrl.pathname.slice(1),
+    });
+
+    const response = await s3client.send(s3command);
+
+    if (response.Body) {
+      res.send(response.Body);
+    } else {
+      throw new Error('Unexpected');
+    }
+  } catch (e) {
+    res.status(404);
+    res.send('Not found');
+  }
+});
 
 function getScripts(statsStr: string) {
   let stats: Record<string, string[]>;
