@@ -3,6 +3,8 @@ import styles from './SidebarMobileFilter.module.scss';
 import { Icon } from '../Icon/Icon';
 import { Button } from '../index';
 import Badge from '../Badge/Badge';
+import clsx from 'clsx';
+import { PackageSortType } from '../../../store/slices/scanDisplayOptions';
 
 type ToggleList = {
   name: string;
@@ -13,10 +15,20 @@ type ToggleList = {
 type Props = {
   isChanged: boolean;
   resetFilters: () => void;
+  onSortOpen: () => void;
   filterTriggers: ToggleList[];
+  sortField: PackageSortType;
+  sortDirection: 'DESC' | 'ASC';
 };
 
-export default function SidebarMobileFilter({ isChanged, resetFilters, filterTriggers }: Props) {
+export default function SidebarMobileFilter({
+  isChanged,
+  resetFilters,
+  onSortOpen,
+  filterTriggers,
+  sortField,
+  sortDirection,
+}: Props) {
   return (
     <>
       <div className={styles.mobileFiltersTop}>
@@ -27,14 +39,29 @@ export default function SidebarMobileFilter({ isChanged, resetFilters, filterTri
           Filters
         </div>
 
-        {isChanged && (
-          <div className={styles.mobileFiltersResetWrapper}>
-            <span className={styles.mobileFiltersReset} onClick={resetFilters}>
-              Reset
-            </span>
-          </div>
-        )}
+        <div>
+          <button className={styles.mobileFilterSort} onClick={onSortOpen}>
+            Sorted by {sortField[0].toUpperCase() + sortField.slice(1)}
+            <Icon
+              kind='sort'
+              width={10}
+              height={9}
+              color='#212121'
+              className={clsx(styles.sortIcon, sortDirection === 'DESC' && styles.sortIconRotated)}
+            />
+          </button>
+        </div>
       </div>
+
+      {isChanged && (
+        <Button
+          variant='secondary'
+          className={clsx(styles.mobileFilterToggle, styles.mobileFilterToggleReset)}
+          onClick={resetFilters}
+        >
+          <Icon kind='crossOpaque' width={10} height={10} color='#212121' />
+        </Button>
+      )}
 
       {filterTriggers.map(({ name, count, onOpen }: ToggleList) => (
         <Button

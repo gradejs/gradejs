@@ -18,7 +18,12 @@ import { Button } from '../index';
 import { IconProps } from '../Icon/Icon';
 import { SidebarMetaSkeleton } from '../SidebarMeta/SidebarMetaSkeleton';
 import { SidebarMobileFilterSkeleton } from '../SidebarMobileFilter/SidebarMobileFilterSkeleton';
-import { PackageFilters, PackageTrait } from '../../../store/slices/scanDisplayOptions';
+import {
+  PackageFilters,
+  PackageSortType,
+  PackageTrait,
+} from '../../../store/slices/scanDisplayOptions';
+import SortsList from '../SortsList/SortsList';
 
 type MetaItemProps = {
   icon: React.ReactElement<IconProps>;
@@ -31,6 +36,11 @@ type Props = {
   availableFilters: PackageFilters;
   selectedFilters: PackageFilters;
   onFiltersChanged: (newFilters: PackageFilters | null) => void;
+  availableSorters: PackageSortType[];
+  onSortersChange: (newSorterName: PackageSortType) => void;
+  sortField: PackageSortType;
+  sortDirection: 'DESC' | 'ASC';
+  handleFilterReset: () => void;
 };
 
 export default function SearchResultsSidebar({
@@ -38,9 +48,15 @@ export default function SearchResultsSidebar({
   availableFilters,
   selectedFilters,
   onFiltersChanged,
+  availableSorters,
+  onSortersChange,
+  sortField,
+  sortDirection,
+  handleFilterReset,
   loading,
 }: Props) {
-  const [activeModal, setActiveModal] = useState<'keywords' | 'authors' | 'traits' | null>(null);
+  const [activeModal, setActiveModal] =
+    useState<'keywords' | 'authors' | 'traits' | 'sort' | null>(null);
   const closeModalHandler = useCallback(() => setActiveModal(null), []);
 
   const anyFiltersActive = useMemo(
@@ -68,8 +84,6 @@ export default function SearchResultsSidebar({
     ],
     [selectedFilters]
   );
-
-  const handleFilterReset = useCallback(() => onFiltersChanged(null), [onFiltersChanged]);
 
   // TODO: Refactor this through restructuring underlying components properly
   const {
@@ -159,6 +173,19 @@ export default function SearchResultsSidebar({
         />
       </Modal>
 
+      <Modal isOpen={activeModal === 'sort'} onClose={closeModalHandler}>
+        <div className={modalStyles.modalContentWrapper}>
+          <SidebarCategory categoryName='Sort by' returnButton={closeModalHandler}>
+            <SortsList
+              availableSorters={availableSorters}
+              onSortersChange={onSortersChange}
+              sortField={sortField}
+              sortDirection={sortDirection}
+            />
+          </SidebarCategory>
+        </div>
+      </Modal>
+
       <aside className={styles.sidebar}>
         <div className={styles.sidebarItem}>
           {loading ? <SidebarMetaSkeleton /> : <SidebarMeta meta={metaItems} />}
@@ -169,9 +196,12 @@ export default function SearchResultsSidebar({
             <SidebarMobileFilterSkeleton />
           ) : (
             <SidebarMobileFilter
+              sortField={sortField}
+              sortDirection={sortDirection}
               isChanged={anyFiltersActive}
               resetFilters={handleFilterReset}
               filterTriggers={mobileFilterTriggers}
+              onSortOpen={() => setActiveModal('sort')}
             />
           )}
         </div>

@@ -11,6 +11,8 @@ import {
 } from '../../store/selectors/scanDisplayOptions/scanDisplayOptions';
 import {
   PackageFilters,
+  PackageSorter,
+  PackageSortType,
   resetScanDisplayOptions,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
@@ -65,6 +67,11 @@ export function WebsiteResultsPage() {
     [searchableEntities]
   );
 
+  const availableSorters: PackageSortType[] = useMemo(
+    () => ['name', 'size', 'popularity', 'severity'],
+    []
+  );
+
   const selectedDisplayOptions = useAppSelector((state) =>
     selectScanDisplayOptions(state, normalizedUrl)
   );
@@ -89,7 +96,26 @@ export function WebsiteResultsPage() {
         dispatch(resetScanDisplayOptions({ scanUrl: normalizedUrl }));
       }
     },
-    [dispatch, normalizedUrl]
+    [dispatch, normalizedUrl, selectedDisplayOptions]
+  );
+
+  const handleSortersChange = useCallback(
+    (newSorters: PackageSorter[]) => {
+      if (!normalizedUrl) {
+        return;
+      }
+
+      dispatch(
+        setScanDisplayOptions({
+          scanUrl: normalizedUrl,
+          options: {
+            ...selectedDisplayOptions,
+            packageSorters: newSorters,
+          },
+        })
+      );
+    },
+    [dispatch, normalizedUrl, selectedDisplayOptions]
   );
 
   if (isNotFound) {
@@ -179,8 +205,11 @@ export function WebsiteResultsPage() {
         bundleSize={scanOverview.bundleSize ?? 0}
         scanDate={scanResult?.scan?.finishedAt}
         selectedFilters={selectedDisplayOptions.packageFilters}
+        selectedSorters={selectedDisplayOptions.packageSorters}
         availableFilters={availableFilters}
+        availableSorters={availableSorters}
         onFiltersChange={handleFiltersChange}
+        onSortersChange={handleSortersChange}
         webpackVersion={webpackVersion}
         accuracy={accuracy}
       />

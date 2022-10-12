@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import clsx from 'clsx';
 import styles from './SearchResults.module.scss';
 import Footer from 'components/ui/Footer/Footer';
@@ -11,8 +11,13 @@ import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedReso
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
-import { PackageFilters } from '../../../store/slices/scanDisplayOptions';
+import {
+  PackageFilters,
+  PackageSorter,
+  PackageSortType,
+} from '../../../store/slices/scanDisplayOptions';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
+import { Button } from 'components/ui';
 
 type Props = {
   isLoading: boolean;
@@ -25,8 +30,11 @@ type Props = {
   scriptsCount: number;
   bundleSize: number;
   availableFilters: PackageFilters;
+  availableSorters: PackageSortType[];
   selectedFilters: PackageFilters;
+  selectedSorters: PackageSorter[];
   onFiltersChange: (newFilters: PackageFilters | null) => void;
+  onSortersChange: (newSorters: PackageSorter[]) => void;
   scanDate?: string;
   webpackVersion?: string;
   accuracy: string;
@@ -43,8 +51,11 @@ export default function SearchResults({
   scriptsCount,
   bundleSize,
   availableFilters,
+  availableSorters,
   selectedFilters,
+  selectedSorters,
   onFiltersChange,
+  onSortersChange,
   scanDate,
   webpackVersion,
   accuracy,
@@ -105,6 +116,20 @@ export default function SearchResults({
     },
   ];
 
+  const handleSortChange = (newSorterName: PackageSortType) => {
+    const sortOrder = newSorterName === sortField && sortDirection === 'DESC' ? 'ASC' : 'DESC';
+    setSortField(newSorterName);
+    setSortDirection(sortOrder);
+
+    const newSorter: PackageSorter = {
+      by: newSorterName,
+      direction: sortOrder,
+    };
+    onSortersChange([newSorter]);
+  };
+
+  const handleFilterReset = useCallback(() => onFiltersChange(null), [onFiltersChange]);
+
   return (
     <>
       <div
@@ -127,6 +152,32 @@ export default function SearchResults({
                 lastScanDate={scanDate}
               />
             )}
+
+            <div className={styles.searchResultsSorters}>
+              {availableSorters.map((sorter) => (
+                <button
+                  key={sorter}
+                  className={clsx(
+                    styles.sortButton,
+                    sortField === sorter && styles.sortButtonActive
+                  )}
+                  onClick={() => handleSortChange(sorter)}
+                >
+                  {sorter[0].toUpperCase() + sorter.slice(1)}
+                  {sortField === sorter && (
+                    <Icon
+                      kind='sort'
+                      width={10}
+                      height={9}
+                      className={clsx(
+                        styles.sortIcon,
+                        sortDirection === 'DESC' && styles.sortIconRotated
+                      )}
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className={styles.searchResultsSidebar}>
@@ -136,25 +187,43 @@ export default function SearchResults({
               availableFilters={availableFilters}
               selectedFilters={selectedFilters}
               onFiltersChanged={onFiltersChange}
+              onSortersChange={handleSortChange}
+              availableSorters={availableSorters}
+              sortField={sortField}
+              sortDirection={sortDirection}
+              handleFilterReset={handleFilterReset}
             />
           </div>
 
-          <div className={styles.packages}>
-            {isLoading ? (
-              <>
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-              </>
-            ) : (
-              packages.map((pkg, _index) => (
+          {isLoading ? (
+            <div className={styles.packages}>
+              <PackagePreviewSkeleton />
+              <PackagePreviewSkeleton />
+              <PackagePreviewSkeleton />
+              <PackagePreviewSkeleton />
+              <PackagePreviewSkeleton />
+              <PackagePreviewSkeleton />
+            </div>
+          ) : packages.length > 0 ? (
+            <div className={styles.packages}>
+              {packages.map((pkg, _index) => (
                 <PackagePreview key={pkg.name} pkg={pkg} opened={true /*index === 0*/} />
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.notFound}>
+              <div className={styles.notFoundIcon}>
+                <Icon kind='notFound' width={55} height={56} color='#4549FF' />
+              </div>
+              <h3 className={styles.notFoundTitle}>No matching packages</h3>
+              <div className={styles.notFoundText}>
+                Try softening the search terms or resetting the filter
+              </div>
+              <Button variant='secondary' size='small' onClick={handleFilterReset}>
+                Reset filters
+              </Button>
+            </div>
+          )}
         </div>
         {/*
         <CardGroups>

@@ -8,7 +8,7 @@ export type PackageFilters = {
   traits: PackageTrait[];
 };
 
-export type PackageSortType = 'severity' | 'popularity';
+export type PackageSortType = 'name' | 'size' | 'severity' | 'popularity';
 export type PackageSorter = {
   by: PackageSortType;
   direction: 'ASC' | 'DESC';

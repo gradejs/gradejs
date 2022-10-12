@@ -1,0 +1,30 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.sortsList {
+  display: grid;
+}
+
+.sortButton {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  padding: 19px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray-border;
+  }
+}
+
+.sortIconRotated {
+  transform: scaleX(-1) rotate(180deg);
+}
+
+.sortButtonActive {
+  font-weight: 500;
+}

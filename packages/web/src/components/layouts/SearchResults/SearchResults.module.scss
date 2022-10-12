@@ -37,9 +37,24 @@
 
 .searchResultsResource {
   grid-column: 2 / -1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  @include xxl {
+    margin-bottom: 36px;
+  }
 
   @include mobile-and-tablet {
     grid-column: 1;
+    margin-bottom: 0;
+  }
+}
+
+.searchResultsSorters {
+  @include mobile-and-tablet {
+    display: none;
   }
 }
 
@@ -94,5 +109,94 @@
     100% {
       width: 95%;
     }
+  }
+}
+
+.sortButtons {
+  display: flex;
+  align-items: center;
+}
+
+.sortButton {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 22px;
+  margin-left: 16px;
+  color: $gray-text;
+  padding: 0;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.sortIcon {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  transform-origin: 50%;
+
+  .sortButtonActive & {
+    color: $black;
+  }
+}
+
+.sortIconRotated {
+  transform: scaleX(-1) rotate(180deg);
+}
+
+.sortButtonActive {
+  font-weight: 500;
+  color: $black;
+}
+
+.notFound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 184px 0;
+  align-self: self-start;
+
+  @include mobile-and-tablet {
+    margin-top: 48px;
+    margin-bottom: 28px;
+  }
+}
+
+.notFoundIcon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  background: $blue-additional;
+  border-radius: 14px;
+  margin-bottom: 36px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 30px;
+  }
+}
+
+.notFoundTitle {
+  margin-bottom: 12px;
+}
+
+.notFoundText {
+  font-size: 17px;
+  line-height: 28px;
+  margin-bottom: 32px;
+  text-align: center;
+
+  @include mobile-and-tablet {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 26px;
   }
 }
