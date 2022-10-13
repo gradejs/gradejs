@@ -6,6 +6,7 @@ import { packageFilterPredicates } from './packageFilters';
 import { sortPackagesByOptions } from './packageSorters';
 
 export const DEFAULT_SCAN_DISPLAY_OPTIONS: ScanDisplayOptions = {
+  searchText: '',
   packageFilters: {
     keywords: [],
     authors: [],
@@ -46,14 +47,22 @@ export const makeSelectSortedAndFilteredScanPackages = () =>
   createSelector(
     [makeSelectScanPackagesByUrl(), makeSelectOptimizedScanDisplayOptions()],
     (packages = [], displayOptions) => {
-      const { packageFilters, packageSorters } = displayOptions;
+      const { searchText, packageFilters, packageSorters } = displayOptions;
 
-      const filteredPackages = packages.filter((pkg) =>
+      const searchValue = searchText.toLowerCase();
+
+      const matchedPackages = packages.filter((pkg) => {
+        return (
+          pkg.name.toLowerCase().includes(searchValue) ||
+          pkg?.registryMetadata?.keywords?.includes(searchValue) ||
+          pkg?.registryMetadata?.description?.toLowerCase().includes(searchValue)
+        );
+      });
+
+      const filteredPackages = matchedPackages.filter((pkg) =>
         packageFilterPredicates.every((predicate) => !predicate(packageFilters, pkg))
       );
 
-      const sortedPackages = sortPackagesByOptions(filteredPackages, packageSorters);
-
-      return sortedPackages;
+      return sortPackagesByOptions(filteredPackages, packageSorters);
     }
   );

@@ -1,0 +1,49 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.searchWrapper {
+  position: relative;
+}
+
+.search {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border-radius: 33px;
+  background-color: $gray-surface;
+  padding: 11px 48px 11px 20px;
+  border: none;
+  appearance: none;
+  outline: none;
+  transition: background-color $transition-duration $transition-timing-function;
+
+  &:hover {
+    background-color: $gray-border;
+  }
+}
+
+.searchEmpty {
+  padding-left: 48px;
+}
+
+.lookingGlass,
+.clearWrapper {
+  position: absolute;
+}
+
+.lookingGlass {
+  top: 12px;
+  left: 14px;
+}
+
+.clearWrapper {
+  cursor: pointer;
+  top: 12px;
+  right: 11px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

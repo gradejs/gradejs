@@ -8,6 +8,7 @@ export type PackageFilters = {
   traits: PackageTrait[];
 };
 
+export type SearchText = string;
 export type PackageSortType = 'name' | 'size' | 'severity' | 'popularity';
 export type PackageSorter = {
   by: PackageSortType;
@@ -15,6 +16,7 @@ export type PackageSorter = {
 };
 
 export type ScanDisplayOptions = {
+  searchText: SearchText;
   packageFilters: PackageFilters;
   packageSorters: PackageSorter[];
 };

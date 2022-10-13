@@ -19,7 +19,7 @@ import { getShowcaseData } from './showcase/showcaseService';
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
 type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
-type ScanResultPackageWithMetadata = WebPageScan.IdentifiedPackage & {
+export type ScanResultPackageWithMetadata = WebPageScan.IdentifiedPackage & {
   registryMetadata?: PackageMetadata;
 };
 

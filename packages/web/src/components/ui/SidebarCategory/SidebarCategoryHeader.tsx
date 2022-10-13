@@ -34,7 +34,7 @@ export default function SidebarCategoryHeader({
             <Badge content={selectedKeywords.length} />
           </span>
         )}
-        {resetGroup && selectedKeywords && (
+        {selectedKeywords && resetGroup && (
           <div
             className={clsx(
               styles.localReset,

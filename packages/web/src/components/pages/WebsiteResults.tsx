@@ -14,6 +14,7 @@ import {
   PackageSorter,
   PackageSortType,
   resetScanDisplayOptions,
+  SearchText,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
 import { getFaviconUrlByHostname, plural } from '../../utils/helpers';
@@ -74,6 +75,25 @@ export function WebsiteResultsPage() {
 
   const selectedDisplayOptions = useAppSelector((state) =>
     selectScanDisplayOptions(state, normalizedUrl)
+  );
+
+  const handleSearchByTextChange = useCallback(
+    (newSearchText: SearchText) => {
+      if (!normalizedUrl) {
+        return;
+      }
+
+      dispatch(
+        setScanDisplayOptions({
+          scanUrl: normalizedUrl,
+          options: {
+            ...selectedDisplayOptions,
+            searchText: newSearchText,
+          },
+        })
+      );
+    },
+    [dispatch, normalizedUrl, selectedDisplayOptions]
   );
 
   const handleFiltersChange = useCallback(
@@ -185,6 +205,11 @@ export function WebsiteResultsPage() {
     ? '91'
     : accuracyMap[webpackVersion] ?? '68.85';
 
+  let identifiedPackages;
+  if (scanResult?.scan?.scanResult?.identifiedPackages) {
+    identifiedPackages = scanResult?.scan?.scanResult?.identifiedPackages;
+  }
+
   return (
     <>
       <Helmet>
@@ -198,16 +223,19 @@ export function WebsiteResultsPage() {
         isPending={isPending || isPending}
         faviconUrl={faviconUrl}
         scanUrl={displayUrl ?? ''}
+        identifiedPackages={identifiedPackages}
         packages={packagesFilteredAndSorted}
         packagesStats={packageStats}
         vulnerabilitiesCount={scanOverview.vulnerabilities.total}
         scriptsCount={scanOverview.scriptsCount ?? 0}
         bundleSize={scanOverview.bundleSize ?? 0}
         scanDate={scanResult?.scan?.finishedAt}
+        searchText={selectedDisplayOptions.searchText}
         selectedFilters={selectedDisplayOptions.packageFilters}
         selectedSorters={selectedDisplayOptions.packageSorters}
         availableFilters={availableFilters}
         availableSorters={availableSorters}
+        onSearchByTextChange={handleSearchByTextChange}
         onFiltersChange={handleFiltersChange}
         onSortersChange={handleSortersChange}
         webpackVersion={webpackVersion}

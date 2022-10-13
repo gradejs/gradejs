@@ -22,8 +22,12 @@ import {
   PackageFilters,
   PackageSortType,
   PackageTrait,
+  SearchText,
 } from '../../../store/slices/scanDisplayOptions';
 import SortsList from '../SortsList/SortsList';
+import SidebarCategorySearch from '../SidebarCategory/SidebarCategorySearch';
+import { ScanResultPackageWithMetadata } from '@gradejs-public/public-api/src/clientApiRouter';
+import SidebarCategorySearchSkeleton from '../SidebarCategory/SidebarCategorySearchSkeleton';
 
 type MetaItemProps = {
   icon: React.ReactElement<IconProps>;
@@ -33,8 +37,11 @@ type MetaItemProps = {
 type Props = {
   loading?: boolean;
   metaItems: MetaItemProps[];
+  identifiedPackages: ScanResultPackageWithMetadata[] | undefined;
   availableFilters: PackageFilters;
+  searchText: SearchText;
   selectedFilters: PackageFilters;
+  onSearchByTextChange: (newSearchText: SearchText) => void;
   onFiltersChanged: (newFilters: PackageFilters | null) => void;
   availableSorters: PackageSortType[];
   onSortersChange: (newSorterName: PackageSortType) => void;
@@ -45,8 +52,11 @@ type Props = {
 
 export default function SearchResultsSidebar({
   metaItems,
+  identifiedPackages,
   availableFilters,
+  searchText,
   selectedFilters,
+  onSearchByTextChange,
   onFiltersChanged,
   availableSorters,
   onSortersChange,
@@ -87,6 +97,7 @@ export default function SearchResultsSidebar({
 
   // TODO: Refactor this through restructuring underlying components properly
   const {
+    handleSearchTextChange,
     handleTraitsFilterChange,
     handleTraitsFilterReset,
     handleKeywordsFilterChange,
@@ -125,6 +136,7 @@ export default function SearchResultsSidebar({
           ...selectedFilters,
           authors: [],
         }),
+      handleSearchTextChange: (newSearchText: SearchText) => onSearchByTextChange(newSearchText),
     }),
     [onFiltersChanged, selectedFilters]
   );
@@ -202,6 +214,22 @@ export default function SearchResultsSidebar({
               resetFilters={handleFilterReset}
               filterTriggers={mobileFilterTriggers}
               onSortOpen={() => setActiveModal('sort')}
+            />
+          )}
+        </div>
+
+        <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
+          {loading ? (
+            <>
+              <SidebarCategoryHeaderSkeleton search />
+              <SidebarCategorySearchSkeleton />
+            </>
+          ) : (
+            <SidebarCategorySearch
+              categoryName='Search by text'
+              packages={identifiedPackages}
+              searchText={searchText}
+              handleSearchTextChange={handleSearchTextChange}
             />
           )}
         </div>

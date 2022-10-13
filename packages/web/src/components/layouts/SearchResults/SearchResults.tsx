@@ -15,15 +15,18 @@ import {
   PackageFilters,
   PackageSorter,
   PackageSortType,
+  SearchText,
 } from '../../../store/slices/scanDisplayOptions';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
 import { Button } from 'components/ui';
+import { ScanResultPackageWithMetadata } from '@gradejs-public/public-api/src/clientApiRouter';
 
 type Props = {
   isLoading: boolean;
   isPending: boolean;
   faviconUrl?: string;
   scanUrl: string;
+  identifiedPackages: ScanResultPackageWithMetadata[] | undefined;
   packages: IdentifiedPackage[];
   packagesStats: { total: number; vulnerable: number; outdated: number };
   vulnerabilitiesCount: number;
@@ -31,8 +34,10 @@ type Props = {
   bundleSize: number;
   availableFilters: PackageFilters;
   availableSorters: PackageSortType[];
+  searchText: SearchText;
   selectedFilters: PackageFilters;
   selectedSorters: PackageSorter[];
+  onSearchByTextChange: (newSearchText: SearchText) => void;
   onFiltersChange: (newFilters: PackageFilters | null) => void;
   onSortersChange: (newSorters: PackageSorter[]) => void;
   scanDate?: string;
@@ -50,10 +55,13 @@ export default function SearchResults({
   vulnerabilitiesCount,
   scriptsCount,
   bundleSize,
+  identifiedPackages,
   availableFilters,
   availableSorters,
+  searchText,
   selectedFilters,
   selectedSorters,
+  onSearchByTextChange,
   onFiltersChange,
   onSortersChange,
   scanDate,
@@ -184,8 +192,11 @@ export default function SearchResults({
             <SearchResultsSidebar
               loading={isLoading}
               metaItems={metaItems}
+              identifiedPackages={identifiedPackages}
               availableFilters={availableFilters}
+              searchText={searchText}
               selectedFilters={selectedFilters}
+              onSearchByTextChange={onSearchByTextChange}
               onFiltersChanged={onFiltersChange}
               onSortersChange={handleSortChange}
               availableSorters={availableSorters}

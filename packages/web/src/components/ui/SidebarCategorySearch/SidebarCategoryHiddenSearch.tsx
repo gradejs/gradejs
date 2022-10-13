@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import styles from './SidebarCategorySearch.module.scss';
 import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
+import Search from '../Search/Search';
 
 type GroupItem = {
   group: string;
@@ -43,13 +44,13 @@ type Props = {
   searchValue: string;
   searchChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearInput: () => void;
-  alphabeticalGroups: GroupItem[];
+  alphabeticalGroups?: GroupItem[];
   selectedItems: string[];
   itemsWithImage?: boolean;
   selectHandler: (selectedKeywords: string[]) => void;
 };
 
-export default function SidebarCategorySearch({
+export default function SidebarCategoryHiddenSearch({
   searchValue,
   searchChangeHandler,
   clearInput,
@@ -71,52 +72,34 @@ export default function SidebarCategorySearch({
 
   return (
     <>
-      <div className={styles.searchWrapper}>
-        {/* FIXME: Don't know why looking glass icon needs to be to the left side and */}
-        {/* disappear if input is not empty. Why not show it on right side only like in */}
-        {/* header search bar and toggle clear icon when not empty, probably design mistake */}
-        {searchValue.length === 0 && (
-          <Icon
-            kind='search'
-            width={24}
-            height={24}
-            color='#8E8AA0'
-            className={styles.lookingGlass}
-          />
-        )}
-        <input
-          type='text'
-          className={clsx(styles.search, searchValue.length === 0 && styles.searchEmpty)}
-          placeholder='Name'
-          value={searchValue}
-          onChange={searchChangeHandler}
-        />
-        {searchValue.length > 0 && (
-          <span className={styles.clearWrapper}>
-            <Icon kind='cross' color='#8E8AA0' className={styles.clear} onClick={clearInput} />
-          </span>
-        )}
-      </div>
+      <Search
+        searchValue={searchValue}
+        placeholder='Name'
+        searchChangeHandler={searchChangeHandler}
+        clearInput={clearInput}
+      />
 
-      <div className={styles.groups}>
-        {alphabeticalGroups.map(({ group, children }) => (
-          <div key={group}>
-            {alphabeticalGroups.length > 1 && <div className={styles.groupName}>{group}</div>}
+      {alphabeticalGroups && (
+        <div className={styles.groups}>
+          {alphabeticalGroups.map(({ group, children }) => (
+            <div key={group}>
+              {alphabeticalGroups.length > 1 && <div className={styles.groupName}>{group}</div>}
 
-            <div className={styles.groupList}>
-              {children.map((item) => (
-                <SearchItem
-                  key={item}
-                  item={item}
-                  selectedItems={selectedItems}
-                  selectHandler={itemSelectionHandler}
-                  itemsWithImage={itemsWithImage}
-                />
-              ))}
+              <div className={styles.groupList}>
+                {children.map((item) => (
+                  <SearchItem
+                    key={item}
+                    item={item}
+                    selectedItems={selectedItems}
+                    selectHandler={itemSelectionHandler}
+                    itemsWithImage={itemsWithImage}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
