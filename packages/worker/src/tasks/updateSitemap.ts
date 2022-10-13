@@ -1,7 +1,6 @@
 import { SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
-import { S3Client } from '@aws-sdk/client-s3';
-import { Upload } from '@aws-sdk/lib-storage';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl, logger } from '@gradejs-public/shared';
 
 /**
@@ -11,45 +10,49 @@ import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl, logger } from '@gradejs
  * - use `<sitemapindex>` when we reach 50,000 urls
  */
 export async function updateSitemap(paths: string[]) {
-  const sitemap = createSitemapPipeline(paths);
-  const s3client = new S3Client({ region: getAwsRegion() });
-  const upload = new Upload({
-    client: s3client,
-    params: {
+  try {
+    const sitemap = await generateSitemap(paths);
+    const s3client = new S3Client({ region: getAwsRegion() });
+    const s3command = new PutObjectCommand({
       Body: sitemap,
       Bucket: getAwsS3Bucket(),
       Key: 'sitemaps/sitemap.xml.gz',
-    },
-  });
+    });
 
-  sitemap.on('error', (e) => {
-    logger.error(e);
-  });
-
-  await upload.done();
+    await s3client.send(s3command);
+  } catch (e) {
+    logger.error('Unexpected error during a sitemap update', e);
+  }
 }
 
 const DEFAULT_PAGES = [{ url: '/', changefreq: 'never', priority: 1.0 }];
 
-function createSitemapPipeline(paths: string[]) {
-  const sitemapStream = new SitemapStream({
-    hostname: getPublicRootUrl(),
-  });
-
-  for (const page of DEFAULT_PAGES) {
-    sitemapStream.write(page);
-  }
-
-  for (const path of paths) {
-    sitemapStream.write({
-      url: path,
-      // TODO: reconsider changefreq later
-      changefreq: 'weekly',
-      priority: 1.0,
+function generateSitemap(paths: string[]) {
+  return new Promise<Buffer>((resolve, reject) => {
+    const sitemapStream = new SitemapStream({
+      hostname: getPublicRootUrl(),
     });
-  }
 
-  sitemapStream.end();
+    for (const page of DEFAULT_PAGES) {
+      sitemapStream.write(page);
+    }
 
-  return sitemapStream.pipe(createGzip());
+    for (const path of paths) {
+      sitemapStream.write({
+        url: path,
+        // TODO: reconsider changefreq later
+        changefreq: 'weekly',
+        priority: 1.0,
+      });
+    }
+
+    const chunks: Buffer[] = [];
+    const pipeline = sitemapStream.pipe(createGzip());
+
+    pipeline.on('data', (chunk) => chunks.push(chunk));
+    pipeline.on('error', (e) => reject(e));
+    pipeline.on('end', () => resolve(Buffer.concat(chunks)));
+
+    sitemapStream.end();
+  });
 }

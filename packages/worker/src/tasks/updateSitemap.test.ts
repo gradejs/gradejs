@@ -1,11 +1,8 @@
-import { S3Client } from '@aws-sdk/client-s3';
-import { Upload } from '@aws-sdk/lib-storage';
-import internal from 'stream';
-import { createGunzip } from 'zlib';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { gunzipSync } from 'zlib';
 import { updateSitemap } from './updateSitemap';
 
 jest.mock('@aws-sdk/client-s3');
-jest.mock('@aws-sdk/lib-storage');
 
 describe('task / updateSitemap', () => {
   it('should index new versions', async () => {
@@ -14,16 +11,13 @@ describe('task / updateSitemap', () => {
 
     await updateSitemap(['/test-1', '/test-2/']);
 
-    const uploadCalls = (Upload as any as jest.Mock).mock.calls;
-    expect(uploadCalls).toHaveLength(1);
+    const putObjectCalls = (PutObjectCommand as jest.Mock).mock.calls;
 
-    const [[payload]] = uploadCalls;
-    expect(payload.client instanceof S3Client).toBeTruthy();
+    expect(S3Client.prototype.send).toHaveBeenCalledTimes(1);
+    expect(putObjectCalls).toHaveLength(1);
 
-    const stream = payload.params.Body;
-    const unzip = createGunzip();
-    const pipeline = stream.pipe(unzip);
-    const sitemap = await readStreamAsString(pipeline);
+    const [[payload]] = putObjectCalls;
+    const sitemap = gunzipSync(payload.Body).toString();
 
     expect(sitemap.replace(/\s/g, '')).toEqual(
       `
@@ -49,12 +43,3 @@ describe('task / updateSitemap', () => {
     );
   });
 });
-
-function readStreamAsString(stream: internal.Readable) {
-  return new Promise<string>((resolve) => {
-    const chunks: Buffer[] = [];
-
-    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString()));
-  });
-}
