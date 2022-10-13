@@ -12,9 +12,8 @@ import {
   isStaging,
   getAwsRegion,
   getAwsS3Bucket,
-  initRollbarLogger,
-  logger,
-} from '@gradejs-public/shared';
+} from '../../shared/src/utils/env';
+import { initRollbarLogger, logger } from '../../shared/src/utils/logger';
 import { store } from './store';
 import { App } from './components/App';
 import path from 'path';
