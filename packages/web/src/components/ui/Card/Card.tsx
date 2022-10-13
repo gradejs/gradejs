@@ -25,7 +25,9 @@ const Card = ({ to, title, variant, icon, description, children }: CardCommonPro
             </div>
           )}
 
-          <div className={styles.title}>{title}</div>
+          <div className={styles.title} title={title}>
+            {title}
+          </div>
         </div>
 
         {description && <div className={styles.description}>{description}</div>}
