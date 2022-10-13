@@ -22,6 +22,9 @@ jobs:
       - name: Build
         run: yarn build:backend
 
+      - name: Build web
+        run: yarn workspace @gradejs-public/web build
+
       - name: Setup Database
         run: docker-compose up -d db
 
