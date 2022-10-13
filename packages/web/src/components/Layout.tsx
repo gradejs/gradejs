@@ -22,12 +22,14 @@ export function Layout({
   css,
   head,
   env,
+  initialState,
   html,
 }: {
   js: string[];
   css: string[];
   head: HelmetData;
   env: Record<string, string>;
+  initialState: object;
   html: string; // pre-rendered components
 }) {
   return (
@@ -59,6 +61,12 @@ export function Layout({
         <script
           type='text/javascript'
           dangerouslySetInnerHTML={{ __html: `window.process = ${sanitizeJSON({ env })}` }}
+        />
+        <script
+          type='text/javascript'
+          dangerouslySetInnerHTML={{
+            __html: `window.__INITIAL_STATE__ = ${sanitizeJSON(initialState)}`,
+          }}
         />
         {js.map((jsFile) => (
           <script key={jsFile} src={jsFile} />

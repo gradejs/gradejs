@@ -1,13 +1,13 @@
 import { useAppDispatch, useAppSelector } from '../../index';
 import { selectShowcaseData } from '../../selectors/showcase';
-import { useEffect } from 'react';
 import { fetchShowcaseData } from '../../slices/showcase';
+import { useUniversalEffect } from '../useUniversalEffect';
 
 export const useShowcaseData = () => {
   const dispatch = useAppDispatch();
   const showcase = useAppSelector(selectShowcaseData);
 
-  useEffect(() => {
+  useUniversalEffect(() => {
     if (!showcase.showcase && !showcase.isLoading && !showcase.error) {
       dispatch(fetchShowcaseData());
     }
