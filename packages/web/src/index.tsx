@@ -6,14 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { createApplicationStore } from './store';
 import { App } from './components/App';
 import { initAnalytics } from './services/analytics';
-import 'styles/global.scss';
 import { Env, getEnv, getProdEnv } from '../../shared/src/utils/env';
-
-declare global {
-  interface Window {
-    __INITIAL_STATE__?: object;
-  }
-}
+import 'styles/global.scss';
 
 const store = createApplicationStore([], window.__INITIAL_STATE__ ?? {});
 const locationChangeHandler = initAnalytics();

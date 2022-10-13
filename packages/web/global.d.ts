@@ -10,3 +10,7 @@ declare module '*.svg' {
 }
 
 declare const __IS_SERVER__: boolean; // Replaced with DefinePlugin during build
+
+interface Window {
+  __INITIAL_STATE__?: object;
+}
