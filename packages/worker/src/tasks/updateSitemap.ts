@@ -1,7 +1,7 @@
 import { SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl } from '@gradejs-public/shared';
+import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl, logger } from '@gradejs-public/shared';
 
 /**
  * Generates `sitemap.xml` and stores it on AWS S3
@@ -19,8 +19,7 @@ export async function updateSitemap(paths: string[]) {
   });
 
   sitemap.on('error', (e) => {
-    // TODO: add logger after merge
-    console.error(e);
+    logger.error(e);
   });
 
   await s3client.send(s3command);
@@ -45,8 +44,6 @@ function createSitemapPipeline(paths: string[]) {
       priority: 1.0,
     });
   }
-
-  // TODO: add webpage results on the next PR
 
   sitemapStream.end();
 
