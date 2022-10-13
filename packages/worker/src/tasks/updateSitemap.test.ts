@@ -1,9 +1,11 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 import internal from 'stream';
 import { createGunzip } from 'zlib';
 import { updateSitemap } from './updateSitemap';
 
 jest.mock('@aws-sdk/client-s3');
+jest.mock('@aws-sdk/lib-storage');
 
 describe('task / updateSitemap', () => {
   it('should index new versions', async () => {
@@ -12,14 +14,13 @@ describe('task / updateSitemap', () => {
 
     await updateSitemap(['/test-1', '/test-2/']);
 
-    const putObjectCalls = (PutObjectCommand as jest.Mock).mock.calls;
+    const uploadCalls = (Upload as any as jest.Mock).mock.calls;
+    expect(uploadCalls).toHaveLength(1);
 
-    expect(S3Client.prototype.send).toHaveBeenCalled();
-    expect(putObjectCalls).toHaveLength(1);
+    const [[payload]] = uploadCalls;
+    expect(payload.client instanceof S3Client).toBeTruthy();
 
-    // check contents
-    const [[payload]] = putObjectCalls;
-    const stream = payload.Body;
+    const stream = payload.params.Body;
     const unzip = createGunzip();
     const pipeline = stream.pipe(unzip);
     const sitemap = await readStreamAsString(pipeline);

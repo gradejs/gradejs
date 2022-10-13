@@ -1,6 +1,7 @@
 import { SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { S3Client } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl, logger } from '@gradejs-public/shared';
 
 /**
@@ -12,17 +13,20 @@ import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl, logger } from '@gradejs
 export async function updateSitemap(paths: string[]) {
   const sitemap = createSitemapPipeline(paths);
   const s3client = new S3Client({ region: getAwsRegion() });
-  const s3command = new PutObjectCommand({
-    Body: sitemap,
-    Bucket: getAwsS3Bucket(),
-    Key: 'sitemaps/sitemap.xml.gz',
+  const upload = new Upload({
+    client: s3client,
+    params: {
+      Body: sitemap,
+      Bucket: getAwsS3Bucket(),
+      Key: 'sitemaps/sitemap.xml.gz',
+    },
   });
 
   sitemap.on('error', (e) => {
     logger.error(e);
   });
 
-  await s3client.send(s3command);
+  await upload.done();
 }
 
 const DEFAULT_PAGES = [{ url: '/', changefreq: 'never', priority: 1.0 }];
