@@ -53,6 +53,9 @@
   font-size: 20px;
   font-weight: 500;
   line-height: 1.54;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
   @include xxl {
     font-size: 26px;
