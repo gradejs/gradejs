@@ -53,6 +53,10 @@
 }
 
 .searchResultsSorters {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+
   @include mobile-and-tablet {
     display: none;
   }
