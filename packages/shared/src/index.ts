@@ -11,6 +11,7 @@ export * from './database/entities/showcasedWebPage';
 export * from './utils/aws';
 export * from './utils/env';
 export * from './utils/types';
+export * from './utils/logger';
 
 // lower case for methods and upper case for typings and zod schemas
 export * as systemApi from './systemApi/api';

@@ -5,6 +5,7 @@ import { z, ZodError } from 'zod';
 import { getOrRequestWebPageScan } from './website/service';
 import { getAffectingVulnerabilities } from './vulnerabilities/vulnerabilities';
 import {
+  logger,
   PackageMetadata,
   PackageVulnerabilityData,
   SerializableEntity,
@@ -131,11 +132,12 @@ export const appRouter = trpc
     },
   })
   .formatError(({ shape, error }) => {
-    // TODO: proper reporting
+    logger.error(shape.message, shape, error);
     return {
       ...shape,
       data: {
         ...shape.data,
+        stack: null,
         zodError:
           error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
             ? error.cause.flatten()
