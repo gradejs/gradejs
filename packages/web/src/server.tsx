@@ -6,6 +6,7 @@ import Helmet from 'react-helmet';
 import { StaticRouter } from 'react-router-dom/server';
 // TODO: fix import from different monorepo package
 import { getPort, getClientVars, isStaging } from '../../shared/src/utils/env';
+import { initRollbarLogger, logger } from '../../shared/src/utils/logger';
 import { store } from './store';
 import { App } from './components/App';
 import path from 'path';
@@ -14,6 +15,8 @@ import { Layout } from 'components/Layout';
 
 const app = express();
 const staticDir = '/static';
+
+initRollbarLogger();
 
 app.use(staticDir, express.static(path.join(__dirname, 'static')));
 app.get('/robots.txt', (_, res) =>
@@ -54,31 +57,36 @@ function getScripts(statsStr: string) {
 }
 
 app.get('*', (req, res) => {
-  const html = ReactDOMServer.renderToString(
-    <Provider store={store}>
-      <StaticRouter location={req.url}>
-        <App locationChangeHandler={() => {}} />
-      </StaticRouter>
-    </Provider>
-  );
-
-  const helmet = Helmet.renderStatic();
-
-  readFile(path.join(__dirname, 'static', 'stats.json'), { encoding: 'utf-8' }, (err, stats) => {
-    if (err) {
-      res.status(404).send();
-      return;
-    }
-
-    const { js, css } = getScripts(stats);
-
-    res.send(
-      '<!doctype html>' +
-        ReactDOMServer.renderToString(
-          <Layout js={js} css={css} head={helmet} env={getClientVars()} html={html} />
-        )
+  try {
+    const html = ReactDOMServer.renderToString(
+      <Provider store={store}>
+        <StaticRouter location={req.url}>
+          <App locationChangeHandler={() => {}} />
+        </StaticRouter>
+      </Provider>
     );
-  });
+
+    const helmet = Helmet.renderStatic();
+
+    readFile(path.join(__dirname, 'static', 'stats.json'), { encoding: 'utf-8' }, (err, stats) => {
+      if (err) {
+        res.status(404).send();
+        return;
+      }
+
+      const { js, css } = getScripts(stats);
+
+      res.send(
+        '<!doctype html>' +
+          ReactDOMServer.renderToString(
+            <Layout js={js} css={css} head={helmet} env={getClientVars()} html={html} />
+          )
+      );
+    });
+  } catch (e) {
+    logger.error(e);
+    res.status(500).send();
+  }
 });
 
 app.listen(getPort(8080));

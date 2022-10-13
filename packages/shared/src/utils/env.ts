@@ -13,6 +13,9 @@ export enum Env {
   AnalyticsId = 'GA_ID',
   VerboseAnalytics = 'DUMP_ANALYTICS',
 
+  // Third-Party
+  RollbarApiKey = 'ROLLBAR_API_KEY',
+
   // AWS
   AwsRegion = 'AWS_REGION',
   SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
@@ -35,7 +38,8 @@ export const getNodeEnv = () => {
   }
   return env as 'production' | 'development' | 'test';
 };
-const getProdEnv = () => (getEnvUnsafe(Env.ProdEnv) === 'staging' ? 'staging' : 'production');
+export const getProdEnv = () =>
+  getEnvUnsafe(Env.ProdEnv) === 'staging' ? 'staging' : 'production';
 export const getPort = (defaultPort: number) => Number(getEnv(Env.Port, defaultPort.toString()));
 
 export const isProduction = () => getNodeEnv() === 'production' && getProdEnv() === 'production';
@@ -99,6 +103,8 @@ export const getClientVars = () => {
     Env.PlausibleDomain,
     Env.AnalyticsId,
     Env.VerboseAnalytics,
+    Env.RollbarApiKey,
+    Env.ProdEnv,
   ].reduce((acc, val) => {
     acc[val] = getEnvUnsafe(val) ?? '';
     return acc;
