@@ -7,7 +7,7 @@ import { store } from './store';
 import { App } from './components/App';
 import { initAnalytics } from './services/analytics';
 import 'styles/global.scss';
-import { Env, getEnv, getProdEnv } from '@gradejs-public/shared';
+import { Env, getEnv, getProdEnv } from '../../shared/src/utils/env';
 
 const locationChangeHandler = initAnalytics();
 
