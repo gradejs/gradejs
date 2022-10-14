@@ -21,7 +21,8 @@ export async function updateSitemap(paths: string[]) {
 
     await s3client.send(s3command);
   } catch (e) {
-    logger.error('Unexpected error during a sitemap update', e);
+    logger.error('Unexpected error during sitemap update', e);
+    throw e;
   }
 }
 

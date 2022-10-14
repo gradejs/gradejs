@@ -1,5 +1,5 @@
 import express from 'express';
-import { WorkerTask } from '@gradejs-public/shared';
+import { logger, WorkerTask } from '@gradejs-public/shared';
 import * as taskHandlers from './tasks';
 
 export function createWorker() {
@@ -16,14 +16,18 @@ export function createWorker() {
   app.post('/', async (req, res, next) => {
     try {
       const message = req.body as WorkerTask;
+
       if (!(message.type in taskHandlers)) {
         throw new Error(`Unknown task: ${message.type}`);
       }
+
+      logger.info(`Received task: ${message.type}`);
 
       const result = await taskHandlers[message.type](message.payload as any);
 
       res.send({ ok: result });
     } catch (e) {
+      logger.error(e);
       next(e);
     }
   });
