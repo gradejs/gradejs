@@ -14,6 +14,8 @@ export function createWorker() {
 
   // Task handling
   app.post('/', async (req, res, next) => {
+    console.log(req.body);
+
     try {
       const message = req.body as WorkerTask;
 
