@@ -13,4 +13,5 @@ export type WorkerTaskPayloadMap = {
   syncPackageIndex: undefined;
   syncPackageIndexBatch: PackageRequest[];
   syncPackageVulnerabilities: undefined;
+  updateSitemap: string[];
 };

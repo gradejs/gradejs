@@ -21,7 +21,7 @@ const port = getPort(8080);
 
 initRollbarLogger();
 
-initDatabase({ runMigrations: true }).then(() => {
+initDatabase({ runMigrations: false }).then(() => {
   createWorker().listen(port, () => {
     logger.info(`gradejs worker started, listening on port ${port}`);
   });
