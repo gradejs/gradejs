@@ -44,11 +44,11 @@ app.get('/robots.txt', (_, res) =>
 
 app.get('/sitemaps/*', async (req, res) => {
   try {
-    const requestUrl = new URL(req.url);
+    const basename = path.basename(req.url);
     const s3client = new S3Client({ region: getAwsRegion() });
     const s3command = new GetObjectCommand({
       Bucket: getAwsS3Bucket(),
-      Key: requestUrl.pathname.slice(1),
+      Key: `sitemaps/${basename}`,
     });
 
     const response = await s3client.send(s3command);
