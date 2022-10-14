@@ -8,6 +8,7 @@ import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl } from '@gradejs-public/
  * TODO:
  * - get paths from database entities
  * - use `<sitemapindex>` when we reach 50,000 urls
+ * - use `lib-storage` for a stream upload
  */
 export async function updateSitemap(paths: string[]) {
   const sitemap = await generateSitemap(paths);

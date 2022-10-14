@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
 import { StaticRouter } from 'react-router-dom/server';
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, NoSuchKey } from '@aws-sdk/client-s3';
 // TODO: fix import from different monorepo package
 import {
   getPort,
@@ -22,6 +22,7 @@ import { readFile } from 'fs';
 import { Layout } from 'components/Layout';
 import { createSettleAsyncActionsMiddleware } from './store/middlewares/settleAsyncActions';
 import { setTimeout } from 'timers/promises';
+import { Readable } from 'stream';
 
 const app = express();
 const staticDir = '/static';
@@ -54,24 +55,22 @@ app.get('/sitemaps/*', async (req, res) => {
       Key: `sitemaps/${basename}`,
     });
 
-    logger.debug('Get Object Command', {
-      Bucket: getAwsS3Bucket(),
-      Key: `sitemaps/${basename}`,
-    });
-
     const response = await s3client.send(s3command);
 
-    logger.debug('Get Object Response', response);
-
-    if (response.Body) {
-      res.send(response.Body);
+    if (response.Body instanceof Readable) {
+      response.Body.pipe(res);
     } else {
-      throw new Error('Unexpected');
+      throw new Error('Unexpected response format');
     }
   } catch (e) {
-    logger.error('Unexpected sitemap error', e);
-    res.status(404);
-    res.send();
+    if (e instanceof NoSuchKey) {
+      res.status(404);
+      res.send();
+    } else {
+      logger.error('Unexpected sitemap error', e);
+      res.status(500);
+      res.send();
+    }
   }
 });
 
