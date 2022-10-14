@@ -1,2 +1,4 @@
+Sitemap: https://gradejs.com/sitemaps/sitemap.xml.gz
+
 User-agent: *
 Allow: /

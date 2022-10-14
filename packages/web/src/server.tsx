@@ -5,8 +5,15 @@ import { Provider } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
 import { StaticRouter } from 'react-router-dom/server';
+import { S3Client, GetObjectCommand, NoSuchKey } from '@aws-sdk/client-s3';
 // TODO: fix import from different monorepo package
-import { getPort, getClientVars, isStaging } from '../../shared/src/utils/env';
+import {
+  getPort,
+  getClientVars,
+  isStaging,
+  getAwsRegion,
+  getAwsS3Bucket,
+} from '../../shared/src/utils/env';
 import { initRollbarLogger, logger } from '../../shared/src/utils/logger';
 import { AppStore, createApplicationStore } from './store';
 import { App } from './components/App';
@@ -15,6 +22,7 @@ import { readFile } from 'fs';
 import { Layout } from 'components/Layout';
 import { createSettleAsyncActionsMiddleware } from './store/middlewares/settleAsyncActions';
 import { setTimeout } from 'timers/promises';
+import { Readable } from 'stream';
 
 const app = express();
 const staticDir = '/static';
@@ -22,6 +30,7 @@ const staticDir = '/static';
 initRollbarLogger();
 
 app.use(staticDir, express.static(path.join(__dirname, 'static')));
+
 app.get('/robots.txt', (_, res) =>
   readFile(
     path.join(__dirname, isStaging() ? '/robots.staging.txt' : '/robots.txt'),
@@ -31,11 +40,39 @@ app.get('/robots.txt', (_, res) =>
         res.send(data);
       } else {
         res.status(404);
-        res.send(null);
+        res.send();
       }
     }
   )
 );
+
+app.get('/sitemaps/*', async (req, res) => {
+  try {
+    const basename = path.basename(req.url);
+    const s3client = new S3Client({ region: getAwsRegion() });
+    const s3command = new GetObjectCommand({
+      Bucket: getAwsS3Bucket(),
+      Key: `sitemaps/${basename}`,
+    });
+
+    const response = await s3client.send(s3command);
+
+    if (response.Body instanceof Readable) {
+      response.Body.pipe(res);
+    } else {
+      throw new Error('Unexpected response format');
+    }
+  } catch (e) {
+    if (e instanceof NoSuchKey) {
+      res.status(404);
+      res.send();
+    } else {
+      logger.error('Unexpected sitemap error', e);
+      res.status(500);
+      res.send();
+    }
+  }
+});
 
 function getScripts(statsStr: string) {
   let stats: Record<string, string[]>;
@@ -113,7 +150,7 @@ app.get('*', async (req, res, next) => {
         return;
       }
 
-    const { js, css } = getScripts(stats);
+      const { js, css } = getScripts(stats);
 
       res.send(
         '<!doctype html>' +

@@ -10,17 +10,19 @@ import {
 
 checkRequiredEnvironmentVariables([
   Env.AwsRegion,
+  Env.AwsS3Bucket,
   Env.DatabaseUrl,
   Env.InternalApiRootUrl,
   Env.SqsWorkerQueueUrl,
   Env.RollbarApiKey,
+  Env.PublicRootUrl,
 ]);
 
 const port = getPort(8080);
 
 initRollbarLogger();
 
-initDatabase({ runMigrations: true }).then(() => {
+initDatabase({ runMigrations: false }).then(() => {
   createWorker().listen(port, () => {
     logger.info(`gradejs worker started, listening on port ${port}`);
   });

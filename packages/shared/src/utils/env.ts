@@ -18,6 +18,7 @@ export enum Env {
 
   // AWS
   AwsRegion = 'AWS_REGION',
+  AwsS3Bucket = 'AWS_S3_BUCKET',
   SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
   SqsLocalPort = 'SQS_LOCAL_PORT',
 
@@ -62,6 +63,8 @@ export const getGradeJsApiKey = () => {
   return getEnv(Env.GradeJsApiKey);
 };
 
+export const getAwsRegion = () => getEnv(Env.AwsRegion);
+export const getAwsS3Bucket = () => getEnv(Env.AwsS3Bucket);
 export const getSqsLocalPort = () => Number(getEnv(Env.SqsLocalPort, '0'));
 
 export const getGitHubAccessToken = () => getEnv(Env.GitHubAccessToken);
