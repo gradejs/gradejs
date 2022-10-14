@@ -1,3 +1,4 @@
+import 'cross-fetch/polyfill';
 import express from 'express';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -14,11 +15,13 @@ import {
   getAwsS3Bucket,
 } from '../../shared/src/utils/env';
 import { initRollbarLogger, logger } from '../../shared/src/utils/logger';
-import { store } from './store';
+import { AppStore, createApplicationStore } from './store';
 import { App } from './components/App';
 import path from 'path';
 import { readFile } from 'fs';
 import { Layout } from 'components/Layout';
+import { createSettleAsyncActionsMiddleware } from './store/middlewares/settleAsyncActions';
+import { setTimeout } from 'timers/promises';
 
 const app = express();
 const staticDir = '/static';
@@ -86,36 +89,79 @@ function getScripts(statsStr: string) {
     }, assets);
 }
 
-app.get('*', (req, res) => {
+function renderPass(store: AppStore, location: string) {
+  return ReactDOMServer.renderToString(
+    <Provider store={store}>
+      <StaticRouter location={location}>
+        <App locationChangeHandler={() => {}} />
+      </StaticRouter>
+    </Provider>
+  );
+}
+
+async function renderTimeout(timeout: number, abort: AbortController) {
+  await setTimeout(timeout, null, { signal: abort.signal });
+  throw new Error('Timed out');
+}
+
+async function renderCycle(location: string, maxPasses = 3, passTimeout = 15000) {
+  const { trackAsyncActionsMiddleware, settleAsyncActions } = createSettleAsyncActionsMiddleware();
+  const store = createApplicationStore([trackAsyncActionsMiddleware]);
+
+  let currentPass = 0;
+  let renderResult = '';
+  do {
+    const timeoutAbortController = new AbortController();
+    const renderTimeoutPromise = renderTimeout(passTimeout, timeoutAbortController);
+    const renderPassResultPromise = settleAsyncActions(async () => renderPass(store, location));
+
+    const passResult = await Promise.race([renderPassResultPromise, renderTimeoutPromise]);
+    if (passResult) {
+      timeoutAbortController.abort();
+      renderResult = passResult.result;
+
+      if (passResult.resolvedActionCount === 0) {
+        break;
+      }
+    }
+
+    currentPass++;
+  } while (currentPass < maxPasses);
+
+  return { renderResult, store };
+}
+
+app.get('*', async (req, res, next) => {
   try {
-    const html = ReactDOMServer.renderToString(
-      <Provider store={store}>
-        <StaticRouter location={req.url}>
-          <App locationChangeHandler={() => {}} />
-        </StaticRouter>
-      </Provider>
-    );
+    const { renderResult, store } = await renderCycle(req.url);
+    const head = Helmet.renderStatic();
 
-    const helmet = Helmet.renderStatic();
-
+    // TODO: Move this out to app initialization
     readFile(path.join(__dirname, 'static', 'stats.json'), { encoding: 'utf-8' }, (err, stats) => {
       if (err) {
         res.status(404).send();
         return;
       }
 
-      const { js, css } = getScripts(stats);
+    const { js, css } = getScripts(stats);
 
       res.send(
         '<!doctype html>' +
           ReactDOMServer.renderToString(
-            <Layout js={js} css={css} head={helmet} env={getClientVars()} html={html} />
+            <Layout
+              js={js}
+              css={css}
+              head={head}
+              env={getClientVars()}
+              html={renderResult}
+              initialState={store.getState()}
+            />
           )
       );
     });
   } catch (e) {
     logger.error(e);
-    res.status(500).send();
+    next(e);
   }
 });
 
