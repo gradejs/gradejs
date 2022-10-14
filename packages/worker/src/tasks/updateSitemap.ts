@@ -1,7 +1,7 @@
 import { SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl, logger } from '@gradejs-public/shared';
+import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl } from '@gradejs-public/shared';
 
 /**
  * Generates `sitemap.xml` and stores it on AWS S3
@@ -10,20 +10,15 @@ import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl, logger } from '@gradejs
  * - use `<sitemapindex>` when we reach 50,000 urls
  */
 export async function updateSitemap(paths: string[]) {
-  try {
-    const sitemap = await generateSitemap(paths);
-    const s3client = new S3Client({ region: getAwsRegion() });
-    const s3command = new PutObjectCommand({
-      Body: sitemap,
-      Bucket: getAwsS3Bucket(),
-      Key: 'sitemaps/sitemap.xml.gz',
-    });
+  const sitemap = await generateSitemap(paths);
+  const s3client = new S3Client({ region: getAwsRegion() });
+  const s3command = new PutObjectCommand({
+    Body: sitemap,
+    Bucket: getAwsS3Bucket(),
+    Key: 'sitemaps/sitemap.xml.gz',
+  });
 
-    await s3client.send(s3command);
-  } catch (e) {
-    logger.error('Unexpected error during sitemap update', e);
-    throw e;
-  }
+  await s3client.send(s3command);
 }
 
 const DEFAULT_PAGES = [{ url: '/', changefreq: 'never', priority: 1.0 }];

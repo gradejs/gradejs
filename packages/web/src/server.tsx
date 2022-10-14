@@ -39,7 +39,7 @@ app.get('/robots.txt', (_, res) =>
         res.send(data);
       } else {
         res.status(404);
-        res.send(null);
+        res.send();
       }
     }
   )
@@ -54,7 +54,14 @@ app.get('/sitemaps/*', async (req, res) => {
       Key: `sitemaps/${basename}`,
     });
 
+    logger.debug('Get Object Command', {
+      Bucket: getAwsS3Bucket(),
+      Key: `sitemaps/${basename}`,
+    });
+
     const response = await s3client.send(s3command);
+
+    logger.debug('Get Object Response', response);
 
     if (response.Body) {
       res.send(response.Body);
@@ -62,8 +69,9 @@ app.get('/sitemaps/*', async (req, res) => {
       throw new Error('Unexpected');
     }
   } catch (e) {
+    logger.error('Unexpected sitemap error', e);
     res.status(404);
-    res.send('Not found');
+    res.send();
   }
 });
 
@@ -143,7 +151,7 @@ app.get('*', async (req, res, next) => {
         return;
       }
 
-    const { js, css } = getScripts(stats);
+      const { js, css } = getScripts(stats);
 
       res.send(
         '<!doctype html>' +

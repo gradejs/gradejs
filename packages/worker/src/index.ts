@@ -15,6 +15,7 @@ checkRequiredEnvironmentVariables([
   Env.InternalApiRootUrl,
   Env.SqsWorkerQueueUrl,
   Env.RollbarApiKey,
+  Env.PublicRootUrl,
 ]);
 
 const port = getPort(8080);
