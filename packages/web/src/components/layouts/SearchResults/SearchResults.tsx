@@ -138,7 +138,7 @@ export default function SearchResults({
               </>
             ) : (
               packages.map((pkg, _index) => (
-                <PackagePreview pkg={pkg} opened={true /*index === 0*/} />
+                <PackagePreview key={pkg.name} pkg={pkg} opened={true /*index === 0*/} />
               ))
             )}
           </div>
