@@ -21,6 +21,7 @@ import { GetPackageInfoOutput } from '../../../services/apiClient';
 import { SitesListSkeleton } from '../../ui/SitesList/SitesListSkeleton';
 import SitesList from '../../ui/SitesList/SitesList';
 import semver from 'semver';
+import { useNavigate } from 'react-router-dom';
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   month: 'short',
   day: 'numeric',
@@ -43,6 +44,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [sortField, setSortField] = useState('versions');
   const [fullDescVisible, setFullDescVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
+  const navigate = useNavigate();
 
   const sorts = ['weight', 'popularity', 'versions'];
 
@@ -77,7 +79,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
     setModalSortOpen(false);
   };
 
-  const deps = Object.values(versionSpecificValues?.[latestVersion!]?.dependencies ?? {});
+  const deps = Object.keys(versionSpecificValues?.[latestVersion!]?.dependencies ?? {});
 
   const formattedVulnerabilities = useMemo(
     () =>
@@ -306,8 +308,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                           uses={version.uses}
                           size={version.size}
                           modulesCount={version.modulesCount}
-                          modules={version.modules}
-                          entries={version.entries}
                         />
                       ))}
                 </div>
@@ -317,7 +317,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
 
               {/* TODO: there are no skeletons for vulnerabilities in design,
                         not sure if intended or overlooked */}
-              {!loading && (
+              {!loading && !!formattedVulnerabilities?.length && (
                 <section>
                   <h2>Vulnerabilities</h2>
 
@@ -541,17 +541,25 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
 
                 <div className={styles.sidebarItem}>
                   <div className={styles.sidebarItemTitle}>
-                    {!loading && deps.length} {plural(deps.length, 'Dependency', 'Dependencies')}
+                    {!loading && plural(deps.length, 'Dependency', 'Dependencies')}
                   </div>
-                  <ChipGroup>
-                    {loading
-                      ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
-                      : deps.map((dependency) => (
-                          <Chip key={dependency} font='monospace' size='medium' fontSize='small'>
-                            {dependency}
-                          </Chip>
-                        ))}
-                  </ChipGroup>
+                  {!!deps.length && (
+                    <ChipGroup>
+                      {loading
+                        ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
+                        : deps.map((dependency) => (
+                            <Chip
+                              key={dependency}
+                              font='monospace'
+                              size='medium'
+                              fontSize='small'
+                              onClick={() => navigate('/package/' + dependency)}
+                            >
+                              {dependency}
+                            </Chip>
+                          ))}
+                    </ChipGroup>
+                  )}
                 </div>
 
                 {/*<div className={styles.sidebarItem}>*/}

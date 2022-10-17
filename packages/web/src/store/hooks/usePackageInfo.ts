@@ -8,10 +8,14 @@ export const usePackageInfo = (packageName: string) => {
   const info = useAppSelector(selectPackageInfo);
 
   useUniversalEffect(() => {
-    if (!info.packageInfo && !info.isLoading && !info.error) {
+    if (
+      (!info.packageInfo || info.packageInfo.name !== packageName) &&
+      !info.isLoading &&
+      !info.error
+    ) {
       dispatch(requestPackageInfo({ packageName }));
     }
-  }, [info]);
+  }, [info, packageName]);
 
   return info;
 };
