@@ -98,7 +98,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
         id: item?.hostname?.hostname,
         image: '', // TODO,
         name: item?.hostname?.hostname,
-        packageCount: item?.sourceScan?.scanResult?.identifiedPackages.length,
+        packagesCount: item?.sourceScan?.scanResult?.identifiedPackages.length,
       })),
     [usage]
   );

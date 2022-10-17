@@ -19,7 +19,8 @@ export async function getPackageInfoByName(packageName: string) {
       .createQueryBuilder('usage')
       .leftJoinAndSelect('usage.hostname', 'hostname')
       .leftJoinAndSelect('usage.sourceScan', 'sourceScan')
-      .where('package_name = :packageName', { packageName }),
+      .where('package_name = :packageName', { packageName })
+      .limit(16), // TODO: remove hardcode
     packagePopularityRepo
       .createQueryBuilder()
       .where('package_name = :packageName', { packageName }),
