@@ -322,7 +322,7 @@ export default function PackagePreview({
             {/* ^ Nearly impossible thing for responsive markup rendered on server.
                 Maybe just avoid conditional render? // oklimenko */}
             {pkg.registryMetadata?.keywords?.slice(0, 5).map((tag) => (
-              <a href='#' className={styles.tag}>
+              <a key={tag} href='#' className={styles.tag}>
                 {tag}
               </a>
             ))}
@@ -348,7 +348,12 @@ export default function PackagePreview({
               ) : (
                 <AvatarGroup>
                   {pkg.registryMetadata?.maintainers?.map((author) => (
-                    <Avatar alt={author.name} altAsTooltip={true} src={author.avatar} />
+                    <Avatar
+                      key={author.name}
+                      alt={author.name}
+                      altAsTooltip={true}
+                      src={author.avatar}
+                    />
                   ))}
                 </AvatarGroup>
               )}

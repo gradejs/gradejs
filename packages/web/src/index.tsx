@@ -8,6 +8,7 @@ import { App } from './components/App';
 import { initAnalytics } from './services/analytics';
 import { Env, getEnv, getProdEnv } from '../../shared/src/utils/env';
 import 'styles/global.scss';
+import ScrollToTop from './utils/ScrollToTop';
 
 const store = createApplicationStore([], window.__INITIAL_STATE__ ?? {});
 const locationChangeHandler = initAnalytics();
@@ -22,7 +23,9 @@ ReactDOM.hydrate(
     <ErrorBoundary level={LEVEL_WARN}>
       <Provider store={store}>
         <BrowserRouter>
-          <App locationChangeHandler={locationChangeHandler} />
+          <ScrollToTop>
+            <App locationChangeHandler={locationChangeHandler} />
+          </ScrollToTop>
         </BrowserRouter>
       </Provider>
     </ErrorBoundary>
