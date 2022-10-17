@@ -62,7 +62,7 @@ export default function SearchResults({
   }
 
   const metaItems = [
-    ...[webpackMeta],
+    webpackMeta,
     {
       icon: <Icon kind='weight' width={24} height={24} color='#212121' />,
       text: `${getReadableSizeString(bundleSize)} webpack bundle size`,
