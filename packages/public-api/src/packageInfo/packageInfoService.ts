@@ -15,7 +15,11 @@ export async function getPackageInfoByName(packageName: string) {
 
   const queries = [
     packageRepo.createQueryBuilder().where('name = :packageName', { packageName }),
-    packageUsageRepo.createQueryBuilder().where('package_name = :packageName', { packageName }),
+    packageUsageRepo
+      .createQueryBuilder('usage')
+      .leftJoinAndSelect('usage.hostname', 'hostname')
+      .leftJoinAndSelect('usage.sourceScan', 'sourceScan')
+      .where('package_name = :packageName', { packageName }),
     packagePopularityRepo
       .createQueryBuilder()
       .where('package_name = :packageName', { packageName }),

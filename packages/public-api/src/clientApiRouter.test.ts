@@ -281,6 +281,19 @@ describe('routes / website', () => {
             {
               packageName: 'react-hoist',
               packageVersionSet: ['20.0.1'],
+              hostname: {
+                hostname: 'testtest.com',
+              },
+              sourceScan: {
+                scanResult: {
+                  identifiedPackages: [
+                    {
+                      name: 'react-hoist',
+                      versionSet: ['20.0.1'],
+                    },
+                  ],
+                },
+              },
             },
           ],
           vulnerabilities: [
