@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import styles from './PackagePage.module.scss';
 import modalStyles from '../../ui/Modal/Modal.module.scss';
 import clsx from 'clsx';
@@ -31,6 +32,11 @@ type Props = {
   loading?: boolean;
   packageInfo?: GetPackageInfoOutput;
 };
+
+// Clean commonly used tags inside markdown
+function mdclean(markdown = ''): string {
+  return markdown.replace(/<br\/?\s?>/g, '\n');
+}
 
 const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [sortDirection, setSortDirection] = useState('asc');
@@ -89,10 +95,10 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const formattedSitesUsage = useMemo(
     () =>
       (usage ?? []).map((item) => ({
-        id: item.hostname.hostname,
+        id: item?.hostname?.hostname,
         image: '', // TODO,
-        name: item.hostname.hostname,
-        packageCount: item.sourceScan?.scanResult?.identifiedPackages.length,
+        name: item?.hostname?.hostname,
+        packageCount: item?.sourceScan?.scanResult?.identifiedPackages.length,
       })),
     [usage]
   );
@@ -197,7 +203,13 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                   ) : (
                     <>
                       <div className={styles.packageDescriptionCol}>
-                        {fullDescVisible ? fullDescription : description}
+                        {fullDescVisible ? (
+                          <ReactMarkdown linkTarget='_blank' skipHtml={true}>
+                            {mdclean(fullDescription) ?? ''}
+                          </ReactMarkdown>
+                        ) : (
+                          description
+                        )}
                       </div>
                     </>
                   )}
