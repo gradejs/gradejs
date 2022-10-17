@@ -138,7 +138,7 @@ export default function SearchResultsSidebar({
         }),
       handleSearchTextChange: (newSearchText: SearchText) => onSearchByTextChange(newSearchText),
     }),
-    [onFiltersChanged, selectedFilters]
+    [onFiltersChanged, onSearchByTextChange, selectedFilters]
   );
 
   return (

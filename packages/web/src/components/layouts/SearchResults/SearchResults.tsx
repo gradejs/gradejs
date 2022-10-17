@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import clsx from 'clsx';
 import styles from './SearchResults.module.scss';
 import Footer from 'components/ui/Footer/Footer';
@@ -10,6 +10,7 @@ import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResul
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
+import SearchDesktopSorters from '../../ui/SearchDesktopSorters/SearchDesktopSorters';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import {
   PackageFilters,
@@ -69,6 +70,8 @@ export default function SearchResults({
   accuracy,
 }: Props) {
   let webpackMeta;
+  const sortField = selectedSorters[0].by;
+  const sortDirection = selectedSorters[0].direction;
 
   if (webpackVersion !== 'x.x') {
     webpackMeta = {
@@ -124,17 +127,18 @@ export default function SearchResults({
     },
   ];
 
-  const handleSortChange = (newSorterName: PackageSortType) => {
-    const sortOrder = newSorterName === sortField && sortDirection === 'DESC' ? 'ASC' : 'DESC';
-    setSortField(newSorterName);
-    setSortDirection(sortOrder);
+  const handleSortChange = useCallback(
+    (newSorterName: PackageSortType) => {
+      const sortOrder = newSorterName === sortField && sortDirection === 'DESC' ? 'ASC' : 'DESC';
 
-    const newSorter: PackageSorter = {
-      by: newSorterName,
-      direction: sortOrder,
-    };
-    onSortersChange([newSorter]);
-  };
+      const newSorter: PackageSorter = {
+        by: newSorterName,
+        direction: sortOrder,
+      };
+      onSortersChange([newSorter]);
+    },
+    [onSortersChange]
+  );
 
   const handleFilterReset = useCallback(() => onFiltersChange(null), [onFiltersChange]);
 
@@ -162,29 +166,12 @@ export default function SearchResults({
             )}
 
             <div className={styles.searchResultsSorters}>
-              {availableSorters.map((sorter) => (
-                <button
-                  key={sorter}
-                  className={clsx(
-                    styles.sortButton,
-                    sortField === sorter && styles.sortButtonActive
-                  )}
-                  onClick={() => handleSortChange(sorter)}
-                >
-                  {sorter[0].toUpperCase() + sorter.slice(1)}
-                  {sortField === sorter && (
-                    <Icon
-                      kind='sort'
-                      width={10}
-                      height={9}
-                      className={clsx(
-                        styles.sortIcon,
-                        sortDirection === 'DESC' && styles.sortIconRotated
-                      )}
-                    />
-                  )}
-                </button>
-              ))}
+              <SearchDesktopSorters
+                availableSorters={availableSorters}
+                sortField={selectedSorters[0].by}
+                sortDirection={selectedSorters[0].direction}
+                handleSortChange={handleSortChange}
+              />
             </div>
           </div>
 
