@@ -9,10 +9,12 @@ import ScansWithVulnerabilitiesCardList, {
   KeyedScansWithVulnerabilitiesCardProps,
 } from '../ui/CardList/ScansWithVulnerabilitiesCardList';
 import { CardListSkeleton } from '../ui/CardList/CardListSkeleton';
+import { useNavigate } from 'react-router-dom';
 import { getFaviconUrlByHostname } from 'utils/helpers';
 
 export default function ShowcaseContainer() {
   const showcase = useShowcaseData();
+  const navigate = useNavigate();
 
   if (showcase.isLoading) {
     return (
@@ -28,6 +30,8 @@ export default function ShowcaseContainer() {
     );
   }
 
+  const onPackageClick = (name: string) => navigate('/package/' + name);
+
   const popularQueries: KeyedPackagesBySourceCardProps[] = (
     showcase.showcase?.showcasedScans ?? []
   ).map(({ hostname, webPage, scanPreview }, idx) => ({
@@ -37,6 +41,7 @@ export default function ShowcaseContainer() {
     sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
     packages: scanPreview.packageNames,
     morePackagesCount: scanPreview.totalCount - scanPreview.packageNames.length,
+    onPackageClick,
   }));
 
   const scansWithVulnerabilities: KeyedScansWithVulnerabilitiesCardProps[] = (

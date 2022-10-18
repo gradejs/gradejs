@@ -110,7 +110,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
       Object.entries(versionSpecificValues ?? {})
         .map(([version, data]) => ({
           version,
-          updateDate: data.updateDate,
+          updateDate: data.updateDate ? new Date(data.updateDate) : undefined,
           uses: popularity?.byVersion.find((item) => item.package_version === version)?.count,
           size: data.unpackedSize,
           modulesCount: data.registryModulesCount, // TODO: detected modules count?
@@ -180,7 +180,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 ) : (
                   <>
                     <span className={styles.packageMetaItem}>{latestVersion}</span>
-                    <span className={styles.packageMetaItem}>{updateDate}</span>
+                    <span className={styles.packageMetaItem}>Last updated at {updateDate}</span>
                   </>
                 )}
               </div>
