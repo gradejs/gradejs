@@ -4,10 +4,12 @@ import {
   systemApi,
   Hostname,
   WebPage,
+  logger,
 } from '@gradejs-public/shared';
 import { EntityManager } from 'typeorm';
 import { syncPackageUsageByHostname } from '../projections/syncPackageUsageByHostname';
 import { syncScansWithVulnerabilities } from '../projections/syncScansWithVulnerabilities';
+import { saveScanWebPageFavicon } from './metadata/favicon';
 
 const RESCAN_TIMEOUT_MS = 1000 * 60 * 60 * 24; // 1 day in ms
 
@@ -84,11 +86,13 @@ export async function syncWebPageScanResult(scanReport: systemApi.ScanReport) {
   return await db.transaction(async (em) => {
     const webPageScanRepo = em.getRepository(WebPageScan);
 
+    const scanReportUrl = new URL(scanReport.url);
+
     let scanEntity: WebPageScan;
     if (scanReport.requestId) {
       scanEntity = await webPageScanRepo.findOneOrFail({ id: parseInt(scanReport.requestId, 10) });
     } else {
-      const webPageEntity = await findOrCreateWebPage(new URL(scanReport.url), em);
+      const webPageEntity = await findOrCreateWebPage(scanReportUrl, em);
       scanEntity = webPageScanRepo.create({
         webPage: webPageEntity,
       });
@@ -108,10 +112,13 @@ export async function syncWebPageScanResult(scanReport: systemApi.ScanReport) {
 
     await webPageScanRepo.save(scanEntity);
 
-    if (scanEntity.status === 'processed') {
+    if (scanEntity.status === 'processed' && scanReport.status === 'ready') {
       await Promise.all([
         syncPackageUsageByHostname(scanEntity, em),
         syncScansWithVulnerabilities(scanEntity, em),
+        saveScanWebPageFavicon(scanReportUrl, scanReport.sourcePageMetadata).catch((e) =>
+          logger.error(e)
+        ),
       ]);
     }
 

@@ -1,5 +1,5 @@
 import 'cross-fetch/polyfill';
-import express from 'express';
+import express, { Response } from 'express';
 import React from 'react';
 import { Provider } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
@@ -46,32 +46,43 @@ app.get('/robots.txt', (_, res) =>
   )
 );
 
-app.get('/sitemaps/*', async (req, res) => {
+async function pipeS3Object(objectKey: string, res: Response) {
   try {
-    const basename = path.basename(req.url);
     const s3client = new S3Client({ region: getAwsRegion() });
     const s3command = new GetObjectCommand({
       Bucket: getAwsS3Bucket(),
-      Key: `sitemaps/${basename}`,
+      Key: objectKey,
     });
 
     const response = await s3client.send(s3command);
 
     if (response.Body instanceof Readable) {
+      if (response.ContentType) {
+        res.header('Content-Type', response.ContentType);
+      }
+
       response.Body.pipe(res);
     } else {
       throw new Error('Unexpected response format');
     }
   } catch (e) {
     if (e instanceof NoSuchKey) {
-      res.status(404);
-      res.send();
+      res.status(404).send();
     } else {
-      logger.error('Unexpected sitemap error', e);
-      res.status(500);
-      res.send();
+      logger.error('Unexpected S3 error', e);
+      res.status(500).send();
     }
   }
+}
+
+app.get('/sitemaps/*', async (req, res) => {
+  const basename = path.basename(req.url);
+  pipeS3Object(`sitemaps/${basename}`, res);
+});
+
+app.get('/favicons/*', async (req, res) => {
+  const basename = path.basename(req.url);
+  pipeS3Object(`favicons/${basename}`, res);
 });
 
 function getScripts(statsStr: string) {

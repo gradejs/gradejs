@@ -23,6 +23,7 @@ describe('website / service', () => {
       requestId: scan.id.toString(),
       status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
+      sourcePageMetadata: {},
       identifiedModuleMap: {
         moduleId: {
           packageName: 'react',
@@ -73,6 +74,7 @@ describe('website / service', () => {
       status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
       identifiedModuleMap: {},
+      sourcePageMetadata: {},
       identifiedPackages: [
         {
           name: 'react',
@@ -107,6 +109,7 @@ describe('website / service', () => {
       status: systemApi.ScanReport.Status.Ready,
       url: url.toString(),
       identifiedModuleMap: {},
+      sourcePageMetadata: {},
       identifiedPackages: [
         {
           name: 'react',
