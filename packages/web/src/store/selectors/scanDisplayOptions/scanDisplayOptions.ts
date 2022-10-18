@@ -51,15 +51,13 @@ export const makeSelectSortedAndFilteredScanPackages = () =>
 
       const searchValue = searchText.toLowerCase();
 
-      // TODO: looks excessive with Array.isArray, but eslint will get trigger for 'use nullish coalescing' otherwise
-      //       with just ||, probably could be simplified
       const matchedPackages = packages.filter(({ name, registryMetadata }) => {
         return (
           name.toLowerCase().includes(searchValue) ||
           registryMetadata?.description?.toLowerCase().includes(searchValue) ||
-          (Array.isArray(registryMetadata?.keywords) &&
+          (!!registryMetadata?.keywords &&
             registryMetadata?.keywords?.some((it) => it.toLowerCase().includes(searchValue))) ||
-          (Array.isArray(registryMetadata?.maintainers) &&
+          (!!registryMetadata?.maintainers &&
             registryMetadata?.maintainers?.some((it) =>
               it.name.toLowerCase().includes(searchValue)
             ))

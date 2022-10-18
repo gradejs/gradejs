@@ -68,10 +68,7 @@ export function WebsiteResultsPage() {
     [searchableEntities]
   );
 
-  const availableSorters: PackageSortType[] = useMemo(
-    () => ['name', 'size', 'popularity', 'severity'],
-    []
-  );
+  const availableSorters: PackageSortType[] = ['name', 'size', 'popularity', 'severity'];
 
   const selectedDisplayOptions = useAppSelector((state) =>
     selectScanDisplayOptions(state, normalizedUrl)
@@ -137,6 +134,25 @@ export function WebsiteResultsPage() {
     },
     [dispatch, normalizedUrl, selectedDisplayOptions]
   );
+
+  const selectedSortField = selectedDisplayOptions.packageSorters[0].by;
+  const selectedSortDirection = selectedDisplayOptions.packageSorters[0].direction;
+
+  const handleSortChange = useCallback(
+    (newSorterName: PackageSortType) => {
+      const sortOrder =
+        newSorterName === selectedSortField && selectedSortDirection === 'DESC' ? 'ASC' : 'DESC';
+
+      const newSorter: PackageSorter = {
+        by: newSorterName,
+        direction: sortOrder,
+      };
+      handleSortersChange([newSorter]);
+    },
+    [handleSortersChange]
+  );
+
+  const handleFilterReset = useCallback(() => handleFiltersChange(null), [handleFiltersChange]);
 
   if (isNotFound) {
     return (
@@ -205,10 +221,7 @@ export function WebsiteResultsPage() {
     ? '91'
     : accuracyMap[webpackVersion] ?? '68.85';
 
-  let identifiedPackages;
-  if (scanResult?.scan?.scanResult?.identifiedPackages) {
-    identifiedPackages = scanResult?.scan?.scanResult?.identifiedPackages;
-  }
+  const identifiedPackages = scanResult?.scan?.scanResult?.identifiedPackages;
 
   return (
     <>
@@ -232,12 +245,14 @@ export function WebsiteResultsPage() {
         scanDate={scanResult?.scan?.finishedAt}
         searchText={selectedDisplayOptions.searchText}
         selectedFilters={selectedDisplayOptions.packageFilters}
-        selectedSorters={selectedDisplayOptions.packageSorters}
+        selectedSortField={selectedSortField}
+        selectedSortDirection={selectedSortDirection}
         availableFilters={availableFilters}
         availableSorters={availableSorters}
         onSearchByTextChange={handleSearchByTextChange}
         onFiltersChange={handleFiltersChange}
-        onSortersChange={handleSortersChange}
+        onFiltersReset={handleFilterReset}
+        onSortChange={handleSortChange}
         webpackVersion={webpackVersion}
         accuracy={accuracy}
       />

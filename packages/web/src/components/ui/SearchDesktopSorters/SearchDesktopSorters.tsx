@@ -2,36 +2,43 @@ import React from 'react';
 import clsx from 'clsx';
 import styles from '../../layouts/SearchResults/SearchResults.module.scss';
 import { Icon } from '../Icon/Icon';
-import { PackageSortType } from '../../../store/slices/scanDisplayOptions';
+import { PackageSorter, PackageSortType } from '../../../store/slices/scanDisplayOptions';
+import { capitalizeWord } from '../../../utils/helpers';
 
 type Props = {
   availableSorters: PackageSortType[];
-  sortField: PackageSortType;
-  sortDirection: 'DESC' | 'ASC';
-  handleSortChange: (newSorterName: PackageSortType) => void;
+  selectedSortField: PackageSorter['by'];
+  selectedSortDirection: PackageSorter['direction'];
+  onSortChange: (newSorters: PackageSortType) => void;
 };
 
 const SearchDesktopSorters = ({
   availableSorters,
-  sortField,
-  sortDirection,
-  handleSortChange,
+  selectedSortField,
+  selectedSortDirection,
+  onSortChange,
 }: Props) => {
   return (
     <>
       {availableSorters.map((sorter) => (
         <button
           key={sorter}
-          className={clsx(styles.sortButton, sortField === sorter && styles.sortButtonActive)}
-          onClick={() => handleSortChange(sorter)}
+          className={clsx(
+            styles.sortButton,
+            selectedSortField === sorter && styles.sortButtonActive
+          )}
+          onClick={() => onSortChange(sorter)}
         >
-          {sorter[0].toUpperCase() + sorter.slice(1)}
-          {sortField === sorter && (
+          {capitalizeWord(sorter)}
+          {selectedSortField === sorter && (
             <Icon
               kind='sort'
               width={10}
               height={9}
-              className={clsx(styles.sortIcon, sortDirection === 'DESC' && styles.sortIconRotated)}
+              className={clsx(
+                styles.sortIcon,
+                selectedSortDirection === 'DESC' && styles.sortIconRotated
+              )}
             />
           )}
         </button>

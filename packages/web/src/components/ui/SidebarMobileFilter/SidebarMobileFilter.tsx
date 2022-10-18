@@ -4,7 +4,8 @@ import { Icon } from '../Icon/Icon';
 import { Button } from '../index';
 import Badge from '../Badge/Badge';
 import clsx from 'clsx';
-import { PackageSortType } from '../../../store/slices/scanDisplayOptions';
+import { PackageSorter } from '../../../store/slices/scanDisplayOptions';
+import { capitalizeWord } from 'utils/helpers';
 
 type ToggleList = {
   name: string;
@@ -14,20 +15,20 @@ type ToggleList = {
 
 type Props = {
   isChanged: boolean;
-  resetFilters: () => void;
+  onFiltersReset: () => void;
   onSortOpen: () => void;
   filterTriggers: ToggleList[];
-  sortField: PackageSortType;
-  sortDirection: 'DESC' | 'ASC';
+  selectedSortField: PackageSorter['by'];
+  selectedSortDirection: PackageSorter['direction'];
 };
 
 export default function SidebarMobileFilter({
   isChanged,
-  resetFilters,
+  onFiltersReset,
   onSortOpen,
   filterTriggers,
-  sortField,
-  sortDirection,
+  selectedSortField,
+  selectedSortDirection,
 }: Props) {
   return (
     <>
@@ -41,13 +42,16 @@ export default function SidebarMobileFilter({
 
         <div>
           <button className={styles.mobileFilterSort} onClick={onSortOpen}>
-            Sorted by {sortField[0].toUpperCase() + sortField.slice(1)}
+            Sorted by {capitalizeWord(selectedSortField)}
             <Icon
               kind='sort'
               width={10}
               height={9}
               color='#212121'
-              className={clsx(styles.sortIcon, sortDirection === 'DESC' && styles.sortIconRotated)}
+              className={clsx(
+                styles.sortIcon,
+                selectedSortDirection === 'DESC' && styles.sortIconRotated
+              )}
             />
           </button>
         </div>
@@ -57,7 +61,7 @@ export default function SidebarMobileFilter({
         <Button
           variant='secondary'
           className={clsx(styles.mobileFilterToggle, styles.mobileFilterToggleReset)}
-          onClick={resetFilters}
+          onClick={onFiltersReset}
         >
           <Icon kind='crossOpaque' width={10} height={10} color='#212121' />
         </Button>

@@ -20,6 +20,7 @@ import { SidebarMetaSkeleton } from '../SidebarMeta/SidebarMetaSkeleton';
 import { SidebarMobileFilterSkeleton } from '../SidebarMobileFilter/SidebarMobileFilterSkeleton';
 import {
   PackageFilters,
+  PackageSorter,
   PackageSortType,
   PackageTrait,
   SearchText,
@@ -44,10 +45,10 @@ type Props = {
   onSearchByTextChange: (newSearchText: SearchText) => void;
   onFiltersChanged: (newFilters: PackageFilters | null) => void;
   availableSorters: PackageSortType[];
-  onSortersChange: (newSorterName: PackageSortType) => void;
-  sortField: PackageSortType;
-  sortDirection: 'DESC' | 'ASC';
-  handleFilterReset: () => void;
+  onSortChange: (newSorterName: PackageSortType) => void;
+  selectedSortField: PackageSorter['by'];
+  selectedSortDirection: PackageSorter['direction'];
+  onFiltersReset: () => void;
 };
 
 export default function SearchResultsSidebar({
@@ -59,10 +60,10 @@ export default function SearchResultsSidebar({
   onSearchByTextChange,
   onFiltersChanged,
   availableSorters,
-  onSortersChange,
-  sortField,
-  sortDirection,
-  handleFilterReset,
+  onSortChange,
+  selectedSortField,
+  selectedSortDirection,
+  onFiltersReset,
   loading,
 }: Props) {
   const [activeModal, setActiveModal] =
@@ -190,9 +191,9 @@ export default function SearchResultsSidebar({
           <SidebarCategory categoryName='Sort by' returnButton={closeModalHandler}>
             <SortsList
               availableSorters={availableSorters}
-              onSortersChange={onSortersChange}
-              sortField={sortField}
-              sortDirection={sortDirection}
+              onSortChange={onSortChange}
+              selectedSortField={selectedSortField}
+              selectedSortDirection={selectedSortDirection}
             />
           </SidebarCategory>
         </div>
@@ -208,10 +209,10 @@ export default function SearchResultsSidebar({
             <SidebarMobileFilterSkeleton />
           ) : (
             <SidebarMobileFilter
-              sortField={sortField}
-              sortDirection={sortDirection}
+              selectedSortField={selectedSortField}
+              selectedSortDirection={selectedSortDirection}
               isChanged={anyFiltersActive}
-              resetFilters={handleFilterReset}
+              onFiltersReset={onFiltersReset}
               filterTriggers={mobileFilterTriggers}
               onSortOpen={() => setActiveModal('sort')}
             />
@@ -298,7 +299,7 @@ export default function SearchResultsSidebar({
 
         {anyFiltersActive && (
           <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
-            <Button variant='secondary' size='small' onClick={handleFilterReset}>
+            <Button variant='secondary' size='small' onClick={onFiltersReset}>
               Reset filters
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import styles from './SearchResults.module.scss';
 import Footer from 'components/ui/Footer/Footer';
@@ -37,10 +37,12 @@ type Props = {
   availableSorters: PackageSortType[];
   searchText: SearchText;
   selectedFilters: PackageFilters;
-  selectedSorters: PackageSorter[];
+  selectedSortField: PackageSorter['by'];
+  selectedSortDirection: PackageSorter['direction'];
   onSearchByTextChange: (newSearchText: SearchText) => void;
   onFiltersChange: (newFilters: PackageFilters | null) => void;
-  onSortersChange: (newSorters: PackageSorter[]) => void;
+  onFiltersReset: () => void;
+  onSortChange: (newSorters: PackageSortType) => void;
   scanDate?: string;
   webpackVersion?: string;
   accuracy: string;
@@ -61,17 +63,17 @@ export default function SearchResults({
   availableSorters,
   searchText,
   selectedFilters,
-  selectedSorters,
+  selectedSortField,
+  selectedSortDirection,
   onSearchByTextChange,
   onFiltersChange,
-  onSortersChange,
+  onFiltersReset,
+  onSortChange,
   scanDate,
   webpackVersion,
   accuracy,
 }: Props) {
   let webpackMeta;
-  const sortField = selectedSorters[0].by;
-  const sortDirection = selectedSorters[0].direction;
 
   if (webpackVersion !== 'x.x') {
     webpackMeta = {
@@ -127,21 +129,6 @@ export default function SearchResults({
     },
   ];
 
-  const handleSortChange = useCallback(
-    (newSorterName: PackageSortType) => {
-      const sortOrder = newSorterName === sortField && sortDirection === 'DESC' ? 'ASC' : 'DESC';
-
-      const newSorter: PackageSorter = {
-        by: newSorterName,
-        direction: sortOrder,
-      };
-      onSortersChange([newSorter]);
-    },
-    [onSortersChange]
-  );
-
-  const handleFilterReset = useCallback(() => onFiltersChange(null), [onFiltersChange]);
-
   return (
     <>
       <div
@@ -168,9 +155,9 @@ export default function SearchResults({
             <div className={styles.searchResultsSorters}>
               <SearchDesktopSorters
                 availableSorters={availableSorters}
-                sortField={selectedSorters[0].by}
-                sortDirection={selectedSorters[0].direction}
-                handleSortChange={handleSortChange}
+                selectedSortField={selectedSortField}
+                selectedSortDirection={selectedSortDirection}
+                onSortChange={onSortChange}
               />
             </div>
           </div>
@@ -185,11 +172,11 @@ export default function SearchResults({
               selectedFilters={selectedFilters}
               onSearchByTextChange={onSearchByTextChange}
               onFiltersChanged={onFiltersChange}
-              onSortersChange={handleSortChange}
+              onSortChange={onSortChange}
               availableSorters={availableSorters}
-              sortField={sortField}
-              sortDirection={sortDirection}
-              handleFilterReset={handleFilterReset}
+              selectedSortField={selectedSortField}
+              selectedSortDirection={selectedSortDirection}
+              onFiltersReset={onFiltersReset}
             />
           </div>
 
@@ -217,7 +204,7 @@ export default function SearchResults({
               <div className={styles.notFoundText}>
                 Try softening the search terms or resetting the filter
               </div>
-              <Button variant='secondary' size='small' onClick={handleFilterReset}>
+              <Button variant='secondary' size='small' onClick={onFiltersReset}>
                 Reset filters
               </Button>
             </div>
