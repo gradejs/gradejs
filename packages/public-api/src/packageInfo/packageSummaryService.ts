@@ -7,7 +7,7 @@ import {
   toSerializable,
 } from '@gradejs-public/shared';
 
-export async function getPackageInfoByName(packageName: string) {
+export async function getPackageSummaryByName(packageName: string) {
   const packageRepo = getRepository(PackageMetadata);
   const packageUsageRepo = getRepository(PackageUsageByHostnameProjection);
   const packagePopularityRepo = getRepository(PackagePopularityView);

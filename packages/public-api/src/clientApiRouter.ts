@@ -14,7 +14,7 @@ import {
 } from '@gradejs-public/shared';
 import { getPackageMetadataByPackageNames } from './packageMetadata/packageMetadataService';
 import { getShowcaseData } from './showcase/showcaseService';
-import { getPackageInfoByName } from './packageInfo/packageInfoService';
+import { getPackageSummaryByName } from './packageInfo/packageSummaryService';
 
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
@@ -99,7 +99,7 @@ export const appRouter = trpc
       packageName: z.string(),
     }),
     async resolve({ input: { packageName } }) {
-      const packageInfo = await getPackageInfoByName(packageName);
+      const packageInfo = await getPackageSummaryByName(packageName);
       return packageInfo ? toSerializable(packageInfo) : null;
     },
   })
