@@ -45,6 +45,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [sortDirection, setSortDirection] = useState('asc');
   const [sortField, setSortField] = useState('versions');
   const [fullDescVisible, setFullDescVisible] = useState(false);
+  const [allVersionsVisible, setAllVersionsVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -327,21 +328,27 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 <div className={styles.packages}>
                   {loading
                     ? repeat(5, <Skeleton width='100%' height={100} variant='rounded' />)
-                    : formattedVersions.map((version) => (
-                        <PackageVersion
-                          key={version.version}
-                          version={version.version}
-                          updateDate={
-                            version.updateDate && dateTimeFormatter.format(version.updateDate)
-                          }
-                          uses={version.uses}
-                          size={version.size}
-                          modulesCount={version.modulesCount}
-                        />
-                      ))}
+                    : (allVersionsVisible ? formattedVersions : formattedVersions.slice(0, 5)).map(
+                        (version) => (
+                          <PackageVersion
+                            key={version.version}
+                            version={version.version}
+                            updateDate={
+                              version.updateDate && dateTimeFormatter.format(version.updateDate)
+                            }
+                            uses={version.uses}
+                            size={version.size}
+                            modulesCount={version.modulesCount}
+                          />
+                        )
+                      )}
                 </div>
 
-                {/*{!loading && <button className={styles.link}>Show +3 more</button>}*/}
+                {!loading && formattedVersions.length > 5 && !allVersionsVisible && (
+                  <button className={styles.link} onClick={() => setAllVersionsVisible(true)}>
+                    Show +{formattedVersions.length - 5} more
+                  </button>
+                )}
               </section>
 
               {/* TODO: there are no skeletons for vulnerabilities in design,
