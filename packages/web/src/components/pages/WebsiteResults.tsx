@@ -32,6 +32,10 @@ export function WebsiteResultsPage() {
     pollWhilePending: true,
   });
 
+  const faviconUrl = useMemo(() => {
+    return parsedUrl && `/favicons/${parsedUrl?.hostname}`;
+  }, [parsedUrl]);
+
   const selectScanDisplayOptions = useMemo(() => makeSelectScanDisplayOptions(), []);
 
   const selectSortedAndFilteredPackages = useMemo(
@@ -168,6 +172,7 @@ export function WebsiteResultsPage() {
       <SearchResults
         isLoading={isLoading || isPending}
         isPending={isPending || isPending}
+        faviconUrl={faviconUrl}
         scanUrl={displayUrl ?? ''}
         packages={packagesFilteredAndSorted}
         packagesStats={packageStats}

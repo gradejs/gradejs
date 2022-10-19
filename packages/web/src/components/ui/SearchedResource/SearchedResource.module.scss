@@ -20,14 +20,22 @@
   display: flex;
   flex-shrink: 0;
   margin-right: 24px;
-  max-width: 42px;
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  background: $gray-surface;
 
   @include xxl {
-    max-width: 52px;
+    width: 52px;
+    height: 52px;
   }
 
   @include mobile-and-tablet {
-    max-width: 44px;
+    width: 44px;
+    height: 44px;
     margin-right: 0;
     margin-bottom: 24px;
   }

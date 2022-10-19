@@ -4,11 +4,11 @@ import { requestWebPageScan } from './api';
 jest.mock('node-fetch');
 process.env.INTERNAL_API_ORIGIN = 'https://mocked-domain.com/';
 
-const fetchMode = fetch as any as jest.Mock;
+const fetchMock = fetch as any as jest.Mock;
 const { Response } = jest.requireActual('node-fetch');
 
 beforeEach(() => {
-  fetchMode.mockClear();
+  fetchMock.mockClear();
 });
 
 describe('systemApi', () => {
@@ -16,11 +16,11 @@ describe('systemApi', () => {
     const url = 'http://example.com/' + Math.random().toString();
     const requestId = 'test-req-id';
 
-    fetchMode.mockImplementation(() => Promise.resolve(new Response('', { status: 204 })));
+    fetchMock.mockImplementation(async () => new Response('', { status: 204 }));
 
     const result = await requestWebPageScan(url, requestId);
 
-    expect(fetchMode).toBeCalledWith('https://api.test.gradejs.com/website/scan', {
+    expect(fetchMock).toBeCalledWith('https://api.test.gradejs.com/website/scan', {
       method: 'POST',
       body: `{"url":"${url}","requestId":"${requestId}"}`,
       headers: {
@@ -29,7 +29,7 @@ describe('systemApi', () => {
       },
     });
 
-    expect(fetchMode).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(result).toMatchObject({});
   });
 });
