@@ -17,6 +17,7 @@ import { getReadableSizeString, plural } from '../../../utils/helpers';
 type Props = {
   isLoading: boolean;
   isPending: boolean;
+  faviconUrl?: string;
   scanUrl: string;
   packages: IdentifiedPackage[];
   packagesStats: { total: number; vulnerable: number; outdated: number };
@@ -34,6 +35,7 @@ type Props = {
 
 export default function SearchResults({
   isLoading,
+  faviconUrl,
   scanUrl,
   packages,
   packagesStats,
@@ -105,10 +107,10 @@ export default function SearchResults({
         <div className={styles.searchResults}>
           <div className={styles.searchResultsResource}>
             {isLoading ? (
-              <SearchedResourceSkeleton name={scanUrl} />
+              <SearchedResourceSkeleton name={scanUrl} image={faviconUrl} />
             ) : (
               <SearchedResource
-                image={/*siteFavicon*/ ''}
+                image={faviconUrl}
                 name={scanUrl}
                 totalPackages={packagesStats.total}
                 lastScanDate={scanDate}
