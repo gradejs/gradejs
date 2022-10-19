@@ -36,6 +36,7 @@ type DocumentScope = {
     string,
     {
       dependencies?: Record<string, string>;
+      readme?: string;
       peerDependencies?: Record<string, string>;
       dist: {
         unpackedSize?: number;
@@ -73,7 +74,9 @@ export async function fetchPackageMetadata(name: string) {
 
   return {
     description: document.description,
-    fullDescription: document.readme,
+    fullDescription: document.readme
+      ? document.readme
+      : document.versions?.[document['dist-tags'].latest]?.readme,
     maintainers: (document.maintainers ?? []).map((author) => ({
       name: author.name,
       email: author.email,
