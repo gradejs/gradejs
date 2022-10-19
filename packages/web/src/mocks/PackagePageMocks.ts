@@ -28,6 +28,30 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
         scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
       },
     } as PackageUsageByHostnameProjection,
+    {
+      hostname: { hostname: 'fingerprint.com' },
+      sourceScan: {
+        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
+      },
+    } as PackageUsageByHostnameProjection,
+    {
+      hostname: { hostname: 'linux.org.ru' },
+      sourceScan: {
+        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
+      },
+    } as PackageUsageByHostnameProjection,
+    {
+      hostname: { hostname: 'www.nooo.me' },
+      sourceScan: {
+        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
+      },
+    } as PackageUsageByHostnameProjection,
+    {
+      hostname: { hostname: 'quintessentially.com' },
+      sourceScan: {
+        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
+      },
+    } as PackageUsageByHostnameProjection,
   ],
   latestVersion: '20.1.0',
   description:
