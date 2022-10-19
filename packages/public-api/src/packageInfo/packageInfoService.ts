@@ -44,6 +44,12 @@ export async function getPackageInfoByName(packageName: string) {
 
   return {
     ...toSerializable(packageInfo),
+    versionSpecificValues: Object.fromEntries(
+      Object.entries(packageInfo.versionSpecificValues ?? {}).filter(
+        // remove non-release versions from output, keep the latest one
+        ([version]) => packageInfo.latestVersion === version || version.match(/^\d+\.\d+\.\d+$/)
+      )
+    ),
     popularity: {
       total: popularity?.usageByHostnameCount ?? 0,
       byVersion: popularity?.versionPopularity ?? [],
