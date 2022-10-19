@@ -48,7 +48,7 @@ describe('routes / systemApi', () => {
       requestId: 'test',
       url: 'http://test.com',
       status: systemApi.ScanReport.Status.Ready,
-      sourcePageMetadata: {},
+      sourcePageMetadata: { favicon: 'https://example.com/favicon.ico' },
       identifiedModuleMap: {},
       identifiedBundler: { name: 'webpack', versionRange: '3.x' },
       identifiedPackages: [
