@@ -6,9 +6,9 @@ const S3_FAVICON_FOLDER_PREFIX = 'favicons';
 
 export async function saveScanWebPageFavicon(
   scanUrl: URL,
-  pageMetadata: systemApi.ScanReport.PageMetadata
+  pageMetadata: systemApi.ScanReport.PageMetadata | undefined
 ) {
-  if (!pageMetadata.favicon) {
+  if (!pageMetadata?.favicon) {
     return;
   }
 

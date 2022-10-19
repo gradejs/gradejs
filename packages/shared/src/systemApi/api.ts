@@ -54,7 +54,7 @@ export const apiScanReportSchema = z.union([
     requestId: z.optional(z.string()),
     url: z.string().url(),
     status: z.literal('ready'),
-    sourcePageMetadata: z.record(pageMetadataSchema),
+    sourcePageMetadata: z.optional(pageMetadataSchema),
     identifiedModuleMap: z.record(identifiedModuleSchema),
     identifiedPackages: z.array(identifiedPackageSchema),
     identifiedBundler: z.optional(identifiedBundlerSchema),
