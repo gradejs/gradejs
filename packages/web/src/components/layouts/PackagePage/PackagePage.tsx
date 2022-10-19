@@ -21,12 +21,14 @@ import { GetPackageInfoOutput } from '../../../services/apiClient';
 import { SitesListSkeleton } from '../../ui/SitesList/SitesListSkeleton';
 import SitesList from '../../ui/SitesList/SitesList';
 import semver from 'semver';
+import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useNavigate } from 'react-router-dom';
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
   month: 'short',
   day: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
 });
 
 type Props = {
@@ -180,14 +182,12 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 ) : (
                   <>
                     <span className={styles.packageMetaItem}>{latestVersion}</span>
-                    <span className={styles.packageMetaItem}>Last updated at {updateDate}</span>
+                    <span className={styles.packageMetaItem}>Last updated on {updateDate}</span>
                   </>
                 )}
               </div>
 
               <section className={styles.packageDescription}>
-                <h2>Full description</h2>
-
                 <div className={styles.packageDescriptionGrid}>
                   {loading ? (
                     <>
@@ -204,9 +204,38 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                     </>
                   ) : (
                     <>
-                      <div className={styles.packageDescriptionCol}>
+                      <div
+                        className={clsx(
+                          styles.packageDescriptionCol,
+                          fullDescVisible ? styles.markdown : null
+                        )}
+                      >
                         {fullDescVisible ? (
-                          <ReactMarkdown linkTarget='_blank' skipHtml={true}>
+                          <ReactMarkdown
+                            components={{
+                              h1: 'h2',
+                              code({ inline, className, children, ...props }) {
+                                const match = /language-(\w+)/.exec(className ?? '');
+                                return !inline && match ? (
+                                  <SyntaxHighlighter
+                                    children={String(children).replace(/\n$/, '')}
+                                    style={prism}
+                                    language={match[1]}
+                                    PreTag='div'
+                                    {...props}
+                                  />
+                                ) : (
+                                  <code className={className} {...props}>
+                                    {children}
+                                  </code>
+                                );
+                              },
+                            }}
+                            rehypePlugins={[
+                              rehypeRaw /* TODO: this is unsafe in general. Do we trust markdown coming from npm? */,
+                            ]}
+                            linkTarget='_blank'
+                          >
                             {mdclean(fullDescription) ?? ''}
                           </ReactMarkdown>
                         ) : (
@@ -219,7 +248,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
 
                 {!loading && !fullDescVisible && (
                   <button className={styles.link} onClick={() => setFullDescVisible(true)}>
-                    Show all
+                    Show full description
                   </button>
                 )}
               </section>
@@ -426,25 +455,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                       </>
                     )}
                   </div>
-                </div>
-
-                {/* TODO: probably hide about section on mobile with non-css solution */}
-                <div className={clsx(styles.sidebarItem, styles.sidebarItemDesktop)}>
-                  {loading ? (
-                    <>
-                      <div className={styles.sidebarItemTitle}>
-                        <Skeleton width={49} />
-                      </div>
-                      <Skeleton width='90%' />
-                      <Skeleton width='50%' />
-                    </>
-                  ) : (
-                    <>
-                      <div className={styles.sidebarItemTitle}>About</div>
-                      <p className={styles.sidebarItemText}>{description}</p>
-                      <button className={styles.link}>Go down to full description</button>
-                    </>
-                  )}
                 </div>
 
                 <div className={styles.sidebarItem}>
