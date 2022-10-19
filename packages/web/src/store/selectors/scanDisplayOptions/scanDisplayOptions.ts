@@ -6,8 +6,8 @@ import { packageFilterPredicates } from './packageFilters';
 import { sortPackagesByOptions } from './packageSorters';
 
 export const DEFAULT_SCAN_DISPLAY_OPTIONS: ScanDisplayOptions = {
-  searchText: '',
   packageFilters: {
+    searchText: '',
     keywords: [],
     authors: [],
     traits: [],
@@ -36,6 +36,7 @@ export const makeSelectOptimizedScanDisplayOptions = () =>
     return {
       ...displayOptions,
       packageFilters: {
+        searchText: displayOptions.packageFilters.searchText,
         keywords: new Set(displayOptions.packageFilters.keywords),
         authors: new Set(displayOptions.packageFilters.authors),
         traits: new Set(displayOptions.packageFilters.traits),
@@ -47,20 +48,18 @@ export const makeSelectSortedAndFilteredScanPackages = () =>
   createSelector(
     [makeSelectScanPackagesByUrl(), makeSelectOptimizedScanDisplayOptions()],
     (packages = [], displayOptions) => {
-      const { searchText, packageFilters, packageSorters } = displayOptions;
+      const { packageFilters, packageSorters } = displayOptions;
 
-      const searchValue = searchText.toLowerCase();
+      const searchValue = packageFilters.searchText.toLowerCase();
 
       const matchedPackages = packages.filter(({ name, registryMetadata }) => {
-        return (
-          name.toLowerCase().includes(searchValue) ||
-          registryMetadata?.description?.toLowerCase().includes(searchValue) ||
-          (!!registryMetadata?.keywords &&
-            registryMetadata?.keywords?.some((it) => it.toLowerCase().includes(searchValue))) ||
-          (!!registryMetadata?.maintainers &&
-            registryMetadata?.maintainers?.some((it) =>
-              it.name.toLowerCase().includes(searchValue)
-            ))
+        const keywords = registryMetadata?.keywords?.length ? registryMetadata?.keywords : [];
+        const maintainers = registryMetadata?.maintainers?.length
+          ? registryMetadata?.maintainers.map((it) => it.name)
+          : [];
+
+        return [name, registryMetadata?.description, ...keywords, ...maintainers].some((field) =>
+          field?.toLowerCase().includes(searchValue)
         );
       });
 

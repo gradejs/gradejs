@@ -1,46 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import debounce from 'lodash.debounce';
-import { ScanResultPackageWithMetadata } from '@gradejs-public/public-api/src/clientApiRouter';
+import React from 'react';
 import SidebarCategoryHeader from './SidebarCategoryHeader';
 import Search from '../Search/Search';
-import { SearchText } from 'store/slices/scanDisplayOptions';
 
 type Props = {
   categoryName: string;
-  packages: ScanResultPackageWithMetadata[] | undefined;
-  searchText: SearchText;
-  handleSearchTextChange: (newSearchText: SearchText) => void;
+  searchValue: string;
+  handleSearchTextChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  clearSearchInput: () => void;
 };
 
 export default function SidebarCategorySearch({
   categoryName,
-  searchText,
+  searchValue,
   handleSearchTextChange,
+  clearSearchInput,
 }: Props) {
-  const [searchValue, setSearchValue] = useState<string>('');
-
-  useEffect(() => {
-    setSearchValue(searchText);
-  }, [searchText]);
-
-  const searchChangeHandler = (inputValue: string) => {
-    handleSearchTextChange(inputValue);
-  };
-
-  const debouncedChangeHandler = useCallback(debounce(searchChangeHandler, 300), [
-    handleSearchTextChange,
-  ]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-    debouncedChangeHandler(e.target.value);
-  };
-
-  const clearInput = () => {
-    setSearchValue('');
-    handleSearchTextChange('');
-  };
-
   return (
     <>
       <SidebarCategoryHeader categoryName={categoryName} />
@@ -48,8 +22,8 @@ export default function SidebarCategorySearch({
       <Search
         searchValue={searchValue}
         placeholder='Name'
-        searchChangeHandler={handleChange}
-        clearInput={clearInput}
+        searchChangeHandler={handleSearchTextChange}
+        clearInput={clearSearchInput}
       />
     </>
   );

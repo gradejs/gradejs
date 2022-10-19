@@ -14,7 +14,6 @@ import {
   PackageSorter,
   PackageSortType,
   resetScanDisplayOptions,
-  SearchText,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
 import { getFaviconUrlByHostname, plural } from '../../utils/helpers';
@@ -61,6 +60,7 @@ export function WebsiteResultsPage() {
 
   const availableFilters: PackageFilters = useMemo(
     () => ({
+      searchText: '',
       authors: searchableEntities.packageAuthors.map((it) => it.name),
       keywords: searchableEntities.packageKeywords,
       traits: ['vulnerable', 'outdated'],
@@ -72,25 +72,6 @@ export function WebsiteResultsPage() {
 
   const selectedDisplayOptions = useAppSelector((state) =>
     selectScanDisplayOptions(state, normalizedUrl)
-  );
-
-  const handleSearchByTextChange = useCallback(
-    (newSearchText: SearchText) => {
-      if (!normalizedUrl) {
-        return;
-      }
-
-      dispatch(
-        setScanDisplayOptions({
-          scanUrl: normalizedUrl,
-          options: {
-            ...selectedDisplayOptions,
-            searchText: newSearchText,
-          },
-        })
-      );
-    },
-    [dispatch, normalizedUrl, selectedDisplayOptions]
   );
 
   const handleFiltersChange = useCallback(
@@ -135,19 +116,26 @@ export function WebsiteResultsPage() {
     [dispatch, normalizedUrl, selectedDisplayOptions]
   );
 
-  const selectedSortField = selectedDisplayOptions.packageSorters[0].by;
-  const selectedSortDirection = selectedDisplayOptions.packageSorters[0].direction;
+  const selectedSort = {
+    by: selectedDisplayOptions.packageSorters[0].by,
+    direction: selectedDisplayOptions.packageSorters[0].direction,
+  };
 
   const handleSortChange = useCallback(
     (newSorterName: PackageSortType) => {
       const sortOrder =
-        newSorterName === selectedSortField && selectedSortDirection === 'DESC' ? 'ASC' : 'DESC';
+        newSorterName === selectedSort.by && selectedSort.direction === 'DESC' ? 'ASC' : 'DESC';
 
       const newSorter: PackageSorter = {
         by: newSorterName,
         direction: sortOrder,
       };
-      handleSortersChange([newSorter]);
+
+      if (newSorter.by !== 'popularity') {
+        handleSortersChange([newSorter, { by: 'popularity', direction: 'DESC' }]);
+      } else {
+        handleSortersChange([newSorter]);
+      }
     },
     [handleSortersChange]
   );
@@ -221,8 +209,6 @@ export function WebsiteResultsPage() {
     ? '91'
     : accuracyMap[webpackVersion] ?? '68.85';
 
-  const identifiedPackages = scanResult?.scan?.scanResult?.identifiedPackages;
-
   return (
     <>
       <Helmet>
@@ -236,20 +222,16 @@ export function WebsiteResultsPage() {
         isPending={isPending || isPending}
         faviconUrl={faviconUrl}
         scanUrl={displayUrl ?? ''}
-        identifiedPackages={identifiedPackages}
         packages={packagesFilteredAndSorted}
         packagesStats={packageStats}
         vulnerabilitiesCount={scanOverview.vulnerabilities.total}
         scriptsCount={scanOverview.scriptsCount ?? 0}
         bundleSize={scanOverview.bundleSize ?? 0}
         scanDate={scanResult?.scan?.finishedAt}
-        searchText={selectedDisplayOptions.searchText}
         selectedFilters={selectedDisplayOptions.packageFilters}
-        selectedSortField={selectedSortField}
-        selectedSortDirection={selectedSortDirection}
+        selectedSort={selectedSort}
         availableFilters={availableFilters}
         availableSorters={availableSorters}
-        onSearchByTextChange={handleSearchByTextChange}
         onFiltersChange={handleFiltersChange}
         onFiltersReset={handleFilterReset}
         onSortChange={handleSortChange}

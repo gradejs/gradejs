@@ -16,13 +16,7 @@ type PackageSorterComparator = (pkgA: IdentifiedPackage, pkgB: IdentifiedPackage
 
 const packageSorterMap: Record<PackageSortType, PackageSorterComparator> = {
   name: (pkgA, pkgB) => pkgB.name.localeCompare(pkgA.name),
-  size: (pkgA, pkgB) => {
-    if (pkgA?.approximateByteSize && pkgB?.approximateByteSize) {
-      return pkgA?.approximateByteSize - pkgB?.approximateByteSize;
-    }
-
-    return 0;
-  },
+  size: (pkgA, pkgB) => (pkgA?.approximateByteSize ?? 0) - (pkgB?.approximateByteSize ?? 0),
   severity: (pkgA, pkgB) => {
     const [pkgAHighestSeverity] = pkgA.vulnerabilities
       .map((it) => it.severity)

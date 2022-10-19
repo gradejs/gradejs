@@ -18,8 +18,7 @@ type Props = {
   onFiltersReset: () => void;
   onSortOpen: () => void;
   filterTriggers: ToggleList[];
-  selectedSortField: PackageSorter['by'];
-  selectedSortDirection: PackageSorter['direction'];
+  selectedSort: PackageSorter;
 };
 
 export default function SidebarMobileFilter({
@@ -27,9 +26,10 @@ export default function SidebarMobileFilter({
   onFiltersReset,
   onSortOpen,
   filterTriggers,
-  selectedSortField,
-  selectedSortDirection,
+  selectedSort,
 }: Props) {
+  const { by, direction } = selectedSort;
+
   return (
     <>
       <div className={styles.mobileFiltersTop}>
@@ -42,16 +42,13 @@ export default function SidebarMobileFilter({
 
         <div>
           <button className={styles.mobileFilterSort} onClick={onSortOpen}>
-            Sorted by {capitalizeWord(selectedSortField)}
+            Sorted by {capitalizeWord(by)}
             <Icon
               kind='sort'
               width={10}
               height={9}
               color='#212121'
-              className={clsx(
-                styles.sortIcon,
-                selectedSortDirection === 'DESC' && styles.sortIconRotated
-              )}
+              className={clsx(styles.sortIcon, direction === 'DESC' && styles.sortIconRotated)}
             />
           </button>
         </div>

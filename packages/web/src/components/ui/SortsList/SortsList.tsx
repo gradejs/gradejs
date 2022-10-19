@@ -7,36 +7,29 @@ import { capitalizeWord } from 'utils/helpers';
 
 type Props = {
   availableSorters: PackageSortType[];
-  selectedSortField: PackageSorter['by'];
-  selectedSortDirection: PackageSorter['direction'];
+  selectedSort: PackageSorter;
   onSortChange: (newSorterName: PackageSortType) => void;
 };
 
-const SortsList = ({
-  availableSorters,
-  selectedSortField,
-  selectedSortDirection,
-  onSortChange,
-}: Props) => {
+const SortsList = ({ availableSorters, selectedSort, onSortChange }: Props) => {
+  const { by, direction } = selectedSort;
+
   return (
     <div className={styles.sortsList}>
       {availableSorters.map((sorter) => (
         <button
           key={sorter}
-          className={clsx(
-            styles.sortButton,
-            selectedSortField === sorter && styles.sortButtonActive
-          )}
+          className={clsx(styles.sortButton, by === sorter && styles.sortButtonActive)}
           onClick={() => onSortChange(sorter)}
         >
           {capitalizeWord(sorter)}
-          {selectedSortField === sorter && (
+          {by === sorter && (
             <Icon
               kind='sort'
               width={14}
               height={13}
               color='#212121'
-              className={clsx(selectedSortDirection === 'DESC' && styles.sortIconRotated)}
+              className={clsx(direction === 'DESC' && styles.sortIconRotated)}
             />
           )}
         </button>

@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './SearchResultsSidebar.module.scss';
 import modalStyles from '../Modal/Modal.module.scss';
 import clsx from 'clsx';
+import debounce from 'lodash.debounce';
 import Modal from '../Modal/Modal';
 import SidebarMeta from '../SidebarMeta/SidebarMeta';
 import SidebarMobileFilter from '../SidebarMobileFilter/SidebarMobileFilter';
@@ -23,11 +24,9 @@ import {
   PackageSorter,
   PackageSortType,
   PackageTrait,
-  SearchText,
 } from '../../../store/slices/scanDisplayOptions';
 import SortsList from '../SortsList/SortsList';
 import SidebarCategorySearch from '../SidebarCategory/SidebarCategorySearch';
-import { ScanResultPackageWithMetadata } from '@gradejs-public/public-api/src/clientApiRouter';
 import SidebarCategorySearchSkeleton from '../SidebarCategory/SidebarCategorySearchSkeleton';
 
 type MetaItemProps = {
@@ -38,37 +37,36 @@ type MetaItemProps = {
 type Props = {
   loading?: boolean;
   metaItems: MetaItemProps[];
-  identifiedPackages: ScanResultPackageWithMetadata[] | undefined;
   availableFilters: PackageFilters;
-  searchText: SearchText;
   selectedFilters: PackageFilters;
-  onSearchByTextChange: (newSearchText: SearchText) => void;
   onFiltersChanged: (newFilters: PackageFilters | null) => void;
   availableSorters: PackageSortType[];
   onSortChange: (newSorterName: PackageSortType) => void;
-  selectedSortField: PackageSorter['by'];
-  selectedSortDirection: PackageSorter['direction'];
+  selectedSort: PackageSorter;
   onFiltersReset: () => void;
 };
 
 export default function SearchResultsSidebar({
   metaItems,
-  identifiedPackages,
   availableFilters,
-  searchText,
   selectedFilters,
-  onSearchByTextChange,
   onFiltersChanged,
   availableSorters,
   onSortChange,
-  selectedSortField,
-  selectedSortDirection,
+  selectedSort,
   onFiltersReset,
   loading,
 }: Props) {
   const [activeModal, setActiveModal] =
     useState<'keywords' | 'authors' | 'traits' | 'sort' | null>(null);
   const closeModalHandler = useCallback(() => setActiveModal(null), []);
+
+  const [rawSearchValue, setRawSearchValue] = useState('');
+  const searchText = selectedFilters.searchText;
+
+  useEffect(() => {
+    setRawSearchValue(searchText);
+  }, [searchText]);
 
   const anyFiltersActive = useMemo(
     () => Object.values(selectedFilters).some((it) => !!it.length),
@@ -137,10 +135,28 @@ export default function SearchResultsSidebar({
           ...selectedFilters,
           authors: [],
         }),
-      handleSearchTextChange: (newSearchText: SearchText) => onSearchByTextChange(newSearchText),
+      handleSearchTextChange: (newSearchText: string) =>
+        onFiltersChanged({
+          ...selectedFilters,
+          searchText: newSearchText,
+        }),
     }),
-    [onFiltersChanged, onSearchByTextChange, selectedFilters]
+    [onFiltersChanged, selectedFilters]
   );
+
+  const debouncedSearchTextChangeHandler = useCallback(debounce(handleSearchTextChange, 300), [
+    handleSearchTextChange,
+  ]);
+
+  const handleRawSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRawSearchValue(e.target.value);
+    debouncedSearchTextChangeHandler(e.target.value);
+  };
+
+  const clearSearchInput = () => {
+    setRawSearchValue('');
+    handleSearchTextChange('');
+  };
 
   return (
     <>
@@ -192,8 +208,7 @@ export default function SearchResultsSidebar({
             <SortsList
               availableSorters={availableSorters}
               onSortChange={onSortChange}
-              selectedSortField={selectedSortField}
-              selectedSortDirection={selectedSortDirection}
+              selectedSort={selectedSort}
             />
           </SidebarCategory>
         </div>
@@ -209,8 +224,7 @@ export default function SearchResultsSidebar({
             <SidebarMobileFilterSkeleton />
           ) : (
             <SidebarMobileFilter
-              selectedSortField={selectedSortField}
-              selectedSortDirection={selectedSortDirection}
+              selectedSort={selectedSort}
               isChanged={anyFiltersActive}
               onFiltersReset={onFiltersReset}
               filterTriggers={mobileFilterTriggers}
@@ -228,9 +242,9 @@ export default function SearchResultsSidebar({
           ) : (
             <SidebarCategorySearch
               categoryName='Search by text'
-              packages={identifiedPackages}
-              searchText={searchText}
-              handleSearchTextChange={handleSearchTextChange}
+              searchValue={rawSearchValue}
+              handleSearchTextChange={handleRawSearchTextChange}
+              clearSearchInput={clearSearchInput}
             />
           )}
         </div>
