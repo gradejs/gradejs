@@ -33,4 +33,7 @@ export class PackageUsageByHostnameProjection extends BaseEntity {
 
   @Column({ type: 'jsonb' })
   packageVersionSet!: string[];
+
+  @Column({ type: 'int' })
+  hostnamePackagesCount!: number; // n of detected packages on host, for "Used on" block
 }

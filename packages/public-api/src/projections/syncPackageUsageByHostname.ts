@@ -39,6 +39,7 @@ export async function syncPackageUsageByHostname(newScan: WebPageScan, em: Entit
       sourceScan: newScan,
       packageName: sourcePackage.name,
       packageVersionSet: sourcePackage.versionSet,
+      hostnamePackagesCount: newScan.scanResult?.identifiedPackages?.length ?? 0,
     })
   );
 
