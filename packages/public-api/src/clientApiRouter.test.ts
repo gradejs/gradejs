@@ -8,7 +8,6 @@ import {
   systemApi,
   WebPage,
   WebPageScan,
-  PackageUsageByHostnameProjection,
   PackageVulnerability,
 } from '@gradejs-public/shared';
 import {
@@ -19,6 +18,7 @@ import {
 import { getRepository } from 'typeorm';
 import { createApp } from './app';
 import { findOrCreateWebPage } from './website/service';
+import { syncPackageUsageByHostname } from './projections/syncPackageUsageByHostname';
 
 useDatabaseConnection();
 useTransactionalTesting();
@@ -189,12 +189,10 @@ describe('routes / website', () => {
 
     const scanRepo = em.getRepository(WebPageScan);
     const packageInfoRepo = em.getRepository(PackageMetadata);
-    const usageInfoRepo = em.getRepository(PackageUsageByHostnameProjection);
-    const hostnameRepo = em.getRepository(Hostname);
     const vulnerabilitiesRepo = em.getRepository(PackageVulnerability);
 
     const mockPkgname = 'react-hoist';
-    const mockHostname = 'test-mock.example.com';
+    const mockHostname = 'testtest123.com';
     const mockWebPagePath = '/testpage';
 
     const mockPage = await findOrCreateWebPage(
@@ -211,10 +209,6 @@ describe('routes / website', () => {
       keywords: ['#react', '#react2'],
       updateSeq: 1,
       updatedAt: new Date().toString(),
-    });
-
-    const host = await hostnameRepo.save({
-      hostname: 'testtest.com',
     });
 
     const mockScan = await scanRepo.save({
@@ -234,14 +228,7 @@ describe('routes / website', () => {
       },
     });
 
-    await usageInfoRepo.save({
-      hostname: host,
-      hostnameId: host.id,
-      sourceScan: mockScan,
-      sourceScanId: mockScan.id,
-      packageName: mockPkgname,
-      packageVersionSet: ['20.0.1'],
-    });
+    await syncPackageUsageByHostname(mockScan, em);
 
     await vulnerabilitiesRepo.save({
       id: 123,
@@ -282,18 +269,9 @@ describe('routes / website', () => {
               packageName: 'react-hoist',
               packageVersionSet: ['20.0.1'],
               hostname: {
-                hostname: 'testtest.com',
+                hostname: mockHostname,
               },
-              sourceScan: {
-                scanResult: {
-                  identifiedPackages: [
-                    {
-                      name: 'react-hoist',
-                      versionSet: ['20.0.1'],
-                    },
-                  ],
-                },
-              },
+              hostnamePackagesCount: 1,
             },
           ],
           vulnerabilities: [
