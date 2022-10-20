@@ -100,7 +100,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
     () =>
       (usage ?? []).map((item) => ({
         id: item?.hostname?.hostname,
-        image: '', // TODO,
+        image: item?.hostname?.hostname ? `/favicons/${item?.hostname?.hostname}` : undefined,
         name: item?.hostname?.hostname,
         packagesCount: item?.hostnamePackagesCount,
       })),

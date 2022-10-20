@@ -18,7 +18,7 @@ function Site({ image, name, packagesCount }: Site) {
   return (
     <div className={styles.site}>
       <div className={styles.imageWrapper}>
-        <img src={image} className={styles.image} alt='' />
+        {image && <img src={image} className={styles.image} loading='lazy' alt='' />}
       </div>
       <div className={styles.content}>
         <div className={styles.title}>{name}</div>
