@@ -1,55 +1,24 @@
-// @ts-nocheck
-
 import React, { useRef, useLayoutEffect, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { getReadableSizeString } from 'utils/helpers';
 import styles from './TreeMap.module.scss';
-
-type Module = {
-  name: string;
-  value: number;
-};
-
-type Data = {
-  name: string;
-  children: Module[];
-};
+import { ClientApi } from 'services/apiClient';
 
 type Props = {
-  data: Data;
-  height?: number;
-  smallestModuleSize?: number;
-  largestModuleSize?: number;
+  modules: Pick<ClientApi.IdentifiedModule, 'packageFile' | 'approximateByteSize'>[];
+  minHeight?: number;
 };
 
-function getTreemapLabelHTML(module: Module) {
-  const titleWithWordBreaks = module.name.replace(/\//g, `<wbr/>/`);
-
-  return `
-    <div class=${styles.treemapLabelContainer}>
-      <div class=${styles.treemapModule}>${titleWithWordBreaks}</div>
-      <div class=${styles.treemapModuleSize}>${getReadableSizeString(module.value)}</div>
-    </div>
-  `;
-}
-
-const TreeMap = ({ data, height = 200, smallestModuleSize, largestModuleSize }: Props) => {
+export default function TreeMap({ modules, minHeight = 200 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(__IS_SERVER__ ? 0 : window.innerWidth);
 
   useEffect(() => {
-    const onResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
+    const onResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', onResize);
-    onResize();
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   useEffect(() => {
@@ -58,104 +27,114 @@ const TreeMap = ({ data, height = 200, smallestModuleSize, largestModuleSize }: 
     }
   }, [containerRef, windowWidth]);
 
-  function renderTreemap() {
-    if (containerWidth === 0) return;
+  // Render D3
+  useLayoutEffect(() => {
+    if (containerWidth === 0 || modules.length === 0) {
+      return;
+    }
+
+    // Right now we may observe collisions in matched modules due to inaccurate module matching
+    // So we want to merge module sizes by it's path
+    const mergedModuleSizesByPath = new Map<string, { name: string; value: number }>();
+    modules.forEach((module) => {
+      const moduleData = mergedModuleSizesByPath.get(module.packageFile);
+
+      if (moduleData) {
+        moduleData.value += module.approximateByteSize;
+      } else {
+        mergedModuleSizesByPath.set(module.packageFile, {
+          name: module.packageFile,
+          value: module.approximateByteSize,
+        });
+      }
+    });
 
     const svg = d3.select(svgRef.current);
+    const smallestSize = d3.min(modules, (it) => it.approximateByteSize) ?? 0;
+    const largestSize = d3.max(modules, (it) => it.approximateByteSize) ?? 0;
+    const scaleFn = d3.scaleLog().domain([smallestSize, largestSize]).range([1, 10, 100]);
+
+    const heightIncreaseStep = windowWidth > 1200 ? 15 : 30;
+    const containerHeight = minHeight + (modules.length - 1) * heightIncreaseStep;
+    const opacity = d3
+      .scaleLinear()
+      .domain([smallestSize !== largestSize ? smallestSize : 0, largestSize])
+      .range([0.2, 1]);
+
     svg.selectAll('g').remove();
+    svg.attr('width', containerWidth).attr('height', containerHeight);
 
-    const dataScale = d3
-      .scaleLog()
-      .domain([smallestModuleSize, largestModuleSize])
-      .range([1, 10, 100]);
+    const data = {
+      name: 'root',
+      value: 0,
+      children: Array.from(mergedModuleSizesByPath.values()),
+    };
 
-    const root = d3.hierarchy(data).sum((d) => dataScale(d.value));
-    // .sort((a, b) => b.value - a.value);
-
-    const modulesCount = data.children.length;
-
-    const heightIncrease = windowWidth > 1200 ? 15 : 30;
-    const addHeight = modulesCount > 1 ? (modulesCount - 1) * heightIncrease : 0;
-    const containerHeight = height + addHeight;
-
-    const treemapRoot = d3
-      .treemap()
+    const dataRoot = d3.hierarchy(data).sum((d) => scaleFn(d.value));
+    const root = d3
+      .treemap<typeof data>()
       .size([containerWidth, containerHeight])
       .paddingInner(4)
-      .tile(d3.treemapBinary)(root);
-
-    svg.attr('width', containerWidth).attr('height', containerHeight);
+      .tile(d3.treemapBinary)(dataRoot);
 
     const nodes = svg
       .selectAll('g')
-      .data(treemapRoot.leaves())
+      .data(root.leaves())
       .join('g')
       .attr('transform', (d) => `translate(${d.x0},${d.y0})`);
 
-    const color = d3.scaleOrdinal().range(['#49D581']);
-    const opacity = d3
-      .scaleLinear()
-      .domain([
-        smallestModuleSize !== largestModuleSize ? smallestModuleSize : 1,
-        largestModuleSize,
-      ])
-      .range([0.2, 1]);
-
-    // render rectangles with fill color and opacity based on value
-    nodes
+    const rects = nodes
       .append('rect')
       .attr('width', (d) => d.x1 - d.x0)
       .attr('height', (d) => d.y1 - d.y0)
       .attr('rx', 10)
-      .attr('fill', (d) => color(d.data.category))
+      .attr('fill', '#49D581')
       .attr('opacity', (d) => opacity(d.data.value));
 
     const foreignObjects = nodes
       .append('foreignObject')
-      .attr('class', styles.treemapForeignObject)
       .attr('width', (d) => d.x1 - d.x0)
       .attr('height', (d) => d.y1 - d.y0)
-      .attr('color', (d) => {
-        if (opacity(d.data.value) < 0.7) {
-          return '#338159';
-        } else {
-          return 'white';
-        }
-      })
-      .html((d) => getTreemapLabelHTML(d.data));
+      .attr('color', (d) => (opacity(d.data.value) < 0.7 ? '#338159' : 'white'))
+      .html((d) => getLabelHTML(d.data));
 
-    const containers = svg.selectAll('g rect').nodes();
-    const textLabels = foreignObjects.selectAll(`.${styles.treemapModule}`).nodes();
-    const textContainers = foreignObjects.selectChild();
+    const containers = rects.nodes();
+    const textContainers = foreignObjects.selectChild<HTMLDivElement>();
+    const textLabels = textContainers.selectChild<HTMLDivElement>().nodes();
 
-    // hide text node if width is bigger than parent
-    textContainers.style('transform', (d, idx) => {
-      const { width: childWidth, height: childHeight } = textLabels[idx].getBoundingClientRect();
-      const { width: parentWidth, height: parentHeight } = containers[idx].getBoundingClientRect();
+    textContainers.style('transform', (_, idx) => {
+      const sizeLabelHeight = 20;
       const padding = 10;
+      const { width: labelWidth, height: labelHeight } = textLabels[idx].getBoundingClientRect();
+      const { width: rectWidth, height: rectHeight } = containers[idx].getBoundingClientRect();
 
       const scale = Math.min(
-        parentWidth / (childWidth + padding),
-        parentHeight / (childHeight + padding * 3)
+        rectWidth / (labelWidth + padding),
+        rectHeight / (labelHeight + padding + sizeLabelHeight)
       );
 
-      if (scale < 1) {
-        return `scale(${scale})`;
-      }
-
-      return 'none';
+      return scale < 1 ? `scale(${scale})` : 'none';
     });
-  }
+  }, [modules, containerWidth, windowWidth]);
 
-  useLayoutEffect(() => {
-    renderTreemap();
-  }, [data, windowWidth]);
+  if (modules.length === 0) {
+    return null;
+  }
 
   return (
     <div ref={containerRef} className={styles.svgWrapper}>
       <svg ref={svgRef} className={styles.treemap} />
     </div>
   );
-};
+}
 
-export default TreeMap;
+function getLabelHTML(data: { name: string; value: number }) {
+  const titleWithWordBreaks = data.name.replace(/\//g, `<wbr/>/`);
+
+  return `
+    <div class=${styles.labelContainer}>
+      <div class=${styles.labelText}>${titleWithWordBreaks}</div>
+      <div class=${styles.labelSize}>${getReadableSizeString(data.value)}</div>
+    </div>
+  `;
+}

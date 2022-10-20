@@ -8,7 +8,7 @@
   fill: currentColor;
 }
 
-.treemapLabelContainer {
+.labelContainer {
   transform-origin: center;
   display: flex;
   width: 100%;
@@ -22,10 +22,10 @@
   position: fixed;
 }
 
-.treemapModule {
+.labelText {
   text-align: center;
 }
 
-.treemapModuleSize {
+.labelSize {
   white-space: nowrap;
 }

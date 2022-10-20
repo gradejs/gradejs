@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import styles from './PackagePreview.module.scss';
 import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
@@ -13,24 +13,15 @@ import {
 } from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
-import { IdentifiedPackage } from 'store/selectors/websiteResults';
+import { IdentifiedPackage, makeSelectScanModulesByPackage } from 'store/selectors/websiteResults';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
 import TreeMap from '../TreeMap/TreeMap';
-import { useScanResult } from '../../../store/hooks/scan/useScanResult';
 import { useParams } from 'react-router-dom';
-
-type Module = {
-  name: string;
-  value: number;
-};
-
-type ModulesTree = {
-  name: string;
-  children: Module[];
-};
+import { useAppSelector } from 'store';
+import { useNormalizedScanUrl } from 'store/hooks/scan/useNormalizedScanUrl';
 
 type Props = {
   opened?: boolean;
@@ -51,11 +42,11 @@ export default function PackagePreview({
   detailsLoading = false,
 }: Props) {
   const { '*': scanUrl } = useParams();
-  const { scanResult } = useScanResult(scanUrl);
-
-  const [modulesTreeData, setModulesTreeData] = useState<null | ModulesTree>(null);
-  const [smallestModuleSize, setSmallestModuleSize] = useState(0);
-  const [largestModuleSize, setLargestModuleSize] = useState(0);
+  const { normalizedUrl } = useNormalizedScanUrl(scanUrl);
+  const scanModulesByPackageSelector = useMemo(makeSelectScanModulesByPackage, []);
+  const packageModules = useAppSelector((state) =>
+    scanModulesByPackageSelector(state, normalizedUrl, pkg)
+  );
 
   // const navigate = useNavigate();
 
@@ -68,38 +59,6 @@ export default function PackagePreview({
   const deps = Object.keys(
     pkg.registryMetadata?.versionSpecificValues?.[versions[versions.length - 1]]?.dependencies ?? {}
   );
-
-  useEffect(() => {
-    const identifiedModuleMap = scanResult?.scan?.scanResult?.identifiedModuleMap;
-
-    if (pkg.moduleIds.length > 0 && identifiedModuleMap) {
-      const collapsedModulesByPath = new Map<string, { name: string; value: number }>();
-
-      pkg.moduleIds.forEach((moduleId) => {
-        const module = identifiedModuleMap[moduleId];
-        const moduleData = collapsedModulesByPath.get(module.packageFile);
-
-        if (moduleData) {
-          moduleData.value += module.approximateByteSize;
-        } else {
-          collapsedModulesByPath.set(module.packageFile, {
-            name: module.packageFile,
-            value: module.approximateByteSize,
-          });
-        }
-      });
-
-      const modules = Array.from(collapsedModulesByPath.values());
-      const moduleSizes = modules.map((it) => it.value);
-
-      setModulesTreeData({
-        name: 'Modules',
-        children: modules,
-      });
-      setSmallestModuleSize(Math.min(...moduleSizes));
-      setLargestModuleSize(Math.max(...moduleSizes));
-    }
-  }, [scanResult]);
 
   return (
     <div className={clsx(styles.package, opened && styles.open)}>
@@ -293,7 +252,7 @@ export default function PackagePreview({
             </div>
             */}
 
-            {modulesTreeData && modulesTreeData.children.length > 0 && (
+            {packageModules.length > 0 && (
               <div className={clsx(styles.stat, styles.statModules)}>
                 <div className={styles.statHeader}>
                   <Icon kind='modules' color='#8E8AA0' className={styles.statIcon} />
@@ -302,11 +261,7 @@ export default function PackagePreview({
                 </div>
 
                 <div className={styles.statModulesWrapper}>
-                  <TreeMap
-                    data={modulesTreeData}
-                    smallestModuleSize={smallestModuleSize}
-                    largestModuleSize={largestModuleSize}
-                  />
+                  <TreeMap modules={packageModules} />
                 </div>
               </div>
             )}

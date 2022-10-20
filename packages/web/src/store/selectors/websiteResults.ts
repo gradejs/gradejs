@@ -77,6 +77,23 @@ const makeSelectScanPackagesByUrl = () =>
     return packages;
   });
 
+const makeSelectScanModulesByPackage = () =>
+  createSelector(
+    [
+      makeSelectScanResultByUrl(),
+      (state: RootState, url: string | undefined, pkg: IdentifiedPackage) => pkg.moduleIds,
+    ],
+    (scanResult, moduleIds) => {
+      const scanData = scanResult?.scan?.scanResult;
+
+      if (!scanData) {
+        return [];
+      }
+
+      return moduleIds.map((it) => scanData.identifiedModuleMap[it]);
+    }
+  );
+
 export const selectors = {
   scanState: createSelector([makeSelectScanResultByUrl()], (scanResult) => ({
     isLoading: scanResult?.isLoading ?? true,
@@ -135,4 +152,4 @@ export const selectors = {
   }),
 };
 
-export { makeSelectScanResultByUrl, makeSelectScanPackagesByUrl };
+export { makeSelectScanResultByUrl, makeSelectScanPackagesByUrl, makeSelectScanModulesByPackage };
