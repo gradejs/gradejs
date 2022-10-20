@@ -6,15 +6,10 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
   id: 123,
   name: 'hoist-non-react-statics',
   monthlyDownloads: 123,
+  updateDate: new Date().toString(),
+  deps: ['art', 'create-react-class', 'scheduler', 'loose-envify'],
   updateSeq: 1,
   updatedAt: new Date().toString(),
-  popularity: {
-    total: 1234,
-    byVersion: [
-      { package_version: '20.1.0', count: 234 },
-      { package_version: '18.1.0', count: 432 },
-    ],
-  },
   usage: [
     {
       hostname: { hostname: 'tinkoff.ru' },
@@ -62,6 +57,8 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
     '20.1.0': {
       unpackedSize: 123456,
       registryModulesCount: 12,
+      uses: 123,
+      isVulnerable: true,
       dependencies: {
         art: 'art',
         'create-react-class': 'create-react-class',
@@ -72,6 +69,8 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
     '18.1.0': {
       unpackedSize: 123,
       registryModulesCount: 5,
+      uses: 321,
+      isVulnerable: false,
       dependencies: {
         art: 'art',
         'create-react-class': 'create-react-class',

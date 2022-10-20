@@ -11,9 +11,9 @@ export function PackageView() {
     return <Error host='' />; // TODO
   }
 
-  const { packageInfo, isLoading, error } = usePackageInfo(packageName);
+  const { packageInfo, isLoading, error } = usePackageInfo(packageName) ?? {};
 
-  if (packageName && !isLoading && error) {
+  if (packageName && !isLoading && (error || !packageInfo)) {
     // TODO: 404 error page
     return <Error host={packageName} message='Package is not found in the database' />;
   }

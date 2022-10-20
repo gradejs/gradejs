@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { client, GetPackageInfoOutput } from '../../services/apiClient';
 
-export type PackageInfoSlice = {
+export type PackageInfoState = {
   isLoading: boolean;
   error?: SerializedError;
   packageInfo?: GetPackageInfoOutput;
 };
+
+export type PackageInfoSlice = Record<string, PackageInfoState>;
 
 export const requestPackageInfo = createAsyncThunk(
   'package/getInfo',
@@ -16,22 +18,42 @@ export const requestPackageInfo = createAsyncThunk(
 
 const packageInfo = createSlice({
   name: 'package',
-  initialState: { isLoading: false } as PackageInfoSlice,
+  initialState: {} as PackageInfoSlice,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(requestPackageInfo.pending, (state) => {
-        state.packageInfo = undefined;
-        state.error = undefined;
-        state.isLoading = true;
+      .addCase(requestPackageInfo.pending, (state, action) => {
+        const { packageName } = action.meta.arg;
+        const previousPackageState = state[packageName] ?? null;
+
+        state[packageName] = {
+          ...previousPackageState,
+          packageInfo: undefined,
+          error: undefined,
+          isLoading: true,
+        };
       })
       .addCase(requestPackageInfo.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error;
+        const { packageName } = action.meta.arg;
+        const previousPackageState = state[packageName] ?? null;
+
+        state[packageName] = {
+          ...previousPackageState,
+          packageInfo: undefined,
+          error: action.error,
+          isLoading: false,
+        };
       })
       .addCase(requestPackageInfo.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.packageInfo = action.payload;
+        const { packageName } = action.meta.arg;
+        const previousPackageState = state[packageName] ?? null;
+
+        state[packageName] = {
+          ...previousPackageState,
+          packageInfo: action.payload,
+          error: undefined,
+          isLoading: false,
+        };
       });
   },
 });
