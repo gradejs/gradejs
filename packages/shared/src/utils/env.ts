@@ -3,6 +3,7 @@ export enum Env {
   Node = 'NODE_ENV',
   Port = 'PORT',
   DatabaseUrl = 'DB_URL',
+  ProdEnv = 'PROD_ENV', // staging or production
 
   // Web related
   PublicApiOrigin = 'API_ORIGIN',
@@ -12,8 +13,12 @@ export enum Env {
   AnalyticsId = 'GA_ID',
   VerboseAnalytics = 'DUMP_ANALYTICS',
 
+  // Third-Party
+  RollbarApiKey = 'ROLLBAR_API_KEY',
+
   // AWS
   AwsRegion = 'AWS_REGION',
+  AwsS3Bucket = 'AWS_S3_BUCKET',
   SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
   SqsLocalPort = 'SQS_LOCAL_PORT',
 
@@ -29,15 +34,17 @@ export enum Env {
 
 export const getNodeEnv = () => {
   const env = getEnvUnsafe(Env.Node);
-  if (!env || !['production', 'staging', 'development', 'test'].includes(env)) {
+  if (!env || !['production', 'development', 'test'].includes(env)) {
     return 'development';
   }
-  return env as 'production' | 'staging' | 'development' | 'test';
+  return env as 'production' | 'development' | 'test';
 };
+export const getProdEnv = () =>
+  getEnvUnsafe(Env.ProdEnv) === 'staging' ? 'staging' : 'production';
 export const getPort = (defaultPort: number) => Number(getEnv(Env.Port, defaultPort.toString()));
 
-export const isProduction = () => getNodeEnv() === 'production';
-export const isStaging = () => getNodeEnv() === 'staging';
+export const isProduction = () => getNodeEnv() === 'production' && getProdEnv() === 'production';
+export const isStaging = () => getNodeEnv() === 'production' && getProdEnv() === 'staging';
 export const isDevelopment = () => getNodeEnv() === 'development';
 export const isTest = () => getNodeEnv() === 'test';
 
@@ -56,6 +63,8 @@ export const getGradeJsApiKey = () => {
   return getEnv(Env.GradeJsApiKey);
 };
 
+export const getAwsRegion = () => getEnv(Env.AwsRegion);
+export const getAwsS3Bucket = () => getEnv(Env.AwsS3Bucket);
 export const getSqsLocalPort = () => Number(getEnv(Env.SqsLocalPort, '0'));
 
 export const getGitHubAccessToken = () => getEnv(Env.GitHubAccessToken);
@@ -97,6 +106,8 @@ export const getClientVars = () => {
     Env.PlausibleDomain,
     Env.AnalyticsId,
     Env.VerboseAnalytics,
+    Env.RollbarApiKey,
+    Env.ProdEnv,
   ].reduce((acc, val) => {
     acc[val] = getEnvUnsafe(val) ?? '';
     return acc;

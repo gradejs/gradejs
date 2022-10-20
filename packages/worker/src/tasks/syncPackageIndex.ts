@@ -1,5 +1,5 @@
 import concurrently from 'tiny-async-pool';
-import { systemApi, queueWorkerTask } from '@gradejs-public/shared';
+import { systemApi, queueWorkerTask, logger } from '@gradejs-public/shared';
 
 const PKG_SYNC_BATCH_LIMIT = 50;
 const PKG_SYNC_PARALLEL_LIMIT = 10;
@@ -22,7 +22,7 @@ export async function syncPackageIndex() {
   }
 
   await concurrently(PKG_SYNC_PARALLEL_LIMIT, offsets, processBatch).catch((e: Error) =>
-    console.error(
+    logger.error(
       `syncPackageIndex task is aborted, only ${processed} out of ${batchesTotal} batches are processed:` +
         `\n${e.message}\n${e.stack}`
     )

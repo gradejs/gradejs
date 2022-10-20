@@ -11,8 +11,8 @@
 body {
   margin: 0;
   font-family: $font-sans-serif;
-  font-size: 0.85rem;
-  line-height: 1.62;
+  font-size: 0.875rem;
+  line-height: 1.5714;
   color: $black;
   text-align: left;
   background-color: $white;
@@ -21,11 +21,7 @@ body {
 
   @include xxl {
     font-size: 1rem;
-  }
-
-  @include mobile-and-tablet {
-    font-size: 0.875rem;
-    line-height: 1.57;
+    line-height: 1.625;
   }
 }
 

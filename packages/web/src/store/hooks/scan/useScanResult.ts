@@ -3,6 +3,7 @@ import { useAppSelector } from '../../index';
 import { makeSelectScanResultByUrl } from '../../selectors/websiteResults';
 import { useNormalizedScanUrl } from './useNormalizedScanUrl';
 import { useScanRequest } from './useScanRequest';
+import { useUniversalEffect } from '../useUniversalEffect';
 
 export const useScanResult = (
   scanUrl: string | undefined,
@@ -16,7 +17,7 @@ export const useScanResult = (
   const requestScan = useScanRequest();
 
   // Initial request if entity wasn't loaded
-  useEffect(() => {
+  useUniversalEffect(() => {
     if (
       normalizedUrl &&
       !scanResult?.scan &&

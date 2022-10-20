@@ -4,19 +4,26 @@ import {
   getPort,
   checkRequiredEnvironmentVariables,
   Env,
+  initRollbarLogger,
+  logger,
 } from '@gradejs-public/shared';
 
 checkRequiredEnvironmentVariables([
   Env.AwsRegion,
+  Env.AwsS3Bucket,
   Env.DatabaseUrl,
   Env.InternalApiRootUrl,
   Env.SqsWorkerQueueUrl,
+  Env.RollbarApiKey,
+  Env.PublicRootUrl,
 ]);
 
 const port = getPort(8080);
 
-initDatabase({ runMigrations: true }).then(() => {
+initRollbarLogger();
+
+initDatabase({ runMigrations: false }).then(() => {
   createWorker().listen(port, () => {
-    console.log(`gradejs worker started, listening on port ${port}`);
+    logger.info(`gradejs worker started, listening on port ${port}`);
   });
 });

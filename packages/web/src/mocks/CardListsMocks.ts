@@ -87,7 +87,7 @@ export const popularPackageListData: KeyedPopularPackageCardProps[] = [
 export const scansWithVulnerabilitiesListData: KeyedScansWithVulnerabilitiesCardProps[] = [
   {
     id: 'LnO9Xynn',
-    sourceTitle: 'disneyland.omsk.ru/signup',
+    sourceTitle: 'debank.com/profile/0x6f923e527a9ac0fca4e4a14ee10778fbf0d8013c',
     sourceUrl: 'disneyland.omsk.ru/signup',
     vulnerablePackageName: 'mdast-util-from-markdown',
   },

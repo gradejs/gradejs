@@ -1,8 +1,10 @@
 import { addDecorator } from '@storybook/react';
 import { MemoryRouter } from 'react-router';
 import { Provider } from 'react-redux';
-import { store } from '../src/store';
+import { createApplicationStore } from '../src/store';
 import '../src/styles/global.scss';
+
+const store = createApplicationStore();
 
 // Some elements, like <Link> may not work without a router context
 addDecorator((story) => <MemoryRouter>{story()}</MemoryRouter>);

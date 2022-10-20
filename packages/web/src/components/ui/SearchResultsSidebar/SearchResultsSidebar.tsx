@@ -66,7 +66,7 @@ export default function SearchResultsSidebar({
         onOpen: () => setActiveModal('authors'),
       },
     ],
-    []
+    [selectedFilters]
   );
 
   const handleFilterReset = useCallback(() => onFiltersChanged(null), [onFiltersChanged]);

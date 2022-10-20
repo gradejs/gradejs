@@ -9,4 +9,8 @@ declare module '*.svg' {
   export default path;
 }
 
-declare const __isServer__: boolean; // Replaced with DefinePlugin during build
+declare const __IS_SERVER__: boolean; // Replaced with DefinePlugin during build
+
+interface Window {
+  __INITIAL_STATE__?: object;
+}

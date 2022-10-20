@@ -22,6 +22,12 @@ webpack(
     }),
   ],
   (err, stats) => {
+    if (stats?.hasErrors()) {
+      process.stderr.write(
+        stats?.stats?.map((s) => s.compilation.errors.map((e) => e.toString())).join('\n')
+      );
+      process.exit(1);
+    }
     // [Stats Object](#stats-object)
     process.stdout.write(stats!.toString() + '\n');
   }

@@ -62,13 +62,16 @@
     "webpack-stats-plugin": "^1.1.0"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.186.0",
     "@gradejs-public/shared": "^0.1.0",
     "@reduxjs/toolkit": "^1.8.3",
+    "@rollbar/react": "^0.11.1",
     "@trpc/client": "^9.27.0",
     "@types/lodash.memoize": "^4.1.7",
     "@types/react-helmet": "^6.1.5",
     "clsx": "^1.1.1",
     "d3": "^7.6.1",
+    "cross-fetch": "^3.1.5",
     "express": "^4.18.1",
     "lodash.memoize": "^4.1.2",
     "lodash.throttle": "^4.1.1",

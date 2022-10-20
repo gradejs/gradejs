@@ -17,6 +17,7 @@ import { getReadableSizeString, plural } from '../../../utils/helpers';
 type Props = {
   isLoading: boolean;
   isPending: boolean;
+  faviconUrl?: string;
   scanUrl: string;
   packages: IdentifiedPackage[];
   packagesStats: { total: number; vulnerable: number; outdated: number };
@@ -34,6 +35,7 @@ type Props = {
 
 export default function SearchResults({
   isLoading,
+  faviconUrl,
   scanUrl,
   packages,
   packagesStats,
@@ -47,11 +49,22 @@ export default function SearchResults({
   webpackVersion,
   accuracy,
 }: Props) {
-  const metaItems = [
-    {
+  let webpackMeta;
+
+  if (webpackVersion !== 'x.x') {
+    webpackMeta = {
       icon: <Icon kind={'webpackLogo'} width={24} height={24} />,
       text: `Webpack v${webpackVersion}`,
-    },
+    };
+  } else {
+    webpackMeta = {
+      icon: <Icon kind={'webpackLogo'} width={24} height={24} />,
+      text: `Unknown Webpack Version`,
+    };
+  }
+
+  const metaItems = [
+    webpackMeta,
     {
       icon: <Icon kind='weight' width={24} height={24} color='#212121' />,
       text: `${getReadableSizeString(bundleSize)} webpack bundle size`,
@@ -105,10 +118,10 @@ export default function SearchResults({
         <div className={styles.searchResults}>
           <div className={styles.searchResultsResource}>
             {isLoading ? (
-              <SearchedResourceSkeleton name={scanUrl} />
+              <SearchedResourceSkeleton name={scanUrl} image={faviconUrl} />
             ) : (
               <SearchedResource
-                image={/*siteFavicon*/ ''}
+                image={faviconUrl}
                 name={scanUrl}
                 totalPackages={packagesStats.total}
                 lastScanDate={scanDate}
@@ -138,7 +151,7 @@ export default function SearchResults({
               </>
             ) : (
               packages.map((pkg, _index) => (
-                <PackagePreview pkg={pkg} opened={true /*index === 0*/} />
+                <PackagePreview key={pkg.name} pkg={pkg} opened={true /*index === 0*/} />
               ))
             )}
           </div>

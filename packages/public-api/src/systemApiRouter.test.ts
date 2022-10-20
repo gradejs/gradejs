@@ -48,6 +48,7 @@ describe('routes / systemApi', () => {
       requestId: 'test',
       url: 'http://test.com',
       status: systemApi.ScanReport.Status.Ready,
+      sourcePageMetadata: { favicon: 'https://test.gradejs.com/favicon.png' },
       identifiedModuleMap: {},
       identifiedBundler: { name: 'webpack', versionRange: '3.x' },
       identifiedPackages: [
@@ -79,8 +80,8 @@ describe('routes / systemApi', () => {
       ],
     };
 
-    const sencWebPageScanResultMock = jest.spyOn(WebsiteService, 'syncWebPageScanResult');
-    sencWebPageScanResultMock.mockImplementation(async () => {
+    const syncWebPageScanResultMock = jest.spyOn(WebsiteService, 'syncWebPageScanResult');
+    syncWebPageScanResultMock.mockImplementation(async () => {
       return getRepository(WebPageScan).create({
         status: WebPageScan.Status.Processed,
       });
@@ -88,6 +89,6 @@ describe('routes / systemApi', () => {
 
     await api.post('/system/scan').set('X-Api-Key', getGradeJsApiKey()).send(payload).expect(204);
 
-    expect(sencWebPageScanResultMock).toBeCalledWith(payload);
+    expect(syncWebPageScanResultMock).toBeCalledWith(payload);
   });
 });

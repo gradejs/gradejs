@@ -45,11 +45,16 @@ export const identifiedBundlerSchema = z.object({
   versionRange: z.string(),
 });
 
+export const pageMetadataSchema = z.object({
+  favicon: z.optional(z.string()),
+});
+
 export const apiScanReportSchema = z.union([
   z.object({
     requestId: z.optional(z.string()),
     url: z.string().url(),
     status: z.literal('ready'),
+    sourcePageMetadata: z.optional(pageMetadataSchema),
     identifiedModuleMap: z.record(identifiedModuleSchema),
     identifiedPackages: z.array(identifiedPackageSchema),
     identifiedBundler: z.optional(identifiedBundlerSchema),
@@ -68,6 +73,7 @@ export namespace ScanReport {
   export type ProcessedScript = z.infer<typeof processedScriptSchema>;
   export type BundlerMetadata = z.infer<typeof bundlerMetadata>;
   export type IdentifiedBundler = z.infer<typeof identifiedBundlerSchema>;
+  export type PageMetadata = z.infer<typeof pageMetadataSchema>;
   export enum Status {
     Ready = 'ready',
     Error = 'error',

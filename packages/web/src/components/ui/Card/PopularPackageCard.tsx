@@ -23,7 +23,7 @@ const PopularPackageCard = ({
       <div className={styles.avatarSites}>
         <AvatarGroup>
           {hostsFaviconList.map((icon) => (
-            <Avatar src={icon} />
+            <Avatar key={icon} src={icon} />
           ))}
         </AvatarGroup>
 

@@ -15,6 +15,7 @@
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.87.0",
     "node-fetch": "2",
+    "rollbar": "^2.24.0",
     "typeorm": "0.2.45",
     "typeorm-naming-strategies": "^4.1.0",
     "typescript": "^4.4.3"

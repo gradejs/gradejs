@@ -1,7 +1,7 @@
-import styles from '../../layouts/SearchResults/SearchResults.module.scss';
-import Skeleton from '../Skeleton/Skeleton';
-import { repeat } from '../../../utils/helpers';
 import React from 'react';
+import styles from './SidebarMobileFilter.module.scss';
+import Skeleton from '../Skeleton/Skeleton';
+import { repeat } from 'utils/helpers';
 
 export const SidebarMobileFilterSkeleton = () => (
   <>
