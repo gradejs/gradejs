@@ -14,9 +14,9 @@ const store = createApplicationStore([], window.__INITIAL_STATE__ ?? {});
 const locationChangeHandler = initAnalytics();
 const accessToken = getEnvUnsafe(Env.RollbarApiKey);
 
-let Wrapper: React.FC = (children) => <>{children}</>;
+let Wrapper: React.FC = ({ children }) => <>{children}</>;
 if (accessToken) {
-  Wrapper = (children) => (
+  Wrapper = ({ children }) => (
     <RollbarProvider
       config={{
         accessToken,
