@@ -6,6 +6,7 @@ import {
   PackageVulnerability,
   toSerializable,
 } from '@gradejs-public/shared';
+import semver from 'semver';
 
 export async function getPackageSummaryByName(packageName: string) {
   const packageRepo = getRepository(PackageMetadata);
@@ -57,6 +58,9 @@ export async function getPackageSummaryByName(packageName: string) {
           version,
           {
             ...data,
+            isVulnerable: vulnerabilities.some((v) =>
+              semver.satisfies(version, v.packageVersionRange)
+            ),
             uses:
               popularity?.versionPopularity?.find((item) => item.package_version === version)
                 ?.count ?? 0,

@@ -10,9 +10,10 @@ type Props = {
   uses?: number;
   size?: number;
   modulesCount?: number;
+  isVulnerable?: boolean;
 };
 
-const PackageVersion = ({ version, updateDate, uses, size, modulesCount }: Props) => {
+const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulnerable }: Props) => {
   return (
     <div className={clsx(styles.package)}>
       <div className={styles.packageTop}>
@@ -20,7 +21,9 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount }: Props
           <div className={clsx(styles.packageTopCol, styles.packageVersion)}>
             <span className={styles.packageTitle}>
               {version}{' '}
-              <Icon kind='bugOutlined' color='#212121' className={styles.packageVersionBug} />
+              {isVulnerable && (
+                <Icon kind='bugOutlined' color='#212121' className={styles.packageVersionBug} />
+              )}
             </span>
             <span className={styles.packageSubtitle}>{updateDate}</span>
           </div>

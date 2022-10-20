@@ -115,6 +115,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
           updateDate: data.updateDate,
           uses: data.uses,
           size: data.unpackedSize,
+          isVulnerable: data.isVulnerable,
           modulesCount: data.registryModulesCount, // TODO: detected modules count?
           modules: [], // TODO
           entries: [], // TODO
