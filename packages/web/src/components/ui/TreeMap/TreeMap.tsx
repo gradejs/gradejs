@@ -33,7 +33,7 @@ function getTreemapLabelHTML(module: Module) {
   `;
 }
 
-const TreeMap = ({ data, height = 212, smallestModuleSize, largestModuleSize }: Props) => {
+const TreeMap = ({ data, height = 200, smallestModuleSize, largestModuleSize }: Props) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -64,13 +64,18 @@ const TreeMap = ({ data, height = 212, smallestModuleSize, largestModuleSize }: 
     const svg = d3.select(svgRef.current);
     svg.selectAll('g').remove();
 
-    const root = d3.hierarchy(data).sum((d) => d.value);
+    const dataScale = d3
+      .scaleLog()
+      .domain([smallestModuleSize, largestModuleSize])
+      .range([1, 10, 100]);
+
+    const root = d3.hierarchy(data).sum((d) => dataScale(d.value));
     // .sort((a, b) => b.value - a.value);
 
     const modulesCount = data.children.length;
 
     const heightIncrease = windowWidth > 1200 ? 15 : 30;
-    const addHeight = modulesCount > 5 ? (modulesCount - 5) * heightIncrease : 0;
+    const addHeight = modulesCount > 1 ? (modulesCount - 1) * heightIncrease : 0;
     const containerHeight = height + addHeight;
 
     const treemapRoot = d3
