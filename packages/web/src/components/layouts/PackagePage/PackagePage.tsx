@@ -58,13 +58,14 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
     description,
     latestVersion,
     maintainers,
+    deps,
     keywords,
     versionSpecificValues,
     homepageUrl,
     repositoryUrl,
     license,
-    popularity,
     usage,
+    updateDate,
   } = packageInfo ?? {};
 
   const requestSort = (sortName: string) => {
@@ -81,8 +82,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const closeModalHandler = () => {
     setModalSortOpen(false);
   };
-
-  const deps = Object.keys(versionSpecificValues?.[latestVersion!]?.dependencies ?? {});
 
   const formattedVulnerabilities = useMemo(
     () =>
@@ -113,8 +112,8 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
       Object.entries(versionSpecificValues ?? {})
         .map(([version, data]) => ({
           version,
-          updateDate: data.updateDate ? new Date(data.updateDate) : undefined,
-          uses: popularity?.byVersion.find((item) => item.package_version === version)?.count,
+          updateDate: data.updateDate,
+          uses: data.uses,
           size: data.unpackedSize,
           modulesCount: data.registryModulesCount, // TODO: detected modules count?
           modules: [], // TODO
@@ -135,12 +134,8 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
           }
           return sortDirection === 'desc' ? -1 * sort : sort;
         }),
-    [versionSpecificValues, popularity, sortDirection, sortDirection]
+    [versionSpecificValues, sortDirection, sortDirection]
   );
-
-  const updateDate =
-    versionSpecificValues?.[latestVersion!]?.updateDate &&
-    dateTimeFormatter.format(new Date(versionSpecificValues?.[latestVersion!]?.updateDate ?? ''));
 
   return (
     <>
@@ -183,7 +178,11 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 ) : (
                   <>
                     <span className={styles.packageMetaItem}>{latestVersion}</span>
-                    <span className={styles.packageMetaItem}>Last updated on {updateDate}</span>
+                    {updateDate && (
+                      <span className={styles.packageMetaItem}>
+                        Last updated on {dateTimeFormatter.format(new Date(updateDate ?? ''))}
+                      </span>
+                    )}
                   </>
                 )}
               </div>
@@ -334,7 +333,8 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                             key={version.version}
                             version={version.version}
                             updateDate={
-                              version.updateDate && dateTimeFormatter.format(version.updateDate)
+                              version.updateDate &&
+                              dateTimeFormatter.format(new Date(version.updateDate))
                             }
                             uses={version.uses}
                             size={version.size}
@@ -558,9 +558,9 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
 
                 <div className={styles.sidebarItem}>
                   <div className={styles.sidebarItemTitle}>
-                    {!loading && plural(deps.length, 'Dependency', 'Dependencies')}
+                    {!loading && plural(deps?.length ?? 0, 'Dependency', 'Dependencies')}
                   </div>
-                  {!!deps.length && (
+                  {!!deps?.length && (
                     <ChipGroup>
                       {loading
                         ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
