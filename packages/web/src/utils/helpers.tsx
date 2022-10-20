@@ -20,14 +20,14 @@ export function plural(factor: number, singularForm: string, pluralForm: string)
 
 export function getReadableSizeString(sizeInBytes: number) {
   if (sizeInBytes === 0) {
-    return '0 KB';
+    return '0 B';
   }
-  let i = -1;
-  const byteUnits = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  do {
-    sizeInBytes = sizeInBytes / 1024;
+  let i = 0;
+  const byteUnits = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  while (sizeInBytes > 1024) {
+    sizeInBytes = Math.floor(sizeInBytes / 1024);
     i++;
-  } while (sizeInBytes > 1024);
+  }
 
-  return `${Math.max(sizeInBytes, 0.1).toFixed(1)} ${byteUnits[i]}`;
+  return `${sizeInBytes} ${byteUnits[i]}`;
 }

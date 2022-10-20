@@ -72,38 +72,34 @@ export default function PackagePreview({
   useEffect(() => {
     const identifiedModuleMap = scanResult?.scan?.scanResult?.identifiedModuleMap;
 
-    const moduleIds = Object.keys(identifiedModuleMap!);
-    const moduleValues = Object.values(identifiedModuleMap!);
-    const filteredModules = moduleValues
-      .filter((module) => {
-        return module.packageName === pkg.name && pkg.moduleIds.some((p) => moduleIds.includes(p));
-      })
-      .map((module) => {
-        return {
-          name: module.packageFile,
-          value: module.approximateByteSize,
-        };
+    if (pkg.moduleIds.length > 0 && identifiedModuleMap) {
+      const collapsedModulesByPath = new Map<string, { name: string; value: number }>();
+
+      pkg.moduleIds.forEach((moduleId) => {
+        const module = identifiedModuleMap[moduleId];
+        const moduleData = collapsedModulesByPath.get(module.packageFile);
+
+        if (moduleData) {
+          moduleData.value += module.approximateByteSize;
+        } else {
+          collapsedModulesByPath.set(module.packageFile, {
+            name: module.packageFile,
+            value: module.approximateByteSize,
+          });
+        }
       });
 
-    if (filteredModules.length > 0) {
-      const modulesData = {
+      const modules = Array.from(collapsedModulesByPath.values());
+      const moduleSizes = modules.map((it) => it.value);
+
+      setModulesTreeData({
         name: 'Modules',
-        children: filteredModules,
-      };
-
-      const smallestModule = filteredModules.reduce((prev, current) => {
-        return prev.value < current.value ? prev : current;
+        children: modules,
       });
-
-      const largestModule = filteredModules.reduce((prev, current) => {
-        return prev.value > current.value ? prev : current;
-      });
-
-      setModulesTreeData(modulesData);
-      setSmallestModuleSize(smallestModule.value);
-      setLargestModuleSize(largestModule.value);
+      setSmallestModuleSize(Math.min(...moduleSizes));
+      setLargestModuleSize(Math.max(...moduleSizes));
     }
-  }, []);
+  }, [scanResult]);
 
   return (
     <div className={clsx(styles.package, opened && styles.open)}>
@@ -297,11 +293,11 @@ export default function PackagePreview({
             </div>
             */}
 
-            {modulesTreeData && modulesTreeData.children.length > 1 && (
+            {modulesTreeData && modulesTreeData.children.length > 0 && (
               <div className={clsx(styles.stat, styles.statModules)}>
                 <div className={styles.statHeader}>
                   <Icon kind='modules' color='#8E8AA0' className={styles.statIcon} />
-                  Modules
+                  Matched Modules
                   {/*<span className={styles.statHeaderAdditional}>Matching 80%</span>*/}
                 </div>
 
