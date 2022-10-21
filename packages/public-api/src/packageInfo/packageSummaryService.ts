@@ -19,6 +19,7 @@ export async function getPackageSummaryByName(packageName: string) {
     packageUsageRepo
       .createQueryBuilder('usage')
       .leftJoinAndSelect('usage.hostname', 'hostname')
+      .leftJoinAndSelect('usage.sourceScan', 'sourceScan') // TODO: store packages count to usage projection
       .where('package_name = :packageName', { packageName })
       .limit(16), // TODO: remove hardcode
     packagePopularityRepo
