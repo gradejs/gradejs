@@ -23,6 +23,8 @@ export default function Header({
 }: Props) {
   return (
     <header className={clsx(styles.header, styles[variant], className)}>
+      {/*{dropdownOpen && <div className={styles.headerSearchOverlay} />}*/}
+
       <Container>
         <div className={clsx(styles.headerInner, showSearch && styles.showSearch)}>
           <Link to='/' className={styles.logo}>

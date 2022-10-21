@@ -17,9 +17,3 @@ export const Main = Template.bind({});
 Main.args = {
   suggestions: ['tinkoff.ru', 'pinterest.com', 'github.com', 'gradejs.com', 'npmjs.com'],
 };
-
-export const Loading = Template.bind({});
-Loading.args = {
-  loading: true,
-  suggestions: ['tinkoff.ru', 'pinterest.com', 'github.com', 'gradejs.com', 'npmjs.com'],
-};
