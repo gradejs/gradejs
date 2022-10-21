@@ -22,7 +22,7 @@ export function PackageView() {
   const description =
     `GradeJS has discovered ${packageInfo?.usage.length} websites using ${packageName}` +
     (packageInfo?.usage.length
-      ? `: ${packageInfo?.usage.slice(0, 4).map((u) => u.hostname?.hostname)} and more.`
+      ? `: ${packageInfo?.usage.slice(0, 4).map((u) => u.hostname)} and more.`
       : '');
   return (
     <>

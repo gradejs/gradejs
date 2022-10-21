@@ -1,7 +1,6 @@
-import { getRepository } from 'typeorm';
+import { getRepository, createQueryBuilder } from 'typeorm';
 import {
   PackageMetadata,
-  PackageUsageByHostnameProjection,
   PackagePopularityView,
   PackageVulnerability,
   toSerializable,
@@ -10,34 +9,41 @@ import semver from 'semver';
 
 export async function getPackageSummaryByName(packageName: string) {
   const packageRepo = getRepository(PackageMetadata);
-  const packageUsageRepo = getRepository(PackageUsageByHostnameProjection);
   const packagePopularityRepo = getRepository(PackagePopularityView);
   const packageVulnerabilities = getRepository(PackageVulnerability);
 
-  const queries = [
-    packageRepo.createQueryBuilder().where('name = :packageName', { packageName }),
-    packageUsageRepo
-      .createQueryBuilder('usage')
-      .leftJoinAndSelect('usage.hostname', 'hostname')
-      .leftJoinAndSelect('usage.sourceScan', 'sourceScan') // TODO: store packages count to usage projection
+  const queries: [
+    Promise<PackageMetadata[]>,
+    Promise<{ hostnamePackagesCount: number; hostname: string; packageName: string }[]>,
+    Promise<PackagePopularityView[]>,
+    Promise<PackageVulnerability[]>
+  ] = [
+    packageRepo.createQueryBuilder().where('name = :packageName', { packageName }).getMany(),
+    createQueryBuilder()
+      .select()
+      .from('package_usage_by_hostname_projection', 'usage')
+      .leftJoin('usage.hostname', 'hn')
+      .addSelect('package_name', 'packageName')
+      .addSelect('hn.hostname', 'hostname')
+      .leftJoin('usage.sourceScan', 'sourceScan')
+      .addSelect(
+        'jsonb_array_length(("sourceScan"."scan_result"->>\'identifiedPackages\')::jsonb)',
+        'hostnamePackagesCount'
+      )
       .where('package_name = :packageName', { packageName })
-      .limit(16), // TODO: remove hardcode
+      .limit(16) // TODO: remove hardcode
+      .getRawMany(),
     packagePopularityRepo
       .createQueryBuilder()
-      .where('package_name = :packageName', { packageName }),
+      .where('package_name = :packageName', { packageName })
+      .getMany(),
     packageVulnerabilities
       .createQueryBuilder()
-      .where('package_name = :packageName', { packageName }),
+      .where('package_name = :packageName', { packageName })
+      .getMany(),
   ];
 
-  const [[packageInfo], usage, [popularity], vulnerabilities] = (await Promise.all(
-    queries.map((q) => q.getMany())
-  )) as [
-    PackageMetadata[],
-    PackageUsageByHostnameProjection[],
-    PackagePopularityView[],
-    PackageVulnerability[]
-  ];
+  const [[packageInfo], usage, [popularity], vulnerabilities] = await Promise.all(queries);
 
   if (!packageInfo) {
     return null;

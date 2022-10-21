@@ -1,6 +1,5 @@
 import { vulnerabilitiesData } from './PackageVersionMocks';
 import { GetPackageInfoOutput } from '../services/apiClient';
-import { PackageUsageByHostnameProjection, WebPageScan } from '@gradejs-public/shared';
 
 export const loadedPackagePageData: GetPackageInfoOutput = {
   id: 123,
@@ -12,41 +11,35 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
   updatedAt: new Date().toString(),
   usage: [
     {
-      hostname: { hostname: 'tinkoff.ru' },
-      sourceScan: {
-        scanResult: { identifiedPackages: [1, 2, 3, 4] } as unknown as WebPageScan.Result,
-      },
-    } as PackageUsageByHostnameProjection,
+      hostname: 'tinkoff.ru',
+      hostnamePackagesCount: 123,
+      packageName: 'hoist-non-react-statics',
+    },
     {
-      hostname: { hostname: 'avito.ru' },
-      sourceScan: {
-        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
-      },
-    } as PackageUsageByHostnameProjection,
+      hostname: 'avito.ru',
+      hostnamePackagesCount: 12,
+      packageName: 'hoist-non-react-statics',
+    },
     {
-      hostname: { hostname: 'fingerprint.com' },
-      sourceScan: {
-        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
-      },
-    } as PackageUsageByHostnameProjection,
+      hostname: 'fingerprint.com',
+      hostnamePackagesCount: 123345,
+      packageName: 'hoist-non-react-statics',
+    },
     {
-      hostname: { hostname: 'linux.org.ru' },
-      sourceScan: {
-        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
-      },
-    } as PackageUsageByHostnameProjection,
+      hostname: 'linux.org.ru',
+      hostnamePackagesCount: 12,
+      packageName: 'hoist-non-react-statics',
+    },
     {
-      hostname: { hostname: 'www.nooo.me' },
-      sourceScan: {
-        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
-      },
-    } as PackageUsageByHostnameProjection,
+      hostname: 'www.nooo.me',
+      hostnamePackagesCount: 123123,
+      packageName: 'hoist-non-react-statics',
+    },
     {
-      hostname: { hostname: 'quintessentially.com' },
-      sourceScan: {
-        scanResult: { identifiedPackages: [1, 2, 3, 4, 5, 6] } as unknown as WebPageScan.Result,
-      },
-    } as PackageUsageByHostnameProjection,
+      hostname: 'quintessentially.com',
+      hostnamePackagesCount: 1,
+      packageName: 'hoist-non-react-statics',
+    },
   ],
   latestVersion: '20.1.0',
   description:

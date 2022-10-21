@@ -9,6 +9,7 @@ import {
   WebPage,
   WebPageScan,
   PackageVulnerability,
+  PackageUsageByHostnameProjection,
 } from '@gradejs-public/shared';
 import {
   createSupertestApi,
@@ -18,7 +19,6 @@ import {
 import { getRepository } from 'typeorm';
 import { createApp } from './app';
 import { findOrCreateWebPage } from './website/service';
-import { syncPackageUsageByHostname } from './projections/syncPackageUsageByHostname';
 
 useDatabaseConnection();
 useTransactionalTesting();
@@ -189,6 +189,7 @@ describe('routes / website', () => {
 
     const scanRepo = em.getRepository(WebPageScan);
     const packageInfoRepo = em.getRepository(PackageMetadata);
+    const usageInfoRepo = em.getRepository(PackageUsageByHostnameProjection);
     const vulnerabilitiesRepo = em.getRepository(PackageVulnerability);
 
     const mockPkgname = 'react-hoist';
@@ -228,7 +229,14 @@ describe('routes / website', () => {
       },
     });
 
-    await syncPackageUsageByHostname(mockScan, em);
+    await usageInfoRepo.save({
+      hostname: mockPage.hostname,
+      hostnameId: mockPage.hostnameId,
+      sourceScan: mockScan,
+      sourceScanId: mockScan.id,
+      packageName: mockPkgname,
+      packageVersionSet: ['20.0.1'],
+    });
 
     await vulnerabilitiesRepo.save({
       id: 123,
@@ -267,10 +275,7 @@ describe('routes / website', () => {
           usage: [
             {
               packageName: 'react-hoist',
-              packageVersionSet: ['20.0.1'],
-              hostname: {
-                hostname: mockHostname,
-              },
+              hostname: mockHostname,
               hostnamePackagesCount: 1,
             },
           ],

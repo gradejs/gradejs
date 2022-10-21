@@ -99,10 +99,10 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const formattedSitesUsage = useMemo(
     () =>
       (usage ?? []).map((item) => ({
-        id: item?.hostname?.hostname,
-        image: item?.hostname?.hostname ? `/favicons/${item?.hostname?.hostname}` : undefined,
-        name: item?.hostname?.hostname,
-        packagesCount: item?.sourceScan?.scanResult?.identifiedPackages.length,
+        id: item?.hostname,
+        image: item?.hostname ? `/favicons/${item?.hostname}` : undefined,
+        name: item?.hostname,
+        packagesCount: item?.hostnamePackagesCount,
       })),
     [usage]
   );
