@@ -24,6 +24,7 @@ export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
   duplicate?: boolean;
   version?: string;
   containingScripts?: string[];
+  modules: ClientApi.IdentifiedModule[];
   vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
 };
 
@@ -71,28 +72,12 @@ const makeSelectScanPackagesByUrl = () =>
             return acc;
           }, new Set<string>())
         ),
+        modules: pkg.moduleIds.map((it) => scanData.identifiedModuleMap[it]),
       };
     });
 
     return packages;
   });
-
-const makeSelectScanModulesByPackage = () =>
-  createSelector(
-    [
-      makeSelectScanResultByUrl(),
-      (state: RootState, url: string | undefined, pkg: IdentifiedPackage) => pkg.moduleIds,
-    ],
-    (scanResult, moduleIds) => {
-      const scanData = scanResult?.scan?.scanResult;
-
-      if (!scanData) {
-        return [];
-      }
-
-      return moduleIds.map((it) => scanData.identifiedModuleMap[it]);
-    }
-  );
 
 export const selectors = {
   scanState: createSelector([makeSelectScanResultByUrl()], (scanResult) => ({
@@ -152,4 +137,4 @@ export const selectors = {
   }),
 };
 
-export { makeSelectScanResultByUrl, makeSelectScanPackagesByUrl, makeSelectScanModulesByPackage };
+export { makeSelectScanResultByUrl, makeSelectScanPackagesByUrl };

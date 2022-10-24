@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styles from './PackagePreview.module.scss';
 import { Icon } from '../Icon/Icon';
 import Chip from '../Chip/Chip';
@@ -13,15 +13,12 @@ import {
 } from './PackagePreviewSkeleton';
 import ProblemBadge from '../ProblemBadge/ProblemBadge';
 import { ChipGroupSkeleton } from '../ChipGroup/ChipGroupSkeleton';
-import { IdentifiedPackage, makeSelectScanModulesByPackage } from 'store/selectors/websiteResults';
+import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
 import TreeMap from '../TreeMap/TreeMap';
-import { useParams } from 'react-router-dom';
-import { useAppSelector } from 'store';
-import { useNormalizedScanUrl } from 'store/hooks/scan/useNormalizedScanUrl';
 
 type Props = {
   opened?: boolean;
@@ -41,13 +38,6 @@ export default function PackagePreview({
   pkg,
   detailsLoading = false,
 }: Props) {
-  const { '*': scanUrl } = useParams();
-  const { normalizedUrl } = useNormalizedScanUrl(scanUrl);
-  const scanModulesByPackageSelector = useMemo(makeSelectScanModulesByPackage, []);
-  const packageModules = useAppSelector((state) =>
-    scanModulesByPackageSelector(state, normalizedUrl, pkg)
-  );
-
   // const navigate = useNavigate();
 
   // const toggleOpen = () => {
@@ -252,7 +242,7 @@ export default function PackagePreview({
             </div>
             */}
 
-            {packageModules.length > 0 && (
+            {pkg.modules.length > 0 && (
               <div className={clsx(styles.stat, styles.statModules)}>
                 <div className={styles.statHeader}>
                   <Icon kind='modules' color='#8E8AA0' className={styles.statIcon} />
@@ -261,7 +251,7 @@ export default function PackagePreview({
                 </div>
 
                 <div className={styles.statModulesWrapper}>
-                  <TreeMap modules={packageModules} />
+                  <TreeMap modules={pkg.modules} />
                 </div>
               </div>
             )}
