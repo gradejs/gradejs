@@ -26,6 +26,7 @@ type ScanResultPackageWithMetadata = WebPageScan.IdentifiedPackage & {
 export namespace ClientApi {
   export type PackageVulnerabilityResponse = SerializableEntity<PackageVulnerabilityData>;
   export type ScanResultPackageResponse = SerializableEntity<ScanResultPackageWithMetadata>;
+  export type IdentifiedModule = SerializableEntity<WebPageScan.IdentifiedModule>;
 }
 
 function mergeRegistryMetadata(

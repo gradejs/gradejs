@@ -23,6 +23,7 @@ const pkg: IdentifiedPackage = {
   duplicate: false,
   approximateByteSize: 123456,
   moduleIds: [],
+  modules: [],
   registryMetadata: {
     name: '@team-griffin/react-heading-section',
     latestVersion: '4.16.4',

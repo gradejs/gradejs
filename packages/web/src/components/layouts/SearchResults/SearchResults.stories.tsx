@@ -20,6 +20,7 @@ Default.args = {
       name: 'react',
       versionSet: ['17.0.2'],
       moduleIds: [],
+      modules: [],
       approximateByteSize: 123,
       outdated: true,
       vulnerable: true,

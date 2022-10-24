@@ -18,6 +18,7 @@ import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
+import TreeMap from '../TreeMap/TreeMap';
 
 type Props = {
   opened?: boolean;
@@ -241,7 +242,19 @@ export default function PackagePreview({
             </div>
             */}
 
-            {/* TODO: add Modules treemap here */}
+            {pkg.modules.length > 0 && (
+              <div className={clsx(styles.stat, styles.statModules)}>
+                <div className={styles.statHeader}>
+                  <Icon kind='modules' color='#8E8AA0' className={styles.statIcon} />
+                  Matched Modules
+                  {/*<span className={styles.statHeaderAdditional}>Matching 80%</span>*/}
+                </div>
+
+                <div className={styles.statModulesWrapper}>
+                  <TreeMap modules={pkg.modules} />
+                </div>
+              </div>
+            )}
 
             {/*
               <div className={styles.stat}>

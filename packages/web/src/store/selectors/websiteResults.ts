@@ -24,6 +24,7 @@ export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
   duplicate?: boolean;
   version?: string;
   containingScripts?: string[];
+  modules: ClientApi.IdentifiedModule[];
   vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
 };
 
@@ -71,6 +72,7 @@ const makeSelectScanPackagesByUrl = () =>
             return acc;
           }, new Set<string>())
         ),
+        modules: pkg.moduleIds.map((it) => scanData.identifiedModuleMap[it]),
       };
     });
 

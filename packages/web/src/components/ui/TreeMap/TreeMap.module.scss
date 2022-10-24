@@ -1,0 +1,31 @@
+@import '~styles/_vars.scss';
+
+.svgWrapper {
+  display: block;
+}
+
+.treemap {
+  fill: currentColor;
+}
+
+.labelContainer {
+  transform-origin: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  font-size: 14px;
+  font-family: $font-monospace;
+  font-weight: 500;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+}
+
+.labelText {
+  text-align: center;
+}
+
+.labelSize {
+  white-space: nowrap;
+}
