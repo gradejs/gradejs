@@ -3,6 +3,7 @@ import styles from './Card.module.scss';
 import Card from './Card';
 import Chip from '../Chip/Chip';
 import ChipGroup from '../ChipGroup/ChipGroup';
+import { Link } from 'react-router-dom';
 
 export type PackagesBySourceCardProps = {
   sourceTitle: string;
@@ -10,7 +11,6 @@ export type PackagesBySourceCardProps = {
   sourceUrl?: string;
   packages: string[];
   morePackagesCount?: number;
-  onPackageClick?: (name: string) => void;
 };
 
 const PackagesBySourceCard = ({
@@ -19,22 +19,16 @@ const PackagesBySourceCard = ({
   sourceUrl,
   packages,
   morePackagesCount,
-  onPackageClick,
 }: PackagesBySourceCardProps) => (
   <Card title={sourceTitle} icon={sourceIcon} to={sourceUrl}>
     <div className={styles.tagsWrapper}>
       <ChipGroup>
         {packages.map((chip) => (
-          <Chip
-            key={chip}
-            title={chip}
-            className={styles.chip}
-            size='large'
-            font='monospace'
-            onClick={() => onPackageClick?.(chip)}
-          >
-            {chip}
-          </Chip>
+          <Link to={'/package/' + chip}>
+            <Chip key={chip} title={chip} className={styles.chip} size='large' font='monospace'>
+              {chip}
+            </Chip>
+          </Link>
         ))}
 
         {!!morePackagesCount && (

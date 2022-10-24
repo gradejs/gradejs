@@ -18,6 +18,8 @@ import Avatar from '../Avatar/Avatar';
 import Vulnerabilities from '../Vulnerabilities/Vulnerabilities';
 import { getReadableSizeString, plural } from '../../../utils/helpers';
 import { IdentifiedPackage } from '../../../types';
+import { Link } from 'react-router-dom';
+import Button from '../Button/Button';
 import TreeMap from '../TreeMap/TreeMap';
 // import { usedOnSitesData } from 'mocks/SitesListMocks';
 
@@ -320,13 +322,9 @@ export default function PackagePreview({
                   </>
                 )}
               </div>
-
-              {/* TODO: should be a <a> link w/ router support */}
-              {/*
-              <Button variant='arrow' onClick={() => navigate(`/package/${pkg.name}`)}>
-                Details
-              </Button>
-              */}
+              <Link to={`/package/${pkg.name}`}>
+                <Button variant='arrow'>Details</Button>
+              </Link>
             </div>
           </div>
         </div>

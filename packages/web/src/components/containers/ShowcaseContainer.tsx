@@ -30,8 +30,6 @@ export default function ShowcaseContainer() {
     );
   }
 
-  const onPackageClick = (name: string) => navigate('/package/' + name);
-
   const popularQueries: KeyedPackagesBySourceCardProps[] = (
     showcase.showcase?.showcasedScans ?? []
   ).map(({ hostname, webPage, scanPreview }, idx) => ({
@@ -41,7 +39,6 @@ export default function ShowcaseContainer() {
     sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
     packages: scanPreview.packageNames,
     morePackagesCount: scanPreview.totalCount - scanPreview.packageNames.length,
-    onPackageClick,
   }));
 
   const scansWithVulnerabilities: KeyedScansWithVulnerabilitiesCardProps[] = (

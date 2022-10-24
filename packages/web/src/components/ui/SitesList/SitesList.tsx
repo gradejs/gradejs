@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from './SitesList.module.scss';
 import clsx from 'clsx';
+import { Link } from 'react-router-dom';
 
 export type Site = {
   id?: string;
   image?: string;
-  name?: string;
+  name: string;
   packagesCount?: number;
 };
 
@@ -21,7 +22,9 @@ function Site({ image, name, packagesCount }: Site) {
         {image && <img src={image} className={styles.image} loading='lazy' alt='' />}
       </div>
       <div className={styles.content}>
-        <div className={styles.title}>{name}</div>
+        <div className={styles.title}>
+          <Link to={'/scan/' + name}>{name}</Link>
+        </div>
         <div className={styles.subtitle}>{packagesCount} packages</div>
       </div>
     </div>

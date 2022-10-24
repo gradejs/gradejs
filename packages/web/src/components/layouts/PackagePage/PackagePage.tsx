@@ -24,7 +24,7 @@ import semver from 'semver';
 import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',
@@ -98,10 +98,10 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const formattedSitesUsage = useMemo(
     () =>
       (usage ?? []).map((item) => ({
-        id: item?.hostname,
-        image: item?.hostname ? `/favicons/${item?.hostname}` : undefined,
-        name: item?.hostname,
-        packagesCount: item?.hostnamePackagesCount,
+        id: item.hostname,
+        image: `/favicons/${item.hostname}`,
+        name: item.hostname,
+        packagesCount: item.hostnamePackagesCount,
       })),
     [usage]
   );
@@ -581,15 +581,16 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                       {loading
                         ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
                         : deps.map((dependency) => (
-                            <Chip
-                              key={dependency}
-                              font='monospace'
-                              size='medium'
-                              fontSize='small'
-                              onClick={() => navigate('/package/' + dependency)}
-                            >
-                              {dependency}
-                            </Chip>
+                            <Link to={'/package/' + dependency}>
+                              <Chip
+                                key={dependency}
+                                font='monospace'
+                                size='medium'
+                                fontSize='small'
+                              >
+                                {dependency}
+                              </Chip>
+                            </Link>
                           ))}
                     </ChipGroup>
                   )}
