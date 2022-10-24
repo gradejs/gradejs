@@ -31,3 +31,7 @@ export function getReadableSizeString(sizeInBytes: number) {
 
   return `${sizeInBytes} ${byteUnits[i]}`;
 }
+
+export function getFaviconUrlByHostname(hostname?: string) {
+  return hostname ? `/favicons/${hostname}` : '';
+}
