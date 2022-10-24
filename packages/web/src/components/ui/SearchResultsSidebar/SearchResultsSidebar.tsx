@@ -21,7 +21,7 @@ import { SidebarMetaSkeleton } from '../SidebarMeta/SidebarMetaSkeleton';
 import { SidebarMobileFilterSkeleton } from '../SidebarMobileFilter/SidebarMobileFilterSkeleton';
 import {
   PackageFilters,
-  PackageSorter,
+  PackageSorters,
   PackageSortType,
   PackageTrait,
 } from '../../../store/slices/scanDisplayOptions';
@@ -42,7 +42,7 @@ type Props = {
   onFiltersChanged: (newFilters: PackageFilters | null) => void;
   availableSorters: PackageSortType[];
   onSortChange: (newSorterName: PackageSortType) => void;
-  selectedSort: PackageSorter;
+  selectedSorters: PackageSorters;
   onFiltersReset: () => void;
 };
 
@@ -53,7 +53,7 @@ export default function SearchResultsSidebar({
   onFiltersChanged,
   availableSorters,
   onSortChange,
-  selectedSort,
+  selectedSorters,
   onFiltersReset,
   loading,
 }: Props) {
@@ -62,7 +62,7 @@ export default function SearchResultsSidebar({
   const closeModalHandler = useCallback(() => setActiveModal(null), []);
 
   const [rawSearchValue, setRawSearchValue] = useState('');
-  const searchText = selectedFilters.searchText;
+  const searchText = selectedFilters.searchText ?? '';
 
   useEffect(() => {
     setRawSearchValue(searchText);
@@ -208,7 +208,7 @@ export default function SearchResultsSidebar({
             <SortsList
               availableSorters={availableSorters}
               onSortChange={onSortChange}
-              selectedSort={selectedSort}
+              selectedSorters={selectedSorters}
             />
           </SidebarCategory>
         </div>
@@ -224,7 +224,7 @@ export default function SearchResultsSidebar({
             <SidebarMobileFilterSkeleton />
           ) : (
             <SidebarMobileFilter
-              selectedSort={selectedSort}
+              selectedSorters={selectedSorters}
               isChanged={anyFiltersActive}
               onFiltersReset={onFiltersReset}
               filterTriggers={mobileFilterTriggers}

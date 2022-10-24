@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import styles from './SidebarCategorySearch.module.scss';
+import styles from './SidebarCategoryHiddenSearch.scss';
 import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
 import Search from '../Search/Search';

@@ -36,7 +36,7 @@ export const makeSelectOptimizedScanDisplayOptions = () =>
     return {
       ...displayOptions,
       packageFilters: {
-        searchText: displayOptions.packageFilters.searchText,
+        searchText: displayOptions.packageFilters.searchText ?? '',
         keywords: new Set(displayOptions.packageFilters.keywords),
         authors: new Set(displayOptions.packageFilters.authors),
         traits: new Set(displayOptions.packageFilters.traits),

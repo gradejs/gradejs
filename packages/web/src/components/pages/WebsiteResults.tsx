@@ -11,7 +11,7 @@ import {
 } from '../../store/selectors/scanDisplayOptions/scanDisplayOptions';
 import {
   PackageFilters,
-  PackageSorter,
+  PackageSorters,
   PackageSortType,
   resetScanDisplayOptions,
   setScanDisplayOptions,
@@ -60,7 +60,6 @@ export function WebsiteResultsPage() {
 
   const availableFilters: PackageFilters = useMemo(
     () => ({
-      searchText: '',
       authors: searchableEntities.packageAuthors.map((it) => it.name),
       keywords: searchableEntities.packageKeywords,
       traits: ['vulnerable', 'outdated'],
@@ -68,7 +67,10 @@ export function WebsiteResultsPage() {
     [searchableEntities]
   );
 
-  const availableSorters: PackageSortType[] = ['name', 'size', 'popularity', 'severity'];
+  const availableSorters: PackageSortType[] = useMemo(
+    () => ['name', 'size', 'popularity', 'severity'],
+    []
+  );
 
   const selectedDisplayOptions = useAppSelector((state) =>
     selectScanDisplayOptions(state, normalizedUrl)
@@ -98,7 +100,7 @@ export function WebsiteResultsPage() {
   );
 
   const handleSortersChange = useCallback(
-    (newSorters: PackageSorter[]) => {
+    (newSorters: PackageSorters[]) => {
       if (!normalizedUrl) {
         return;
       }
@@ -116,17 +118,16 @@ export function WebsiteResultsPage() {
     [dispatch, normalizedUrl, selectedDisplayOptions]
   );
 
-  const selectedSort = {
-    by: selectedDisplayOptions.packageSorters[0].by,
-    direction: selectedDisplayOptions.packageSorters[0].direction,
-  };
+  const selectedSorters = selectedDisplayOptions.packageSorters[0];
 
   const handleSortChange = useCallback(
     (newSorterName: PackageSortType) => {
       const sortOrder =
-        newSorterName === selectedSort.by && selectedSort.direction === 'DESC' ? 'ASC' : 'DESC';
+        newSorterName === selectedSorters.by && selectedSorters.direction === 'DESC'
+          ? 'ASC'
+          : 'DESC';
 
-      const newSorter: PackageSorter = {
+      const newSorter: PackageSorters = {
         by: newSorterName,
         direction: sortOrder,
       };
@@ -229,7 +230,7 @@ export function WebsiteResultsPage() {
         bundleSize={scanOverview.bundleSize ?? 0}
         scanDate={scanResult?.scan?.finishedAt}
         selectedFilters={selectedDisplayOptions.packageFilters}
-        selectedSort={selectedSort}
+        selectedSorters={selectedSorters}
         availableFilters={availableFilters}
         availableSorters={availableSorters}
         onFiltersChange={handleFiltersChange}

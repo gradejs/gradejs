@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './SidebarCategory.module.scss';
-import SidebarCategoryHiddenSearch from '../SidebarCategorySearch/SidebarCategoryHiddenSearch';
+import SidebarCategoryHiddenSearch from '../SidebarCategoryHiddenSearch/SidebarCategoryHiddenSearch';
 import SidebarCategoryHeader from './SidebarCategoryHeader';
 
 type GroupItem = {

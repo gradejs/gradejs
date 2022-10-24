@@ -14,7 +14,7 @@ import SearchDesktopSorters from '../../ui/SearchDesktopSorters/SearchDesktopSor
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import {
   PackageFilters,
-  PackageSorter,
+  PackageSorters,
   PackageSortType,
 } from '../../../store/slices/scanDisplayOptions';
 import { getReadableSizeString, plural, repeat } from '../../../utils/helpers';
@@ -33,7 +33,7 @@ type Props = {
   availableFilters: PackageFilters;
   availableSorters: PackageSortType[];
   selectedFilters: PackageFilters;
-  selectedSort: PackageSorter;
+  selectedSorters: PackageSorters;
   onFiltersChange: (newFilters: PackageFilters | null) => void;
   onFiltersReset: () => void;
   onSortChange: (newSorters: PackageSortType) => void;
@@ -55,7 +55,7 @@ export default function SearchResults({
   availableFilters,
   availableSorters,
   selectedFilters,
-  selectedSort,
+  selectedSorters,
   onFiltersChange,
   onFiltersReset,
   onSortChange,
@@ -145,7 +145,7 @@ export default function SearchResults({
             <div className={styles.searchResultsSorters}>
               <SearchDesktopSorters
                 availableSorters={availableSorters}
-                selectedSort={selectedSort}
+                selectedSorters={selectedSorters}
                 onSortChange={onSortChange}
               />
             </div>
@@ -160,7 +160,7 @@ export default function SearchResults({
               onFiltersChanged={onFiltersChange}
               onSortChange={onSortChange}
               availableSorters={availableSorters}
-              selectedSort={selectedSort}
+              selectedSorters={selectedSorters}
               onFiltersReset={onFiltersReset}
             />
           </div>

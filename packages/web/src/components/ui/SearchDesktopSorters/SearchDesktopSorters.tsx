@@ -2,17 +2,17 @@ import React from 'react';
 import clsx from 'clsx';
 import styles from '../../layouts/SearchResults/SearchResults.module.scss';
 import { Icon } from '../Icon/Icon';
-import { PackageSorter, PackageSortType } from '../../../store/slices/scanDisplayOptions';
+import { PackageSorters, PackageSortType } from '../../../store/slices/scanDisplayOptions';
 import { capitalizeWord } from '../../../utils/helpers';
 
 type Props = {
   availableSorters: PackageSortType[];
-  selectedSort: PackageSorter;
+  selectedSorters: PackageSorters;
   onSortChange: (newSorters: PackageSortType) => void;
 };
 
-const SearchDesktopSorters = ({ availableSorters, selectedSort, onSortChange }: Props) => {
-  const { by, direction } = selectedSort;
+const SearchDesktopSorters = ({ availableSorters, selectedSorters, onSortChange }: Props) => {
+  const { by, direction } = selectedSorters;
 
   return (
     <>

@@ -1,18 +1,18 @@
 import React from 'react';
 import styles from './SortsList.module.scss';
-import { PackageSorter, PackageSortType } from '../../../store/slices/scanDisplayOptions';
+import { PackageSorters, PackageSortType } from '../../../store/slices/scanDisplayOptions';
 import clsx from 'clsx';
 import { Icon } from '../Icon/Icon';
 import { capitalizeWord } from 'utils/helpers';
 
 type Props = {
   availableSorters: PackageSortType[];
-  selectedSort: PackageSorter;
+  selectedSorters: PackageSorters;
   onSortChange: (newSorterName: PackageSortType) => void;
 };
 
-const SortsList = ({ availableSorters, selectedSort, onSortChange }: Props) => {
-  const { by, direction } = selectedSort;
+const SortsList = ({ availableSorters, selectedSorters, onSortChange }: Props) => {
+  const { by, direction } = selectedSorters;
 
   return (
     <div className={styles.sortsList}>

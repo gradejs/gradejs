@@ -4,7 +4,7 @@ import { Icon } from '../Icon/Icon';
 import { Button } from '../index';
 import Badge from '../Badge/Badge';
 import clsx from 'clsx';
-import { PackageSorter } from '../../../store/slices/scanDisplayOptions';
+import { PackageSorters } from '../../../store/slices/scanDisplayOptions';
 import { capitalizeWord } from 'utils/helpers';
 
 type ToggleList = {
@@ -18,7 +18,7 @@ type Props = {
   onFiltersReset: () => void;
   onSortOpen: () => void;
   filterTriggers: ToggleList[];
-  selectedSort: PackageSorter;
+  selectedSorters: PackageSorters;
 };
 
 export default function SidebarMobileFilter({
@@ -26,9 +26,9 @@ export default function SidebarMobileFilter({
   onFiltersReset,
   onSortOpen,
   filterTriggers,
-  selectedSort,
+  selectedSorters,
 }: Props) {
-  const { by, direction } = selectedSort;
+  const { by, direction } = selectedSorters;
 
   return (
     <>

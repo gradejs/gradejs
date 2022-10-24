@@ -1,5 +1,5 @@
 import { IdentifiedPackage } from '../websiteResults';
-import { PackageSorter, PackageSortType } from '../../slices/scanDisplayOptions';
+import { PackageSorters, PackageSortType } from '../../slices/scanDisplayOptions';
 
 export const SeverityWeightMap: Record<string, number> = {
   CRITICAL: 4,
@@ -36,7 +36,7 @@ const packageSorterMap: Record<PackageSortType, PackageSorterComparator> = {
   },
 };
 
-export function sortPackagesByOptions(packages: IdentifiedPackage[], options: PackageSorter[]) {
+export function sortPackagesByOptions(packages: IdentifiedPackage[], options: PackageSorters[]) {
   return packages.slice().sort((pkgA, pkgB) => {
     let sortDirection = 0;
     for (const sortOption of options) {
