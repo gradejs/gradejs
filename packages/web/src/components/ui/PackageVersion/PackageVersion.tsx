@@ -27,7 +27,7 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
             </span>
             <span className={styles.packageSubtitle}>{updateDate}</span>
           </div>
-          {uses && (
+          {!!uses && (
             <div
               className={clsx(
                 styles.packageTopCol,
@@ -39,7 +39,7 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
               <span className={styles.packageSubtitle}>Sites used</span>
             </div>
           )}
-          {size && (
+          {!!size && (
             <div
               className={clsx(
                 styles.packageTopCol,
@@ -53,7 +53,7 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
               </span>
             </div>
           )}
-          {modulesCount && (
+          {!!modulesCount && (
             <div
               className={clsx(
                 styles.packageTopCol,

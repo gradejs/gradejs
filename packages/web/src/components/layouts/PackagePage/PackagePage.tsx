@@ -42,7 +42,7 @@ function mdclean(markdown = ''): string {
 }
 
 const PackagePage = ({ packageInfo, loading = false }: Props) => {
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortDirection, setSortDirection] = useState('desc' as 'asc' | 'desc');
   const [sortField, setSortField] = useState('versions');
   const [fullDescVisible, setFullDescVisible] = useState(false);
   const [allVersionsVisible, setAllVersionsVisible] = useState(false);
@@ -70,14 +70,12 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   } = packageInfo ?? {};
 
   const requestSort = (sortName: string) => {
-    let direction = 'asc';
-
-    if (sortDirection === 'asc' && sortName === sortField) {
-      direction = 'desc';
+    if (sortName !== sortField) {
+      setSortDirection('desc');
+    } else {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     }
-
     setSortField(sortName);
-    setSortDirection(direction);
   };
 
   const closeModalHandler = () => {
@@ -121,7 +119,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
           modules: [], // TODO
           entries: [], // TODO
         }))
-        .sort((a, b) => {
+        .sort((b, a) => {
           let sort: number;
           switch (sortField) {
             case 'weight':
@@ -136,7 +134,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
           }
           return sortDirection === 'desc' ? -1 * sort : sort;
         }),
-    [versionSpecificValues, sortDirection, sortDirection]
+    [versionSpecificValues, sortDirection, sortField]
   );
 
   return (
@@ -309,7 +307,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                                 height={12}
                                 className={clsx(
                                   styles.sortIcon,
-                                  sortDirection === 'desc' && styles.sortIconDesc
+                                  sortDirection === 'asc' && styles.sortIconAsc
                                 )}
                               />
                             ) : (
