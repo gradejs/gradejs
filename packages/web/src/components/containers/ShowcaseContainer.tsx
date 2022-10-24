@@ -9,12 +9,10 @@ import ScansWithVulnerabilitiesCardList, {
   KeyedScansWithVulnerabilitiesCardProps,
 } from '../ui/CardList/ScansWithVulnerabilitiesCardList';
 import { CardListSkeleton } from '../ui/CardList/CardListSkeleton';
-import { useNavigate } from 'react-router-dom';
 import { getFaviconUrlByHostname } from 'utils/helpers';
 
 export default function ShowcaseContainer() {
   const showcase = useShowcaseData();
-  const navigate = useNavigate();
 
   if (showcase.isLoading) {
     return (

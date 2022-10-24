@@ -24,10 +24,8 @@ const packageInfo = createSlice({
     builder
       .addCase(requestPackageInfo.pending, (state, action) => {
         const { packageName } = action.meta.arg;
-        const previousPackageState = state[packageName] ?? null;
 
         state[packageName] = {
-          ...previousPackageState,
           packageInfo: undefined,
           error: undefined,
           isLoading: true,
@@ -35,10 +33,8 @@ const packageInfo = createSlice({
       })
       .addCase(requestPackageInfo.rejected, (state, action) => {
         const { packageName } = action.meta.arg;
-        const previousPackageState = state[packageName] ?? null;
 
         state[packageName] = {
-          ...previousPackageState,
           packageInfo: undefined,
           error: action.error,
           isLoading: false,
@@ -46,10 +42,8 @@ const packageInfo = createSlice({
       })
       .addCase(requestPackageInfo.fulfilled, (state, action) => {
         const { packageName } = action.meta.arg;
-        const previousPackageState = state[packageName] ?? null;
 
         state[packageName] = {
-          ...previousPackageState,
           packageInfo: action.payload,
           error: undefined,
           isLoading: false,
