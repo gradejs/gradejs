@@ -9,6 +9,7 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
   deps: ['art', 'create-react-class', 'scheduler', 'loose-envify'],
   updateSeq: 1,
   updatedAt: new Date().toString(),
+  usageByHostnameCount: 123,
   usage: [
     {
       hostname: 'tinkoff.ru',

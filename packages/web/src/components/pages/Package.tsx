@@ -20,7 +20,7 @@ export function PackageView() {
 
   const title = `Real world usage & stats of ${packageName} - GradeJS`;
   const description =
-    `GradeJS has discovered ${packageInfo?.usage.length} websites using ${packageName}` +
+    `GradeJS has discovered ${packageInfo?.usageByHostnameCount} websites using ${packageName}` +
     (packageInfo?.usage.length
       ? `: ${packageInfo?.usage.slice(0, 4).map((u) => u.hostname)} and more.`
       : '');

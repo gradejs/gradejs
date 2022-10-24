@@ -66,6 +66,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
     license,
     usage,
     updateDate,
+    usageByHostnameCount,
   } = packageInfo ?? {};
 
   const requestSort = (sortName: string) => {
@@ -578,6 +579,13 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                           ))}
                     </ChipGroup>
                   )}
+                </div>
+
+                <div className={styles.sidebarItem}>
+                  <div className={styles.sidebarItemTitle}>
+                    {!loading &&
+                      `Used on ${plural(usageByHostnameCount ?? 0, 'website', 'websites')}`}
+                  </div>
                 </div>
 
                 {/*<div className={styles.sidebarItem}>*/}
