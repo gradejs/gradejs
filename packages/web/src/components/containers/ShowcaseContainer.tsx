@@ -9,6 +9,7 @@ import ScansWithVulnerabilitiesCardList, {
   KeyedScansWithVulnerabilitiesCardProps,
 } from '../ui/CardList/ScansWithVulnerabilitiesCardList';
 import { CardListSkeleton } from '../ui/CardList/CardListSkeleton';
+import { getFaviconUrlByHostname } from 'utils/helpers';
 
 export default function ShowcaseContainer() {
   const showcase = useShowcaseData();
@@ -31,7 +32,7 @@ export default function ShowcaseContainer() {
     showcase.showcase?.showcasedScans ?? []
   ).map(({ hostname, webPage, scanPreview }, idx) => ({
     id: idx.toString(),
-    sourceIcon: '',
+    sourceIcon: getFaviconUrlByHostname(hostname.hostname),
     sourceTitle: `${hostname.hostname}`,
     sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
     packages: scanPreview.packageNames,

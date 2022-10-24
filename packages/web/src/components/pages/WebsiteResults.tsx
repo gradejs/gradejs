@@ -14,7 +14,7 @@ import {
   resetScanDisplayOptions,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
-import { plural } from '../../utils/helpers';
+import { getFaviconUrlByHostname, plural } from '../../utils/helpers';
 
 const accuracyMap: Record<string, string> = {
   // TODO: remove hardcode
@@ -32,9 +32,7 @@ export function WebsiteResultsPage() {
     pollWhilePending: true,
   });
 
-  const faviconUrl = useMemo(() => {
-    return parsedUrl && `/favicons/${parsedUrl?.hostname}`;
-  }, [parsedUrl]);
+  const faviconUrl = getFaviconUrlByHostname(parsedUrl?.hostname);
 
   const selectScanDisplayOptions = useMemo(() => makeSelectScanDisplayOptions(), []);
 
