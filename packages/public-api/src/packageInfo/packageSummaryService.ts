@@ -7,6 +7,8 @@ import {
 } from '@gradejs-public/shared';
 import semver from 'semver';
 
+const simpleVersionRegex = /^\d+\.\d+\.\d+$/;
+
 export async function getPackageSummaryByName(packageName: string) {
   const packageRepo = getRepository(PackageMetadata);
   const packagePopularityRepo = getRepository(PackagePopularityView);
@@ -67,7 +69,7 @@ export async function getPackageSummaryByName(packageName: string) {
       Object.entries(packageInfo.versionSpecificValues ?? {})
         .filter(
           // remove non-release versions from output, keep the latest one
-          ([version]) => packageInfo.latestVersion === version || version.match(/^\d+\.\d+\.\d+$/)
+          ([version]) => packageInfo.latestVersion === version || version.match(simpleVersionRegex)
         )
         .map(([version, data]) => [
           version,
