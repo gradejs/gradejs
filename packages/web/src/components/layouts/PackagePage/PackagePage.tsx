@@ -106,6 +106,16 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
     [usage]
   );
 
+  const imageUriTransformer = (input: string) =>
+    input.startsWith('https://')
+      ? input
+      : packageInfo?.repositoryUrl?.startsWith('https://github.com')
+      ? `https://raw.githubusercontent.com/${packageInfo?.repositoryUrl?.replace(
+          /^https:\/\/github.com\//,
+          ''
+        )}/HEAD/${input}`
+      : input;
+
   const formattedVersions = useMemo(
     () =>
       Object.entries(versionSpecificValues ?? {})
@@ -212,8 +222,14 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                       >
                         {fullDescVisible ? (
                           <ReactMarkdown
+                            transformImageUri={imageUriTransformer}
                             components={{
                               h1: 'h2',
+                              source({ srcSet, ...props }) {
+                                return (
+                                  <source {...props} srcSet={imageUriTransformer(srcSet ?? '')} />
+                                );
+                              },
                               code({ inline, className, children, ...props }) {
                                 const match = /language-(\w+)/.exec(className ?? '');
                                 return !inline && match ? (
