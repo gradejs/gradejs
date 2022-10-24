@@ -13,13 +13,13 @@ export async function getPackageSummaryByName(packageName: string) {
   const packageVulnerabilities = getRepository(PackageVulnerability);
 
   const queries: [
-    Promise<PackageMetadata[]>,
+    Promise<PackageMetadata | undefined>,
     Promise<{ hostnamePackagesCount: number; hostname: string; packageName: string }[]>,
     Promise<number>,
-    Promise<PackagePopularityView[]>,
+    Promise<PackagePopularityView | undefined>,
     Promise<PackageVulnerability[]>
   ] = [
-    packageRepo.createQueryBuilder().where('name = :packageName', { packageName }).getMany(),
+    packageRepo.createQueryBuilder().where('name = :packageName', { packageName }).getOne(),
     createQueryBuilder()
       .select()
       .from('package_usage_by_hostname_projection', 'usage')
@@ -42,15 +42,16 @@ export async function getPackageSummaryByName(packageName: string) {
     packagePopularityRepo
       .createQueryBuilder()
       .where('package_name = :packageName', { packageName })
-      .getMany(),
+      .getOne(),
     packageVulnerabilities
       .createQueryBuilder()
       .where('package_name = :packageName', { packageName })
       .getMany(),
   ];
 
-  const [[packageInfo], usage, usageByHostnameCount, [popularity], vulnerabilities] =
-    await Promise.all(queries);
+  const [packageInfo, usage, usageByHostnameCount, popularity, vulnerabilities] = await Promise.all(
+    queries
+  );
 
   if (!packageInfo) {
     return null;
