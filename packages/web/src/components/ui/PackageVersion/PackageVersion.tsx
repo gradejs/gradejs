@@ -4,6 +4,9 @@ import clsx from 'clsx';
 import { Icon } from '../Icon/Icon';
 import { formatNumber, getReadableSizeString } from 'utils/helpers';
 
+// Note: Modules/entrypoints typings and related code have been removed
+// in https://github.com/gradejs/gradejs/pull/111/ - use as reference
+
 type Props = {
   version: string;
   updateDate?: string;
