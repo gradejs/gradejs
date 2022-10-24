@@ -24,7 +24,7 @@ import semver from 'semver';
 import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',
@@ -47,7 +47,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [fullDescVisible, setFullDescVisible] = useState(false);
   const [allVersionsVisible, setAllVersionsVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
-  const navigate = useNavigate();
 
   const sorts = ['weight', 'popularity', 'versions'];
 
@@ -548,6 +547,19 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                           </div>
                         </div>
 
+                        <div className={styles.stat}>
+                          <div className={styles.statImagePlaceholder}>
+                            <Icon kind='modules' width={20} height={20} />
+                          </div>
+
+                          <div className={styles.statContent}>
+                            <span className={styles.statTitle}>Used on</span>
+                            <span className={styles.statValue}>
+                              {plural(usageByHostnameCount ?? 0, 'website', 'websites')}
+                            </span>
+                          </div>
+                        </div>
+
                         {/*<div className={styles.stat}>*/}
                         {/*  <div className={styles.statImagePlaceholder}>*/}
                         {/*    <Icon kind='rating' />*/}
@@ -594,13 +606,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                           ))}
                     </ChipGroup>
                   )}
-                </div>
-
-                <div className={styles.sidebarItem}>
-                  <div className={styles.sidebarItemTitle}>
-                    {!loading &&
-                      `Used on ${plural(usageByHostnameCount ?? 0, 'website', 'websites')}`}
-                  </div>
                 </div>
 
                 {/*<div className={styles.sidebarItem}>*/}
