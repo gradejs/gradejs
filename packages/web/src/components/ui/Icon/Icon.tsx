@@ -28,6 +28,9 @@ import arrowBack from '../../../assets/icons/sprite/arrow-back.svg';
 import filters from '../../../assets/icons/sprite/filters.svg';
 import questionMark from '../../../assets/icons/sprite/question-mark.svg';
 import modules from '../../../assets/icons/sprite/modules.svg';
+import sort from '../../../assets/icons/sprite/sort.svg';
+import crossOpaque from '../../../assets/icons/sprite/cross-opaque.svg';
+import notFound from '../../../assets/icons/sprite/not-found.svg';
 
 const icons = {
   githubLogo,
@@ -59,6 +62,9 @@ const icons = {
   questionMark,
   webpackLogo,
   modules,
+  sort,
+  crossOpaque,
+  notFound,
 };
 
 export type IconProps = {

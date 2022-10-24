@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './SearchResultsSidebar.module.scss';
 import modalStyles from '../Modal/Modal.module.scss';
 import clsx from 'clsx';
+import debounce from 'lodash.debounce';
 import Modal from '../Modal/Modal';
 import SidebarMeta from '../SidebarMeta/SidebarMeta';
 import SidebarMobileFilter from '../SidebarMobileFilter/SidebarMobileFilter';
@@ -18,7 +19,15 @@ import { Button } from '../index';
 import { IconProps } from '../Icon/Icon';
 import { SidebarMetaSkeleton } from '../SidebarMeta/SidebarMetaSkeleton';
 import { SidebarMobileFilterSkeleton } from '../SidebarMobileFilter/SidebarMobileFilterSkeleton';
-import { PackageFilters, PackageTrait } from '../../../store/slices/scanDisplayOptions';
+import {
+  PackageFilters,
+  PackageSorters,
+  PackageSortType,
+  PackageTrait,
+} from '../../../store/slices/scanDisplayOptions';
+import SortsList from '../SortsList/SortsList';
+import SidebarCategorySearch from '../SidebarCategory/SidebarCategorySearch';
+import SidebarCategorySearchSkeleton from '../SidebarCategory/SidebarCategorySearchSkeleton';
 
 type MetaItemProps = {
   icon: React.ReactElement<IconProps>;
@@ -31,6 +40,10 @@ type Props = {
   availableFilters: PackageFilters;
   selectedFilters: PackageFilters;
   onFiltersChanged: (newFilters: PackageFilters | null) => void;
+  availableSorters: PackageSortType[];
+  onSortChange: (newSorterName: PackageSortType) => void;
+  selectedSorters: PackageSorters;
+  onFiltersReset: () => void;
 };
 
 export default function SearchResultsSidebar({
@@ -38,10 +51,22 @@ export default function SearchResultsSidebar({
   availableFilters,
   selectedFilters,
   onFiltersChanged,
+  availableSorters,
+  onSortChange,
+  selectedSorters,
+  onFiltersReset,
   loading,
 }: Props) {
-  const [activeModal, setActiveModal] = useState<'keywords' | 'authors' | 'traits' | null>(null);
+  const [activeModal, setActiveModal] =
+    useState<'keywords' | 'authors' | 'traits' | 'sort' | null>(null);
   const closeModalHandler = useCallback(() => setActiveModal(null), []);
+
+  const [rawSearchValue, setRawSearchValue] = useState('');
+  const searchText = selectedFilters.searchText ?? '';
+
+  useEffect(() => {
+    setRawSearchValue(searchText);
+  }, [searchText]);
 
   const anyFiltersActive = useMemo(
     () => Object.values(selectedFilters).some((it) => !!it.length),
@@ -69,10 +94,9 @@ export default function SearchResultsSidebar({
     [selectedFilters]
   );
 
-  const handleFilterReset = useCallback(() => onFiltersChanged(null), [onFiltersChanged]);
-
   // TODO: Refactor this through restructuring underlying components properly
   const {
+    handleSearchTextChange,
     handleTraitsFilterChange,
     handleTraitsFilterReset,
     handleKeywordsFilterChange,
@@ -111,9 +135,28 @@ export default function SearchResultsSidebar({
           ...selectedFilters,
           authors: [],
         }),
+      handleSearchTextChange: (newSearchText: string) =>
+        onFiltersChanged({
+          ...selectedFilters,
+          searchText: newSearchText,
+        }),
     }),
     [onFiltersChanged, selectedFilters]
   );
+
+  const debouncedSearchTextChangeHandler = useCallback(debounce(handleSearchTextChange, 300), [
+    handleSearchTextChange,
+  ]);
+
+  const handleRawSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRawSearchValue(e.target.value);
+    debouncedSearchTextChangeHandler(e.target.value);
+  };
+
+  const clearSearchInput = () => {
+    setRawSearchValue('');
+    handleSearchTextChange('');
+  };
 
   return (
     <>
@@ -159,6 +202,18 @@ export default function SearchResultsSidebar({
         />
       </Modal>
 
+      <Modal isOpen={activeModal === 'sort'} onClose={closeModalHandler}>
+        <div className={modalStyles.modalContentWrapper}>
+          <SidebarCategory categoryName='Sort by' returnButton={closeModalHandler}>
+            <SortsList
+              availableSorters={availableSorters}
+              onSortChange={onSortChange}
+              selectedSorters={selectedSorters}
+            />
+          </SidebarCategory>
+        </div>
+      </Modal>
+
       <aside className={styles.sidebar}>
         <div className={styles.sidebarItem}>
           {loading ? <SidebarMetaSkeleton /> : <SidebarMeta meta={metaItems} />}
@@ -169,9 +224,27 @@ export default function SearchResultsSidebar({
             <SidebarMobileFilterSkeleton />
           ) : (
             <SidebarMobileFilter
+              selectedSorters={selectedSorters}
               isChanged={anyFiltersActive}
-              resetFilters={handleFilterReset}
+              onFiltersReset={onFiltersReset}
               filterTriggers={mobileFilterTriggers}
+              onSortOpen={() => setActiveModal('sort')}
+            />
+          )}
+        </div>
+
+        <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
+          {loading ? (
+            <>
+              <SidebarCategoryHeaderSkeleton search />
+              <SidebarCategorySearchSkeleton />
+            </>
+          ) : (
+            <SidebarCategorySearch
+              categoryName='Search by text'
+              searchValue={rawSearchValue}
+              handleSearchTextChange={handleRawSearchTextChange}
+              clearSearchInput={clearSearchInput}
             />
           )}
         </div>
@@ -240,7 +313,7 @@ export default function SearchResultsSidebar({
 
         {anyFiltersActive && (
           <div className={clsx(styles.sidebarItem, styles.sidebarItemFilter)}>
-            <Button variant='secondary' size='small' onClick={handleFilterReset}>
+            <Button variant='secondary' size='small' onClick={onFiltersReset}>
               Reset filters
             </Button>
           </div>

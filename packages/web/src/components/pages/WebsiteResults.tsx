@@ -11,6 +11,8 @@ import {
 } from '../../store/selectors/scanDisplayOptions/scanDisplayOptions';
 import {
   PackageFilters,
+  PackageSorters,
+  PackageSortType,
   resetScanDisplayOptions,
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
@@ -65,6 +67,11 @@ export function WebsiteResultsPage() {
     [searchableEntities]
   );
 
+  const availableSorters: PackageSortType[] = useMemo(
+    () => ['name', 'size', 'popularity', 'severity'],
+    []
+  );
+
   const selectedDisplayOptions = useAppSelector((state) =>
     selectScanDisplayOptions(state, normalizedUrl)
   );
@@ -89,8 +96,52 @@ export function WebsiteResultsPage() {
         dispatch(resetScanDisplayOptions({ scanUrl: normalizedUrl }));
       }
     },
-    [dispatch, normalizedUrl]
+    [dispatch, normalizedUrl, selectedDisplayOptions]
   );
+
+  const handleSortersChange = useCallback(
+    (newSorters: PackageSorters[]) => {
+      if (!normalizedUrl) {
+        return;
+      }
+
+      dispatch(
+        setScanDisplayOptions({
+          scanUrl: normalizedUrl,
+          options: {
+            ...selectedDisplayOptions,
+            packageSorters: newSorters,
+          },
+        })
+      );
+    },
+    [dispatch, normalizedUrl, selectedDisplayOptions]
+  );
+
+  const selectedSorters = selectedDisplayOptions.packageSorters[0];
+
+  const handleSortChange = useCallback(
+    (newSorterName: PackageSortType) => {
+      const sortOrder =
+        newSorterName === selectedSorters.by && selectedSorters.direction === 'DESC'
+          ? 'ASC'
+          : 'DESC';
+
+      const newSorter: PackageSorters = {
+        by: newSorterName,
+        direction: sortOrder,
+      };
+
+      if (newSorter.by !== 'popularity') {
+        handleSortersChange([newSorter, { by: 'popularity', direction: 'DESC' }]);
+      } else {
+        handleSortersChange([newSorter]);
+      }
+    },
+    [handleSortersChange]
+  );
+
+  const handleFilterReset = useCallback(() => handleFiltersChange(null), [handleFiltersChange]);
 
   if (isNotFound) {
     return (
@@ -179,8 +230,12 @@ export function WebsiteResultsPage() {
         bundleSize={scanOverview.bundleSize ?? 0}
         scanDate={scanResult?.scan?.finishedAt}
         selectedFilters={selectedDisplayOptions.packageFilters}
+        selectedSorters={selectedSorters}
         availableFilters={availableFilters}
+        availableSorters={availableSorters}
         onFiltersChange={handleFiltersChange}
+        onFiltersReset={handleFilterReset}
+        onSortChange={handleSortChange}
         webpackVersion={webpackVersion}
         accuracy={accuracy}
       />

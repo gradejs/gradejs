@@ -3,20 +3,21 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type PackageTrait = 'vulnerable' | 'outdated';
 
 export type PackageFilters = {
+  searchText?: string;
   keywords: string[];
   authors: string[];
   traits: PackageTrait[];
 };
 
-export type PackageSortType = 'severity' | 'popularity';
-export type PackageSorter = {
+export type PackageSortType = 'name' | 'size' | 'severity' | 'popularity';
+export type PackageSorters = {
   by: PackageSortType;
   direction: 'ASC' | 'DESC';
 };
 
 export type ScanDisplayOptions = {
   packageFilters: PackageFilters;
-  packageSorters: PackageSorter[];
+  packageSorters: PackageSorters[];
 };
 
 export type ScanDisplayOptionsSlice = Record<string, ScanDisplayOptions | undefined>;

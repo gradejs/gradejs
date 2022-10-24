@@ -15,6 +15,11 @@
   }
 }
 
+.mobileFilterToggleReset {
+  width: 42px;
+  padding: 16px 0;
+}
+
 .mobileFiltersTop {
   display: flex;
   align-items: center;
@@ -41,4 +46,23 @@
 
 .mobileFiltersReset {
   font-weight: 500;
+}
+
+.mobileFilterSort {
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-weight: 500;
+  color: $black;
+}
+
+.sortIcon {
+  margin-left: 8px;
+}
+
+.sortIconRotated {
+  transform: rotate(180deg);
 }

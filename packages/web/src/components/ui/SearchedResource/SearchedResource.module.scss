@@ -4,15 +4,9 @@
 .searchedResource {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 24px;
-
-  @include xxl {
-    margin-bottom: 36px;
-  }
 
   @include mobile-and-tablet {
     flex-direction: column;
-    margin-bottom: 0;
   }
 }
 

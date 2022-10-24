@@ -1,5 +1,5 @@
 import { IdentifiedPackage } from '../websiteResults';
-import { PackageSorter, PackageSortType } from '../../slices/scanDisplayOptions';
+import { PackageSorters, PackageSortType } from '../../slices/scanDisplayOptions';
 
 export const SeverityWeightMap: Record<string, number> = {
   CRITICAL: 4,
@@ -15,6 +15,8 @@ export const compareSeverities = (severityA = 'UNKNOWN', severityB = 'UNKNOWN') 
 type PackageSorterComparator = (pkgA: IdentifiedPackage, pkgB: IdentifiedPackage) => number;
 
 const packageSorterMap: Record<PackageSortType, PackageSorterComparator> = {
+  name: (pkgA, pkgB) => pkgB.name.localeCompare(pkgA.name),
+  size: (pkgA, pkgB) => (pkgA?.approximateByteSize ?? 0) - (pkgB?.approximateByteSize ?? 0),
   severity: (pkgA, pkgB) => {
     const [pkgAHighestSeverity] = pkgA.vulnerabilities
       .map((it) => it.severity)
@@ -34,7 +36,7 @@ const packageSorterMap: Record<PackageSortType, PackageSorterComparator> = {
   },
 };
 
-export function sortPackagesByOptions(packages: IdentifiedPackage[], options: PackageSorter[]) {
+export function sortPackagesByOptions(packages: IdentifiedPackage[], options: PackageSorters[]) {
   return packages.slice().sort((pkgA, pkgB) => {
     let sortDirection = 0;
     for (const sortOption of options) {

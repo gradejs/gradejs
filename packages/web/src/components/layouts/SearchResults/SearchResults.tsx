@@ -10,9 +10,15 @@ import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResul
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
+import SearchDesktopSorters from '../../ui/SearchDesktopSorters/SearchDesktopSorters';
 import { IdentifiedPackage } from 'store/selectors/websiteResults';
-import { PackageFilters } from '../../../store/slices/scanDisplayOptions';
-import { getReadableSizeString, plural } from '../../../utils/helpers';
+import {
+  PackageFilters,
+  PackageSorters,
+  PackageSortType,
+} from '../../../store/slices/scanDisplayOptions';
+import { getReadableSizeString, plural, repeat } from '../../../utils/helpers';
+import { Button } from 'components/ui';
 
 type Props = {
   isLoading: boolean;
@@ -25,8 +31,12 @@ type Props = {
   scriptsCount: number;
   bundleSize: number;
   availableFilters: PackageFilters;
+  availableSorters: PackageSortType[];
   selectedFilters: PackageFilters;
+  selectedSorters: PackageSorters;
   onFiltersChange: (newFilters: PackageFilters | null) => void;
+  onFiltersReset: () => void;
+  onSortChange: (newSorters: PackageSortType) => void;
   scanDate?: string;
   webpackVersion?: string;
   accuracy: string;
@@ -43,8 +53,12 @@ export default function SearchResults({
   scriptsCount,
   bundleSize,
   availableFilters,
+  availableSorters,
   selectedFilters,
+  selectedSorters,
   onFiltersChange,
+  onFiltersReset,
+  onSortChange,
   scanDate,
   webpackVersion,
   accuracy,
@@ -127,6 +141,14 @@ export default function SearchResults({
                 lastScanDate={scanDate}
               />
             )}
+
+            <div className={styles.searchResultsSorters}>
+              <SearchDesktopSorters
+                availableSorters={availableSorters}
+                selectedSorters={selectedSorters}
+                onSortChange={onSortChange}
+              />
+            </div>
           </div>
 
           <div className={styles.searchResultsSidebar}>
@@ -136,25 +158,35 @@ export default function SearchResults({
               availableFilters={availableFilters}
               selectedFilters={selectedFilters}
               onFiltersChanged={onFiltersChange}
+              onSortChange={onSortChange}
+              availableSorters={availableSorters}
+              selectedSorters={selectedSorters}
+              onFiltersReset={onFiltersReset}
             />
           </div>
 
-          <div className={styles.packages}>
-            {isLoading ? (
-              <>
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-                <PackagePreviewSkeleton />
-              </>
-            ) : (
-              packages.map((pkg, _index) => (
+          {isLoading ? (
+            <div className={styles.packages}>{repeat(5, <PackagePreviewSkeleton />)}</div>
+          ) : packages.length > 0 ? (
+            <div className={styles.packages}>
+              {packages.map((pkg, _index) => (
                 <PackagePreview key={pkg.name} pkg={pkg} opened={true /*index === 0*/} />
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.notFound}>
+              <div className={styles.notFoundIcon}>
+                <Icon kind='notFound' width={55} height={56} color='#4549FF' />
+              </div>
+              <h3 className={styles.notFoundTitle}>No matching packages</h3>
+              <div className={styles.notFoundText}>
+                Try softening the search terms or resetting the filter
+              </div>
+              <Button variant='secondary' size='small' onClick={onFiltersReset}>
+                Reset filters
+              </Button>
+            </div>
+          )}
         </div>
         {/*
         <CardGroups>

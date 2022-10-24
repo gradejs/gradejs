@@ -8,7 +8,7 @@ import Button from '../Button/Button';
 type Props = {
   returnButton?: () => void;
   categoryName: string;
-  selectedKeywords: string[];
+  selectedKeywords?: string[];
   resetGroup?: () => void;
   children?: React.ReactNode;
 };
@@ -29,12 +29,12 @@ export default function SidebarCategoryHeader({
           </button>
         )}
         {categoryName}
-        {selectedKeywords.length > 0 && (
+        {selectedKeywords && selectedKeywords.length > 0 && (
           <span className={styles.selectedCounter}>
             <Badge content={selectedKeywords.length} />
           </span>
         )}
-        {resetGroup && (
+        {selectedKeywords && resetGroup && (
           <div
             className={clsx(
               styles.localReset,

@@ -7,6 +7,7 @@ import { sortPackagesByOptions } from './packageSorters';
 
 export const DEFAULT_SCAN_DISPLAY_OPTIONS: ScanDisplayOptions = {
   packageFilters: {
+    searchText: '',
     keywords: [],
     authors: [],
     traits: [],
@@ -35,6 +36,7 @@ export const makeSelectOptimizedScanDisplayOptions = () =>
     return {
       ...displayOptions,
       packageFilters: {
+        searchText: displayOptions.packageFilters.searchText ?? '',
         keywords: new Set(displayOptions.packageFilters.keywords),
         authors: new Set(displayOptions.packageFilters.authors),
         traits: new Set(displayOptions.packageFilters.traits),
@@ -48,12 +50,23 @@ export const makeSelectSortedAndFilteredScanPackages = () =>
     (packages = [], displayOptions) => {
       const { packageFilters, packageSorters } = displayOptions;
 
-      const filteredPackages = packages.filter((pkg) =>
+      const searchValue = packageFilters.searchText.toLowerCase();
+
+      const matchedPackages = packages.filter(({ name, registryMetadata }) => {
+        const keywords = registryMetadata?.keywords?.length ? registryMetadata?.keywords : [];
+        const maintainers = registryMetadata?.maintainers?.length
+          ? registryMetadata?.maintainers.map((it) => it.name)
+          : [];
+
+        return [name, registryMetadata?.description, ...keywords, ...maintainers].some((field) =>
+          field?.toLowerCase().includes(searchValue)
+        );
+      });
+
+      const filteredPackages = matchedPackages.filter((pkg) =>
         packageFilterPredicates.every((predicate) => !predicate(packageFilters, pkg))
       );
 
-      const sortedPackages = sortPackagesByOptions(filteredPackages, packageSorters);
-
-      return sortedPackages;
+      return sortPackagesByOptions(filteredPackages, packageSorters);
     }
   );

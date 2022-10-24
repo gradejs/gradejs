@@ -3,7 +3,7 @@ import SidebarCategoryHeader from './SidebarCategoryHeader';
 
 type Props = {
   categoryName: string;
-  selectedKeywords: string[];
+  selectedKeywords?: string[];
   keywordsList?: string[];
   returnButton?: () => void;
   resetGroup?: () => void;

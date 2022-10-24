@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './SidebarCategory.module.scss';
-import SidebarCategorySearch from '../SidebarCategorySearch/SidebarCategorySearch';
+import SidebarCategoryHiddenSearch from '../SidebarCategoryHiddenSearch/SidebarCategoryHiddenSearch';
 import SidebarCategoryHeader from './SidebarCategoryHeader';
 
 type GroupItem = {
@@ -80,7 +80,7 @@ export default function SidebarCategoryWithSearch({
       />
 
       {open ? (
-        <SidebarCategorySearch
+        <SidebarCategoryHiddenSearch
           searchValue={searchValue}
           selectHandler={selectHandler}
           searchChangeHandler={searchChangeHandler}
