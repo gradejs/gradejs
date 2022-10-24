@@ -172,7 +172,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
         <Container>
           <div className={styles.packagePageGrid}>
             <div className={styles.content}>
-              <h1>{packageName}</h1>
+              <h1 className={styles.packageName}>{packageName}</h1>
 
               <div className={styles.packageMeta}>
                 {loading ? (

@@ -2,7 +2,7 @@
 @import '~styles/responsive.scss';
 
 h1 {
-  font-size: 40px;
+  font-size: 40px; // fallback
   line-height: 46px;
   margin-bottom: 12px;
 
@@ -16,10 +16,12 @@ h1 {
     font-size: 28px;
     line-height: 36px;
   }
+
+  font-size: 4vw;
 }
 
 h2 {
-  font-size: 32px;
+  font-size: 32px; // fallback
   line-height: 40px;
   margin-bottom: 20px;
 
@@ -32,6 +34,8 @@ h2 {
     font-size: 24px;
     line-height: 30px;
   }
+
+  font-size: 3vw;
 }
 
 .packagePage {
@@ -82,6 +86,10 @@ h2 {
 }
 
 .content {
+  h1.packageName {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 
 .packageDescription {
