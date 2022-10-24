@@ -37,6 +37,11 @@
   flex-shrink: 0;
   margin-right: 16px;
   display: inline-flex;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f7f7f9;
 }
 
 .icon {

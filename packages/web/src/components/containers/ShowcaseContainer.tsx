@@ -31,7 +31,7 @@ export default function ShowcaseContainer() {
     showcase.showcase?.showcasedScans ?? []
   ).map(({ hostname, webPage, scanPreview }, idx) => ({
     id: idx.toString(),
-    sourceIcon: '',
+    sourceIcon: `/favicons/${hostname.hostname}`,
     sourceTitle: `${hostname.hostname}`,
     sourceUrl: `/scan/${hostname.hostname}${webPage.path}`,
     packages: scanPreview.packageNames,
