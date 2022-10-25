@@ -179,6 +179,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
         <Container>
           <div className={styles.packagePageGrid}>
             <div className={styles.content}>
+              {/* TODO: insert <wbr> after '/' in namespaces */}
               <h1 className={styles.packageName}>{packageName}</h1>
 
               <div className={styles.packageMeta}>
