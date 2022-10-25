@@ -30,44 +30,53 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
             </span>
             <span className={styles.packageSubtitle}>{updateDate}</span>
           </div>
-          {!!uses && (
-            <div
-              className={clsx(
-                styles.packageTopCol,
-                styles.packageTopColMinor,
-                styles.packageTopColSites
-              )}
-            >
-              <span className={styles.packageTitle}>{formatNumber(uses)}</span>
-              <span className={styles.packageSubtitle}>Sites used</span>
-            </div>
-          )}
-          {!!size && (
-            <div
-              className={clsx(
-                styles.packageTopCol,
-                styles.packageTopColMinor,
-                styles.packageTopColSize
-              )}
-            >
-              <span className={styles.packageTitle}>{getReadableSizeString(size)}</span>
-              <span className={styles.packageSubtitle}>
-                <span className={styles.mobileHidden}>Total size</span>
-              </span>
-            </div>
-          )}
-          {!!modulesCount && (
-            <div
-              className={clsx(
-                styles.packageTopCol,
-                styles.packageTopColMinor,
-                styles.packageTopColModules
-              )}
-            >
-              <span className={styles.packageTitle}>{formatNumber(modulesCount)}</span>
-              <span className={styles.packageSubtitle}>Modules</span>
-            </div>
-          )}
+
+          <div
+            className={clsx(
+              styles.packageTopCol,
+              styles.packageTopColMinor,
+              styles.packageTopColSites
+            )}
+          >
+            {!!uses && (
+              <>
+                <span className={styles.packageTitle}>{formatNumber(uses)}</span>
+                <span className={styles.packageSubtitle}>Sites used</span>
+              </>
+            )}
+          </div>
+
+          <div
+            className={clsx(
+              styles.packageTopCol,
+              styles.packageTopColMinor,
+              styles.packageTopColSize
+            )}
+          >
+            {!!size && (
+              <>
+                <span className={styles.packageTitle}>{getReadableSizeString(size)}</span>
+                <span className={styles.packageSubtitle}>
+                  <span className={styles.mobileHidden}>Total size</span>
+                </span>
+              </>
+            )}
+          </div>
+
+          <div
+            className={clsx(
+              styles.packageTopCol,
+              styles.packageTopColMinor,
+              styles.packageTopColModules
+            )}
+          >
+            {!!modulesCount && (
+              <>
+                <span className={styles.packageTitle}>{formatNumber(modulesCount)}</span>
+                <span className={styles.packageSubtitle}>Modules</span>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
