@@ -3,6 +3,7 @@ export * from './database/entities/hostname';
 export * from './database/entities/webPage';
 export * from './database/entities/webPageScan';
 export * from './database/entities/packageMetadata';
+export * from './database/entities/packagePopularityView';
 export * from './database/entities/packageVulnerability';
 export * from './database/entities/packageUsageByHostnameProjection';
 export * from './database/entities/scansWithVulnerabilitiesProjection';

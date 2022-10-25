@@ -8,6 +8,8 @@ import {
   systemApi,
   WebPage,
   WebPageScan,
+  PackageVulnerability,
+  PackageUsageByHostnameProjection,
 } from '@gradejs-public/shared';
 import {
   createSupertestApi,
@@ -22,6 +24,8 @@ useDatabaseConnection();
 useTransactionalTesting();
 
 const api = createSupertestApi(createApp);
+
+jest.setTimeout(600000);
 
 describe('routes / heathCheck', () => {
   it('should return valid response for healthcheck path', async () => {
@@ -174,6 +178,123 @@ describe('routes / website', () => {
               },
             ],
           },
+        },
+      },
+    });
+  });
+
+  it('should return correct package info', async () => {
+    const db = await getDatabaseConnection();
+    const em = db.createEntityManager();
+
+    const scanRepo = em.getRepository(WebPageScan);
+    const packageInfoRepo = em.getRepository(PackageMetadata);
+    const usageInfoRepo = em.getRepository(PackageUsageByHostnameProjection);
+    const vulnerabilitiesRepo = em.getRepository(PackageVulnerability);
+
+    const mockPkgname = 'react-hoist';
+    const mockHostname = 'testtest123.com';
+    const mockWebPagePath = '/testpage';
+
+    const mockPage = await findOrCreateWebPage(
+      new URL(`https://${mockHostname}${mockWebPagePath}`),
+      em
+    );
+
+    await packageInfoRepo.save({
+      id: 123,
+      name: mockPkgname,
+      latestVersion: '20.0.1',
+      monthlyDownloads: 123,
+      maintainers: [{ name: 'test', avatar: 'test.jpg', email: 'test@test.com' }],
+      keywords: ['#react', '#react2'],
+      updateSeq: 1,
+      updatedAt: new Date().toString(),
+    });
+
+    const mockScan = await scanRepo.save({
+      webPage: mockPage,
+      status: WebPageScan.Status.Processed,
+      createdAt: new Date(Date.now() - 100),
+      finishedAt: new Date(Date.now()),
+      scanResult: {
+        identifiedModuleMap: {},
+        identifiedPackages: [
+          {
+            name: mockPkgname,
+            versionSet: ['20.0.1'],
+            moduleIds: [],
+          },
+        ],
+      },
+    });
+
+    await usageInfoRepo.save({
+      hostname: mockPage.hostname,
+      hostnameId: mockPage.hostnameId,
+      sourceScan: mockScan,
+      sourceScanId: mockScan.id,
+      packageName: mockPkgname,
+      packageVersionSet: ['20.0.1'],
+    });
+
+    await vulnerabilitiesRepo.save({
+      id: 123,
+      packageName: mockPkgname,
+      packageVersionRange: '17.0.1 - 18.0.0',
+      osvId: 'GHSA-jf85-cpcp-j695',
+      osvData: {
+        schema_version: '1',
+        id: '123',
+        modified: new Date().toString(),
+        summary:
+          'React Editable Json Tree vulnerable to arbitrary code execution via function parsing',
+        database_specific: { severity: 'Critical' },
+      },
+    });
+
+    const url =
+      '/client/getPackageInfo?input=' +
+      encodeURIComponent(JSON.stringify({ packageName: mockPkgname }));
+    const response = await api.get(url).set('Origin', 'http://localhost:3000').expect(200);
+
+    expect(response.body).toMatchObject({
+      result: {
+        data: {
+          name: 'react-hoist',
+          latestVersion: '20.0.1',
+          monthlyDownloads: 123,
+          maintainers: [
+            {
+              name: 'test',
+              email: 'test@test.com',
+              avatar: 'test.jpg',
+            },
+          ],
+          keywords: ['#react', '#react2'],
+          usage: [
+            {
+              packageName: 'react-hoist',
+              hostname: mockHostname,
+              hostnamePackagesCount: 1,
+            },
+          ],
+          vulnerabilities: [
+            {
+              packageName: 'react-hoist',
+              packageVersionRange: '17.0.1 - 18.0.0',
+              osvId: 'GHSA-jf85-cpcp-j695',
+              osvData: {
+                id: '123',
+                summary:
+                  'React Editable Json Tree vulnerable to arbitrary code execution via function parsing',
+                schema_version: '1',
+                database_specific: {
+                  severity: 'Critical',
+                },
+              },
+            },
+          ],
         },
       },
     });

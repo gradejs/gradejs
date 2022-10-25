@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HomePage } from './pages/Home';
 import { WebsiteResultsPage } from './pages/WebsiteResults';
+import { PackageView } from './pages/Package';
 type AppProps = {
   locationChangeHandler: (url?: string | URL) => void;
 };
@@ -40,6 +41,7 @@ export function App({ locationChangeHandler }: AppProps) {
       <Routes>
         <Route index element={<HomePage />} />
         <Route path='/scan/*' element={<WebsiteResultsPage />} />
+        <Route path='/package/*' element={<PackageView />} />
         <Route path='*' element={<Navigate replace to='/' />} />
       </Routes>
     </>

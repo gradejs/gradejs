@@ -10,8 +10,8 @@ import SearchResultsSidebar from 'components/ui/SearchResultsSidebar/SearchResul
 import { SearchedResourceSkeleton } from '../../ui/SearchedResource/SearchedResourceSkeleton';
 import { PackagePreviewSkeleton } from '../../ui/PackagePreview/PackagePreviewSkeleton';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
+import { IdentifiedPackage } from '../../../types';
 import SearchDesktopSorters from '../../ui/SearchDesktopSorters/SearchDesktopSorters';
-import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import {
   PackageFilters,
   PackageSorters,

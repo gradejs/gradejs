@@ -1,0 +1,17 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.cardSkeleton {
+  flex-shrink: 0;
+  max-width: 600px;
+  min-height: 200px;
+
+  @include xxl {
+    min-height: 248px;
+  }
+
+  @include mobile-and-tablet {
+    max-width: 314px;
+    min-height: 204px;
+  }
+}

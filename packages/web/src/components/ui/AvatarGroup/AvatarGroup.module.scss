@@ -4,3 +4,11 @@
   align-items: center;
   flex-direction: row-reverse;
 }
+
+.avatarItem {
+  margin-left: -7px;
+
+  &:last-child {
+    margin-left: 0;
+  }
+}

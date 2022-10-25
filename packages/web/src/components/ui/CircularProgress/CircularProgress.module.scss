@@ -1,0 +1,36 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.circularProgress {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.circularProgressWrapper {
+  transform: rotate(-90deg);
+}
+
+.circularProgressSvg {
+  display: block;
+}
+
+.circularProgressProgress {
+  stroke: currentColor;
+  color: $green-accent;
+}
+
+.circularProgressContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: $black;
+}

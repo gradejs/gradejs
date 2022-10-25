@@ -7,25 +7,26 @@
 }
 
 .sitesList {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-x: auto;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 50px;
 
   @include mobile-and-tablet {
+    display: flex;
+    align-items: center;
     justify-content: flex-start;
-  }
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    & > * + * {
+      margin-left: 68px;
 
-  & > * + * {
-    margin-left: 68px;
-
-    @include lg {
-      margin-left: 40px;
+      @include lg {
+        margin-left: 40px;
+      }
     }
   }
 }
@@ -33,10 +34,7 @@
 .site {
   display: flex;
   align-items: center;
-
-  @include mobile-and-tablet {
-    min-width: 145px;
-  }
+  min-width: 145px;
 }
 
 .imageWrapper {
@@ -44,19 +42,30 @@
   flex-shrink: 0;
   width: 44px;
   margin-right: 14px;
+  background-color: $shadow;
 }
 
 .image {
   width: 100%;
+  border-radius: 50%;
   object-fit: cover;
 }
 
 .content {
-  white-space: nowrap;
+  display: grid;
 }
 
 .title {
   font-weight: 500;
+  color: $black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include mobile-and-tablet {
+    white-space: unset;
+    overflow: unset;
+    text-overflow: unset;
+  }
 }
 
 .subtitle {

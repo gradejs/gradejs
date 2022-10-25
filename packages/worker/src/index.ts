@@ -14,7 +14,6 @@ checkRequiredEnvironmentVariables([
   Env.DatabaseUrl,
   Env.InternalApiRootUrl,
   Env.SqsWorkerQueueUrl,
-  Env.RollbarApiKey,
   Env.PublicRootUrl,
 ]);
 

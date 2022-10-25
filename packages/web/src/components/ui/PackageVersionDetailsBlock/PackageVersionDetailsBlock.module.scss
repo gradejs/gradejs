@@ -1,0 +1,294 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.package {
+  background-color: $white;
+  box-shadow: 0 1px 35px rgba(92, 84, 186, 0.1);
+  border-radius: 24px;
+  transition: background-color $transition-duration $transition-timing-function;
+}
+
+.packageOpen {
+  background-color: $gray-surface;
+}
+
+.packageTop {
+  padding: 24px 32px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px;
+  align-items: center;
+
+  @include lg {
+    padding: 20px;
+  }
+
+  @include mobile-and-tablet {
+    align-items: flex-start;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    grid-gap: 12px;
+  }
+}
+
+.packageTopContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include mobile-and-tablet {
+    display: grid;
+    align-items: flex-start;
+    grid-gap: 4px;
+  }
+}
+
+.packageTopCol {
+  flex: 1 0 0;
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.packageVersion {
+  .packageTitle {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .packageOpen & {
+    .packageTitle {
+      font-weight: 500;
+    }
+  }
+
+  @include mobile-and-tablet {
+    grid-column: 1 / 2;
+    grid-row: 1 / 4;
+  }
+}
+
+.packageVersionBug {
+  margin-left: 8px;
+}
+
+.packageTopColMinor {
+  @include mobile-and-tablet {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 20px;
+
+    .packageTitle {
+      margin-bottom: 0;
+      margin-right: 10px;
+      font-size: inherit;
+      line-height: inherit;
+      text-align: right;
+      min-width: 70px;
+    }
+  }
+}
+
+.packageTopColSites {
+  @include mobile-and-tablet {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+}
+
+.packageTopColSize {
+  @include mobile-and-tablet {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+}
+
+.packageTopColModules {
+  @include mobile-and-tablet {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+  }
+}
+
+.packageArrowButton {
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: $gray-surface;
+  margin: 0;
+  padding: 0;
+  border: none;
+  transition: all $transition-duration $transition-timing-function;
+
+  .packageOpen & {
+    background-color: $gray-border;
+    transform: rotate(180deg);
+  }
+
+  @include mobile-and-tablet {
+    width: 24px;
+    height: 24px;
+
+    svg {
+      width: 10px;
+      height: 7px;
+    }
+  }
+}
+
+.packageTitle {
+  font-size: 20px;
+  line-height: 24px;
+  margin-bottom: 8px;
+  font-family: $font-monospace;
+
+  @include mobile-and-tablet {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+}
+
+.packageSubtitle {
+  font-size: 14px;
+  line-height: 20px;
+  color: $gray-text;
+}
+
+.mobileHidden {
+  @include mobile-and-tablet {
+    display: none;
+  }
+}
+
+.packageItems {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.packageContentWrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition-duration: $transition-duration;
+  transition-timing-function: $transition-timing-function;
+
+  .packageOpen & {
+    max-height: 9000px;
+    transition-duration: $transition-duration;
+    transition-timing-function: ease-in;
+  }
+}
+
+.packageContent {
+  padding: 12px 72px 24px 32px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  @include lg {
+    padding: 4px 56px 24px 20px;
+  }
+
+  @include mobile-and-tablet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-gap: 32px;
+    padding-right: 20px;
+  }
+}
+
+.packageContentCol {
+  flex: 0 0 auto;
+  max-width: 100%;
+  width: 50%;
+  padding-right: 40px;
+
+  @include lg {
+    padding-right: 20px;
+  }
+
+  @include mobile-and-tablet {
+    flex: 1 0 0;
+    width: 100%;
+    padding: 0;
+  }
+}
+
+.packageContentTitle {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: $gray-text;
+  margin-bottom: 16px;
+}
+
+.packageContentTitleIcon {
+  display: flex;
+  margin-right: 8px;
+}
+
+.packageModules {
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.packageModuleTop {
+  display: flex;
+  align-items: center;
+}
+
+.packageModulePath {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: $font-monospace;
+  font-weight: 500;
+}
+
+.packageModuleSize {
+  font-size: 14px;
+  line-height: 18px;
+  font-family: $font-monospace;
+  font-weight: 500;
+  color: $gray-text;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.packageModulePercentage {
+  display: flex;
+  align-items: center;
+}
+
+.entryPoints {
+  display: grid;
+  grid-gap: 12px;
+}
+
+.entryPoint {
+  display: flex;
+  align-items: center;
+  color: $gray-text;
+}
+
+.entryPointCircle {
+  display: flex;
+  margin-right: 14px;
+}
+
+.entryPointHighlight {
+  color: $black;
+}
+
+.entryPointTitle {
+  font-weight: 500;
+  font-family: $font-monospace;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 3px;
+}

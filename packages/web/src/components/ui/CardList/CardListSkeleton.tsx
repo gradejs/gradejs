@@ -1,20 +1,12 @@
 import React from 'react';
 import styles from './CardList.module.scss';
 import { repeat } from '../../../utils/helpers';
-import Skeleton from '../Skeleton/Skeleton';
-import Card from '../Card/Card';
+import CardSkeleton from '../Card/CardSkeleton';
 
 type Props = {
   numberOfElements?: number;
 };
 
 export const CardListSkeleton = ({ numberOfElements = 3 }: Props) => (
-  <div className={styles.grid}>
-    {repeat(
-      numberOfElements,
-      <Skeleton width='100%' variant='rounded'>
-        <Card />
-      </Skeleton>
-    )}
-  </div>
+  <div className={styles.grid}>{repeat(numberOfElements, <CardSkeleton />)}</div>
 );

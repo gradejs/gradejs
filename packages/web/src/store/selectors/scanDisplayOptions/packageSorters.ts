@@ -1,5 +1,5 @@
-import { IdentifiedPackage } from '../websiteResults';
 import { PackageSorters, PackageSortType } from '../../slices/scanDisplayOptions';
+import { IdentifiedPackage } from '../../../types';
 
 export const SeverityWeightMap: Record<string, number> = {
   CRITICAL: 4,
