@@ -13,7 +13,6 @@ import {
   isStaging,
   getAwsRegion,
   getAwsS3Bucket,
-  isDevelopment,
 } from '../../shared/src/utils/env';
 import { initRollbarLogger, logger } from '../../shared/src/utils/logger';
 import { AppStore, createApplicationStore } from './store';
