@@ -107,16 +107,13 @@ async function loadAssets() {
         return acc;
       }, assets);
   } catch (e) {
-    return assets;
+    logger.error('Unexpected assets error', e);
+    throw e;
   }
 }
 
 async function pipeS3Object(objectKey: string, res: Response, fallback?: Buffer) {
   try {
-    if (isDevelopment()) {
-      throw new Error('Development mode');
-    }
-
     const s3client = new S3Client({ region: getAwsRegion() });
     const s3command = new GetObjectCommand({
       Bucket: getAwsS3Bucket(),
