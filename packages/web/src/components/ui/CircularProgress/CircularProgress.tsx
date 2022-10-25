@@ -8,17 +8,22 @@ type Props = {
 };
 
 const CircularProgress = ({ progress, size = 48, strokeWidth = 5 }: Props) => {
-  const sizeWithTrack = size + strokeWidth;
-  const center = sizeWithTrack / 2;
-  const radius = center - strokeWidth;
-
-  const circumference = 2 * Math.PI * ((size - strokeWidth) / 2);
-  const strokeDashoffset = circumference * ((100 - progress) / 100);
-
   const circleStyle = useMemo(() => {
+    const sizeWithTrack = size + strokeWidth;
+    const center = sizeWithTrack / 2;
+    const radius = center - strokeWidth;
+
+    const circumference = 2 * Math.PI * ((size - strokeWidth) / 2);
+    const numberedStrokeDashoffset = circumference * ((100 - progress) / 100);
+    const strokeDasharray = circumference.toFixed(3);
+    const strokeDashoffset = `${numberedStrokeDashoffset.toFixed(3)}px`;
+
     return {
-      strokeDasharray: circumference.toFixed(3),
-      strokeDashoffset: `${strokeDashoffset.toFixed(3)}px`,
+      sizeWithTrack,
+      center,
+      radius,
+      strokeDasharray,
+      strokeDashoffset,
     };
   }, [progress, size, strokeWidth]);
 
@@ -29,6 +34,8 @@ const CircularProgress = ({ progress, size = 48, strokeWidth = 5 }: Props) => {
     };
   }, [size]);
 
+  const { sizeWithTrack, center, radius, strokeDasharray, strokeDashoffset } = circleStyle;
+
   return (
     <div className={styles.circularProgress}>
       <span className={styles.circularProgressWrapper} style={wrapperStyle}>
@@ -37,7 +44,8 @@ const CircularProgress = ({ progress, size = 48, strokeWidth = 5 }: Props) => {
           viewBox={`${center} ${center} ${sizeWithTrack} ${sizeWithTrack}`}
         >
           <circle
-            style={circleStyle}
+            strokeDasharray={strokeDasharray}
+            strokeDashoffset={strokeDashoffset}
             className={styles.circularProgressProgress}
             cx={sizeWithTrack}
             cy={sizeWithTrack}

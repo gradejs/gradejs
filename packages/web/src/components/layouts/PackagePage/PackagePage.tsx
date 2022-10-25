@@ -14,7 +14,7 @@ import SidebarCategorySort from 'components/ui/SidebarCategory/SidebarCategorySo
 import Footer from '../../ui/Footer/Footer';
 import PackageVersion from '../../ui/PackageVersion/PackageVersion';
 import Skeleton from '../../ui/Skeleton/Skeleton';
-import { plural, repeat } from 'utils/helpers';
+import { capitalizeWord, plural, repeat } from 'utils/helpers';
 import AvatarGroup from '../../ui/AvatarGroup/AvatarGroup';
 import Avatar from '../../ui/Avatar/Avatar';
 import { GetPackageInfoOutput } from '../../../services/apiClient';
@@ -25,6 +25,7 @@ import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Link } from 'react-router-dom';
+
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',
@@ -48,7 +49,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [allVersionsVisible, setAllVersionsVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
 
-  const sorts = ['weight', 'popularity', 'versions'];
+  const sorts = useMemo(() => ['weight', 'popularity', 'versions'], []);
 
   const {
     name: packageName,
@@ -164,9 +165,13 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                   )}
                   onClick={() => requestSort(name)}
                 >
-                  {name[0].toUpperCase() + name.slice(1)}
+                  {capitalizeWord(name)}
                   {sortField === name && (
-                    <Icon kind={sortDirection === 'desc' ? 'sortDesc' : 'sortAsc'} />
+                    <Icon
+                      kind={sortDirection === 'desc' ? 'sortDesc' : 'sortAsc'}
+                      width={24}
+                      height={24}
+                    />
                   )}
                 </button>
               ))}
@@ -315,7 +320,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                           onClick={() => requestSort(name)}
                           disabled={loading}
                         >
-                          {name[0].toUpperCase() + name.slice(1)}
+                          {capitalizeWord(name)}
 
                           {!loading &&
                             (sortField === name ? (
