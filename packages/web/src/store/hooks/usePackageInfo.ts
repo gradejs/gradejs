@@ -11,6 +11,7 @@ export const usePackageInfo = (packageName: string) => {
 
   useUniversalEffect(() => {
     if (
+      info?.packageInfo !== null /* 404 */ &&
       (!info?.packageInfo || info?.packageInfo?.name !== packageName) &&
       !info?.isLoading &&
       !info?.error
