@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getAwsRegion, getAwsS3Bucket, systemApi } from '@gradejs-public/shared';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getAwsS3Bucket, getS3Client, systemApi } from '@gradejs-public/shared';
 
 const S3_FAVICON_FOLDER_PREFIX = 'favicons';
 
@@ -18,7 +18,7 @@ export async function saveScanWebPageFavicon(
   // TODO: Upload as stream. node-fetch stream interface conflicts with S3 one
   const faviconBody = await faviconRequest.buffer();
 
-  const s3client = new S3Client({ region: getAwsRegion() });
+  const s3client = getS3Client();
   const s3command = new PutObjectCommand({
     Body: faviconBody,
     Bucket: getAwsS3Bucket(),

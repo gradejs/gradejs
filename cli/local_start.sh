@@ -36,7 +36,7 @@ ELASTICMQ_PID=$!
 echo "Starting worker package"
 AWS_REGION=test PORT=8084 DB_URL=postgres://gradejs:gradejs@localhost:5432/gradejs-public \
   SQS_WORKER_QUEUE_URL=/test/frontend-queue \
-  SQS_LOCAL_PORT=29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
+  SQS_ENDPOINT=http://localhost:29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
   INTERNAL_API_ROOT_URL=http://localhost:8082 \
   GRADEJS_API_KEY=TEST_API_KEY \
   npm run debug --prefix packages/worker 2>&1 &
@@ -44,13 +44,15 @@ WORKER_PID=$!
 
 echo "Starting queue puller script"
 AWS_REGION=test AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
+  SQS_ENDPOINT=http://localhost:29324 \
+  WORKER_ROOT_URL=http://localhost:8084 \
   ./node_modules/.bin/ts-node --swc cli/localSqsPuller.ts 2>&1 &
 PULLER_PID=$!
 
 echo "Starting public api package"
 AWS_REGION=test PORT=8083 DB_URL=postgres://gradejs:gradejs@localhost:5432/gradejs-public \
   SQS_WORKER_QUEUE_URL=/test/frontend-queue \
-  SQS_LOCAL_PORT=29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
+  SQS_ENDPOINT=http://localhost:29324 AWS_ACCESS_KEY_ID=secret AWS_SECRET_ACCESS_KEY=secret \
   CORS_ALLOWED_ORIGIN=http://localhost:3000 \
   INTERNAL_API_ROOT_URL=http://localhost:8082 \
   GRADEJS_API_KEY=TEST_API_KEY \

@@ -13,6 +13,7 @@
     "migration:create": "typeorm migration:create -d src/database/migrations -n"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.186.0",
     "@aws-sdk/client-sqs": "^3.87.0",
     "node-fetch": "2",
     "rollbar": "^2.24.0",
