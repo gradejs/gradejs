@@ -1,10 +1,12 @@
 @import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
-h1 {
-  font-size: 40px;
+h1.packageName {
+  font-size: 40px; // fallback
   line-height: 46px;
   margin-bottom: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
   @include xxl {
     font-size: 48px;
@@ -18,8 +20,8 @@ h1 {
   }
 }
 
-h2 {
-  font-size: 32px;
+.packagePage h2 {
+  font-size: 32px; // fallback
   line-height: 40px;
   margin-bottom: 20px;
 
@@ -79,9 +81,6 @@ h2 {
       content: '\00a0\00a0·\00a0\00a0';
     }
   }
-}
-
-.content {
 }
 
 .packageDescription {
@@ -426,7 +425,7 @@ h2 {
   }
 }
 
-.sortIconDesc {
+.sortIconAsc {
   transform: rotate(180deg);
 }
 
@@ -491,4 +490,166 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.markdown {
+  margin: 0;
+  color: #333;
+
+  ol {
+    list-style-position: outside;
+    font-weight: 600;
+    margin-bottom: 20px;
+    margin-left: 16px;
+  }
+
+  ol li {
+    margin-bottom: 2px;
+  }
+
+  li {
+    font-weight: 400;
+  }
+
+  & > h1 {
+    margin: 24px 0 16px 0;
+    padding: 0 0 7px;
+    line-height: 1.2;
+    white-space: normal;
+    text-transform: none;
+    letter-spacing: -0.8px;
+  }
+
+  & > h1 a {
+    text-decoration: none;
+  }
+
+  & > h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+  }
+
+  & > h2 a,
+  h3 a,
+  h4 a,
+  h5 a,
+  h6 a {
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  & > h2 a:hover,
+  h3 a:hover,
+  h4 a:hover,
+  h5 a:hover,
+  h6 a:hover {
+    text-decoration: underline;
+  }
+
+  & > h1,
+  h2 {
+    border-bottom: 1px solid $gray-border;
+    margin: 8px 0 16px 0;
+    font-size: 1.875rem;
+  }
+
+  h2 {
+    letter-spacing: -0.3px;
+  }
+
+  h3 {
+    margin: 16px 0 4px 0;
+    font-size: 1.5rem;
+  }
+
+  h4,
+  h5,
+  h6 {
+    margin: 16px 0 4px 0;
+    font-size: 1.275rem;
+  }
+
+  ol ol,
+  ul ol,
+  ol ul,
+  ul ul {
+    margin: 0 0 0 20px;
+  }
+
+  p,
+  li {
+    color: #333;
+  }
+
+  p a,
+  li a {
+    font-weight: 600;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  td,
+  th {
+    background: #fff;
+    border: 1px solid $gray-border;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  h1:hover .deep-link .deep-link-icon,
+  h2:hover .deep-link .deep-link-icon,
+  h3:hover .deep-link .deep-link-icon,
+  h4:hover .deep-link .deep-link-icon,
+  h5:hover .deep-link .deep-link-icon,
+  h6:hover .deep-link .deep-link-icon,
+  .deep-link:hover .deep-link-icon,
+  .deep-link-icon:hover {
+    visibility: visible;
+  }
+
+  .deep-link {
+    float: left;
+    margin-left: -20px;
+    padding-right: 4px;
+  }
+
+  .deep-link .deep-link-icon {
+    visibility: hidden;
+  }
+
+  blockquote {
+    background: #efefef;
+    padding: 1px 16px;
+    margin-left: 0;
+    margin-right: 0;
+    border-left: #cecece solid 10px;
+    border-radius: 3px;
+  }
+
+  table {
+    display: block;
+    white-space: normal;
+    overflow-x: auto;
+    width: max-content;
+    max-width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+  }
+
+  td,
+  th {
+    padding: 9px 13px;
+    border: 1px solid #d8d8d8;
+  }
+
+  tr:nth-child(2n) td {
+    background-color: #f4f4f4;
+  }
 }

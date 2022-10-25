@@ -23,7 +23,7 @@ Default.args = {
     {
       id: '123',
       image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
+      name: 'pinterest123.com',
       packagesCount: 151,
     },
     {
@@ -35,31 +35,31 @@ Default.args = {
     {
       id: '789',
       image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
+      name: 'pinterest12.com',
       packagesCount: 151,
     },
     {
       id: '1231',
       image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
+      name: 'pinterest1.com',
       packagesCount: 151,
     },
     {
       id: '12321',
       image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
+      name: 'pinterest1234.com',
       packagesCount: 151,
     },
     {
       id: '123123',
       image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
+      name: 'pinterest1234456.com',
       packagesCount: 151,
     },
     {
       id: '12123132',
       image: 'https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg',
-      name: 'pinterest.com',
+      name: 'pinterest12345.com',
       packagesCount: 151,
     },
   ],

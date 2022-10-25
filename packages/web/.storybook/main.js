@@ -1,5 +1,6 @@
 const path = require('path');
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
+const { DefinePlugin } = require('webpack');
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -75,6 +76,11 @@ module.exports = {
     });
 
     config.plugins.push(new SpriteLoaderPlugin());
+    config.plugins.push(
+      new DefinePlugin({
+        __IS_SERVER__: false,
+      })
+    );
 
     return config;
   },

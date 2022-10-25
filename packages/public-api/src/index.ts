@@ -14,7 +14,6 @@ checkRequiredEnvironmentVariables([
   Env.SqsWorkerQueueUrl,
   Env.InternalApiRootUrl,
   Env.GradeJsApiKey,
-  Env.RollbarApiKey,
 ]);
 
 const port = getPort(8080);

@@ -1,5 +1,5 @@
 import { PackageTrait } from '../../slices/scanDisplayOptions';
-import { IdentifiedPackage } from '../websiteResults';
+import { IdentifiedPackage } from '../../../types';
 
 export type OptimizedPackageFilters = {
   keywords: Set<string>;

@@ -1,7 +1,7 @@
 import semver from 'semver';
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../';
-import type { ClientApi } from '../../services/apiClient';
+import { IdentifiedPackage } from '../../types';
 
 function semverListAsRange(versionList: string[]) {
   if (!versionList.length) {
@@ -16,17 +16,6 @@ function semverListAsRange(versionList: string[]) {
 
   return `${sortedVersions[0]} - ${sortedVersions[sortedVersions.length - 1]}`;
 }
-
-export type IdentifiedPackage = ClientApi.ScanResultPackageResponse & {
-  approximateByteSize?: number;
-  outdated?: boolean;
-  vulnerable?: boolean;
-  duplicate?: boolean;
-  version?: string;
-  containingScripts?: string[];
-  modules: ClientApi.IdentifiedModule[];
-  vulnerabilities: ClientApi.PackageVulnerabilityResponse[];
-};
 
 const makeSelectScanResultByUrl = () =>
   createSelector(

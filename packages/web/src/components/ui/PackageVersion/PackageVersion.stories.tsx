@@ -1,7 +1,6 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import PackageVersion from './PackageVersion';
-import { modulesData, entriesData } from 'mocks/PackageVersionMocks';
 import Skeleton from '../Skeleton/Skeleton';
 
 export default {
@@ -18,27 +17,17 @@ Default.args = {
   updateDate: '2 month ago',
   uses: 23987,
   size: 160,
-  sizeUnit: 'B',
-  sizeUnitShorthand: 'Byte',
   modulesCount: 50,
-  modules: modulesData,
-  entries: entriesData,
 };
 
-export const Opened: ComponentStory<typeof PackageVersion> = (args) => (
-  <PackageVersion opened {...args} />
-);
+export const Opened: ComponentStory<typeof PackageVersion> = (args) => <PackageVersion {...args} />;
 
 Opened.args = {
   version: '18.2.0',
   updateDate: '2 month ago',
   uses: 23987,
   size: 160,
-  sizeUnit: 'B',
-  sizeUnitShorthand: 'Byte',
   modulesCount: 50,
-  modules: modulesData,
-  entries: entriesData,
 };
 
 export const Loading: ComponentStory<typeof PackageVersion> = () => (

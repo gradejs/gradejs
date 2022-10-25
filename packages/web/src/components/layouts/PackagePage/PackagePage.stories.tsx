@@ -1,6 +1,7 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import PackagePage from './PackagePage';
+import { loadedPackagePageData } from 'mocks/PackagePageMocks';
 
 export default {
   title: 'Layouts / Package Page',
@@ -14,11 +15,11 @@ const Template: ComponentStory<typeof PackagePage> = (args) => <PackagePage {...
 
 export const Default = Template.bind({});
 Default.args = {
-  packageName: 'hoist-non-react-statics',
+  packageInfo: loadedPackagePageData,
 };
 
 export const Loading = Template.bind({});
 Loading.args = {
-  packageName: 'hoist-non-react-statics',
-  pageLoading: true,
+  packageInfo: loadedPackagePageData,
+  loading: true,
 };

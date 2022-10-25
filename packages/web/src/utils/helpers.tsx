@@ -14,8 +14,13 @@ export function repeat(times: number, children: React.ReactNode) {
     .map((_, idx) => <React.Fragment key={idx}>{children}</React.Fragment>);
 }
 
-export function plural(factor: number, singularForm: string, pluralForm: string) {
-  return `${factor} ${factor === 1 ? singularForm : pluralForm}`;
+export function plural(
+  factor: number,
+  singularForm: string,
+  pluralForm: string,
+  withFactor = true
+) {
+  return (withFactor ? `${factor} ` : '') + (factor === 1 ? singularForm : pluralForm);
 }
 
 export function getReadableSizeString(sizeInBytes: number) {

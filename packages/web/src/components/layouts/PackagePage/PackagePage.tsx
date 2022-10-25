@@ -1,84 +1,152 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import styles from './PackagePage.module.scss';
 import modalStyles from '../../ui/Modal/Modal.module.scss';
 import clsx from 'clsx';
 import StickyDefaultHeader from '../../ui/Header/StickyDefaultHeader';
 import Container from 'components/ui/Container/Container';
-import { SitesListSkeleton } from '../../ui/SitesList/SitesListSkeleton';
-import SitesList from '../../ui/SitesList/SitesList';
 import { Icon } from '../../ui/Icon/Icon';
 import ChipGroup from '../../ui/ChipGroup/ChipGroup';
 import Chip from 'components/ui/Chip/Chip';
 import { Button } from 'components/ui';
 import Modal from '../../ui/Modal/Modal';
 import SidebarCategorySort from 'components/ui/SidebarCategory/SidebarCategorySort';
-import CardGroups from '../../ui/CardGroups/CardGroups';
-import CardGroup from '../../ui/CardGroup/CardGroup';
-import { CardListSkeleton } from '../../ui/CardList/CardListSkeleton';
-import PackagesBySourceCardList from '../../ui/CardList/PackagesBySourceCardList';
-import PopularPackageCardList from '../../ui/CardList/PopularPackageCardList';
-import { packagesBySourceListData, popularPackageListData } from '../../../mocks/CardListsMocks';
 import Footer from '../../ui/Footer/Footer';
 import PackageVersion from '../../ui/PackageVersion/PackageVersion';
 import Skeleton from '../../ui/Skeleton/Skeleton';
-import { repeat } from 'utils/helpers';
-import { loadedPackagePageData } from 'mocks/PackagePageMocks';
+import { plural, repeat } from 'utils/helpers';
 import AvatarGroup from '../../ui/AvatarGroup/AvatarGroup';
 import Avatar from '../../ui/Avatar/Avatar';
+import { GetPackageInfoOutput } from '../../../services/apiClient';
+import { SitesListSkeleton } from '../../ui/SitesList/SitesListSkeleton';
+import SitesList from '../../ui/SitesList/SitesList';
+import semver from 'semver';
+import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Link } from 'react-router-dom';
+const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
 
 type Props = {
-  pageLoading?: boolean;
-  packageName: string;
+  loading?: boolean;
+  packageInfo?: GetPackageInfoOutput;
 };
 
-const PackagePage = ({ packageName, pageLoading = false }: Props) => {
-  const [loading, setLoading] = useState(pageLoading);
-  const [sortDirection, setSortDirection] = useState('asc');
+// Clean commonly used tags inside markdown
+function mdclean(markdown = ''): string {
+  return markdown.replace(/<br\/?\s?>/g, '\n');
+}
+
+const PackagePage = ({ packageInfo, loading = false }: Props) => {
+  const [sortDirection, setSortDirection] = useState('desc' as 'asc' | 'desc');
   const [sortField, setSortField] = useState('versions');
   const [fullDescVisible, setFullDescVisible] = useState(false);
+  const [allVersionsVisible, setAllVersionsVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
-
-  // FIXME: just for demo purpose
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 5000);
-  }, []);
 
   const sorts = ['weight', 'popularity', 'versions'];
 
   const {
-    delta,
-    currentVersion,
-    lastUpdate,
-    shortDesc,
-    desc,
-    fullDesc,
-    usedOnList,
+    name: packageName,
     vulnerabilities,
-    dependencies,
-    dependents,
+    fullDescription,
+    description,
+    latestVersion,
+    maintainers,
+    deps,
     keywords,
-    versions,
+    versionSpecificValues,
     homepageUrl,
     repositoryUrl,
-    maintainers,
-  } = loadedPackagePageData;
+    license,
+    usage,
+    updateDate,
+    usageByHostnameCount,
+  } = packageInfo ?? {};
 
   const requestSort = (sortName: string) => {
-    let direction = 'asc';
-
-    if (sortDirection === 'asc' && sortName === sortField) {
-      direction = 'desc';
+    if (sortName !== sortField) {
+      setSortDirection('desc');
+    } else {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     }
-
     setSortField(sortName);
-    setSortDirection(direction);
   };
 
   const closeModalHandler = () => {
     setModalSortOpen(false);
   };
+
+  const formattedVulnerabilities = useMemo(
+    () =>
+      vulnerabilities?.map((v) => ({
+        id: v.id,
+        severity: (v.osvData?.database_specific as any | undefined)?.severity, // TODO: proper typing
+        linkPath: `https://github.com/advisories/${v.osvId}`,
+        linkText: v.osvId,
+        title: v.osvData?.summary,
+        fixedAfter: v.packageVersionRange, // TODO: fair last version
+      })),
+    [vulnerabilities]
+  );
+
+  const formattedSitesUsage = useMemo(
+    () =>
+      (usage ?? []).map((item) => ({
+        id: item.hostname,
+        image: `/favicons/${item.hostname}`,
+        name: item.hostname,
+        packagesCount: item.hostnamePackagesCount,
+      })),
+    [usage]
+  );
+
+  const imageUriTransformer = (input: string) =>
+    input.startsWith('https://')
+      ? input
+      : packageInfo?.repositoryUrl?.startsWith('https://github.com')
+      ? `https://raw.githubusercontent.com/${packageInfo?.repositoryUrl?.replace(
+          /^https:\/\/github.com\//,
+          ''
+        )}/HEAD/${input}`
+      : input;
+
+  const formattedVersions = useMemo(
+    () =>
+      Object.entries(versionSpecificValues ?? {})
+        .map(([version, data]) => ({
+          version,
+          updateDate: data.updateDate,
+          uses: data.uses,
+          size: data.unpackedSize,
+          isVulnerable: vulnerabilities?.some((v) =>
+            semver.satisfies(version, v.packageVersionRange)
+          ),
+          modulesCount: data.registryModulesCount, // TODO: detected modules count?
+          modules: [], // TODO
+          entries: [], // TODO
+        }))
+        .sort((b, a) => {
+          let sort: number;
+          switch (sortField) {
+            case 'weight':
+              sort = (b.size ?? 0) - (a.size ?? 0);
+              break;
+            case 'popularity':
+              sort = (b.uses ?? 0) - (a.uses ?? 0);
+              break;
+            case 'versions':
+            default:
+              sort = semver.compare(b.version, a.version);
+          }
+          return sortDirection === 'desc' ? -1 * sort : sort;
+        }),
+    [versionSpecificValues, vulnerabilities, sortDirection, sortField]
+  );
 
   return (
     <>
@@ -97,31 +165,8 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   onClick={() => requestSort(name)}
                 >
                   {name[0].toUpperCase() + name.slice(1)}
-
-                  {/* TODO: not sure how to handle it better right now by using <Icon> component */}
                   {sortField === name && (
-                    <svg
-                      width='24'
-                      height='24'
-                      viewBox='0 0 24 24'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M11 14L7 18M7 18L3 14M7 18L7 8'
-                        stroke={sortDirection === 'asc' ? '#212121' : '#DDDCE3'}
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                      <path
-                        d='M21 10L17 6M17 6L13 10M17 6L17 16'
-                        stroke={sortDirection === 'desc' ? '#212121' : '#DDDCE3'}
-                        strokeWidth='1.5'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
+                    <Icon kind={sortDirection === 'desc' ? 'sortDesc' : 'sortAsc'} />
                   )}
                 </button>
               ))}
@@ -136,22 +181,25 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
         <Container>
           <div className={styles.packagePageGrid}>
             <div className={styles.content}>
-              <h1>{packageName}</h1>
+              {/* TODO: insert <wbr> after '/' in namespaces */}
+              <h1 className={styles.packageName}>{packageName}</h1>
 
               <div className={styles.packageMeta}>
                 {loading ? (
                   <Skeleton width={189} />
                 ) : (
                   <>
-                    <span className={styles.packageMetaItem}>{currentVersion}</span>
-                    <span className={styles.packageMetaItem}>{lastUpdate}</span>
+                    <span className={styles.packageMetaItem}>{latestVersion}</span>
+                    {updateDate && (
+                      <span className={styles.packageMetaItem}>
+                        Last updated on {dateTimeFormatter.format(new Date(updateDate ?? ''))}
+                      </span>
+                    )}
                   </>
                 )}
               </div>
 
               <section className={styles.packageDescription}>
-                <h2>Full description</h2>
-
                 <div className={styles.packageDescriptionGrid}>
                   {loading ? (
                     <>
@@ -168,8 +216,49 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                     </>
                   ) : (
                     <>
-                      <div className={styles.packageDescriptionCol}>
-                        {fullDescVisible ? fullDesc : desc}
+                      <div
+                        className={clsx(
+                          styles.packageDescriptionCol,
+                          fullDescVisible ? styles.markdown : null
+                        )}
+                      >
+                        {fullDescVisible ? (
+                          <ReactMarkdown
+                            transformImageUri={imageUriTransformer}
+                            components={{
+                              h1: 'h2',
+                              source({ srcSet, ...props }) {
+                                return (
+                                  <source {...props} srcSet={imageUriTransformer(srcSet ?? '')} />
+                                );
+                              },
+                              code({ inline, className, children, ...props }) {
+                                const match = /language-(\w+)/.exec(className ?? '');
+                                return !inline && match ? (
+                                  <SyntaxHighlighter
+                                    children={String(children).replace(/\n$/, '')}
+                                    style={prism}
+                                    language={match[1]}
+                                    PreTag='div'
+                                    {...props}
+                                  />
+                                ) : (
+                                  <code className={className} {...props}>
+                                    {children}
+                                  </code>
+                                );
+                              },
+                            }}
+                            rehypePlugins={[
+                              rehypeRaw /* TODO: this is unsafe in general. Do we trust markdown coming from npm? */,
+                            ]}
+                            linkTarget='_blank'
+                          >
+                            {mdclean(fullDescription) ?? ''}
+                          </ReactMarkdown>
+                        ) : (
+                          description
+                        )}
                       </div>
                     </>
                   )}
@@ -177,7 +266,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
 
                 {!loading && !fullDescVisible && (
                   <button className={styles.link} onClick={() => setFullDescVisible(true)}>
-                    Show all
+                    Show full description
                   </button>
                 )}
               </section>
@@ -188,7 +277,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                 {loading ? (
                   <SitesListSkeleton className={styles.usedOnList} />
                 ) : (
-                  <SitesList sites={usedOnList} className={styles.usedOnList} />
+                  <SitesList sites={formattedSitesUsage} className={styles.usedOnList} />
                 )}
               </section>
 
@@ -236,7 +325,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                                 height={12}
                                 className={clsx(
                                   styles.sortIcon,
-                                  sortDirection === 'desc' && styles.sortIconDesc
+                                  sortDirection === 'asc' && styles.sortIconAsc
                                 )}
                               />
                             ) : (
@@ -256,59 +345,67 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                 <div className={styles.packages}>
                   {loading
                     ? repeat(5, <Skeleton width='100%' height={100} variant='rounded' />)
-                    : versions.map((version) => (
-                        <PackageVersion
-                          key={version.version}
-                          version={version.version}
-                          updateDate={version.updateDate}
-                          uses={version.uses}
-                          size={version.size}
-                          sizeUnit={version.sizeUnit}
-                          sizeUnitShorthand={version.sizeUnitShorthand}
-                          modulesCount={version.modulesCount}
-                          modules={version.modules}
-                          entries={version.entries}
-                        />
-                      ))}
+                    : (allVersionsVisible ? formattedVersions : formattedVersions.slice(0, 5)).map(
+                        (version) => (
+                          <PackageVersion
+                            key={version.version}
+                            version={version.version}
+                            updateDate={
+                              version.updateDate &&
+                              dateTimeFormatter.format(new Date(version.updateDate))
+                            }
+                            uses={version.uses}
+                            size={version.size}
+                            modulesCount={version.modulesCount}
+                            isVulnerable={version.isVulnerable}
+                          />
+                        )
+                      )}
                 </div>
 
-                {!loading && <button className={styles.link}>Show +3 more</button>}
+                {!loading && formattedVersions.length > 5 && !allVersionsVisible && (
+                  <button className={styles.link} onClick={() => setAllVersionsVisible(true)}>
+                    Show +{formattedVersions.length - 5} more
+                  </button>
+                )}
               </section>
 
               {/* TODO: there are no skeletons for vulnerabilities in design,
                         not sure if intended or overlooked */}
-              {!loading && (
+              {!loading && !!formattedVulnerabilities?.length && (
                 <section>
                   <h2>Vulnerabilities</h2>
 
                   <div className={styles.vulnerabilities}>
-                    {vulnerabilities.map(({ id, label, title, text, linkText, linkPath }) => (
-                      <div key={id} className={styles.vulnerability}>
-                        <div className={styles.vulnerabilityTop}>
-                          <Chip
-                            variant='vulnerabilities'
-                            size='badge'
-                            fontWeight='semiBold'
-                            icon={
-                              <Icon kind='vulnerability' width={24} height={24} color='white' />
-                            }
-                          >
-                            {label}
-                          </Chip>
+                    {formattedVulnerabilities?.map(
+                      ({ id, severity, linkPath, linkText, title, fixedAfter }) => (
+                        <div key={id} className={styles.vulnerability}>
+                          <div className={styles.vulnerabilityTop}>
+                            <Chip
+                              variant='vulnerabilities'
+                              size='badge'
+                              fontWeight='semiBold'
+                              icon={
+                                <Icon kind='vulnerability' width={24} height={24} color='white' />
+                              }
+                            >
+                              {severity}
+                            </Chip>
 
-                          <a
-                            href={linkPath}
-                            target='_blank'
-                            rel='noreferrer'
-                            className={styles.vulnerabilityLink}
-                          >
-                            {linkText}
-                          </a>
+                            <a
+                              href={linkPath}
+                              target='_blank'
+                              rel='noreferrer'
+                              className={styles.vulnerabilityLink}
+                            >
+                              {linkText}
+                            </a>
+                          </div>
+                          <div className={styles.vulnerabilityTitle}>{title}</div>
+                          <div className={styles.vulnerabilityText}>{fixedAfter}</div>
                         </div>
-                        <div className={styles.vulnerabilityTitle}>{title}</div>
-                        <div className={styles.vulnerabilityText}>{text}</div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 </section>
               )}
@@ -386,25 +483,6 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   </div>
                 </div>
 
-                {/* TODO: probably hide about section on mobile with non-css solution */}
-                <div className={clsx(styles.sidebarItem, styles.sidebarItemDesktop)}>
-                  {loading ? (
-                    <>
-                      <div className={styles.sidebarItemTitle}>
-                        <Skeleton width={49} />
-                      </div>
-                      <Skeleton width='90%' />
-                      <Skeleton width='50%' />
-                    </>
-                  ) : (
-                    <>
-                      <div className={styles.sidebarItemTitle}>About</div>
-                      <p className={styles.sidebarItemText}>{shortDesc}</p>
-                      <button className={styles.link}>Go down to full description</button>
-                    </>
-                  )}
-                </div>
-
                 <div className={styles.sidebarItem}>
                   <div className={styles.stats}>
                     {loading ? (
@@ -468,67 +546,91 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                           </div>
 
                           <div className={styles.statContent}>
-                            <span className={styles.statTitle}>Freely distributable</span>
-                            <span className={styles.statValue}>MIT License</span>
+                            <span className={styles.statTitle}>License</span>
+                            <span className={styles.statValue}>{license}</span>
                           </div>
                         </div>
 
                         <div className={styles.stat}>
                           <div className={styles.statImagePlaceholder}>
-                            <Icon kind='rating' />
+                            <Icon kind='modules' width={20} height={20} />
                           </div>
 
                           <div className={styles.statContent}>
-                            <span className={styles.statTitle}>Rating</span>
+                            <span className={styles.statTitle}>Used on</span>
                             <span className={styles.statValue}>
-                              457{' '}
-                              <span
-                                className={clsx(
-                                  delta > 0 ? styles.statRatingGreen : styles.statRatingRed
-                                )}
-                              >
-                                {delta > 0 ? `+${delta}` : delta}
-                              </span>
+                              {plural(usageByHostnameCount ?? 0, 'website', 'websites')}
                             </span>
                           </div>
                         </div>
+
+                        {/*<div className={styles.stat}>*/}
+                        {/*  <div className={styles.statImagePlaceholder}>*/}
+                        {/*    <Icon kind='rating' />*/}
+                        {/*  </div>*/}
+
+                        {/*  <div className={styles.statContent}>*/}
+                        {/*    <span className={styles.statTitle}>Rating</span>*/}
+                        {/*    <span className={styles.statValue}>*/}
+                        {/*      457{' '}*/}
+                        {/*      <span*/}
+                        {/*        className={clsx(*/}
+                        {/*          delta > 0 ? styles.statRatingGreen : styles.statRatingRed*/}
+                        {/*        )}*/}
+                        {/*      >*/}
+                        {/*        {delta > 0 ? `+${delta}` : delta}*/}
+                        {/*      </span>*/}
+                        {/*    </span>*/}
+                        {/*  </div>*/}
+                        {/*</div>*/}
                       </>
                     )}
                   </div>
                 </div>
 
                 <div className={styles.sidebarItem}>
-                  <div className={styles.sidebarItemTitle}>{!loading && 4} Dependency</div>
-                  <ChipGroup>
-                    {loading
-                      ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
-                      : dependencies.map((dependency) => (
-                          <Chip key={dependency} font='monospace' size='medium' fontSize='small'>
-                            {dependency}
-                          </Chip>
-                        ))}
-                  </ChipGroup>
-                </div>
-
-                <div className={styles.sidebarItem}>
-                  <div className={styles.sidebarItemTitle}>198 Dependents</div>
-
-                  <ChipGroup>
-                    {loading
-                      ? repeat(6, <Skeleton variant='rounded' width={108} height={36} />)
-                      : dependents.map((dependency) => (
-                          <Chip key={dependency} font='monospace' size='medium' fontSize='small'>
-                            {dependency}
-                          </Chip>
-                        ))}
-                  </ChipGroup>
-
-                  {!loading && (
-                    <button className={clsx(styles.link, styles.sidebarItemAction)}>
-                      View all
-                    </button>
+                  <div className={styles.sidebarItemTitle}>
+                    {!loading && plural(deps?.length ?? 0, 'Dependency', 'Dependencies')}
+                  </div>
+                  {!!deps?.length && (
+                    <ChipGroup>
+                      {loading
+                        ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
+                        : deps.map((dependency) => (
+                            <Link to={'/package/' + dependency}>
+                              <Chip
+                                key={dependency}
+                                font='monospace'
+                                size='medium'
+                                fontSize='small'
+                              >
+                                {dependency}
+                              </Chip>
+                            </Link>
+                          ))}
+                    </ChipGroup>
                   )}
                 </div>
+
+                {/*<div className={styles.sidebarItem}>*/}
+                {/*  <div className={styles.sidebarItemTitle}>198 Dependents</div>*/}
+
+                {/*  <ChipGroup>*/}
+                {/*    {loading*/}
+                {/*      ? repeat(6, <Skeleton variant='rounded' width={108} height={36} />)*/}
+                {/*      : dependents.map((dependency) => (*/}
+                {/*          <Chip key={dependency} font='monospace' size='medium' fontSize='small'>*/}
+                {/*            {dependency}*/}
+                {/*          </Chip>*/}
+                {/*        ))}*/}
+                {/*  </ChipGroup>*/}
+
+                {/*  {!loading && (*/}
+                {/*    <button className={clsx(styles.link, styles.sidebarItemAction)}>*/}
+                {/*      View all*/}
+                {/*    </button>*/}
+                {/*  )}*/}
+                {/*</div>*/}
 
                 <div className={styles.sidebarItem}>
                   <div className={styles.sidebarItemTitle}>Keywords</div>
@@ -536,7 +638,7 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
                   <ChipGroup>
                     {loading
                       ? repeat(9, <Skeleton variant='rounded' width={89} height={36} />)
-                      : keywords.map((keyword) => (
+                      : keywords?.map((keyword) => (
                           <Chip key={keyword} size='medium'>
                             {keyword}
                           </Chip>
@@ -547,23 +649,23 @@ const PackagePage = ({ packageName, pageLoading = false }: Props) => {
             </aside>
           </div>
 
-          <CardGroups>
-            <CardGroup title='Popular search queries'>
-              {loading ? (
-                <CardListSkeleton />
-              ) : (
-                <PackagesBySourceCardList cards={packagesBySourceListData} />
-              )}
-            </CardGroup>
+          {/*<CardGroups>*/}
+          {/*  <CardGroup title='Popular search queries'>*/}
+          {/*    {loading ? (*/}
+          {/*      <CardListSkeleton />*/}
+          {/*    ) : (*/}
+          {/*      <PackagesBySourceCardList cards={packagesBySourceListData} />*/}
+          {/*    )}*/}
+          {/*  </CardGroup>*/}
 
-            <CardGroup title='Popular packages'>
-              {loading ? (
-                <CardListSkeleton numberOfElements={6} />
-              ) : (
-                <PopularPackageCardList cards={popularPackageListData} />
-              )}
-            </CardGroup>
-          </CardGroups>
+          {/*  <CardGroup title='Popular packages'>*/}
+          {/*    {loading ? (*/}
+          {/*      <CardListSkeleton numberOfElements={6} />*/}
+          {/*    ) : (*/}
+          {/*      <PopularPackageCardList cards={popularPackageListData} />*/}
+          {/*    )}*/}
+          {/*  </CardGroup>*/}
+          {/*</CardGroups>*/}
         </Container>
       </div>
 

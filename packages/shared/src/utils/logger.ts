@@ -1,5 +1,5 @@
 import Rollbar from 'rollbar';
-import { getProdEnv, getEnv, Env } from './env';
+import { getProdEnv, getEnv, Env, getEnvUnsafe } from './env';
 
 interface LogMethod {
   (message: string, ...meta: unknown[]): void;
@@ -22,7 +22,9 @@ export interface LoggerTransport {
 export const logger = createLogger([console]);
 
 export async function initRollbarLogger() {
-  logger.addTransport(createRollbarTransport());
+  if (getEnvUnsafe(Env.RollbarApiKey)) {
+    logger.addTransport(createRollbarTransport());
+  }
 }
 
 export interface Logger {

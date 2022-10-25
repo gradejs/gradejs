@@ -3,6 +3,7 @@ import { configureStore, Middleware } from '@reduxjs/toolkit';
 import { scansReducer } from './slices/scans';
 import { showcaseReducer } from './slices/showcase';
 import { scanDisplayOptionsReducer } from './slices/scanDisplayOptions';
+import { packageReducer } from './slices/package';
 
 export const createApplicationStore = (
   extraMiddleware: Middleware[] = [],
@@ -15,6 +16,7 @@ export const createApplicationStore = (
     reducer: {
       showcase: showcaseReducer,
       scans: scansReducer,
+      packageInfo: packageReducer,
       scanDisplayOptions: scanDisplayOptionsReducer,
     },
     preloadedState,

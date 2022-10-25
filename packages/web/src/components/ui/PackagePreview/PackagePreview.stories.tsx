@@ -2,8 +2,8 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import PackagePreview from './PackagePreview';
 import { PackagePreviewSkeleton } from './PackagePreviewSkeleton';
-import { IdentifiedPackage } from 'store/selectors/websiteResults';
 import Container from '../Container/Container';
+import { IdentifiedPackage } from '../../../types';
 
 export default {
   title: 'Interface / PackagePreview',

@@ -14,7 +14,7 @@ export const serverConfig: (options: WebpackConfigOptions) => Configuration = ({
 }) => ({
   entry: join(__dirname, '..', srcDir, 'server.tsx'),
   ...configCommon(mode),
-  devtool: mode === 'production' ? false : 'inline-cheap-module-source-map',
+  devtool: mode === 'production' ? 'source-map' : 'inline-cheap-module-source-map',
   module: {
     rules: [
       {
