@@ -10,7 +10,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 10px;
-  row-gap: 20px;
+  row-gap: 50px;
 
   @include mobile-and-tablet {
     display: flex;
@@ -57,6 +57,7 @@
 
 .title {
   font-weight: 500;
+  color: $black;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -12,6 +12,7 @@
   border: 1px solid transparent;
   white-space: nowrap;
   transition: all $transition-duration $transition-timing-function;
+  color: $black;
 
   @include xxl {
     border-radius: 31px;

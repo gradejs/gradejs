@@ -17,17 +17,17 @@ type Props = {
 
 function Site({ image, name, packagesCount }: Site) {
   return (
-    <div className={styles.site}>
-      <div className={styles.imageWrapper}>
-        {image && <img src={image} className={styles.image} loading='lazy' alt='' />}
-      </div>
-      <div className={styles.content}>
-        <div className={styles.title}>
-          <Link to={'/scan/' + name}>{name}</Link>
+    <Link to={'/scan/' + name}>
+      <div className={styles.site}>
+        <div className={styles.imageWrapper}>
+          {image && <img src={image} className={styles.image} loading='lazy' alt='' />}
         </div>
-        <div className={styles.subtitle}>{packagesCount} packages</div>
+        <div className={styles.content}>
+          <div className={styles.title}>{name}</div>
+          <div className={styles.subtitle}>{packagesCount} packages</div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
