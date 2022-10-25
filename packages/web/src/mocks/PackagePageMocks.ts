@@ -52,7 +52,6 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
       unpackedSize: 123456,
       registryModulesCount: 12,
       uses: 123,
-      isVulnerable: true,
       dependencies: {
         art: 'art',
         'create-react-class': 'create-react-class',
@@ -64,7 +63,6 @@ export const loadedPackagePageData: GetPackageInfoOutput = {
       unpackedSize: 123,
       registryModulesCount: 5,
       uses: 321,
-      isVulnerable: false,
       dependencies: {
         art: 'art',
         'create-react-class': 'create-react-class',

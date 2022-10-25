@@ -123,7 +123,9 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
           updateDate: data.updateDate,
           uses: data.uses,
           size: data.unpackedSize,
-          isVulnerable: data.isVulnerable,
+          isVulnerable: vulnerabilities?.some((v) =>
+            semver.satisfies(version, v.packageVersionRange)
+          ),
           modulesCount: data.registryModulesCount, // TODO: detected modules count?
           modules: [], // TODO
           entries: [], // TODO
@@ -143,7 +145,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
           }
           return sortDirection === 'desc' ? -1 * sort : sort;
         }),
-    [versionSpecificValues, sortDirection, sortField]
+    [versionSpecificValues, vulnerabilities, sortDirection, sortField]
   );
 
   return (
@@ -355,6 +357,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                             uses={version.uses}
                             size={version.size}
                             modulesCount={version.modulesCount}
+                            isVulnerable={version.isVulnerable}
                           />
                         )
                       )}
