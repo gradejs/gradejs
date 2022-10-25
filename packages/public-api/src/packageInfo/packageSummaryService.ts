@@ -16,7 +16,6 @@ export async function getPackageSummaryByName(packageName: string) {
   const queries: [
     Promise<PackageMetadata | undefined>,
     Promise<{ hostnamePackagesCount: number; hostname: string; packageName: string }[]>,
-    Promise<number>,
     Promise<PackagePopularityView | undefined>,
     Promise<PackageVulnerability[]>
   ] = [
@@ -35,11 +34,6 @@ export async function getPackageSummaryByName(packageName: string) {
       .where('package_name = :packageName', { packageName })
       .limit(16) // TODO: remove hardcode
       .getRawMany(),
-    createQueryBuilder()
-      .select()
-      .from('package_usage_by_hostname_projection', 'usage')
-      .where('package_name = :packageName', { packageName })
-      .getCount(),
     packagePopularityRepo
       .createQueryBuilder()
       .where('package_name = :packageName', { packageName })
@@ -50,9 +44,7 @@ export async function getPackageSummaryByName(packageName: string) {
       .getMany(),
   ];
 
-  const [packageInfo, usage, usageByHostnameCount, popularity, vulnerabilities] = await Promise.all(
-    queries
-  );
+  const [packageInfo, usage, popularity, vulnerabilities] = await Promise.all(queries);
 
   if (!packageInfo) {
     return null;
@@ -82,6 +74,6 @@ export async function getPackageSummaryByName(packageName: string) {
     ),
     usage: usage.map((u) => toSerializable(u)),
     vulnerabilities: vulnerabilities.map((v) => toSerializable(v)),
-    usageByHostnameCount,
+    usageByHostnameCount: popularity?.usageByHostnameCount,
   };
 }
