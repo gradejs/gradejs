@@ -18,35 +18,100 @@ import { initRollbarLogger, logger } from '../../shared/src/utils/logger';
 import { AppStore, createApplicationStore } from './store';
 import { App } from './components/App';
 import path from 'path';
-import { readFile } from 'fs';
+import { readFile } from 'fs/promises';
 import { Layout } from 'components/Layout';
 import { createSettleAsyncActionsMiddleware } from './store/middlewares/settleAsyncActions';
 import { setTimeout } from 'timers/promises';
 import { Readable } from 'stream';
 
-const app = express();
-const staticDir = '/static';
-
 initRollbarLogger();
 
-app.use(staticDir, express.static(path.join(__dirname, 'static')));
+const app = express();
+
+const publicStaticDir = '/static';
+const staticAbsolutePath = path.join(__dirname, 'static');
+const robotsTxt = isStaging() ? '/robots.staging.txt' : '/robots.txt';
+
+const robotsTxtPromise = readFile(path.join(__dirname, robotsTxt));
+const loadAssetsPromise = loadAssets();
+const defaultSiteFaviconPromise = readFile(path.join(staticAbsolutePath, 'default-favicon.png'));
+
+app.use(publicStaticDir, express.static(staticAbsolutePath));
 
 app.get('/robots.txt', (_, res) =>
-  readFile(
-    path.join(__dirname, isStaging() ? '/robots.staging.txt' : '/robots.txt'),
-    { encoding: 'utf-8' },
-    (err, data) => {
-      if (!err) {
-        res.send(data);
-      } else {
-        res.status(404);
-        res.send();
-      }
-    }
-  )
+  robotsTxtPromise
+    .then((data) => res.send(data))
+    .catch(() => {
+      res.status(404);
+      res.send();
+    })
 );
 
-async function pipeS3Object(objectKey: string, res: Response) {
+app.get('/sitemaps/*', async (req, res) => {
+  const basename = path.basename(req.url);
+  pipeS3Object(`sitemaps/${basename}`, res);
+});
+
+app.get('/favicons/*', async (req, res) => {
+  const basename = path.basename(req.url);
+  const fallback = await defaultSiteFaviconPromise;
+  pipeS3Object(`favicons/${basename}`, res, fallback);
+});
+
+app.get('*', async (req, res, next) => {
+  try {
+    const { renderResult, store } = await renderCycle(req.url);
+    const head = Helmet.renderStatic();
+    const { js, css } = await loadAssetsPromise;
+
+    res.send(
+      '<!doctype html>' +
+        ReactDOMServer.renderToString(
+          <Layout
+            js={js}
+            css={css}
+            head={head}
+            env={getClientVars()}
+            html={renderResult}
+            initialState={store.getState()}
+          />
+        )
+    );
+  } catch (e) {
+    logger.error(e);
+    next(e);
+  }
+});
+
+app.listen(getPort(8080));
+
+async function loadAssets() {
+  const assets: { js: string[]; css: string[] } = { js: [], css: [] };
+
+  try {
+    const statsStr = await readFile(path.join(staticAbsolutePath, 'stats.json'));
+    const stats = JSON.parse(statsStr.toString()).assetsByChunkName as Record<string, string[]>;
+
+    return Object.values(stats)
+      .flat()
+      .reduce((acc, asset) => {
+        if (asset.endsWith('.js')) {
+          acc.js.push(path.join(publicStaticDir, asset));
+        }
+
+        if (asset.endsWith('.css')) {
+          acc.css.push(path.join(publicStaticDir, asset));
+        }
+
+        return acc;
+      }, assets);
+  } catch (e) {
+    logger.error('Unexpected assets error', e);
+    throw e;
+  }
+}
+
+async function pipeS3Object(objectKey: string, res: Response, fallback?: Buffer) {
   try {
     const s3client = new S3Client({ region: getAwsRegion() });
     const s3command = new GetObjectCommand({
@@ -66,45 +131,15 @@ async function pipeS3Object(objectKey: string, res: Response) {
       throw new Error('Unexpected response format');
     }
   } catch (e) {
-    if (e instanceof NoSuchKey) {
+    if (fallback) {
+      res.send(fallback);
+    } else if (e instanceof NoSuchKey) {
       res.status(404).send();
     } else {
       logger.error('Unexpected S3 error', e);
       res.status(500).send();
     }
   }
-}
-
-app.get('/sitemaps/*', async (req, res) => {
-  const basename = path.basename(req.url);
-  pipeS3Object(`sitemaps/${basename}`, res);
-});
-
-app.get('/favicons/*', async (req, res) => {
-  const basename = path.basename(req.url);
-  pipeS3Object(`favicons/${basename}`, res);
-});
-
-function getScripts(statsStr: string) {
-  let stats: Record<string, string[]>;
-  const assets: { js: string[]; css: string[] } = { js: [], css: [] };
-  try {
-    stats = JSON.parse(statsStr).assetsByChunkName as Record<string, string[]>;
-  } catch (e) {
-    return assets;
-  }
-
-  return Object.values(stats)
-    .flat()
-    .reduce((acc, asset) => {
-      if (asset.endsWith('.js')) {
-        acc.js.push(staticDir + '/' + asset);
-      }
-      if (asset.endsWith('.css')) {
-        acc.css.push(staticDir + '/' + asset);
-      }
-      return acc;
-    }, assets);
 }
 
 function renderPass(store: AppStore, location: string) {
@@ -148,39 +183,3 @@ async function renderCycle(location: string, maxPasses = 3, passTimeout = 15000)
 
   return { renderResult, store };
 }
-
-app.get('*', async (req, res, next) => {
-  try {
-    const { renderResult, store } = await renderCycle(req.url);
-    const head = Helmet.renderStatic();
-
-    // TODO: Move this out to app initialization
-    readFile(path.join(__dirname, 'static', 'stats.json'), { encoding: 'utf-8' }, (err, stats) => {
-      if (err) {
-        res.status(404).send();
-        return;
-      }
-
-      const { js, css } = getScripts(stats);
-
-      res.send(
-        '<!doctype html>' +
-          ReactDOMServer.renderToString(
-            <Layout
-              js={js}
-              css={css}
-              head={head}
-              env={getClientVars()}
-              html={renderResult}
-              initialState={store.getState()}
-            />
-          )
-      );
-    });
-  } catch (e) {
-    logger.error(e);
-    next(e);
-  }
-});
-
-app.listen(getPort(8080));

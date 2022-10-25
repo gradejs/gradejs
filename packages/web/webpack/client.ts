@@ -79,7 +79,11 @@ export const clientConfig: (options: WebpackConfigOptions) => Configuration = ({
       template: join(__dirname, '..', 'index.html'),
     }),
     new CopyPlugin({
-      patterns: [{ from: 'src/assets/sharing-image.png', to: 'sharing-image.png' }],
+      patterns: [
+        { from: 'src/assets/sharing-image.png', to: 'sharing-image.png' },
+        { from: 'src/assets/default-favicon.png', to: 'default-favicon.png' },
+        { from: 'src/assets/favicon.ico', to: 'favicon.ico' },
+      ],
     }),
     ...plugins,
     new StatsWriterPlugin({
