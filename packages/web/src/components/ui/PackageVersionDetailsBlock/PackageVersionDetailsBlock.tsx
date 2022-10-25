@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './PackageVersion.module.scss';
+import styles from './PackageVersionDetailsBlock.module.scss';
 import clsx from 'clsx';
 import { Icon } from '../Icon/Icon';
 import { formatNumber, getReadableSizeString, plural } from 'utils/helpers';
@@ -16,7 +16,7 @@ type Props = {
   isVulnerable?: boolean;
 };
 
-const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulnerable }: Props) => {
+const PackageVersionDetailsBlock = ({ version, updateDate, uses, size, modulesCount, isVulnerable }: Props) => {
   return (
     <div className={clsx(styles.package)}>
       <div className={styles.packageTop}>
@@ -85,4 +85,4 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
   );
 };
 
-export default PackageVersion;
+export default PackageVersionDetailsBlock;

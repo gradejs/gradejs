@@ -12,7 +12,7 @@ import { Button } from 'components/ui';
 import Modal from '../../ui/Modal/Modal';
 import SidebarCategorySort from 'components/ui/SidebarCategory/SidebarCategorySort';
 import Footer from '../../ui/Footer/Footer';
-import PackageVersion from '../../ui/PackageVersion/PackageVersion';
+import PackageVersionDetailsBlock from '../../ui/PackageVersionDetailsBlock/PackageVersionDetailsBlock';
 import Skeleton from '../../ui/Skeleton/Skeleton';
 import { capitalizeWord, plural, repeat } from 'utils/helpers';
 import AvatarGroup from '../../ui/AvatarGroup/AvatarGroup';
@@ -352,7 +352,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                     ? repeat(5, <Skeleton width='100%' height={100} variant='rounded' />)
                     : (allVersionsVisible ? formattedVersions : formattedVersions.slice(0, 5)).map(
                         (version) => (
-                          <PackageVersion
+                          <PackageVersionDetailsBlock
                             key={version.version}
                             version={version.version}
                             updateDate={
