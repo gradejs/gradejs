@@ -21,7 +21,6 @@ import { IdentifiedPackage } from '../../../types';
 import { Link } from 'react-router-dom';
 import Button from '../Button/Button';
 import TreeMap from '../TreeMap/TreeMap';
-// import { usedOnSitesData } from 'mocks/SitesListMocks';
 
 type Props = {
   opened?: boolean;
