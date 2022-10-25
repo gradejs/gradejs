@@ -19,8 +19,11 @@ export enum Env {
   // AWS
   AwsRegion = 'AWS_REGION',
   AwsS3Bucket = 'AWS_S3_BUCKET',
+  S3AccessKey = 'AWS_S3_ACCESS_KEY',
+  S3SecretKey = 'AWS_S3_SECRET_KEY',
+  S3Endpoint = 'AWS_S3_ENDPOINT',
   SqsWorkerQueueUrl = 'SQS_WORKER_QUEUE_URL',
-  SqsLocalPort = 'SQS_LOCAL_PORT',
+  SqsEndpoint = 'SQS_ENDPOINT',
 
   // GitHub
   GitHubAccessToken = 'GITHUB_ACCESS_TOKEN',
@@ -65,7 +68,6 @@ export const getGradeJsApiKey = () => {
 
 export const getAwsRegion = () => getEnv(Env.AwsRegion);
 export const getAwsS3Bucket = () => getEnv(Env.AwsS3Bucket);
-export const getSqsLocalPort = () => Number(getEnv(Env.SqsLocalPort, '0'));
 
 export const getGitHubAccessToken = () => getEnv(Env.GitHubAccessToken);
 

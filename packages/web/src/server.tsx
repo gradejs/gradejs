@@ -5,15 +5,10 @@ import { Provider } from 'react-redux';
 import ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
 import { StaticRouter } from 'react-router-dom/server';
-import { S3Client, GetObjectCommand, NoSuchKey } from '@aws-sdk/client-s3';
+import { GetObjectCommand, NoSuchKey } from '@aws-sdk/client-s3';
 // TODO: fix import from different monorepo package
-import {
-  getPort,
-  getClientVars,
-  isStaging,
-  getAwsRegion,
-  getAwsS3Bucket,
-} from '../../shared/src/utils/env';
+import { getS3Client } from '../../shared/src/utils/aws';
+import { getPort, getClientVars, isStaging, getAwsS3Bucket } from '../../shared/src/utils/env';
 import { initRollbarLogger, logger } from '../../shared/src/utils/logger';
 import { AppStore, createApplicationStore } from './store';
 import { App } from './components/App';
@@ -48,7 +43,7 @@ app.get('/robots.txt', (_, res) =>
 
 async function pipeS3Object(objectKey: string, res: Response) {
   try {
-    const s3client = new S3Client({ region: getAwsRegion() });
+    const s3client = getS3Client();
     const s3command = new GetObjectCommand({
       Bucket: getAwsS3Bucket(),
       Key: objectKey,

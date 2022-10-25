@@ -1,7 +1,7 @@
 import { SitemapStream } from 'sitemap';
 import { createGzip } from 'zlib';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl } from '@gradejs-public/shared';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getAwsS3Bucket, getPublicRootUrl, getS3Client } from '@gradejs-public/shared';
 
 /**
  * Generates `sitemap.xml` and stores it on AWS S3
@@ -12,7 +12,7 @@ import { getAwsRegion, getAwsS3Bucket, getPublicRootUrl } from '@gradejs-public/
  */
 export async function updateSitemap(paths: string[]) {
   const sitemap = await generateSitemap(paths);
-  const s3client = new S3Client({ region: getAwsRegion() });
+  const s3client = getS3Client();
   const s3command = new PutObjectCommand({
     Body: sitemap,
     Bucket: getAwsS3Bucket(),

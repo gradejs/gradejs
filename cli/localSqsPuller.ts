@@ -13,11 +13,15 @@ import fetch from 'node-fetch';
  */
 
 // This hardcode should be in sync with values in local_start.sh
-const workerPort = 8084;
-const sqsPort = 29324;
+const workerRootUrl = process.env.WORKER_ROOT_URL ?? '';
+const sqsEndpoint = process.env.SQS_ENDPOINT ?? '';
 const sqsQueueUrl = '/test/frontend-queue';
 const timeout = 300; // sec, visibility timeout
 const pollInterval = 20; // sec
+
+if (!workerRootUrl || !sqsEndpoint) {
+  throw new Error('WORKER_ROOT_URL and SQS_ENDPOINT must be defined');
+}
 
 export async function startWorker(loop = true) {
   let currentTask: WorkerTaskWrapper | undefined;
@@ -37,7 +41,7 @@ export async function startWorker(loop = true) {
 
       if (currentTask) {
         const abortTimeoutId = setTimeout(() => abortTimeoutCallback(), timeout * 1000);
-        await fetch(`http://localhost:${workerPort}`, {
+        await fetch(workerRootUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -64,12 +68,7 @@ let sqsClient: SQSClient | undefined;
 function getSQSClient() {
   if (!sqsClient) {
     sqsClient = new SQSClient({
-      endpoint: {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: sqsPort,
-        path: '/',
-      },
+      endpoint: sqsEndpoint,
     });
   }
 
