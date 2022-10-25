@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './PackageVersion.module.scss';
 import clsx from 'clsx';
 import { Icon } from '../Icon/Icon';
-import { formatNumber, getReadableSizeString } from 'utils/helpers';
+import { formatNumber, getReadableSizeString, plural } from 'utils/helpers';
 
 // Note: Modules/entrypoints typings and related code have been removed
 // in https://github.com/gradejs/gradejs/pull/111/ - use as reference
@@ -41,7 +41,9 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
             {!!uses && (
               <>
                 <span className={styles.packageTitle}>{formatNumber(uses)}</span>
-                <span className={styles.packageSubtitle}>Sites used</span>
+                <span className={styles.packageSubtitle}>
+                  {plural(uses, 'Site used', 'Sites used', false)}
+                </span>
               </>
             )}
           </div>
@@ -56,9 +58,7 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
             {!!size && (
               <>
                 <span className={styles.packageTitle}>{getReadableSizeString(size)}</span>
-                <span className={styles.packageSubtitle}>
-                  <span className={styles.mobileHidden}>Total size</span>
-                </span>
+                <span className={styles.packageSubtitle}>Total size</span>
               </>
             )}
           </div>
@@ -73,7 +73,9 @@ const PackageVersion = ({ version, updateDate, uses, size, modulesCount, isVulne
             {!!modulesCount && (
               <>
                 <span className={styles.packageTitle}>{formatNumber(modulesCount)}</span>
-                <span className={styles.packageSubtitle}>Modules</span>
+                <span className={styles.packageSubtitle}>
+                  {plural(modulesCount, 'Module', 'Modules', false)}
+                </span>
               </>
             )}
           </div>
