@@ -16,7 +16,7 @@ export default function Hint({ text }: Props) {
   return (
     <>
       <span className={styles.tooltipTrigger} ref={setTriggerRef}>
-        <Icon kind='questionMark' width={6} height={11} stroke='white' color='white' />
+        <Icon kind='questionMark' width={5} height={9} stroke='white' color='white' />
       </span>
 
       {visible && (

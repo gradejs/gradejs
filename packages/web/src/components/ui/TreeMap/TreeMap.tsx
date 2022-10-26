@@ -132,9 +132,11 @@ function getLabelHTML(data: { name: string; value: number }) {
   const titleWithWordBreaks = data.name.replace(/\//g, `<wbr/>/`);
 
   return `
-    <div class=${styles.labelContainer}>
-      <div class=${styles.labelText}>${titleWithWordBreaks}</div>
-      <div class=${styles.labelSize}>${getReadableSizeString(data.value)}</div>
-    </div>
+    <body>
+      <div class=${styles.labelContainer}>
+        <div class=${styles.labelText}>${titleWithWordBreaks}</div>
+        <div class=${styles.labelSize}>${getReadableSizeString(data.value)}</div>
+      </div>
+    </body>
   `;
 }

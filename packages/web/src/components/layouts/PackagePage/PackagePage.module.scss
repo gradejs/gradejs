@@ -653,3 +653,11 @@ h1.packageName {
     background-color: #f4f4f4;
   }
 }
+
+.mostPopularVersions {
+  margin-bottom: 70px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 56px;
+  }
+}

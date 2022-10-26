@@ -2,6 +2,7 @@
 @import '~styles/responsive.scss';
 
 .sitesListWrapper {
+  margin-top: 16px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
 }

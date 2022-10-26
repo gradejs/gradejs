@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './BarChart.module.scss';
+import styles from './VersionPopularityChart.module.scss';
 import clsx from 'clsx';
 import { repeat } from 'utils/helpers';
 import Skeleton from '../Skeleton/Skeleton';
@@ -17,14 +17,14 @@ const PopularityVersionSkeleton = () => (
   <Skeleton width={64} className={styles.popularityVersionSkeleton} />
 );
 
-export default function BarChartSkeleton() {
+export default function VersionPopularityChartSkeleton() {
   return (
-    <div className={styles.popularity}>
+    <div className={styles.container}>
       {repeat(
         6,
-        <div className={styles.popularityItemWrapper}>
-          <div className={styles.popularityItem}>
-            <div className={clsx(styles.popularityFill, styles.popularityFillSkeleton)}>
+        <div className={styles.barWrapper}>
+          <div className={styles.barContainer}>
+            <div className={clsx(styles.bar, styles.barSkeleton)}>
               <PopularitySkeleton />
             </div>
           </div>

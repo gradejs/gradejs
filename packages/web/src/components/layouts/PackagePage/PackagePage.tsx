@@ -25,6 +25,8 @@ import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Link } from 'react-router-dom';
+import VersionPopularityChartSkeleton from 'components/ui/VersionPopularityChart/VersionPopularityChartSkeleton';
+import VersionPopularityChart from 'components/ui/VersionPopularityChart/VersionPopularityChart';
 
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -93,17 +95,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
         fixedAfter: v.packageVersionRange, // TODO: fair last version
       })),
     [vulnerabilities]
-  );
-
-  const formattedSitesUsage = useMemo(
-    () =>
-      (usage ?? []).map((item) => ({
-        id: item.hostname,
-        image: `/favicons/${item.hostname}`,
-        name: item.hostname,
-        packagesCount: item.hostnamePackagesCount,
-      })),
-    [usage]
   );
 
   const imageUriTransformer = (input: string) =>
@@ -276,13 +267,26 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 )}
               </section>
 
+              <section className={styles.mostPopularVersions}>
+                <h2>Most popular versions</h2>
+
+                {loading ? (
+                  <VersionPopularityChartSkeleton />
+                ) : (
+                  <VersionPopularityChart
+                    max={8}
+                    versionSpecificValues={versionSpecificValues ?? {}}
+                  />
+                )}
+              </section>
+
               <section>
                 <h2>Used on</h2>
 
                 {loading ? (
                   <SitesListSkeleton className={styles.usedOnList} />
                 ) : (
-                  <SitesList sites={formattedSitesUsage} className={styles.usedOnList} />
+                  <SitesList sites={usage ?? []} className={styles.usedOnList} />
                 )}
               </section>
 
@@ -602,7 +606,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                       {loading
                         ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
                         : deps.map((dependency) => (
-                            <Link to={'/package/' + dependency}>
+                            <Link to={`/package/${dependency}`}>
                               <Chip
                                 key={dependency}
                                 font='monospace'
