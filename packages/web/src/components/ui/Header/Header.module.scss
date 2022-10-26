@@ -29,7 +29,7 @@
 }
 
 .shadow {
-  box-shadow: inset 0px -1px 0px 0px rgba($gray-border, 0.5);
+  box-shadow: inset 0px -1px 0px 0px $gray-border;
 }
 
 .showSearch {
@@ -54,7 +54,7 @@
 
 .searchWrapper {
   flex-grow: 1;
-  padding: 0 40px;
+  padding: 0 44px;
 
   @include mobile-and-tablet {
     grid-column: 1 / -1;

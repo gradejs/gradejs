@@ -12,20 +12,22 @@
   position: relative;
   display: flex;
   align-items: center;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 17px;
+  line-height: 28px;
   font-family: $font-monospace;
   color: $red-accent;
-
-  @include xxl {
-    font-size: 18px;
-    line-height: 24px;
-  }
+  max-width: calc(100% - 100px);
 
   @include mobile-and-tablet {
     font-size: 14px;
-    line-height: 20px;
+    line-height: 22px;
   }
+}
+
+.vulnerablePackageName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .vulnerableIcon {

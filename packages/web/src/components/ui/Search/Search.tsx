@@ -19,8 +19,8 @@ const Search = ({ searchValue, placeholder, searchChangeHandler, clearInput }: P
       {searchValue.length === 0 && (
         <Icon
           kind='search'
-          width={24}
-          height={24}
+          width={16}
+          height={16}
           color='#8E8AA0'
           className={styles.lookingGlass}
         />

@@ -26,8 +26,8 @@
 }
 
 .content {
-  padding-top: 24px;
-  padding-bottom: 100px;
+  padding-top: 12px;
+  padding-bottom: 137px;
 
   @include mobile-and-tablet {
     padding-top: 20px;
@@ -39,19 +39,17 @@
   max-width: 884px;
   margin-left: auto;
   margin-right: auto;
-
-  @include mobile-and-tablet {
-    margin-bottom: 20px;
-  }
+  margin-bottom: 20px;
 }
 
 .subtitle {
-  max-width: 616px;
+  max-width: 656px;
   margin-left: auto;
   margin-right: auto;
   color: rgba($white, 0.5);
   margin-bottom: 48px;
-  font-size: 16px;
+  font-size: 17px;
+  line-height: 28px;
 
   @include mobile-and-tablet {
     margin-bottom: 32px;
@@ -60,7 +58,7 @@
 
 .search {
   position: relative;
-  max-width: 758px;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -68,22 +66,17 @@
 .input {
   display: block;
   width: 100%;
-  height: 85px;
-  padding-left: 44px;
-  padding-right: 124px;
-  font-size: 26px;
+  height: 84px;
+  padding-left: 36px;
+  padding-right: 100px;
+  font-size: 22px;
+  line-height: 30px;
   font-family: inherit;
   background: rgba($white, 0.16);
   border: none;
   outline: none;
-  // FIXME: not sure that non-empty input should have transparent text like placeholder
-  color: rgba($white, 0.5);
-  //color: $white;
+  color: $white;
   border-radius: 50px;
-
-  @include xxl {
-    height: 100px;
-  }
 
   @include mobile-and-tablet {
     height: 64px;
@@ -105,8 +98,8 @@
   z-index: 1;
   top: 8px;
   right: 8px;
-  width: 69px;
-  height: 69px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -115,11 +108,6 @@
   margin: 0;
   padding: 0;
   background-color: rgba($white, 0.1);
-
-  @include xxl {
-    width: 84px;
-    height: 84px;
-  }
 
   @include mobile-and-tablet {
     top: 4px;
@@ -131,13 +119,6 @@
 
 .submitIcon {
   margin-left: 4px;
-  width: 26px;
-  height: 26px;
-
-  @include xxl {
-    width: 32px;
-    height: 32px;
-  }
 
   @include mobile-and-tablet {
     width: 10px;
@@ -146,14 +127,10 @@
 }
 
 .suggestions {
-  margin-top: 28px;
+  margin-top: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  @include mobile-and-tablet {
-    margin-top: 24px;
-  }
 
   & > * {
     margin: 0 4px;

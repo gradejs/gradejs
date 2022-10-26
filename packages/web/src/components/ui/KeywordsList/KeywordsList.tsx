@@ -33,7 +33,6 @@ export default function KeywordsList({ keywordsList, selectedKeywords, selectHan
                 : [...selectedKeywords, keyword]
             )
           }
-          size='medium'
           font='monospace'
         >
           {keyword}

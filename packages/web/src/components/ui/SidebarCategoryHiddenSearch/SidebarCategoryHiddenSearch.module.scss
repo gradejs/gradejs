@@ -34,7 +34,7 @@
   font-weight: 500;
   color: $gray-text;
   padding-bottom: 6px;
-  border-bottom: 1px solid rgba($gray-border, 0.5);
+  border-bottom: 1px solid $gray-border;
 }
 
 .groupList {

@@ -606,15 +606,8 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                       {loading
                         ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
                         : deps.map((dependency) => (
-                            <Link to={`/package/${dependency}`}>
-                              <Chip
-                                key={dependency}
-                                font='monospace'
-                                size='medium'
-                                fontSize='small'
-                              >
-                                {dependency}
-                              </Chip>
+                            <Link key={dependency} to={`/package/${dependency}`}>
+                              <Chip font='monospace'>{dependency}</Chip>
                             </Link>
                           ))}
                     </ChipGroup>
