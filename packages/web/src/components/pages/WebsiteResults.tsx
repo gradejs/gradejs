@@ -17,6 +17,7 @@ import {
   setScanDisplayOptions,
 } from '../../store/slices/scanDisplayOptions';
 import { getFaviconUrlByHostname, plural } from '../../utils/helpers';
+import { useScanRequest } from '../../store/hooks/scan/useScanRequest';
 
 const accuracyMap: Record<string, string> = {
   // TODO: remove hardcode
@@ -54,9 +55,8 @@ export function WebsiteResultsPage() {
     selectors.searchableScanEntities(state, normalizedUrl)
   );
 
-  const { isProtected, isPending, isLoading, isFailed, isNotFound, isInvalid } = useAppSelector(
-    (state) => selectors.scanState(state, normalizedUrl)
-  );
+  const { isProtected, isPending, isLoading, isFailed, isNotFound, isInvalid, isRescanAvailable } =
+    useAppSelector((state) => selectors.scanState(state, normalizedUrl));
 
   const availableFilters: PackageFilters = useMemo(
     () => ({
@@ -143,6 +143,13 @@ export function WebsiteResultsPage() {
 
   const handleFilterReset = useCallback(() => handleFiltersChange(null), [handleFiltersChange]);
 
+  const requestScan = useScanRequest();
+  const requestRescan = useCallback(() => {
+    if (normalizedUrl) {
+      requestScan(normalizedUrl, true);
+    }
+  }, [requestScan, normalizedUrl]);
+
   if (isNotFound) {
     return (
       <ErrorLayout
@@ -220,7 +227,6 @@ export function WebsiteResultsPage() {
       </Helmet>
       <SearchResults
         isLoading={isLoading || isPending}
-        isPending={isPending || isPending}
         faviconUrl={faviconUrl}
         scanUrl={displayUrl ?? ''}
         packages={packagesFilteredAndSorted}
@@ -236,6 +242,7 @@ export function WebsiteResultsPage() {
         onFiltersChange={handleFiltersChange}
         onFiltersReset={handleFilterReset}
         onSortChange={handleSortChange}
+        onRescanRequested={isRescanAvailable ? requestRescan : undefined}
         webpackVersion={webpackVersion}
         accuracy={accuracy}
       />

@@ -78,6 +78,7 @@ export const selectors = {
     isInvalid:
       scanResult?.scan?.status === 'failed' ||
       scanResult?.scan?.scanResult?.identifiedPackages.length === 0,
+    isRescanAvailable: !!scanResult?.scan?.isRescanAvailable,
   })),
   scanOverview: createSelector(
     [makeSelectScanResultByUrl(), makeSelectScanPackagesByUrl()],

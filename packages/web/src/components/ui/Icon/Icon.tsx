@@ -35,6 +35,7 @@ import sortDesc from '../../../assets/icons/sprite/sort-desc.svg';
 import sort from '../../../assets/icons/sprite/sort.svg';
 import crossOpaque from '../../../assets/icons/sprite/cross-opaque.svg';
 import notFound from '../../../assets/icons/sprite/not-found.svg';
+import refresh from '../../../assets/icons/sprite/refresh.svg';
 
 const icons = {
   githubLogo,
@@ -73,6 +74,7 @@ const icons = {
   sortDesc,
   crossOpaque,
   notFound,
+  refresh,
 };
 
 export type IconProps = {

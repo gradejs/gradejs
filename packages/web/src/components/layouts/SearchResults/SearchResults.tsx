@@ -22,7 +22,6 @@ import { Button } from 'components/ui';
 
 type Props = {
   isLoading: boolean;
-  isPending: boolean;
   faviconUrl?: string;
   scanUrl: string;
   packages: IdentifiedPackage[];
@@ -37,10 +36,10 @@ type Props = {
   onFiltersChange: (newFilters: PackageFilters | null) => void;
   onFiltersReset: () => void;
   onSortChange: (newSorters: PackageSortType) => void;
+  onRescanRequested?: () => void;
   scanDate?: string;
   webpackVersion?: string;
   accuracy: string;
-  // siteFavicon: string;
 };
 
 export default function SearchResults({
@@ -62,6 +61,7 @@ export default function SearchResults({
   scanDate,
   webpackVersion,
   accuracy,
+  onRescanRequested,
 }: Props) {
   let webpackMeta;
 
@@ -139,6 +139,7 @@ export default function SearchResults({
                 name={scanUrl}
                 totalPackages={packagesStats.total}
                 lastScanDate={scanDate}
+                onRescanRequested={onRescanRequested}
               />
             )}
 

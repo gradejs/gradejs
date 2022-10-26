@@ -42,6 +42,10 @@ export async function findOrCreateWebPage(url: URL, em: EntityManager) {
   return webPageEntity;
 }
 
+export function isRescanAvailable(scan: WebPageScan) {
+  return Date.now() - scan.createdAt.getTime() > RESCAN_TIMEOUT_MS;
+}
+
 export async function getOrRequestWebPageScan(url: string, performScan = false) {
   const parsedUrl = new URL(url);
 
@@ -63,7 +67,7 @@ export async function getOrRequestWebPageScan(url: string, performScan = false) 
       return mostRecentScan;
     }
 
-    if (mostRecentScan && Date.now() - mostRecentScan.createdAt.getTime() < RESCAN_TIMEOUT_MS) {
+    if (mostRecentScan && !isRescanAvailable(mostRecentScan)) {
       return mostRecentScan;
     }
 

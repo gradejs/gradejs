@@ -62,6 +62,24 @@
   vertical-align: middle;
 }
 
-.searchedResourceSubtitle {
+.searchedResourceScanDate {
   color: $gray-text;
+}
+
+.searchedResourceRescanButton {
+  margin-left: 16px;
+  padding: 0;
+
+  cursor: pointer;
+
+  appearance: none;
+  border: none;
+  background: transparent;
+
+  color: $blue-accent;
+  font-weight: 500;
+}
+
+.searchedResourceRescanButtonIcon {
+  vertical-align: text-top;
 }

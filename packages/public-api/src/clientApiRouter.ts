@@ -2,7 +2,7 @@ import * as trpc from '@trpc/server';
 // See also: https://colinhacks.com/essays/painless-typesafety
 import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
 import { z, ZodError } from 'zod';
-import { getOrRequestWebPageScan } from './website/service';
+import { getOrRequestWebPageScan, isRescanAvailable } from './website/service';
 import { getAffectingVulnerabilities } from './vulnerabilities/vulnerabilities';
 import {
   logger,
@@ -44,6 +44,7 @@ type RequestWebPageScanResponse = {
   id: string;
   status: WebPageScan.Status;
   finishedAt?: string;
+  isRescanAvailable?: boolean;
   scanResult?: {
     identifiedModuleMap: Record<string, WebPageScan.IdentifiedModule>;
     identifiedPackages: ScanResultPackageWithMetadata[];
@@ -119,6 +120,7 @@ export const appRouter = trpc
         id: scan.id.toString(),
         status: scan.status,
         finishedAt: scan.finishedAt?.toString(),
+        isRescanAvailable: true,
         scanResult: undefined,
       };
 
@@ -137,6 +139,8 @@ export const appRouter = trpc
           identifiedBundler: scan.scanResult.identifiedBundler,
           vulnerabilities,
         };
+
+        scanResponse.isRescanAvailable = isRescanAvailable(scan);
       }
 
       return toSerializable(scanResponse);
