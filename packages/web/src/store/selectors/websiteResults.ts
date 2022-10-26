@@ -72,7 +72,7 @@ export const selectors = {
   scanState: createSelector([makeSelectScanResultByUrl()], (scanResult) => ({
     isLoading: scanResult?.isLoading ?? true,
     isFailed: !!scanResult?.error,
-    isNotFound: !(scanResult?.isLoading ?? true) && scanResult?.scan === null,
+    isNotFound: scanResult?.error?.code === 'NOT_FOUND',
     isPending: scanResult?.scan?.status === 'pending',
     isProtected: scanResult?.scan?.status === 'protected',
     isInvalid:

@@ -10,12 +10,7 @@ export const usePackageInfo = (packageName: string) => {
   const info = useAppSelector((state) => selectPackageInfo(state, packageName));
 
   useUniversalEffect(() => {
-    if (
-      info?.packageInfo !== null /* 404 */ &&
-      (!info?.packageInfo || info?.packageInfo?.name !== packageName) &&
-      !info?.isLoading &&
-      !info?.error
-    ) {
+    if (!info?.packageInfo && !info?.isLoading && !info?.error) {
       dispatch(requestPackageInfo({ packageName }));
     }
   }, [info, packageName]);
