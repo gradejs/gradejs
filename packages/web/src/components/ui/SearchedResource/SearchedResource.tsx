@@ -1,11 +1,13 @@
 import React from 'react';
 import styles from './SearchedResource.module.scss';
+import { Icon } from '../Icon/Icon';
 
 type Props = {
   image?: string;
   name: string;
   totalPackages: number;
   lastScanDate?: string;
+  onRescanRequested?: () => void;
 };
 
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
@@ -15,7 +17,13 @@ const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   minute: '2-digit',
 });
 
-export default function SearchedResource({ image, name, totalPackages, lastScanDate }: Props) {
+export default function SearchedResource({
+  image,
+  name,
+  totalPackages,
+  lastScanDate,
+  onRescanRequested,
+}: Props) {
   return (
     <div className={styles.searchedResource}>
       {image && (
@@ -29,8 +37,17 @@ export default function SearchedResource({ image, name, totalPackages, lastScanD
           {name} <span className={styles.searchedResourceHighlight}>{totalPackages} packages</span>
         </h3>
         {!!lastScanDate && (
-          <div className={styles.searchedResourceSubtitle}>
-            Last scanned on {dateTimeFormatter.format(new Date(lastScanDate)).replace(', ', ' at ')}
+          <div>
+            <span className={styles.searchedResourceScanDate}>
+              Last scanned on&nbsp;
+              {dateTimeFormatter.format(new Date(lastScanDate)).replace(', ', ' at ')}
+            </span>
+            {!!onRescanRequested && (
+              <button className={styles.searchedResourceRescanButton} onClick={onRescanRequested}>
+                <Icon kind='refresh' className={styles.searchedResourceRescanButtonIcon} />
+                &nbsp;Update
+              </button>
+            )}
           </div>
         )}
       </div>
