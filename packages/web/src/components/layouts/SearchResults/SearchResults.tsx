@@ -170,8 +170,8 @@ export default function SearchResults({
             <div className={styles.packages}>{repeat(5, <PackagePreviewSkeleton />)}</div>
           ) : packages.length > 0 ? (
             <div className={styles.packages}>
-              {packages.map((pkg, _index) => (
-                <PackagePreview key={pkg.name} pkg={pkg} opened={true /*index === 0*/} />
+              {packages.map((pkg, index) => (
+                <PackagePreview key={pkg.name} pkg={pkg} opened={index === 0} />
               ))}
             </div>
           ) : (

@@ -1,7 +1,7 @@
 @import '~styles/_vars.scss';
 @import '~styles/responsive.scss';
 
-.popularity {
+.container {
   margin-top: 16px;
   display: flex;
   overflow-x: auto;
@@ -18,10 +18,11 @@
   }
 }
 
-.popularityItemWrapper {
+.barWrapper {
   min-width: 100px;
   flex-shrink: 0;
   margin-right: 10px;
+  flex: 1;
 
   &:last-child {
     margin-right: 0;
@@ -32,8 +33,8 @@
   }
 }
 
-.popularityItem {
-  height: 282px;
+.barContainer {
+  height: 224px;
   background: $gray-surface;
   border-radius: 12px;
   display: flex;
@@ -41,7 +42,7 @@
   justify-content: flex-end;
 }
 
-.popularityFill {
+.bar {
   border-radius: 10px;
   background: $gray-border;
   display: flex;
@@ -51,9 +52,14 @@
   font-weight: 500;
   color: $gray-text;
   padding-bottom: 14px;
+
+  &.highlighted {
+    background: $blue-accent;
+    color: $white;
+  }
 }
 
-.popularityFillSkeleton {
+.barSkeleton {
   padding-bottom: 0;
   height: 100%;
 }
@@ -61,11 +67,6 @@
 .popularitySkeleton {
   padding-bottom: 0;
   transform: none;
-}
-
-.popularityFillAccent {
-  background: $blue-accent;
-  color: #ffffff;
 }
 
 .popularityVersion {

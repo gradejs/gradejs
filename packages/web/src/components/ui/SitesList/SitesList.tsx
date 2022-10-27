@@ -2,12 +2,11 @@ import React from 'react';
 import styles from './SitesList.module.scss';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import { getFaviconUrlByHostname } from 'utils/helpers';
 
 export type Site = {
-  id?: string;
-  image?: string;
-  name: string;
-  packagesCount?: number;
+  hostname?: string;
+  hostnamePackagesCount?: number;
 };
 
 type Props = {
@@ -15,16 +14,21 @@ type Props = {
   className?: string;
 };
 
-function Site({ image, name, packagesCount }: Site) {
+function Site({ hostname, hostnamePackagesCount }: Site) {
   return (
-    <Link to={'/scan/' + name}>
+    <Link to={`/scan/${hostname}`}>
       <div className={styles.site}>
         <div className={styles.imageWrapper}>
-          {image && <img src={image} className={styles.image} loading='lazy' alt='' />}
+          <img
+            src={getFaviconUrlByHostname(hostname)}
+            className={styles.image}
+            loading='lazy'
+            alt=''
+          />
         </div>
         <div className={styles.content}>
-          <div className={styles.title}>{name}</div>
-          <div className={styles.subtitle}>{packagesCount} packages</div>
+          <div className={styles.title}>{hostname}</div>
+          <div className={styles.subtitle}>{hostnamePackagesCount} packages</div>
         </div>
       </div>
     </Link>
@@ -36,7 +40,7 @@ export default function SitesList({ sites, className }: Props) {
     <div className={styles.sitesListWrapper}>
       <div className={clsx(styles.sitesList, className)}>
         {sites.map((site) => (
-          <Site key={site.id} {...site} />
+          <Site key={site.hostname} {...site} />
         ))}
       </div>
     </div>

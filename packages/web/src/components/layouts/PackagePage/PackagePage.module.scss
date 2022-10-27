@@ -317,16 +317,6 @@ h1.packageName {
   color: $red-accent;
 }
 
-.versions {
-  margin-top: 96px;
-  margin-bottom: 72px;
-
-  @include mobile-and-tablet {
-    margin-top: 64px;
-    margin-bottom: 56px;
-  }
-}
-
 .versionsTitle {
   margin-bottom: 0;
 }
@@ -445,10 +435,12 @@ h1.packageName {
   background: $gray-surface;
   border-radius: 24px;
   padding: 0 20px;
+  margin-bottom: 72px;
 
   @include mobile-and-tablet {
     margin-left: -20px;
     margin-right: -20px;
+    margin-bottom: 56px;
   }
 }
 
@@ -651,5 +643,14 @@ h1.packageName {
 
   tr:nth-child(2n) td {
     background-color: #f4f4f4;
+  }
+}
+
+.mostPopularVersions,
+.usedOn {
+  margin-bottom: 70px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 56px;
   }
 }
