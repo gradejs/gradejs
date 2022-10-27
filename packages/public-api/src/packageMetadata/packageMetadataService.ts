@@ -2,7 +2,7 @@ import { getDatabaseConnection, PackageMetadata } from '@gradejs-public/shared';
 
 type Metadata = Omit<Omit<PackageMetadata, 'fullDescription'>, 'versionSpecificValues'>;
 
-export async function getPackageMetadataByPackageNames(
+export async function getPackagePartialMetadataByPackageNames(
   packageNames: string[]
 ): Promise<Record<string, Metadata>> {
   if (!packageNames.length) {
@@ -15,7 +15,7 @@ export async function getPackageMetadataByPackageNames(
   const packageMetadataEntities = await packageMetadataRepo
     .createQueryBuilder('pm')
     .where('pm.name IN (:...packageNames)', { packageNames })
-    .getRawMany();
+    .getMany();
 
   return packageMetadataEntities.reduce((acc, val) => {
     acc[val.name] = val;
