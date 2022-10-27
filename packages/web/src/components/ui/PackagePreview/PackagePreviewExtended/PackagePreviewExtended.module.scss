@@ -42,10 +42,10 @@
 
 .statLink {
   display: block;
-  line-height: 20px;
   color: $blue-accent;
   font-weight: 500;
   transition: opacity $transition-duration $transition-timing-function;
+  word-break: break-word;
 
   &:hover {
     opacity: 0.6;
