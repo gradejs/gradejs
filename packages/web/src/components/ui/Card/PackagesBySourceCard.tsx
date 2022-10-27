@@ -3,7 +3,6 @@ import styles from './Card.module.scss';
 import Card from './Card';
 import Chip from '../Chip/Chip';
 import ChipGroup from '../ChipGroup/ChipGroup';
-import { Link } from 'react-router-dom';
 
 export type PackagesBySourceCardProps = {
   sourceTitle: string;
