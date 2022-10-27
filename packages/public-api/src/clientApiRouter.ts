@@ -101,7 +101,11 @@ export const appRouter = trpc
     }),
     async resolve({ input: { packageName } }) {
       const packageInfo = await getPackageSummaryByName(packageName);
-      return packageInfo ? toSerializable(packageInfo) : null;
+      if (!packageInfo) {
+        throw new trpc.TRPCError({ code: 'NOT_FOUND' });
+      }
+
+      return toSerializable(packageInfo);
     },
   })
   .mutation('getOrRequestWebPageScan', {
@@ -112,8 +116,7 @@ export const appRouter = trpc
     async resolve({ input: { url, rescan } }) {
       const scan = await getOrRequestWebPageScan(url, rescan);
       if (!scan) {
-        // TODO: proper 404
-        return null; // == 404
+        throw new trpc.TRPCError({ code: 'NOT_FOUND' });
       }
 
       const scanResponse: RequestWebPageScanResponse = {
