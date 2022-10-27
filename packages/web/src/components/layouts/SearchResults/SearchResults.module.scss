@@ -29,7 +29,7 @@
     grid-template-rows: none;
     grid-gap: 24px;
     padding-bottom: 64px;
-    margin-bottom: 56px;
+    margin-bottom: 0;
   }
 
   @include mobile {

@@ -21,22 +21,14 @@
 .statHeader {
   display: flex;
   align-items: center;
-  font-size: 14px;
-  line-height: 18px;
   color: $gray-text;
   font-weight: 500;
   margin-bottom: 8px;
-
-  @include mobile-and-tablet {
-    margin-bottom: 12px;
-  }
 }
 
 .statHeaderAdditional {
   flex-grow: 1;
   text-align: right;
-  font-size: 14px;
-  line-height: 18px;
   font-weight: 400;
 }
 
@@ -63,8 +55,8 @@
 .statTitle {
   display: flex;
   align-items: flex-end;
-  font-size: 26px;
-  line-height: 40px;
+  font-size: 22px;
+  line-height: 30px;
   font-weight: 500;
 }
 
@@ -72,8 +64,6 @@
   position: relative;
   align-items: flex-end;
   margin-left: 4px;
-  font-size: 16px;
-  line-height: 1.625;
 }
 
 .statRatingGreen {
@@ -117,6 +107,12 @@
       margin-bottom: 32px;
     }
   }
+
+  .statListItemLarge {
+    @include mobile-and-tablet {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .statListItemSmall {
@@ -157,11 +153,6 @@
   margin: 0 -24px;
   padding: 0 24px;
 
-  @include xxl {
-    margin: 0 -32px;
-    padding: 0 32px;
-  }
-
   @include mobile-and-tablet {
     margin: 0 -20px;
     padding: 0 20px;
@@ -193,6 +184,7 @@
   align-items: center;
 
   @include sm {
+    margin-top: 24px;
     justify-content: space-between;
     width: 100%;
   }
