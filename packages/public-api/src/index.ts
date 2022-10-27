@@ -19,8 +19,13 @@ checkRequiredEnvironmentVariables([
 const port = getPort(8080);
 initRollbarLogger();
 
-initDatabase({ runMigrations: true }).then(() => {
-  createApp().listen(port, () => {
-    logger.info(`gradejs api started, listening on port ${port}`);
+initDatabase({ runMigrations: true })
+  .then(() => {
+    createApp().listen(port, () => {
+      logger.info(`gradejs api started, listening on port ${port}`);
+    });
+  })
+  .catch((e) => {
+    logger.error(e);
+    process.exit(1);
   });
-});
