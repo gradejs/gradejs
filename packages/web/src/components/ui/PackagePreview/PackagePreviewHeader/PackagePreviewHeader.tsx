@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { Icon } from 'components/ui/Icon/Icon';
 import ProblemBadge from 'components/ui/ProblemBadge/ProblemBadge';
 import React from 'react';
@@ -7,9 +8,10 @@ import styles from './PackagePreviewHeader.module.scss';
 type Props = {
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   pkg: IdentifiedPackage;
+  opened?: boolean;
 };
 
-export function PackagePreviewHeader({ onClick, pkg }: Props) {
+export function PackagePreviewHeader({ onClick, opened, pkg }: Props) {
   return (
     <div className={styles.header} onClick={onClick}>
       <div className={styles.top}>
@@ -27,7 +29,13 @@ export function PackagePreviewHeader({ onClick, pkg }: Props) {
           )}
         </div>
         <button type='button' className={styles.arrowWrapper}>
-          <Icon kind='chevronDown' width={14} height={8} color='#8E8AA0' className={styles.arrow} />
+          <Icon
+            kind='chevronDown'
+            width={14}
+            height={8}
+            color='#8E8AA0'
+            className={clsx(styles.arrow, { [styles.arrowOpened]: opened })}
+          />
         </button>
       </div>
 

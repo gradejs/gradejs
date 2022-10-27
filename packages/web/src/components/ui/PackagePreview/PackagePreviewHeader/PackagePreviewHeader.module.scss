@@ -86,13 +86,11 @@
   }
 }
 
+.arrowOpened {
+  transform: rotate(180deg);
+}
+
 .arrow {
-  transition: transform 0.3s ease-out;
-
-  .open & {
-    transform: rotate(180deg);
-  }
-
   @include mobile-and-tablet {
     width: 10px;
     height: 7px;

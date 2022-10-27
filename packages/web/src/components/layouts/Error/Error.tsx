@@ -16,7 +16,7 @@ export type Props = {
 export default function Error({
   host,
   message = 'It looks like the entered website is not built with Webpack',
-  action = 'GradeJS will analyze production JavaScript files and match webpack bundled modules to 1,826 indexed NPM libraries over 54,735 releases',
+  action = 'GradeJS will analyze production JavaScript files and match webpack bundled modules to ~3,000 indexed NPM libraries over ~100,000 releases',
   actionTitle,
 }: Props) {
   return (

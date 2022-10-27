@@ -20,7 +20,7 @@ export default function PackagePreview({ opened, pkg }: Props) {
 
   return (
     <div className={clsx(styles.package, { [styles.open]: isOpened })}>
-      <PackagePreviewHeader onClick={toggleView} pkg={pkg} />
+      <PackagePreviewHeader onClick={toggleView} opened={isOpened} pkg={pkg} />
       {isOpened && <PackagePreviewExtended pkg={pkg} />}
       <PackagePreviewFooter metadata={pkg.registryMetadata} />
     </div>

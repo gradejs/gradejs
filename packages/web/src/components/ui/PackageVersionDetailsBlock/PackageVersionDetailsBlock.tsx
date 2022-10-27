@@ -16,7 +16,14 @@ type Props = {
   isVulnerable?: boolean;
 };
 
-const PackageVersionDetailsBlock = ({ version, updateDate, uses, size, modulesCount, isVulnerable }: Props) => {
+const PackageVersionDetailsBlock = ({
+  version,
+  updateDate,
+  uses,
+  size,
+  modulesCount,
+  isVulnerable,
+}: Props) => {
   return (
     <div className={clsx(styles.package)}>
       <div className={styles.packageTop}>
@@ -42,7 +49,7 @@ const PackageVersionDetailsBlock = ({ version, updateDate, uses, size, modulesCo
               <>
                 <span className={styles.packageTitle}>{formatNumber(uses)}</span>
                 <span className={styles.packageSubtitle}>
-                  {plural(uses, 'Site used', 'Sites used', false)}
+                  {plural(uses, 'Website', 'Websites', false)}
                 </span>
               </>
             )}
@@ -58,7 +65,7 @@ const PackageVersionDetailsBlock = ({ version, updateDate, uses, size, modulesCo
             {!!size && (
               <>
                 <span className={styles.packageTitle}>{getReadableSizeString(size)}</span>
-                <span className={styles.packageSubtitle}>Total size</span>
+                <span className={styles.packageSubtitle}>Unpacked size</span>
               </>
             )}
           </div>

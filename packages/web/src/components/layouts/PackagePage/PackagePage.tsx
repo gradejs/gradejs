@@ -51,7 +51,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [allVersionsVisible, setAllVersionsVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
 
-  const sorts = useMemo(() => ['weight', 'popularity', 'versions'], []);
+  const sorts = useMemo(() => ['size', 'usage', 'version'], []);
 
   const {
     name: packageName,
@@ -125,13 +125,13 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
         .sort((b, a) => {
           let sort: number;
           switch (sortField) {
-            case 'weight':
+            case 'size':
               sort = (b.size ?? 0) - (a.size ?? 0);
               break;
-            case 'popularity':
+            case 'usage':
               sort = (b.uses ?? 0) - (a.uses ?? 0);
               break;
-            case 'versions':
+            case 'version':
             default:
               sort = semver.compare(b.version, a.version);
           }
@@ -268,7 +268,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
               </section>
 
               <section className={styles.mostPopularVersions}>
-                <h2>Most popular versions</h2>
+                <h2>Top usage distribution</h2>
 
                 {loading ? (
                   <VersionPopularityChartSkeleton />
@@ -280,7 +280,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 )}
               </section>
 
-              <section>
+              <section className={styles.usedOn}>
                 <h2>Used on</h2>
 
                 {loading ? (
@@ -289,6 +289,46 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                   <SitesList sites={usage ?? []} className={styles.usedOnList} />
                 )}
               </section>
+
+              {/* TODO: there are no skeletons for vulnerabilities in design,
+                        not sure if intended or overlooked */}
+              {!loading && !!formattedVulnerabilities?.length && (
+                <section>
+                  <h2>Vulnerabilities</h2>
+
+                  <div className={styles.vulnerabilities}>
+                    {formattedVulnerabilities?.map(
+                      ({ id, severity, linkPath, linkText, title, fixedAfter }) => (
+                        <div key={id} className={styles.vulnerability}>
+                          <div className={styles.vulnerabilityTop}>
+                            <Chip
+                              variant='vulnerabilities'
+                              size='badge'
+                              fontWeight='semiBold'
+                              icon={
+                                <Icon kind='vulnerability' width={24} height={24} color='white' />
+                              }
+                            >
+                              {severity}
+                            </Chip>
+
+                            <a
+                              href={linkPath}
+                              target='_blank'
+                              rel='noreferrer'
+                              className={styles.vulnerabilityLink}
+                            >
+                              {linkText}
+                            </a>
+                          </div>
+                          <div className={styles.vulnerabilityTitle}>{title}</div>
+                          <div className={styles.vulnerabilityText}>{fixedAfter}</div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </section>
+              )}
 
               <section className={styles.versions}>
                 <div className={styles.versionsTop}>
@@ -378,50 +418,10 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                   </button>
                 )}
               </section>
-
-              {/* TODO: there are no skeletons for vulnerabilities in design,
-                        not sure if intended or overlooked */}
-              {!loading && !!formattedVulnerabilities?.length && (
-                <section>
-                  <h2>Vulnerabilities</h2>
-
-                  <div className={styles.vulnerabilities}>
-                    {formattedVulnerabilities?.map(
-                      ({ id, severity, linkPath, linkText, title, fixedAfter }) => (
-                        <div key={id} className={styles.vulnerability}>
-                          <div className={styles.vulnerabilityTop}>
-                            <Chip
-                              variant='vulnerabilities'
-                              size='badge'
-                              fontWeight='semiBold'
-                              icon={
-                                <Icon kind='vulnerability' width={24} height={24} color='white' />
-                              }
-                            >
-                              {severity}
-                            </Chip>
-
-                            <a
-                              href={linkPath}
-                              target='_blank'
-                              rel='noreferrer'
-                              className={styles.vulnerabilityLink}
-                            >
-                              {linkText}
-                            </a>
-                          </div>
-                          <div className={styles.vulnerabilityTitle}>{title}</div>
-                          <div className={styles.vulnerabilityText}>{fixedAfter}</div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </section>
-              )}
             </div>
 
             <aside className={styles.sidebar}>
-              <h4 className={styles.sidebarOptionalTitle}>Background information</h4>
+              <h4 className={styles.sidebarOptionalTitle}>Summary</h4>
 
               <div className={styles.sidebarInner}>
                 <div className={styles.sidebarItem}>
@@ -536,7 +536,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                             <div>
                               <div className={styles.sidebarItemSubtitle}>Collaborators</div>
                               <div className={styles.sidebarCollaboratorsGroup}>
-                                <AvatarGroup>
+                                <AvatarGroup max={8}>
                                   {maintainers?.map((author) => (
                                     <Avatar
                                       alt={author.name}
@@ -551,17 +551,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
 
                         <div className={styles.stat}>
                           <div className={styles.statImagePlaceholder}>
-                            <Icon kind='license' width={20} height={20} />
-                          </div>
-
-                          <div className={styles.statContent}>
-                            <span className={styles.statTitle}>License</span>
-                            <span className={styles.statValue}>{license}</span>
-                          </div>
-                        </div>
-
-                        <div className={styles.stat}>
-                          <div className={styles.statImagePlaceholder}>
                             <Icon kind='modules' width={20} height={20} />
                           </div>
 
@@ -570,6 +559,17 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                             <span className={styles.statValue}>
                               {plural(usageByHostnameCount ?? 0, 'website', 'websites')}
                             </span>
+                          </div>
+                        </div>
+
+                        <div className={styles.stat}>
+                          <div className={styles.statImagePlaceholder}>
+                            <Icon kind='license' width={20} height={20} />
+                          </div>
+
+                          <div className={styles.statContent}>
+                            <span className={styles.statTitle}>License</span>
+                            <span className={styles.statValue}>{license}</span>
                           </div>
                         </div>
 
