@@ -9,7 +9,7 @@
     "typecheck": "tsc --project tsconfig.build.json --noEmit",
     "test": "jest",
     "start": "node build/index.js",
-    "debug": "nodemon --inspect=9203 --watch src src/index.ts"
+    "debug": "nodemon --exec \"node --require ts-node/register --inspect=9203 src/index.ts\" --watch src"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.186.0",
