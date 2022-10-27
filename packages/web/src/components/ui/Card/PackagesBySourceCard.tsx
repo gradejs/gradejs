@@ -24,8 +24,8 @@ const PackagesBySourceCard = ({
     <div className={styles.tagsWrapper}>
       <ChipGroup>
         {packages.map((chip) => (
-          <Link to={'/package/' + chip}>
-            <Chip key={chip} title={chip} className={styles.chip} size='large' font='monospace'>
+          <Link key={chip} to={'/package/' + chip} className={styles.tagLink}>
+            <Chip title={chip} className={styles.chip} size='large' font='monospace'>
               {chip}
             </Chip>
           </Link>

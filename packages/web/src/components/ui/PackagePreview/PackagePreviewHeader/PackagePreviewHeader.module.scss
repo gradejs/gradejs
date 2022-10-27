@@ -14,11 +14,7 @@
 .title {
   padding-right: 24px;
   font-size: 22px;
-
-  @include xxl {
-    font-size: 26px;
-    line-height: 1.54;
-  }
+  line-height: 30px;
 
   @include mobile-and-tablet {
     display: flex;
@@ -40,11 +36,6 @@
   vertical-align: middle;
   display: inline-block;
   font-size: 14px;
-  padding-top: 2px;
-
-  @include xxl {
-    font-size: 16px;
-  }
 
   & > * {
     &:not(:last-child) {
@@ -71,8 +62,8 @@
   appearance: none;
   border: none;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: $gray-surface;
   display: flex;

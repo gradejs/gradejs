@@ -141,13 +141,7 @@ export function PackagePreviewExtended({
 
             <ChipGroup>
               {dependencies.map((dependency) => (
-                <Chip
-                  key={dependency}
-                  title={dependency}
-                  size='medium'
-                  fontSize='small'
-                  font='monospace'
-                >
+                <Chip key={dependency} title={dependency} size='medium' font='monospace'>
                   {dependency}
                 </Chip>
               ))}

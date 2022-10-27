@@ -8,10 +8,10 @@
 .search {
   display: block;
   width: 100%;
-  height: 48px;
+  height: 44px;
   border-radius: 33px;
   background-color: $gray-surface;
-  padding: 11px 48px 11px 20px;
+  padding: 11px 39px 11px 20px;
   border: none;
   appearance: none;
   outline: none;
@@ -23,7 +23,7 @@
 }
 
 .searchEmpty {
-  padding-left: 48px;
+  padding-left: 39px;
 }
 
 .lookingGlass,
@@ -32,7 +32,7 @@
 }
 
 .lookingGlass {
-  top: 12px;
+  top: 14px;
   left: 14px;
 }
 
