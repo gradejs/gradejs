@@ -18,7 +18,7 @@ const PopularPackageCard = ({
   hostsFaviconList,
   totalUsageCount,
 }: PopularPackageCardProps) => (
-  <Card title={packageName} description={packageDescription}>
+  <Card title={packageName} description={packageDescription} to={`/package/${packageName}`}>
     <div className={styles.avatarsWrapper}>
       <div className={styles.avatarSites}>
         <AvatarGroup>

@@ -1,6 +1,8 @@
 import { getRepository } from 'typeorm';
 import {
+  PackageMetadata,
   ScansWithVulnerabilitiesProjection,
+  ShowcasedPackage,
   ShowcasedWebPage,
   WebPageScan,
 } from '@gradejs-public/shared';
@@ -14,6 +16,10 @@ async function getLatestShowcasedScans(limit = 3) {
     .orderBy('showcasedWebPage.displayOrder', 'ASC')
     .limit(limit)
     .getMany();
+
+  if (!showcasedWebPages.length) {
+    return [];
+  }
 
   // While being a heavy query, this is alleviated by web_page_id, created_at index on scan table
   const showcasedScans = await webPageScanRepo
@@ -50,14 +56,36 @@ async function getShowcasedScansWithVulnerabilities(limit = 3) {
     .getMany();
 }
 
+async function getShowcasedPackages(limit = 6) {
+  const showcasedPackagesRepo = getRepository(ShowcasedPackage);
+
+  return showcasedPackagesRepo
+    .createQueryBuilder('showcasedPackage')
+    .leftJoinAndMapOne(
+      'showcasedPackage.packageMetadata',
+      PackageMetadata,
+      'packageMetadata',
+      'showcasedPackage.packageName = packageMetadata.name'
+    )
+    .leftJoin('showcasedPackage.packagePopularity', 'packagePopularity')
+    .select(['showcasedPackage.displayOrder', 'showcasedPackage.packageName'])
+    .addSelect(['packageMetadata.description'])
+    .addSelect(['packagePopularity.usageByHostnameCount'])
+    .orderBy('showcasedPackage.displayOrder', 'ASC')
+    .limit(limit)
+    .getMany();
+}
+
 export async function getShowcaseData() {
-  const [showcasedScans, scansWithVulnerabilities] = await Promise.all([
+  const [showcasedScans, scansWithVulnerabilities, showcasedPackages] = await Promise.all([
     getLatestShowcasedScans(),
     getShowcasedScansWithVulnerabilities(),
+    getShowcasedPackages(),
   ]);
 
   return {
     showcasedScans,
     scansWithVulnerabilities,
+    showcasedPackages,
   };
 }

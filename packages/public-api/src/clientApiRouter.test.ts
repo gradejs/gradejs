@@ -10,6 +10,7 @@ import {
   WebPageScan,
   PackageVulnerability,
   PackageUsageByHostnameProjection,
+  ShowcasedPackage,
 } from '@gradejs-public/shared';
 import {
   createSupertestApi,
@@ -19,6 +20,7 @@ import {
 import { getRepository } from 'typeorm';
 import { createApp } from './app';
 import { findOrCreateWebPage } from './website/service';
+import { refreshPackagePopularityView } from './projections/refreshPackagePopularityView';
 
 useDatabaseConnection();
 useTransactionalTesting();
@@ -300,7 +302,7 @@ describe('routes / website', () => {
     });
   });
 
-  it('should return correct showcase dataset', async () => {
+  it('should return correct scan-related showcase dataset', async () => {
     const db = await getDatabaseConnection();
     const em = db.createEntityManager();
 
@@ -437,6 +439,86 @@ describe('routes / website', () => {
                   severity: 'CRITICAL',
                 },
               ],
+            },
+          ],
+        },
+      },
+    });
+  });
+
+  it('should return correct package showcase dataset', async () => {
+    const db = await getDatabaseConnection();
+    const em = db.createEntityManager();
+
+    const mockHostname = 'test-mock.example.com';
+    const mockWebPagePath = '/testpage';
+    const mockPackageName = 'mock-showcased-package';
+
+    const packageMetadataRepo = em.getRepository(PackageMetadata);
+    const scanRepo = em.getRepository(WebPageScan);
+    const packageUsageRepo = em.getRepository(PackageUsageByHostnameProjection);
+    const showcasedPackageRepo = em.getRepository(ShowcasedPackage);
+
+    const mockPage = await findOrCreateWebPage(
+      new URL(`https://${mockHostname}${mockWebPagePath}`),
+      em
+    );
+
+    await packageMetadataRepo.save({
+      name: mockPackageName,
+      description: 'mock showcased package description',
+      latestVersion: '1.0.1',
+      monthlyDownloads: 123,
+      maintainers: [{ name: 'test', avatar: 'test.jpg', email: 'test@test.com' }],
+      keywords: ['#react', '#react2'],
+      updateSeq: 1,
+      updatedAt: new Date().toString(),
+    });
+
+    const mockScan = await scanRepo.save({
+      webPage: mockPage,
+      status: WebPageScan.Status.Processed,
+      createdAt: new Date(Date.now() - 100),
+      finishedAt: new Date(Date.now()),
+      scanResult: {
+        identifiedModuleMap: {},
+        identifiedPackages: [
+          {
+            name: mockPackageName,
+            versionSet: ['1.0.1'],
+            moduleIds: [],
+          },
+        ],
+      },
+    });
+
+    await packageUsageRepo.save({
+      hostname: mockPage.hostname,
+      hostnameId: mockPage.hostnameId,
+      sourceScan: mockScan,
+      sourceScanId: mockScan.id,
+      packageName: mockPackageName,
+      packageVersionSet: ['1.0.1'],
+    });
+
+    await refreshPackagePopularityView();
+
+    await showcasedPackageRepo.save({
+      packageName: mockPackageName,
+    });
+
+    const showcaseResponse = await api.get('/client/getShowcase').expect(200);
+
+    expect(showcaseResponse.body).toMatchObject({
+      result: {
+        data: {
+          showcasedScans: [],
+          scansWithVulnerabilities: [],
+          showcasedPackages: [
+            {
+              name: 'mock-showcased-package',
+              description: 'mock showcased package description',
+              usageByHostnameCount: '1',
             },
           ],
         },

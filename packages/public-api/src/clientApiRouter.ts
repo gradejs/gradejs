@@ -89,9 +89,16 @@ export const appRouter = trpc
         })
       );
 
+      const showcasedPackages = showcaseData.showcasedPackages.map((showcasedPackage) => ({
+        name: showcasedPackage.packageName,
+        description: showcasedPackage.packageMetadata.description,
+        usageByHostnameCount: showcasedPackage.packagePopularity?.usageByHostnameCount,
+      }));
+
       return toSerializable({
         showcasedScans,
         scansWithVulnerabilities,
+        showcasedPackages,
       });
     },
   })

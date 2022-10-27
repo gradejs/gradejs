@@ -10,6 +10,9 @@ import ScansWithVulnerabilitiesCardList, {
 } from '../ui/CardList/ScansWithVulnerabilitiesCardList';
 import { CardListSkeleton } from '../ui/CardList/CardListSkeleton';
 import { getFaviconUrlByHostname } from 'utils/helpers';
+import PopularPackageCardList, {
+  KeyedPopularPackageCardProps,
+} from '../ui/CardList/PopularPackageCardList';
 
 export default function ShowcaseContainer() {
   const showcase = useShowcaseData();
@@ -22,6 +25,10 @@ export default function ShowcaseContainer() {
         </CardGroup>
 
         <CardGroup title='Vulnerable websites'>
+          <CardListSkeleton />
+        </CardGroup>
+
+        <CardGroup title='Popular packages'>
           <CardListSkeleton />
         </CardGroup>
       </CardGroups>
@@ -49,6 +56,16 @@ export default function ShowcaseContainer() {
     additionalVulnerabilitiesCount: vulnerabilities.length - 1,
   }));
 
+  const popularPackages: KeyedPopularPackageCardProps[] = (
+    showcase.showcase?.showcasedPackages ?? []
+  ).map((pkg) => ({
+    id: pkg.name,
+    packageName: pkg.name,
+    hostsFaviconList: [], // TODO: Add favicons
+    packageDescription: pkg.description,
+    totalUsageCount: pkg.usageByHostnameCount ?? 0,
+  }));
+
   return (
     <CardGroups>
       {!!popularQueries.length && (
@@ -57,9 +74,9 @@ export default function ShowcaseContainer() {
         </CardGroup>
       )}
 
-      {/*<CardGroup title='Popular packages'>*/}
-      {/*  <PopularPackageCardList cards={popularPackageListData} />*/}
-      {/*</CardGroup>*/}
+      <CardGroup title='Popular packages'>
+        <PopularPackageCardList cards={popularPackages} />
+      </CardGroup>
 
       {!!scansWithVulnerabilities.length && (
         <CardGroup title='Vulnerable websites'>
