@@ -8,6 +8,8 @@ export class ShowcasedPackages1666848850142 implements MigrationInterface {
         "display_order" smallint not null default 0,
         "package_name" text not null references "package_metadata"("name")
       );
+      
+      create unique index "showcased_package_package_name" on "showcased_package" ("package_name");
     `);
   }
 
