@@ -19,7 +19,12 @@ export async function getPackageSummaryByName(packageName: string) {
     Promise<PackagePopularityView | undefined>,
     Promise<PackageVulnerability[]>
   ] = [
-    packageRepo.createQueryBuilder().where('name = :packageName', { packageName }).getOne(),
+    packageRepo
+      .createQueryBuilder('metadata')
+      .addSelect('metadata.full_description', 'metadata_full_description')
+      .addSelect('metadata.version_specific_values', 'metadata_version_specific_values')
+      .where('name = :packageName', { packageName })
+      .getOne(),
     createQueryBuilder()
       .select()
       .from('package_usage_by_hostname_projection', 'usage')
