@@ -51,8 +51,8 @@ export default function Hero({ suggestions, onSubmit = () => {}, loading = false
                   <Icon
                     kind='arrow'
                     className={styles.submitIcon}
-                    width={32}
-                    height={32}
+                    width={14}
+                    height={24}
                     color='#fff'
                   />
                 ) : (
@@ -66,7 +66,7 @@ export default function Hero({ suggestions, onSubmit = () => {}, loading = false
             <div className={styles.suggestions}>
               {suggestions.map((suggestion) => (
                 <Link key={suggestion} to={`/scan/${suggestion}`}>
-                  <Chip title={suggestion} variant='suggest' size='medium'>
+                  <Chip title={suggestion} size='medium' variant='suggest'>
                     {suggestion}
                   </Chip>
                 </Link>

@@ -30,7 +30,7 @@ export class PackageMetadata extends BaseEntity {
   @Column()
   description?: string;
 
-  @Column()
+  @Column({ select: false })
   fullDescription?: string;
 
   @Column({ type: 'jsonb' })
@@ -39,7 +39,7 @@ export class PackageMetadata extends BaseEntity {
   @Column({ type: 'jsonb' })
   keywords?: string[];
 
-  @Column({ type: 'jsonb' })
+  @Column({ type: 'jsonb', select: false })
   versionSpecificValues?: Record<string, VersionData>;
 
   @Column()

@@ -31,8 +31,8 @@ export function PackagePreviewHeader({ onClick, opened, pkg }: Props) {
         <button type='button' className={styles.arrowWrapper}>
           <Icon
             kind='chevronDown'
-            width={14}
-            height={8}
+            width={12}
+            height={7}
             color='#8E8AA0'
             className={clsx(styles.arrow, { [styles.arrowOpened]: opened })}
           />

@@ -26,8 +26,8 @@ const SearchDesktopSorters = ({ availableSorters, selectedSorters, onSortChange 
           {by === sorter && (
             <Icon
               kind='sort'
-              width={10}
-              height={9}
+              width={14}
+              height={10}
               className={clsx(styles.sortIcon, direction === 'DESC' && styles.sortIconRotated)}
             />
           )}

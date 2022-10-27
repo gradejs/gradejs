@@ -12,7 +12,7 @@
   padding-bottom: 16px;
 
   &:not(:last-child) {
-    border-bottom: 1px solid rgba($gray-border, 0.5);
+    border-bottom: 1px solid $gray-border;
   }
 }
 
@@ -24,8 +24,8 @@
 }
 
 .vulnerabilityTitle {
-  font-size: 19px;
-  line-height: 26px;
+  font-size: 17px;
+  line-height: 28px;
   font-weight: 500;
   margin-bottom: 2px;
 

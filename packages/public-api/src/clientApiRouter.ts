@@ -12,7 +12,7 @@ import {
   toSerializable,
   WebPageScan,
 } from '@gradejs-public/shared';
-import { getPackageMetadataByPackageNames } from './packageMetadata/packageMetadataService';
+import { getPackagePartialMetadataByPackageNames } from './packageMetadata/packageMetadataService';
 import { getShowcaseData } from './showcase/showcaseService';
 import { getPackageSummaryByName } from './packageInfo/packageSummaryService';
 
@@ -131,7 +131,7 @@ export const appRouter = trpc
         const packageNames = scan.scanResult.identifiedPackages.map((it) => it.name);
 
         const [metadata, vulnerabilities] = await Promise.all([
-          getPackageMetadataByPackageNames(packageNames),
+          getPackagePartialMetadataByPackageNames(packageNames),
           getAffectingVulnerabilities(scan.scanResult),
         ]);
 

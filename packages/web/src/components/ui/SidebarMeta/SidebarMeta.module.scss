@@ -2,28 +2,22 @@
 
 .meta {
   display: grid;
-  grid-gap: 20px;
-
-  // FIXME: not sure that mobile spacing should be higher than desktop one
-  @include mobile-and-tablet {
-    grid-gap: 24px;
-  }
+  grid-gap: 16px;
 }
 
 .metaItem {
   display: flex;
   align-items: center;
-  line-height: 24px;
 }
 
 .metaIcon {
+  width: 24px;
+  height: 24px;
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  margin-right: 20px;
-
-  @include mobile-and-tablet {
-    margin-right: 16px;
-  }
+  margin-right: 16px;
 }
 
 .metaText {

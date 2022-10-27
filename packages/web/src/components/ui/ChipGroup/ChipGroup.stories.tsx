@@ -24,7 +24,7 @@ export const Default: ComponentStory<typeof ChipGroup> = () => (
 export const Medium: ComponentStory<typeof ChipGroup> = () => (
   <ChipGroup>
     {['@reflectivechimp/gatsby-remark-normalize-paths', 'react', 'react-dom'].map((chip) => (
-      <Chip key={chip} title={chip} size='medium' font='monospace'>
+      <Chip key={chip} title={chip} font='monospace'>
         {chip}
       </Chip>
     ))}

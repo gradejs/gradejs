@@ -14,24 +14,19 @@
   display: flex;
   flex-shrink: 0;
   margin-right: 24px;
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
 
   border-radius: 50%;
   overflow: hidden;
 
   background: $gray-surface;
 
-  @include xxl {
-    width: 52px;
-    height: 52px;
-  }
-
   @include mobile-and-tablet {
     width: 44px;
     height: 44px;
     margin-right: 0;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 }
 
@@ -46,11 +41,8 @@
 }
 
 .searchedResourceTitle {
-  margin-bottom: 12px;
-
-  @include mobile-and-tablet {
-    margin-bottom: 8px;
-  }
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 .searchedResourceHighlight {
@@ -66,8 +58,15 @@
   color: $gray-text;
 }
 
+.searchedResourceSubtitle {
+  display: flex;
+  align-items: center;
+}
+
 .searchedResourceRescanButton {
-  margin-left: 16px;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 14px;
   padding: 0;
 
   cursor: pointer;
@@ -81,5 +80,5 @@
 }
 
 .searchedResourceRescanButtonIcon {
-  vertical-align: text-top;
+  margin-right: 4px;
 }

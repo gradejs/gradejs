@@ -17,7 +17,6 @@
 
   @include xxl {
     min-height: 248px;
-    padding: 24px;
   }
 
   @include mobile-and-tablet {
@@ -37,34 +36,31 @@
   flex-shrink: 0;
   margin-right: 16px;
   display: inline-flex;
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   overflow: hidden;
   background: #f7f7f9;
+
+  @include mobile-and-tablet {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 .icon {
   width: 100%;
-  max-width: 42px;
+  height: 100%;
   object-fit: cover;
-
-  @include xxl {
-    max-width: 52px;
-  }
 }
 
 .title {
-  font-size: 20px;
+  font-size: 22px;
+  line-height: 30px;
   font-weight: 500;
-  line-height: 1.54;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-
-  @include xxl {
-    font-size: 26px;
-  }
 
   @include mobile-and-tablet {
     font-size: 20px;
@@ -82,10 +78,6 @@
 
 .tagsWrapper {
   margin-top: 20px;
-
-  @include xxl {
-    margin-top: 28px;
-  }
 }
 
 .placeholder {
@@ -136,16 +128,16 @@
 
 .counter {
   white-space: nowrap;
-  font-size: 16px;
-  line-height: 30px;
+  font-size: 17px;
+  line-height: 28px;
   margin-left: 14px;
 
-  @include xxl {
-    font-size: 19px;
-  }
-
   @include mobile-and-tablet {
-    font-size: 16px;
-    line-height: 1.62;
+    font-size: 14px;
+    line-height: 22px;
   }
+}
+
+.tagLink {
+  max-width: 100%;
 }

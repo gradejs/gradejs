@@ -7,11 +7,7 @@
   justify-content: space-between;
   border-top: 1px solid rgba($gray-border, 0.5);
   margin-top: 24px;
-  padding-top: 24px;
-
-  @include mobile-and-tablet {
-    padding-top: 20px;
-  }
+  padding-top: 16px;
 }
 
 .tags {

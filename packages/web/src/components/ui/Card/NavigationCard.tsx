@@ -6,7 +6,7 @@ import { Icon } from '../Icon/Icon';
 const NavigationCard = ({ title, to }: CardCommonProps) => (
   <Card to={to} title={title} variant='placeholder'>
     <button className={styles.arrowBtn}>
-      <Icon kind='arrow' color='#212121' width={10} height={18} />
+      <Icon kind='arrow' color='#212121' width={9} height={18} />
     </button>
   </Card>
 );
