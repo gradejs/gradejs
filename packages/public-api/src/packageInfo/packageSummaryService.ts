@@ -27,6 +27,7 @@ export async function getPackageSummaryByName(packageName: string) {
       .getOne(),
     createQueryBuilder()
       .select()
+      .distinctOn(['usage.hostname_id'])
       .from('package_usage_by_hostname_projection', 'usage')
       .leftJoin('usage.hostname', 'hn')
       .addSelect('package_name', 'packageName')
@@ -37,7 +38,8 @@ export async function getPackageSummaryByName(packageName: string) {
         'hostnamePackagesCount'
       )
       .where('package_name = :packageName', { packageName })
-      .orderBy('hn.global_rank', 'ASC', 'NULLS LAST')
+      .orderBy('usage.hostname_id')
+      .addOrderBy('hn.global_rank', 'ASC', 'NULLS LAST')
       .limit(16) // TODO: remove hardcode
       .getRawMany(),
     packagePopularityRepo
