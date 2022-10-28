@@ -10,6 +10,9 @@ export class Hostname extends BaseEntity {
   @Column()
   hostname!: string;
 
+  @Column()
+  globalRank?: number;
+
   @OneToMany(() => WebPage, (webPage) => webPage.hostname)
   webPages?: WebPage[];
 }

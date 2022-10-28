@@ -37,6 +37,7 @@ export async function getPackageSummaryByName(packageName: string) {
         'hostnamePackagesCount'
       )
       .where('package_name = :packageName', { packageName })
+      .orderBy('hn.global_rank', 'ASC', 'NULLS LAST')
       .limit(16) // TODO: remove hardcode
       .getRawMany(),
     packagePopularityRepo
