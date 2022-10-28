@@ -10,6 +10,7 @@ export type WorkerTask = {
 export type WorkerTaskType = keyof WorkerTaskPayloadMap;
 
 export type WorkerTaskPayloadMap = {
+  syncHostnameRanking: undefined;
   syncPackageIndex: undefined;
   syncPackageIndexBatch: PackageRequest[];
   syncPackageVulnerabilities: undefined;

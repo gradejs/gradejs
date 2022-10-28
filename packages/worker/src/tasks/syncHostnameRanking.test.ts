@@ -5,6 +5,8 @@ import { syncHostnameRanking } from './syncHostnameRanking';
 useDatabaseConnection();
 useTransactionalTesting();
 
+jest.setTimeout(50000);
+
 describe('task / syncHostnamePopularity', () => {
   it('should update rankings', async () => {
     const connection = await getDatabaseConnection();
