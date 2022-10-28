@@ -3,7 +3,9 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getAwsS3Bucket, getS3Client, systemApi } from '@gradejs-public/shared';
 
 const S3_FAVICON_FOLDER_PREFIX = 'favicons';
+const FAVICON_TIMEOUT = 20000;
 const VALID_MIME_TYPES = ['image/png', 'image/jpeg', 'image/vnd.microsoft.icon', 'image/svg+xml'];
+let abortController: AbortController;
 
 export async function saveScanWebPageFavicon(
   scanUrl: URL,
@@ -13,9 +15,27 @@ export async function saveScanWebPageFavicon(
     return;
   }
 
-  const faviconRequest = await fetch(pageMetadata.favicon, {
-    headers: { Accept: VALID_MIME_TYPES.join(', ') },
-  });
+  abortController = new AbortController();
+
+  const faviconRequest = await Promise.race([
+    fetch(pageMetadata.favicon, {
+      headers: { Accept: VALID_MIME_TYPES.join(', ') },
+      // TODO: remove ignores when typescript versions are synced
+      /* eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error */
+      // @ts-ignore note: node-fetch typings are incompatible
+      signal: abortController.signal,
+    }),
+    new Promise<null>((resolve) => {
+      setTimeout(() => {
+        abortController.abort();
+        resolve(null);
+      }, FAVICON_TIMEOUT);
+    }),
+  ]);
+
+  if (!faviconRequest) {
+    return;
+  }
 
   const faviconContentType = faviconRequest.headers.get('content-type') ?? undefined;
   if (faviconContentType && !VALID_MIME_TYPES.includes(faviconContentType)) {
