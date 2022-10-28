@@ -3,6 +3,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getAwsS3Bucket, getS3Client, systemApi } from '@gradejs-public/shared';
 
 const S3_FAVICON_FOLDER_PREFIX = 'favicons';
+const VALID_MIME_TYPES = ['image/png', 'image/jpeg', 'image/vnd.microsoft.icon', 'image/svg+xml'];
 
 export async function saveScanWebPageFavicon(
   scanUrl: URL,
@@ -12,9 +13,15 @@ export async function saveScanWebPageFavicon(
     return;
   }
 
-  const faviconRequest = await fetch(pageMetadata.favicon);
+  const faviconRequest = await fetch(pageMetadata.favicon, {
+    headers: { Accept: VALID_MIME_TYPES.join(', ') },
+  });
 
   const faviconContentType = faviconRequest.headers.get('content-type') ?? undefined;
+  if (faviconContentType && !VALID_MIME_TYPES.includes(faviconContentType)) {
+    return;
+  }
+
   // TODO: Upload as stream. node-fetch stream interface conflicts with S3 one
   const faviconBody = await faviconRequest.buffer();
 

@@ -42,4 +42,26 @@ describe('website / metadata / favicon', () => {
       Key: 'favicons/test.gradejs.com',
     });
   });
+
+  it('should not save favicon with improper type', async () => {
+    process.env.PUBLIC_ROOT_URL = 'https://gradejs.com';
+    process.env.AWS_S3_BUCKET = 'fpjs-dev-gradejs';
+
+    fetchMock.mockImplementation(
+      async () =>
+        new Response('test-data', {
+          status: 200,
+          headers: new Map([['content-type', 'text/html']]),
+        })
+    );
+
+    await saveScanWebPageFavicon(new URL('https://test.gradejs.com'), {
+      favicon: 'https://test.gradejs.com/favicon.svg',
+    });
+
+    const putObjectCalls = (PutObjectCommand as jest.Mock).mock.calls;
+
+    expect(S3Client.prototype.send).toHaveBeenCalledTimes(0);
+    expect(putObjectCalls).toHaveLength(0);
+  });
 });
