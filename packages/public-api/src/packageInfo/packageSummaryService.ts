@@ -1,9 +1,12 @@
 import { getRepository, createQueryBuilder } from 'typeorm';
 import {
+  Hostname,
   PackageMetadata,
   PackagePopularityView,
+  PackageUsageByHostnameProjection,
   PackageVulnerability,
   toSerializable,
+  WebPageScan,
 } from '@gradejs-public/shared';
 
 const simpleVersionRegex = /^\d+\.\d+\.\d+$/;
@@ -26,20 +29,25 @@ export async function getPackageSummaryByName(packageName: string) {
       .where('name = :packageName', { packageName })
       .getOne(),
     createQueryBuilder()
-      .select()
-      .distinctOn(['usage.hostname_id'])
-      .from('package_usage_by_hostname_projection', 'usage')
-      .leftJoin('usage.hostname', 'hn')
+      .select('hostname.hostname', 'hostname')
       .addSelect('package_name', 'packageName')
-      .addSelect('hn.hostname', 'hostname')
-      .leftJoin('usage.sourceScan', 'sourceScan')
       .addSelect(
         'jsonb_array_length(("sourceScan"."scan_result"->>\'identifiedPackages\')::jsonb)',
         'hostnamePackagesCount'
       )
+      .from(
+        (subQuery) =>
+          subQuery
+            .select()
+            .distinctOn(['hostname_id'])
+            .from(PackageUsageByHostnameProjection, 'usage')
+            .where('package_name = :packageName', { packageName }),
+        'distinct_usage'
+      )
+      .leftJoin(Hostname, 'hostname', 'hostname.id = distinct_usage.hostname_id')
+      .leftJoin(WebPageScan, 'sourceScan', 'sourceScan.id = distinct_usage.source_scan_id')
       .where('package_name = :packageName', { packageName })
-      .orderBy('usage.hostname_id')
-      .addOrderBy('hn.global_rank', 'ASC', 'NULLS LAST')
+      .orderBy('hostname.global_rank', 'ASC', 'NULLS LAST')
       .limit(16) // TODO: remove hardcode
       .getRawMany(),
     packagePopularityRepo
