@@ -38,7 +38,7 @@ export async function saveScanWebPageFavicon(
   }
 
   const faviconContentType = faviconRequest.headers.get('content-type') ?? undefined;
-  if (faviconContentType && !VALID_MIME_TYPES.includes(faviconContentType)) {
+  if (!faviconContentType || !VALID_MIME_TYPES.includes(faviconContentType)) {
     return;
   }
 
