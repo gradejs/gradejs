@@ -27,6 +27,7 @@ import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Link } from 'react-router-dom';
 import VersionPopularityChartSkeleton from 'components/ui/VersionPopularityChart/VersionPopularityChartSkeleton';
 import VersionPopularityChart from 'components/ui/VersionPopularityChart/VersionPopularityChart';
+import ShowcaseContainer from 'components/containers/ShowcaseContainer';
 
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -651,23 +652,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
             </aside>
           </div>
 
-          {/*<CardGroups>*/}
-          {/*  <CardGroup title='Popular search queries'>*/}
-          {/*    {loading ? (*/}
-          {/*      <CardListSkeleton />*/}
-          {/*    ) : (*/}
-          {/*      <PackagesBySourceCardList cards={packagesBySourceListData} />*/}
-          {/*    )}*/}
-          {/*  </CardGroup>*/}
-
-          {/*  <CardGroup title='Popular packages'>*/}
-          {/*    {loading ? (*/}
-          {/*      <CardListSkeleton numberOfElements={6} />*/}
-          {/*    ) : (*/}
-          {/*      <PopularPackageCardList cards={popularPackageListData} />*/}
-          {/*    )}*/}
-          {/*  </CardGroup>*/}
-          {/*</CardGroups>*/}
+          <ShowcaseContainer showVulnerableWebsites={false} />
         </Container>
       </div>
 
