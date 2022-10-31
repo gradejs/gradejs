@@ -19,6 +19,7 @@ import {
 } from '../../../store/slices/scanDisplayOptions';
 import { getReadableSizeString, plural, repeat } from '../../../utils/helpers';
 import { Button } from 'components/ui';
+import ShowcaseContainer from 'components/containers/ShowcaseContainer';
 
 type Props = {
   isLoading: boolean;
@@ -191,17 +192,8 @@ export default function SearchResults({
             </div>
           )}
         </div>
-        {/*
-        <CardGroups>
-          <CardGroup title='Similar sites'>
-            {isLoading ? <CardListSkeleton /> : <PackagesBySourceCardList cards={similarCards} />}
-          </CardGroup>
 
-          <CardGroup title='Popular packages'>
-            {isLoading ? <CardListSkeleton /> : <PopularPackageCardList cards={popularPackages} />}
-          </CardGroup>
-        </CardGroups>
-        */}
+        <ShowcaseContainer showVulnerableWebsites={false} />
       </Container>
 
       <Footer />

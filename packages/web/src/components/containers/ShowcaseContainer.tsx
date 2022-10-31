@@ -14,7 +14,11 @@ import PopularPackageCardList, {
   KeyedPopularPackageCardProps,
 } from '../ui/CardList/PopularPackageCardList';
 
-export default function ShowcaseContainer() {
+type Props = {
+  showVulnerableWebsites?: boolean;
+};
+
+export default function ShowcaseContainer({ showVulnerableWebsites = true }: Props) {
   const showcase = useShowcaseData();
 
   if (showcase.isLoading) {
@@ -24,13 +28,15 @@ export default function ShowcaseContainer() {
           <CardListSkeleton />
         </CardGroup>
 
-        <CardGroup title='Vulnerable websites'>
-          <CardListSkeleton />
-        </CardGroup>
-
         <CardGroup title='Popular packages'>
           <CardListSkeleton />
         </CardGroup>
+
+        {showVulnerableWebsites && (
+          <CardGroup title='Vulnerable websites'>
+            <CardListSkeleton />
+          </CardGroup>
+        )}
       </CardGroups>
     );
   }
@@ -78,7 +84,7 @@ export default function ShowcaseContainer() {
         <PopularPackageCardList cards={popularPackages} />
       </CardGroup>
 
-      {!!scansWithVulnerabilities.length && (
+      {!!scansWithVulnerabilities.length && showVulnerableWebsites && (
         <CardGroup title='Vulnerable websites'>
           <ScansWithVulnerabilitiesCardList cards={scansWithVulnerabilities} />
         </CardGroup>
