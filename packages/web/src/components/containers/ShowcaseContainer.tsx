@@ -61,7 +61,7 @@ export default function ShowcaseContainer() {
   ).map((pkg) => ({
     id: pkg.name,
     packageName: pkg.name,
-    hostsFaviconList: pkg.usage.map((it) => getFaviconUrlByHostname(it.hostname)), // TODO: Add favicons
+    hostsFaviconList: pkg.usage.map((it) => getFaviconUrlByHostname(it.hostname)),
     packageDescription: pkg.description,
     totalUsageCount: pkg.usageByHostnameCount ?? 0,
   }));

@@ -516,7 +516,8 @@ describe('routes / website', () => {
             {
               name: 'mock-showcased-package',
               description: 'mock showcased package description',
-              usageByHostnameCount: '1',
+              usageByHostnameCount: 1,
+              usage: [{ hostname: mockHostname, packageName: 'mock-showcased-package' }],
             },
           ],
         },
