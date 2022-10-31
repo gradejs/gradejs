@@ -27,7 +27,7 @@ describe('task / syncHostnamePopularity', () => {
     });
 
     expect(updatedEntries.find((it) => it.hostname === 'google.com')).toMatchObject({
-      globalRank: 1,
+      globalRank: expect.any(Number),
     });
 
     expect(updatedEntries.find((it) => it.hostname === 'ebay.com')).toMatchObject({
