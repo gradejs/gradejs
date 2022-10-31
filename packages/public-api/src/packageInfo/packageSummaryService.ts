@@ -1,13 +1,11 @@
-import { getRepository, createQueryBuilder } from 'typeorm';
+import { getRepository } from 'typeorm';
 import {
-  Hostname,
   PackageMetadata,
   PackagePopularityView,
-  PackageUsageByHostnameProjection,
   PackageVulnerability,
   toSerializable,
-  WebPageScan,
 } from '@gradejs-public/shared';
+import { getPackageUsage } from './packageUsage';
 
 const simpleVersionRegex = /^\d+\.\d+\.\d+$/;
 
@@ -28,28 +26,7 @@ export async function getPackageSummaryByName(packageName: string) {
       .addSelect('metadata.version_specific_values', 'metadata_version_specific_values')
       .where('name = :packageName', { packageName })
       .getOne(),
-    createQueryBuilder()
-      .select('hostname.hostname', 'hostname')
-      .addSelect('package_name', 'packageName')
-      .addSelect(
-        'jsonb_array_length(("sourceScan"."scan_result"->>\'identifiedPackages\')::jsonb)',
-        'hostnamePackagesCount'
-      )
-      .from(
-        (subQuery) =>
-          subQuery
-            .select()
-            .distinctOn(['hostname_id'])
-            .from(PackageUsageByHostnameProjection, 'usage')
-            .where('package_name = :packageName', { packageName }),
-        'distinct_usage'
-      )
-      .leftJoin(Hostname, 'hostname', 'hostname.id = distinct_usage.hostname_id')
-      .leftJoin(WebPageScan, 'sourceScan', 'sourceScan.id = distinct_usage.source_scan_id')
-      .where('package_name = :packageName', { packageName })
-      .orderBy('hostname.global_rank', 'ASC', 'NULLS LAST')
-      .limit(16) // TODO: remove hardcode
-      .getRawMany(),
+    getPackageUsage(packageName, { limit: 16, countPackages: true }), // TODO: remove hardcode
     packagePopularityRepo
       .createQueryBuilder()
       .where('package_name = :packageName', { packageName })

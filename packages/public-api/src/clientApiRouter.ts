@@ -92,6 +92,7 @@ export const appRouter = trpc
       return toSerializable({
         showcasedScans,
         scansWithVulnerabilities,
+        showcasedPackages: showcaseData.showcasedPackages,
       });
     },
   })
