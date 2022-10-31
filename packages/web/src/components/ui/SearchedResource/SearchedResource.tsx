@@ -37,15 +37,15 @@ export default function SearchedResource({
           {name} <span className={styles.searchedResourceHighlight}>{totalPackages} packages</span>
         </h3>
         {!!lastScanDate && (
-          <div>
-            <span className={styles.searchedResourceScanDate}>
+          <div className={styles.searchedResourceSubtitle}>
+            <div className={styles.searchedResourceScanDate}>
               Last scanned on&nbsp;
               {dateTimeFormatter.format(new Date(lastScanDate)).replace(', ', ' at ')}
-            </span>
+            </div>
             {!!onRescanRequested && (
               <button className={styles.searchedResourceRescanButton} onClick={onRescanRequested}>
                 <Icon kind='refresh' className={styles.searchedResourceRescanButtonIcon} />
-                &nbsp;Update
+                Update
               </button>
             )}
           </div>

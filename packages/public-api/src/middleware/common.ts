@@ -11,7 +11,7 @@ export const cors = createCorsMiddleware({
     if (originAllowList.length === 0 || (origin && originAllowList.includes(origin))) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, false);
     }
   },
 });

@@ -1,0 +1,73 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba($gray-border, 0.5);
+  margin-top: 24px;
+  padding-top: 16px;
+}
+
+.tags {
+  display: grid;
+  grid-template-columns: repeat(5, auto) 53px;
+  grid-gap: 18px;
+  justify-content: start;
+  align-items: center;
+  padding-right: 24px;
+
+  @include lg {
+    grid-template-columns: repeat(4, auto) 53px;
+  }
+
+  @include sm {
+    grid-template-columns: repeat(3, auto) 50px;
+    padding-right: 18px;
+  }
+
+  @include mobile {
+    grid-template-columns: repeat(2, auto) 50px;
+  }
+}
+
+.tag {
+  font-weight: 500;
+  transition: opacity $transition-duration $transition-timing-function;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.6;
+  }
+
+  @include lg {
+    &:nth-child(n + 5) {
+      display: none;
+    }
+  }
+
+  @include sm {
+    &:nth-child(n + 4) {
+      display: none;
+    }
+  }
+
+  @include mobile {
+    &:nth-child(n + 3) {
+      display: none;
+    }
+  }
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  color: $gray-text;
+}
+
+.authorImage {
+  margin-left: 16px;
+}

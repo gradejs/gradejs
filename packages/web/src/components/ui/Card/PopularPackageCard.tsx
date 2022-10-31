@@ -21,13 +21,15 @@ const PopularPackageCard = ({
   <Card title={packageName} description={packageDescription} to={`/package/${packageName}`}>
     <div className={styles.avatarsWrapper}>
       <div className={styles.avatarSites}>
-        <AvatarGroup>
+        <AvatarGroup max={5}>
           {hostsFaviconList.map((icon) => (
             <Avatar key={icon} src={icon} />
           ))}
         </AvatarGroup>
 
-        <div className={styles.counter}>+ {formatNumber(totalUsageCount)} sites use</div>
+        <div className={styles.counter}>
+          +{formatNumber(totalUsageCount - hostsFaviconList.length)} websites
+        </div>
       </div>
     </div>
   </Card>

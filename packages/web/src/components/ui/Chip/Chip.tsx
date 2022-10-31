@@ -19,7 +19,6 @@ export type ChipProps = {
   size?: 'badge' | 'default' | 'medium' | 'large';
   font?: 'sans-serif' | 'monospace';
   fontWeight?: 'normal' | 'semiBold';
-  fontSize?: 'small' | 'regular';
   icon?: React.ReactElement<IconProps>;
   title?: string;
   onClick?: React.MouseEventHandler<HTMLSpanElement>;
@@ -32,7 +31,6 @@ export default function Chip({
   size = 'default',
   font = 'sans-serif',
   fontWeight = 'normal',
-  fontSize = 'regular',
   icon,
   title,
   onClick,
@@ -45,7 +43,6 @@ export default function Chip({
         styles[size],
         styles[font],
         styles[fontWeight],
-        fontSize === 'small' && styles.smallFont,
         className
       )}
       title={title}

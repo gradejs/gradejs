@@ -80,19 +80,19 @@ export default function SearchResults({
   const metaItems = [
     webpackMeta,
     {
-      icon: <Icon kind='weight' width={24} height={24} color='#212121' />,
+      icon: <Icon kind='weight' width={18} height={18} color='#212121' />,
       text: `${getReadableSizeString(bundleSize)} webpack bundle size`,
     },
     {
-      icon: <Icon kind='search' width={24} height={24} color='#212121' />,
+      icon: <Icon kind='search' width={16} height={16} color='#212121' />,
       text: plural(scriptsCount, 'script processed', 'scripts processed'),
     },
     {
       icon: (
         <Icon
           kind='vulnerability'
-          width={24}
-          height={24}
+          width={18}
+          height={17}
           color={packagesStats.vulnerable === 0 ? '#49D581' : '#F3512E'}
         />
       ),
@@ -110,11 +110,11 @@ export default function SearchResults({
       text: packagesStats.duplicate + ' duplicate packages',
     },*/
     {
-      icon: <Icon kind='outdated' color='#F1CE61' stroke='white' width={24} height={24} />,
+      icon: <Icon kind='outdated' color='#F1CE61' stroke='white' width={18} height={18} />,
       text: plural(packagesStats.outdated, 'outdated package', 'outdated packages'),
     },
     {
-      icon: <Icon kind={'check'} width={24} height={24} />,
+      icon: <Icon kind='check' width={18} height={18} color='#212121' />,
       text: `~${accuracy}% estimated accuracy`,
     },
   ];
@@ -143,13 +143,15 @@ export default function SearchResults({
               />
             )}
 
-            <div className={styles.searchResultsSorters}>
-              <SearchDesktopSorters
-                availableSorters={availableSorters}
-                selectedSorters={selectedSorters}
-                onSortChange={onSortChange}
-              />
-            </div>
+            {!isLoading && (
+              <div className={styles.searchResultsSorters}>
+                <SearchDesktopSorters
+                  availableSorters={availableSorters}
+                  selectedSorters={selectedSorters}
+                  onSortChange={onSortChange}
+                />
+              </div>
+            )}
           </div>
 
           <div className={styles.searchResultsSidebar}>
@@ -170,8 +172,8 @@ export default function SearchResults({
             <div className={styles.packages}>{repeat(5, <PackagePreviewSkeleton />)}</div>
           ) : packages.length > 0 ? (
             <div className={styles.packages}>
-              {packages.map((pkg, _index) => (
-                <PackagePreview key={pkg.name} pkg={pkg} opened={true /*index === 0*/} />
+              {packages.map((pkg, index) => (
+                <PackagePreview key={pkg.name} pkg={pkg} opened={index === 0} />
               ))}
             </div>
           ) : (

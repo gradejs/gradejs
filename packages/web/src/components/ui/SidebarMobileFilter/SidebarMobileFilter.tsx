@@ -45,8 +45,8 @@ export default function SidebarMobileFilter({
             Sorted by {capitalizeWord(by)}
             <Icon
               kind='sort'
-              width={10}
-              height={9}
+              width={14}
+              height={10}
               color='#212121'
               className={clsx(styles.sortIcon, direction === 'DESC' && styles.sortIconRotated)}
             />

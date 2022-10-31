@@ -1,0 +1,218 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.container {
+  padding-top: 24px;
+}
+
+.stat {
+  margin-bottom: 32px;
+}
+
+.statModules {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.statModulesWrapper {
+  margin-top: 18px;
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  color: $gray-text;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.statHeaderAdditional {
+  flex-grow: 1;
+  text-align: right;
+  font-weight: 400;
+}
+
+.statIcon {
+  margin-right: 8px;
+}
+
+.statTooltip {
+  margin-left: 8px;
+}
+
+.statLink {
+  display: block;
+  color: $blue-accent;
+  font-weight: 500;
+  transition: opacity $transition-duration $transition-timing-function;
+  word-break: break-word;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.statTitle {
+  display: flex;
+  align-items: flex-end;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+.statRating {
+  position: relative;
+  align-items: flex-end;
+  margin-left: 4px;
+}
+
+.statRatingGreen {
+  color: $green-accent;
+
+  .statRatingArrow {
+    color: $green-accent;
+  }
+}
+
+.statRatingRed {
+  color: $red-accent;
+
+  .statRatingArrow {
+    color: $red-accent;
+    transform: rotate(90deg);
+  }
+}
+
+.statRatingArrow {
+  top: -8px;
+  right: 0;
+  position: absolute;
+}
+
+.statSubtitle {
+  color: $gray-text;
+}
+
+.statList {
+  display: flex;
+
+  @include mobile-and-tablet {
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    margin-bottom: 0;
+
+    @include mobile-and-tablet {
+      margin-bottom: 32px;
+    }
+  }
+
+  .statListItemLarge {
+    @include mobile-and-tablet {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.statListItemSmall {
+  flex: 0 0 auto;
+  width: 25%;
+
+  @include mobile-and-tablet {
+    width: 50%;
+  }
+}
+
+.statListItemLarge {
+  flex: 0 0 auto;
+  width: 50%;
+
+  @include mobile-and-tablet {
+    width: 100%;
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+.statListItemNewLine {
+  margin-top: 16px;
+}
+
+.popularity {
+  margin-top: 16px;
+
+  @include mobile {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+}
+
+.usedOnList {
+  margin-top: 10px;
+  margin: 0 -24px;
+  padding: 0 24px;
+
+  @include mobile-and-tablet {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:not(:only-child) {
+    margin-top: 24px;
+
+    @include mobile-and-tablet {
+      margin-top: 0;
+    }
+  }
+
+  @include sm {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+}
+
+.links {
+  display: flex;
+  align-items: center;
+
+  @include sm {
+    margin-top: 24px;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  & > * + * {
+    margin-left: 62px;
+
+    @include mobile-and-tablet {
+      margin-left: 40px;
+    }
+
+    @include sm {
+      margin-left: 0;
+    }
+  }
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  color: $black;
+  font-weight: 500;
+}
+
+.linkIcon {
+  margin-right: 8px;
+}
+
+.details {
+  display: block;
+}

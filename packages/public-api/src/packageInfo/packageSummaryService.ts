@@ -1,10 +1,11 @@
-import { getRepository, createQueryBuilder } from 'typeorm';
+import { getRepository } from 'typeorm';
 import {
   PackageMetadata,
   PackagePopularityView,
   PackageVulnerability,
   toSerializable,
 } from '@gradejs-public/shared';
+import { getPackageUsage } from './packageUsage';
 
 const simpleVersionRegex = /^\d+\.\d+\.\d+$/;
 
@@ -19,21 +20,13 @@ export async function getPackageSummaryByName(packageName: string) {
     Promise<PackagePopularityView | undefined>,
     Promise<PackageVulnerability[]>
   ] = [
-    packageRepo.createQueryBuilder().where('name = :packageName', { packageName }).getOne(),
-    createQueryBuilder()
-      .select()
-      .from('package_usage_by_hostname_projection', 'usage')
-      .leftJoin('usage.hostname', 'hn')
-      .addSelect('package_name', 'packageName')
-      .addSelect('hn.hostname', 'hostname')
-      .leftJoin('usage.sourceScan', 'sourceScan')
-      .addSelect(
-        'jsonb_array_length(("sourceScan"."scan_result"->>\'identifiedPackages\')::jsonb)',
-        'hostnamePackagesCount'
-      )
-      .where('package_name = :packageName', { packageName })
-      .limit(16) // TODO: remove hardcode
-      .getRawMany(),
+    packageRepo
+      .createQueryBuilder('metadata')
+      .addSelect('metadata.full_description', 'metadata_full_description')
+      .addSelect('metadata.version_specific_values', 'metadata_version_specific_values')
+      .where('name = :packageName', { packageName })
+      .getOne(),
+    getPackageUsage(packageName, { limit: 16, countPackages: true }), // TODO: remove hardcode
     packagePopularityRepo
       .createQueryBuilder()
       .where('package_name = :packageName', { packageName })

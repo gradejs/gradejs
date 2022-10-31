@@ -1,11 +1,13 @@
 import { getRepository } from 'typeorm';
 import {
   PackageMetadata,
+  PackagePopularityView,
   ScansWithVulnerabilitiesProjection,
   ShowcasedPackage,
   ShowcasedWebPage,
   WebPageScan,
 } from '@gradejs-public/shared';
+import { getPackageUsage } from '../packageInfo/packageUsage';
 
 async function getLatestShowcasedScans(limit = 3) {
   const showcasedWebPageRepo = getRepository(ShowcasedWebPage);
@@ -59,21 +61,35 @@ async function getShowcasedScansWithVulnerabilities(limit = 3) {
 async function getShowcasedPackages(limit = 6) {
   const showcasedPackagesRepo = getRepository(ShowcasedPackage);
 
-  return showcasedPackagesRepo
+  const packages = await showcasedPackagesRepo
     .createQueryBuilder('showcasedPackage')
-    .leftJoinAndMapOne(
-      'showcasedPackage.packageMetadata',
+    .leftJoin(
       PackageMetadata,
       'packageMetadata',
       'showcasedPackage.packageName = packageMetadata.name'
     )
-    .leftJoin('showcasedPackage.packagePopularity', 'packagePopularity')
-    .select(['showcasedPackage.displayOrder', 'showcasedPackage.packageName'])
-    .addSelect(['packageMetadata.description'])
-    .addSelect(['packagePopularity.usageByHostnameCount'])
+    .leftJoin(
+      PackagePopularityView,
+      'packagePopularity',
+      'showcasedPackage.packageName = packagePopularity.packageName'
+    )
+    .select('showcasedPackage.displayOrder', 'displayOrder')
+    .addSelect('showcasedPackage.packageName', 'name')
+    .addSelect('packageMetadata.description', 'description')
+    .addSelect('packagePopularity.usageByHostnameCount', 'usageByHostnameCount')
     .orderBy('showcasedPackage.displayOrder', 'ASC')
     .limit(limit)
-    .getMany();
+    .getRawMany();
+
+  const usage = await Promise.all(packages.map((it) => getPackageUsage(it.name, { limit: 4 })));
+
+  return packages.map((it, index) => ({
+    usage: usage[index],
+    name: it.name.toString(),
+    displayOrder: Number(it.displayOrder) || 0,
+    description: it.description?.toString(),
+    usageByHostnameCount: Number(it.usageByHostnameCount) || 0,
+  }));
 }
 
 export async function getShowcaseData() {

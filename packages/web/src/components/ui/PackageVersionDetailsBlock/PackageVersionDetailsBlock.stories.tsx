@@ -20,7 +20,9 @@ Default.args = {
   modulesCount: 50,
 };
 
-export const Opened: ComponentStory<typeof PackageVersionDetailsBlock> = (args) => <PackageVersionDetailsBlock {...args} />;
+export const Opened: ComponentStory<typeof PackageVersionDetailsBlock> = (args) => (
+  <PackageVersionDetailsBlock {...args} />
+);
 
 Opened.args = {
   version: '18.2.0',

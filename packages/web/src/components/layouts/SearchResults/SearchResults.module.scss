@@ -3,16 +3,18 @@
 
 .searchResults {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: 23% minmax(0, 1fr);
   grid-template-rows: min-content 1fr;
   grid-column-gap: 60px;
   margin-top: 44px;
   padding-bottom: 108px;
-  border-bottom: 1px solid rgba($gray-border, 0.5);
+  // TODO: add border when showcase will be available for search results page
+  //border-bottom: 1px solid $gray-border;
   margin-bottom: 80px;
 
   @include xxl {
-    grid-column-gap: 80px;
+    grid-column-gap: 72px;
+    grid-template-columns: 20% minmax(0, 1fr);
   }
 
   @include lg {
@@ -27,7 +29,7 @@
     grid-template-rows: none;
     grid-gap: 24px;
     padding-bottom: 64px;
-    margin-bottom: 56px;
+    margin-bottom: 0;
   }
 
   @include mobile {
@@ -40,11 +42,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 24px;
-
-  @include xxl {
-    margin-bottom: 36px;
-  }
+  margin-bottom: 36px;
 
   @include mobile-and-tablet {
     grid-column: 1;

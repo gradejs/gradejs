@@ -1,0 +1,94 @@
+@import '~styles/_vars.scss';
+@import '~styles/responsive.scss';
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.header {
+  cursor: pointer;
+}
+
+.title {
+  padding-right: 24px;
+  font-size: 22px;
+  line-height: 30px;
+
+  @include mobile-and-tablet {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+
+.name {
+  font-weight: 500;
+}
+
+.version {
+  font-weight: 400;
+  color: $gray-text;
+  margin-right: 12px;
+}
+
+.problems {
+  vertical-align: middle;
+  display: inline-block;
+  font-size: 14px;
+
+  & > * {
+    &:not(:last-child) {
+      margin-right: 6px;
+    }
+
+    @include mobile-and-tablet {
+      margin-bottom: 6px;
+    }
+  }
+
+  @include mobile-and-tablet {
+    padding-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    order: 1;
+    height: initial;
+    margin-bottom: 2px;
+  }
+}
+
+.arrowWrapper {
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: $gray-surface;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  @include mobile-and-tablet {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.arrowOpened {
+  transform: rotate(180deg);
+}
+
+.arrow {
+  @include mobile-and-tablet {
+    width: 10px;
+    height: 7px;
+  }
+}
+
+.desc {
+  margin-top: 8px;
+  color: $gray-text;
+}

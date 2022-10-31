@@ -21,7 +21,6 @@ export const Medium = Template.bind({});
 Medium.args = {
   children: 'react',
   title: 'react',
-  size: 'medium',
 };
 
 export const Large = Template.bind({});

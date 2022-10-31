@@ -1,5 +1,4 @@
 import React from 'react';
-import NavigationCard from '../Card/NavigationCard';
 import PopularPackageCard, { PopularPackageCardProps } from '../Card/PopularPackageCard';
 import CardList from './CardList';
 
@@ -17,7 +16,6 @@ const PopularPackageCardList = ({ cards }: Props) => {
       {cards.map((card) => (
         <PopularPackageCard key={card.id} {...card} />
       ))}
-      <NavigationCard title='Go to all Popular packages' to='/' />
     </CardList>
   );
 };

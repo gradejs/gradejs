@@ -1,10 +1,11 @@
 @import '~styles/_vars.scss';
 
 .tooltipTrigger {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: $gray-text;
+  opacity: 0.3;
   display: flex;
   align-items: center;
   justify-content: center;

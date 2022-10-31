@@ -8,7 +8,7 @@
     "build": "tsc --project tsconfig.build.json",
     "test": "jest",
     "start": "node build/index.js",
-    "debug": "node --inspect=9201 build/index.js"
+    "debug": "nodemon --exec \"node --require ts-node/register --inspect=9201 src/index.ts\" --watch ./src --ext ts,tsx,json"
   },
   "engines": {
     "node": "^16.14.2"
@@ -33,6 +33,7 @@
     "@types/jest": "^27.4.1",
     "@types/supertest": "^2.0.12",
     "jest": "^27.5.1",
+    "nodemon": "^2.0.19",
     "supertest": "^6.2.2",
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",

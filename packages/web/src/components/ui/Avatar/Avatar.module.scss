@@ -13,11 +13,6 @@
   justify-content: center;
   user-select: none;
 
-  @include xxl {
-    width: 44px;
-    height: 44px;
-  }
-
   @include mobile-and-tablet {
     width: 36px;
     height: 36px;
@@ -32,11 +27,6 @@
 
 .additionalAvatars {
   font-weight: 500;
-  font-size: 14px;
   background: $blue-additional;
   color: $blue-accent;
-
-  @include xxl {
-    font-size: 16px;
-  }
 }

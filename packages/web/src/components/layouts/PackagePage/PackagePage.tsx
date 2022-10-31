@@ -25,6 +25,8 @@ import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Link } from 'react-router-dom';
+import VersionPopularityChartSkeleton from 'components/ui/VersionPopularityChart/VersionPopularityChartSkeleton';
+import VersionPopularityChart from 'components/ui/VersionPopularityChart/VersionPopularityChart';
 
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -49,7 +51,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
   const [allVersionsVisible, setAllVersionsVisible] = useState(false);
   const [modalSortOpen, setModalSortOpen] = useState(false);
 
-  const sorts = useMemo(() => ['weight', 'popularity', 'versions'], []);
+  const sorts = useMemo(() => ['size', 'usage', 'version'], []);
 
   const {
     name: packageName,
@@ -95,17 +97,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
     [vulnerabilities]
   );
 
-  const formattedSitesUsage = useMemo(
-    () =>
-      (usage ?? []).map((item) => ({
-        id: item.hostname,
-        image: `/favicons/${item.hostname}`,
-        name: item.hostname,
-        packagesCount: item.hostnamePackagesCount,
-      })),
-    [usage]
-  );
-
   const imageUriTransformer = (input: string) =>
     input.startsWith('https://')
       ? input
@@ -134,13 +125,13 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
         .sort((b, a) => {
           let sort: number;
           switch (sortField) {
-            case 'weight':
+            case 'size':
               sort = (b.size ?? 0) - (a.size ?? 0);
               break;
-            case 'popularity':
+            case 'usage':
               sort = (b.uses ?? 0) - (a.uses ?? 0);
               break;
-            case 'versions':
+            case 'version':
             default:
               sort = semver.compare(b.version, a.version);
           }
@@ -276,15 +267,68 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 )}
               </section>
 
-              <section>
+              <section className={styles.mostPopularVersions}>
+                <h2>Top usage distribution</h2>
+
+                {loading ? (
+                  <VersionPopularityChartSkeleton />
+                ) : (
+                  <VersionPopularityChart
+                    max={8}
+                    versionSpecificValues={versionSpecificValues ?? {}}
+                  />
+                )}
+              </section>
+
+              <section className={styles.usedOn}>
                 <h2>Used on</h2>
 
                 {loading ? (
                   <SitesListSkeleton className={styles.usedOnList} />
                 ) : (
-                  <SitesList sites={formattedSitesUsage} className={styles.usedOnList} />
+                  <SitesList sites={usage ?? []} className={styles.usedOnList} />
                 )}
               </section>
+
+              {/* TODO: there are no skeletons for vulnerabilities in design,
+                        not sure if intended or overlooked */}
+              {!loading && !!formattedVulnerabilities?.length && (
+                <section>
+                  <h2>Vulnerabilities</h2>
+
+                  <div className={styles.vulnerabilities}>
+                    {formattedVulnerabilities?.map(
+                      ({ id, severity, linkPath, linkText, title, fixedAfter }) => (
+                        <div key={id} className={styles.vulnerability}>
+                          <div className={styles.vulnerabilityTop}>
+                            <Chip
+                              variant='vulnerabilities'
+                              size='badge'
+                              fontWeight='semiBold'
+                              icon={
+                                <Icon kind='vulnerability' width={24} height={24} color='white' />
+                              }
+                            >
+                              {severity}
+                            </Chip>
+
+                            <a
+                              href={linkPath}
+                              target='_blank'
+                              rel='noreferrer'
+                              className={styles.vulnerabilityLink}
+                            >
+                              {linkText}
+                            </a>
+                          </div>
+                          <div className={styles.vulnerabilityTitle}>{title}</div>
+                          <div className={styles.vulnerabilityText}>{fixedAfter}</div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </section>
+              )}
 
               <section className={styles.versions}>
                 <div className={styles.versionsTop}>
@@ -374,50 +418,10 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                   </button>
                 )}
               </section>
-
-              {/* TODO: there are no skeletons for vulnerabilities in design,
-                        not sure if intended or overlooked */}
-              {!loading && !!formattedVulnerabilities?.length && (
-                <section>
-                  <h2>Vulnerabilities</h2>
-
-                  <div className={styles.vulnerabilities}>
-                    {formattedVulnerabilities?.map(
-                      ({ id, severity, linkPath, linkText, title, fixedAfter }) => (
-                        <div key={id} className={styles.vulnerability}>
-                          <div className={styles.vulnerabilityTop}>
-                            <Chip
-                              variant='vulnerabilities'
-                              size='badge'
-                              fontWeight='semiBold'
-                              icon={
-                                <Icon kind='vulnerability' width={24} height={24} color='white' />
-                              }
-                            >
-                              {severity}
-                            </Chip>
-
-                            <a
-                              href={linkPath}
-                              target='_blank'
-                              rel='noreferrer'
-                              className={styles.vulnerabilityLink}
-                            >
-                              {linkText}
-                            </a>
-                          </div>
-                          <div className={styles.vulnerabilityTitle}>{title}</div>
-                          <div className={styles.vulnerabilityText}>{fixedAfter}</div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </section>
-              )}
             </div>
 
             <aside className={styles.sidebar}>
-              <h4 className={styles.sidebarOptionalTitle}>Background information</h4>
+              <h4 className={styles.sidebarOptionalTitle}>Summary</h4>
 
               <div className={styles.sidebarInner}>
                 <div className={styles.sidebarItem}>
@@ -532,7 +536,7 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                             <div>
                               <div className={styles.sidebarItemSubtitle}>Collaborators</div>
                               <div className={styles.sidebarCollaboratorsGroup}>
-                                <AvatarGroup>
+                                <AvatarGroup max={8}>
                                   {maintainers?.map((author) => (
                                     <Avatar
                                       alt={author.name}
@@ -547,17 +551,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
 
                         <div className={styles.stat}>
                           <div className={styles.statImagePlaceholder}>
-                            <Icon kind='license' width={20} height={20} />
-                          </div>
-
-                          <div className={styles.statContent}>
-                            <span className={styles.statTitle}>License</span>
-                            <span className={styles.statValue}>{license}</span>
-                          </div>
-                        </div>
-
-                        <div className={styles.stat}>
-                          <div className={styles.statImagePlaceholder}>
                             <Icon kind='modules' width={20} height={20} />
                           </div>
 
@@ -566,6 +559,17 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                             <span className={styles.statValue}>
                               {plural(usageByHostnameCount ?? 0, 'website', 'websites')}
                             </span>
+                          </div>
+                        </div>
+
+                        <div className={styles.stat}>
+                          <div className={styles.statImagePlaceholder}>
+                            <Icon kind='license' width={20} height={20} />
+                          </div>
+
+                          <div className={styles.statContent}>
+                            <span className={styles.statTitle}>License</span>
+                            <span className={styles.statValue}>{license}</span>
                           </div>
                         </div>
 
@@ -602,15 +606,8 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                       {loading
                         ? repeat(4, <Skeleton variant='rounded' width={108} height={36} />)
                         : deps.map((dependency) => (
-                            <Link to={'/package/' + dependency}>
-                              <Chip
-                                key={dependency}
-                                font='monospace'
-                                size='medium'
-                                fontSize='small'
-                              >
-                                {dependency}
-                              </Chip>
+                            <Link key={dependency} to={`/package/${dependency}`}>
+                              <Chip font='monospace'>{dependency}</Chip>
                             </Link>
                           ))}
                     </ChipGroup>

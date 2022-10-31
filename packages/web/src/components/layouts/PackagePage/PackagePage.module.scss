@@ -69,8 +69,8 @@ h1.packageName {
   margin-bottom: 40px;
 
   @include xxl {
-    font-size: 19px;
-    line-height: 26px;
+    font-size: 17px;
+    line-height: 28px;
     margin-bottom: 62px;
   }
 }
@@ -147,7 +147,7 @@ h1.packageName {
 .sidebarItem {
   &:not(:first-child) {
     padding-top: 40px;
-    border-top: 1px solid rgba($gray-border, 0.5);
+    border-top: 1px solid $gray-border;
 
     @include mobile-and-tablet {
       padding-top: 32px;
@@ -300,8 +300,8 @@ h1.packageName {
 }
 
 .statValue {
-  font-size: 19px;
-  line-height: 26px;
+  font-size: 17px;
+  line-height: 28px;
   font-weight: 500;
 
   @include mobile-and-tablet {
@@ -315,16 +315,6 @@ h1.packageName {
 
 .statRatingRed {
   color: $red-accent;
-}
-
-.versions {
-  margin-top: 96px;
-  margin-bottom: 72px;
-
-  @include mobile-and-tablet {
-    margin-top: 64px;
-    margin-bottom: 56px;
-  }
 }
 
 .versionsTitle {
@@ -413,7 +403,7 @@ h1.packageName {
 
 .sortButtonsMobile {
   & > * + * {
-    border-top: 1px solid rgba($gray-border, 0.5);
+    border-top: 1px solid $gray-border;
   }
 }
 
@@ -445,10 +435,12 @@ h1.packageName {
   background: $gray-surface;
   border-radius: 24px;
   padding: 0 20px;
+  margin-bottom: 72px;
 
   @include mobile-and-tablet {
     margin-left: -20px;
     margin-right: -20px;
+    margin-bottom: 56px;
   }
 }
 
@@ -457,7 +449,7 @@ h1.packageName {
   padding-bottom: 16px;
 
   &:not(:last-child) {
-    border-bottom: 1px solid rgba($gray-border, 0.5);
+    border-bottom: 1px solid $gray-border;
   }
 }
 
@@ -469,8 +461,8 @@ h1.packageName {
 }
 
 .vulnerabilityTitle {
-  font-size: 19px;
-  line-height: 26px;
+  font-size: 17px;
+  line-height: 28px;
   font-weight: 500;
   margin-bottom: 2px;
 
@@ -651,5 +643,14 @@ h1.packageName {
 
   tr:nth-child(2n) td {
     background-color: #f4f4f4;
+  }
+}
+
+.mostPopularVersions,
+.usedOn {
+  margin-bottom: 70px;
+
+  @include mobile-and-tablet {
+    margin-bottom: 56px;
   }
 }
