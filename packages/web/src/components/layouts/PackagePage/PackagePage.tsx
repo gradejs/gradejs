@@ -28,6 +28,7 @@ import { Link } from 'react-router-dom';
 import VersionPopularityChartSkeleton from 'components/ui/VersionPopularityChart/VersionPopularityChartSkeleton';
 import VersionPopularityChart from 'components/ui/VersionPopularityChart/VersionPopularityChart';
 import ShowcaseContainer from 'components/containers/ShowcaseContainer';
+import { USAGE_CHUNK_LIMIT } from 'store/hooks/usePackageInfo';
 
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -37,7 +38,9 @@ const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
 
 type Props = {
   loading?: boolean;
+  usageLoading?: boolean;
   packageInfo?: GetPackageInfoOutput;
+  onUsageMoreClick?: () => unknown;
 };
 
 // Clean commonly used tags inside markdown
@@ -45,7 +48,7 @@ function mdclean(markdown = ''): string {
   return markdown.replace(/<br\/?\s?>/g, '\n');
 }
 
-const PackagePage = ({ packageInfo, loading = false }: Props) => {
+const PackagePage = ({ packageInfo, usageLoading, onUsageMoreClick, loading = false }: Props) => {
   const [sortDirection, setSortDirection] = useState('desc' as 'asc' | 'desc');
   const [sortField, setSortField] = useState('versions');
   const [fullDescVisible, setFullDescVisible] = useState(false);
@@ -140,6 +143,17 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
         }),
     [versionSpecificValues, vulnerabilities, sortDirection, sortField]
   );
+
+  const usageMoreNextChunk = useMemo(() => {
+    if (packageInfo && packageInfo.usageByHostnameCount) {
+      return Math.min(
+        USAGE_CHUNK_LIMIT,
+        packageInfo.usageByHostnameCount - packageInfo.usage.length
+      );
+    }
+
+    return 0;
+  }, [packageInfo]);
 
   return (
     <>
@@ -268,6 +282,33 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                 )}
               </section>
 
+              {loading && (
+                <section className={styles.usedOn}>
+                  <h2>Used on</h2>
+
+                  <SitesListSkeleton className={styles.usedOnList} />
+                </section>
+              )}
+
+              {!!usage?.length && (
+                <section className={styles.usedOn}>
+                  <h2>Used on {usageByHostnameCount} websites</h2>
+                  <SitesList sites={usage} className={styles.usedOnList} />
+
+                  <div className={styles.showMorePackages}>
+                    {usageLoading ? (
+                      <button className={styles.link}>Loading...</button>
+                    ) : (
+                      usageMoreNextChunk > 0 && (
+                        <button className={styles.link} onClick={onUsageMoreClick}>
+                          Show +{usageMoreNextChunk} more
+                        </button>
+                      )
+                    )}
+                  </div>
+                </section>
+              )}
+
               <section className={styles.mostPopularVersions}>
                 <h2>Top usage distribution</h2>
 
@@ -278,16 +319,6 @@ const PackagePage = ({ packageInfo, loading = false }: Props) => {
                     max={8}
                     versionSpecificValues={versionSpecificValues ?? {}}
                   />
-                )}
-              </section>
-
-              <section className={styles.usedOn}>
-                <h2>Used on</h2>
-
-                {loading ? (
-                  <SitesListSkeleton className={styles.usedOnList} />
-                ) : (
-                  <SitesList sites={usage ?? []} className={styles.usedOnList} />
                 )}
               </section>
 

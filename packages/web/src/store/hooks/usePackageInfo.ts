@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../index';
-import { requestPackageInfo } from '../slices/package';
+import { requestPackageInfo, requestPackageUsage } from '../slices/package';
 import { makeSelectPackageInfo } from '../selectors/packageInfo';
 import { useUniversalEffect } from './useUniversalEffect';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export const usePackageInfo = (packageName: string) => {
   const dispatch = useAppDispatch();
@@ -16,4 +16,28 @@ export const usePackageInfo = (packageName: string) => {
   }, [info, packageName]);
 
   return info;
+};
+
+export const USAGE_CHUNK_LIMIT = 16;
+
+export const usePackageUsage = (packageName: string) => {
+  const dispatch = useAppDispatch();
+  const info = usePackageInfo(packageName);
+
+  const fetchMorePackageUsage = useCallback(() => {
+    if (info?.packageInfo) {
+      dispatch(
+        requestPackageUsage({
+          packageName,
+          limit: USAGE_CHUNK_LIMIT,
+          offset: info.packageInfo.usage.length,
+        })
+      );
+    }
+  }, [info, packageName]);
+
+  return {
+    isUsageLoading: !!info?.isUsageLoading,
+    fetchMorePackageUsage,
+  };
 };
