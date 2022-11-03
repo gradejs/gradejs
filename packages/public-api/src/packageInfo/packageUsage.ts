@@ -7,6 +7,8 @@ type Options = {
   countPackages?: boolean;
 };
 
+export const MAX_ALLOWED_USAGE_LIMIT = 20;
+
 export function getPackageUsage(
   packageName: string,
   options?: { limit?: number; offset?: number }

@@ -15,7 +15,7 @@ import {
 import { getPackagePartialMetadataByPackageNames } from './packageMetadata/packageMetadataService';
 import { getShowcaseData } from './showcase/showcaseService';
 import { getPackageSummaryByName } from './packageInfo/packageSummaryService';
-import { getPackageUsage } from './packageInfo/packageUsage';
+import { getPackageUsage, MAX_ALLOWED_USAGE_LIMIT } from './packageInfo/packageUsage';
 
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
@@ -113,8 +113,8 @@ export const appRouter = trpc
   .query('getPackageUsage', {
     input: z.object({
       packageName: z.string(),
-      offset: z.number(),
-      limit: z.number(),
+      offset: z.number().gt(0),
+      limit: z.number().gt(0).lte(MAX_ALLOWED_USAGE_LIMIT),
     }),
     async resolve({ input: { packageName, offset, limit } }) {
       const usage = await getPackageUsage(packageName, {

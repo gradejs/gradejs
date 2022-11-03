@@ -144,13 +144,16 @@ const PackagePage = ({ packageInfo, usageLoading, onUsageMoreClick, loading = fa
     [versionSpecificValues, vulnerabilities, sortDirection, sortField]
   );
 
-  let usageMoreNextChunk = 0;
-  if (packageInfo && packageInfo.usageByHostnameCount) {
-    usageMoreNextChunk = Math.min(
-      USAGE_CHUNK_LIMIT,
-      packageInfo.usageByHostnameCount - packageInfo.usage.length
-    );
-  }
+  const usageMoreNextChunk = useMemo(() => {
+    if (packageInfo && packageInfo.usageByHostnameCount) {
+      return Math.min(
+        USAGE_CHUNK_LIMIT,
+        packageInfo.usageByHostnameCount - packageInfo.usage.length
+      );
+    }
+
+    return 0;
+  }, [packageInfo]);
 
   return (
     <>
