@@ -15,6 +15,7 @@ import {
 import { getPackagePartialMetadataByPackageNames } from './packageMetadata/packageMetadataService';
 import { getShowcaseData } from './showcase/showcaseService';
 import { getPackageSummaryByName } from './packageInfo/packageSummaryService';
+import { getPackageUsage } from './packageInfo/packageUsage';
 
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
@@ -107,6 +108,22 @@ export const appRouter = trpc
       }
 
       return toSerializable(packageInfo);
+    },
+  })
+  .query('getPackageUsage', {
+    input: z.object({
+      packageName: z.string(),
+      offset: z.number(),
+      limit: z.number(),
+    }),
+    async resolve({ input: { packageName, offset, limit } }) {
+      const usage = await getPackageUsage(packageName, {
+        offset,
+        limit,
+        countPackages: true,
+      });
+
+      return toSerializable({ usage });
     },
   })
   .mutation('getOrRequestWebPageScan', {

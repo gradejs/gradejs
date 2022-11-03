@@ -2,7 +2,7 @@ import React from 'react';
 import { Error } from 'components/layouts';
 import PackagePage from '../layouts/PackagePage/PackagePage';
 import { useParams } from 'react-router-dom';
-import { usePackageInfo } from '../../store/hooks/usePackageInfo';
+import { usePackageInfo, usePackageUsage } from '../../store/hooks/usePackageInfo';
 import { Helmet } from 'react-helmet';
 
 export function PackageView() {
@@ -12,6 +12,7 @@ export function PackageView() {
   }
 
   const { packageInfo, isLoading, error } = usePackageInfo(packageName) ?? {};
+  const { isUsageLoading, fetchMorePackageUsage } = usePackageUsage(packageName);
 
   if (packageName && !isLoading && (error || !packageInfo)) {
     // TODO: 404 error page
@@ -32,7 +33,12 @@ export function PackageView() {
         <meta property='og:title' content={title} />
         <meta property='og:description' content={description} />
       </Helmet>
-      <PackagePage loading={isLoading} packageInfo={packageInfo} />
+      <PackagePage
+        loading={isLoading}
+        packageInfo={packageInfo}
+        usageLoading={isUsageLoading}
+        onUsageMoreClick={fetchMorePackageUsage}
+      />
     </>
   );
 }
