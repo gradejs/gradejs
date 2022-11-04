@@ -16,6 +16,7 @@ import { getPackagePartialMetadataByPackageNames } from './packageMetadata/packa
 import { getShowcaseData } from './showcase/showcaseService';
 import { getPackageSummaryByName } from './packageInfo/packageSummaryService';
 import { getPackageUsage, MAX_ALLOWED_USAGE_LIMIT } from './packageInfo/packageUsage';
+import { searchEntitiesByName } from './search/searchService';
 
 // created for each request
 export const createContext = (_: CreateExpressContextOptions) => ({}); // no context
@@ -124,6 +125,24 @@ export const appRouter = trpc
       });
 
       return toSerializable({ usage });
+    },
+  })
+  .query('search', {
+    input: z.string().min(1).max(50),
+    async resolve({ input: searchQuery }) {
+      const { hostnames, packages } = await searchEntitiesByName(searchQuery);
+
+      const mappedPackages = packages.map((it) => ({
+        type: 'package',
+        name: it.packageName,
+      }));
+
+      const mappedHostnames = hostnames.map((it) => ({
+        type: 'hostname',
+        hostname: it.hostname,
+      }));
+
+      return [...mappedHostnames, ...mappedPackages];
     },
   })
   .mutation('getOrRequestWebPageScan', {
