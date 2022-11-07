@@ -165,6 +165,7 @@ export default function SearchBarContainer({
     }
 
     if (inputValue === '') {
+      getSearchResults.cancel();
       dispatch(closeSearch());
       setError('');
     }
