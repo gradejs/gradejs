@@ -26,7 +26,7 @@ export default function Vulnerabilities({ vulnerabilities }: Props) {
               variant='vulnerabilities'
               size='badge'
               fontWeight='semiBold'
-              icon={<Icon kind='vulnerability' width={24} height={24} color='white' />}
+              icon={<Icon kind='vulnerability' width={18} height={18} color='white' />}
             >
               {(severity && SeverityLabelMapping[severity]) ?? 'Unknown'}
             </Chip>

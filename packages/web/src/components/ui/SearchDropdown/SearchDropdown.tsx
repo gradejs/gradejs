@@ -9,10 +9,17 @@ type Props = {
   searchSuggestions: SearchSuggestion[];
   onSuggestionClick: (suggestion: SearchSuggestion) => void;
   inputValue: string;
+  currentFocus: number;
   error: string;
 };
 
-const SearchDropdown = ({ searchSuggestions, onSuggestionClick, inputValue, error }: Props) => {
+const SearchDropdown = ({
+  searchSuggestions,
+  onSuggestionClick,
+  inputValue,
+  currentFocus,
+  error,
+}: Props) => {
   const getHighlightedText = (text: string, highlight: string) => {
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
 
@@ -42,13 +49,16 @@ const SearchDropdown = ({ searchSuggestions, onSuggestionClick, inputValue, erro
         )}
 
         {!error &&
-          searchSuggestions.map((suggestion) => {
+          searchSuggestions.map((suggestion, index) => {
             const { type, title, vulnerable, subtitle } = suggestion;
 
             return (
               <Link
                 key={title}
-                className={clsx(styles.suggestion)}
+                className={clsx(
+                  styles.suggestion,
+                  currentFocus === index && styles.suggestionActive
+                )}
                 to={`/${type}/${title}`}
                 onClick={() => onSuggestionClick(suggestion)}
               >

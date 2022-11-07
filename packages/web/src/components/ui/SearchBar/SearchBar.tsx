@@ -11,6 +11,7 @@ type Props = {
   value: string;
   loading: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onFocus?: () => void;
   onClear: () => void;
   error: string;
@@ -24,6 +25,7 @@ export default function SearchBar({
   value,
   loading,
   onChange,
+  onKeyDown,
   onFocus,
   onClear,
   error,
@@ -44,6 +46,7 @@ export default function SearchBar({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         onFocus={onFocus}
       />
       {variant !== 'hero' ? (

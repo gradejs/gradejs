@@ -13,6 +13,7 @@ function ProblemBadge({ problem }: Props) {
         <Chip
           variant='vulnerabilities'
           size='badge'
+          fontWeight='semiBold'
           icon={<Icon kind='vulnerability' width={18} height={18} color='white' />}
         >
           Vulnerable
@@ -23,6 +24,7 @@ function ProblemBadge({ problem }: Props) {
         <Chip
           variant='duplicate'
           size='badge'
+          fontWeight='semiBold'
           icon={<Icon kind='duplicate' width={18} height={18} color='white' />}
         >
           Duplicate
@@ -33,6 +35,7 @@ function ProblemBadge({ problem }: Props) {
         <Chip
           variant='outdated'
           size='badge'
+          fontWeight='semiBold'
           icon={<Icon kind='outdated' width={18} height={18} color='white' stroke='#F1CE61' />}
         >
           Outdated

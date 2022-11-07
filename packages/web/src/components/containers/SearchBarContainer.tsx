@@ -40,6 +40,7 @@ export default function SearchBarContainer({
   const [submittedValue, setSubmittedValue] = useState<string | undefined>(undefined);
   const [highlight, setHighlight] = useState('');
   const [error, setError] = useState('');
+  const [currentFocus, setCurrentFocus] = useState(-1);
 
   const { displayUrl, scanResult } = useScanResult(submittedValue, { requestRescan: true });
 
@@ -48,6 +49,48 @@ export default function SearchBarContainer({
       navigate(`/scan/${displayUrl}`);
     }
   }, [scanResult, displayUrl]);
+
+  const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      if (currentFocus >= searchDataResults.length) {
+        setCurrentFocus(0);
+      } else {
+        setCurrentFocus(currentFocus + 1);
+      }
+    } else if (e.key === 'ArrowUp') {
+      if (currentFocus <= 0) {
+        setCurrentFocus(searchDataResults.length - 1);
+      } else {
+        setCurrentFocus(currentFocus - 1);
+      }
+    } else if (e.key === 'Enter') {
+      if (currentFocus > -1) {
+        e.preventDefault();
+        const { type, title } = searchDataResults[currentFocus];
+        navigate(`/${type}/${title}`);
+      }
+    }
+  };
+
+  const clearHandler = () => {
+    setInputValue('');
+    setError('');
+    dispatch(resetSearch());
+  };
+
+  const focusHandler = () => {
+    if (searchDataResults.length && inputValue.length > 0) {
+      setDropdownOpen(true);
+    }
+  };
+
+  // const handleSearchClose = () => {
+  //   setDropdownOpen(false);
+  // };
 
   const submitHandler = useCallback(
     (e: React.SyntheticEvent) => {
@@ -61,26 +104,6 @@ export default function SearchBarContainer({
     },
     [inputValue]
   );
-
-  const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const clearHandler = () => {
-    setInputValue('');
-    setError('');
-    dispatch(resetSearch());
-  };
-
-  // const handleSearchClose = () => {
-  //   setDropdownOpen(false);
-  // };
-
-  const focusHandler = () => {
-    if (searchDataResults.length && inputValue.length > 0) {
-      setDropdownOpen(true);
-    }
-  };
 
   const getSearchResults = useCallback(
     debounce((value) => {
@@ -132,19 +155,26 @@ export default function SearchBarContainer({
 
   return (
     <>
+      {/* TODO: if global black overlay will be used enable this */}
       {/*{inputValue.length > 0 && dropdownOpen && (*/}
       {/*  <PortalModal wrapperId='search-root'>*/}
       {/*    <div className={styles.overlay} onClick={handleSearchClose} />*/}
       {/*  </PortalModal>*/}
       {/*)}*/}
 
-      <form ref={searchContainerRef} className={styles.searchBarContainer} onSubmit={submitHandler}>
+      <form
+        autoComplete='off'
+        ref={searchContainerRef}
+        className={styles.searchBarContainer}
+        onSubmit={submitHandler}
+      >
         <SearchBar
           size={size}
           variant={variant}
           placeholder={placeholder}
           value={inputValue}
           onChange={handleSearchTextChange}
+          onKeyDown={handleKeyDown}
           onFocus={focusHandler}
           onClear={clearHandler}
           loading={loading}
@@ -157,6 +187,7 @@ export default function SearchBarContainer({
             searchSuggestions={searchDataResults}
             onSuggestionClick={suggestionClickHandler}
             inputValue={highlight}
+            currentFocus={currentFocus}
             error={error}
           />
         )}

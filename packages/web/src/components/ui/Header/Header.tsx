@@ -23,6 +23,7 @@ export default function Header({
 }: Props) {
   return (
     <header className={clsx(styles.header, styles[variant], className)}>
+      {/* TODO: if global black overlay will be used enable this */}
       {/*{dropdownOpen && <div className={styles.headerSearchOverlay} />}*/}
 
       <Container>

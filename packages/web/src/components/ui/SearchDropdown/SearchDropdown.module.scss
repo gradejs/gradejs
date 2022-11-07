@@ -144,6 +144,7 @@
     transition: all $transition-duration $transition-timing-function;
   }
 
+  &.suggestionActive,
   &:hover {
     .chevron {
       transform: translateX(0);
