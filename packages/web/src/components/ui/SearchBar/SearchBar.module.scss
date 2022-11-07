@@ -23,6 +23,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  transition: border-radius $transition-duration $transition-timing-function;
 
   &::placeholder {
     color: $gray-text;
@@ -83,10 +84,26 @@
   &.suggestionsOpen {
     .input {
       border-radius: 42px 42px 0 0;
+      background: $white;
+      color: $black;
 
       @include mobile-and-tablet {
         border-radius: 32px 32px 0 0;
       }
+    }
+
+    .submit {
+      background-color: rgba($black, 0.1);
+    }
+
+    .submitIcon,
+    .clearIcon {
+      color: $black;
+    }
+
+    .loader {
+      border-color: $blue-accent;
+      border-bottom-color: transparent;
     }
   }
 
@@ -117,7 +134,7 @@
 
 .suggestionsOpen {
   .input {
-    //background: $white;
+    background: $white;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }

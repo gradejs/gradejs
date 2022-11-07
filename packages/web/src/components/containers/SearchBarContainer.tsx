@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { useScanResult } from '../../store/hooks/scan/useScanResult';
 import { trackCustomEvent } from '../../services/analytics';
-import { fetchSearchData, resetSearch } from '../../store/slices/search';
-import { selectSearchResults } from '../../store/selectors/search';
-// import PortalModal from 'components/ui/ReactPortal/ReactPortal';
+import { fetchSearchData, openSearch, closeSearch, resetSearch } from '../../store/slices/search';
+import { selectSearchOpen, selectSearchResults } from '../../store/selectors/search';
+import { CSSTransition } from 'react-transition-group';
+import PortalModal from 'components/ui/ReactPortal/ReactPortal';
 import SearchBar from '../ui/SearchBar/SearchBar';
 import SearchDropdown from '../ui/SearchDropdown/SearchDropdown';
 import useOnClickOutside from '../../hooks/useClickOutside';
@@ -21,6 +22,24 @@ type Props = {
   placeholder?: string;
 };
 
+const backdropTransitionClassNames = {
+  enter: styles.overlayEnter,
+  enterActive: styles.overlayEnterActive,
+  enterDone: styles.overlayEnterDone,
+  exit: styles.overlayExit,
+  exitActive: styles.overlayExitActive,
+  exitDone: styles.overlayExitDone,
+};
+
+const dropdownTransitionClassNames = {
+  enter: styles.dropdownEnter,
+  enterActive: styles.dropdownEnterActive,
+  enterDone: styles.dropdownEnterDone,
+  exit: styles.dropdownExit,
+  exitActive: styles.dropdownExitActive,
+  exitDone: styles.dropdownExitDone,
+};
+
 // TODO: Dedupe logic at Home component
 export default function SearchBarContainer({
   size = 'default',
@@ -30,11 +49,12 @@ export default function SearchBarContainer({
 }: Props) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const searchDataResults = useAppSelector(selectSearchResults);
+  const searchIsOpen = useAppSelector(selectSearchOpen);
 
   const searchContainerRef = useRef(null);
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState(initialValue);
   const [submittedValue, setSubmittedValue] = useState<string | undefined>(undefined);
@@ -70,6 +90,8 @@ export default function SearchBarContainer({
     } else if (e.key === 'Enter') {
       if (currentFocus > -1) {
         e.preventDefault();
+        dispatch(closeSearch());
+
         const { type, title } = searchDataResults[currentFocus];
         navigate(`/${type}/${title}`);
       }
@@ -84,19 +106,19 @@ export default function SearchBarContainer({
 
   const focusHandler = () => {
     if (searchDataResults.length && inputValue.length > 0) {
-      setDropdownOpen(true);
+      dispatch(openSearch());
     }
   };
 
-  // const handleSearchClose = () => {
-  //   setDropdownOpen(false);
-  // };
+  const handleSearchClose = () => {
+    dispatch(closeSearch());
+  };
 
   const submitHandler = useCallback(
     (e: React.SyntheticEvent) => {
       e.preventDefault();
       setSubmittedValue(inputValue);
-      setDropdownOpen(false);
+      dispatch(closeSearch());
       dispatch(resetSearch());
 
       const trackCategory = variant === 'hero' ? 'HomePage' : 'SearchBar';
@@ -115,11 +137,11 @@ export default function SearchBarContainer({
         .unwrap()
         .then(() => {
           setLoading(false);
-          setDropdownOpen(true);
+          dispatch(openSearch());
         })
         .catch((err) => {
           setLoading(false);
-          setDropdownOpen(true);
+          dispatch(openSearch());
           setError(err.message);
         });
     }, 300),
@@ -128,12 +150,13 @@ export default function SearchBarContainer({
 
   const suggestionClickHandler = (suggestion: SearchSuggestion) => {
     setInputValue(suggestion.title);
-    setDropdownOpen(false);
-    dispatch(resetSearch());
+    dispatch(closeSearch());
   };
 
   const clickOutsideHandler = () => {
-    setDropdownOpen(false);
+    if (searchIsOpen) {
+      dispatch(closeSearch());
+    }
   };
 
   useOnClickOutside(searchContainerRef, clickOutsideHandler);
@@ -144,7 +167,7 @@ export default function SearchBarContainer({
     }
 
     if (inputValue === '') {
-      setDropdownOpen(false);
+      dispatch(closeSearch());
       setError('');
     }
   }, [inputValue, dispatch]);
@@ -155,12 +178,16 @@ export default function SearchBarContainer({
 
   return (
     <>
-      {/* TODO: if global black overlay will be used enable this */}
-      {/*{inputValue.length > 0 && dropdownOpen && (*/}
-      {/*  <PortalModal wrapperId='search-root'>*/}
-      {/*    <div className={styles.overlay} onClick={handleSearchClose} />*/}
-      {/*  </PortalModal>*/}
-      {/*)}*/}
+      <PortalModal wrapperId='modal-root'>
+        <CSSTransition
+          in={inputValue.length > 0 && searchIsOpen}
+          timeout={600}
+          classNames={backdropTransitionClassNames}
+          unmountOnExit
+        >
+          <div className={styles.overlay} onClick={handleSearchClose} />
+        </CSSTransition>
+      </PortalModal>
 
       <form
         autoComplete='off'
@@ -178,11 +205,16 @@ export default function SearchBarContainer({
           onFocus={focusHandler}
           onClear={clearHandler}
           loading={loading}
-          suggestionsOpen={dropdownOpen}
+          suggestionsOpen={searchIsOpen}
           error={error}
         />
 
-        {inputValue.length > 0 && dropdownOpen && (
+        <CSSTransition
+          in={inputValue.length > 0 && searchIsOpen}
+          timeout={600}
+          classNames={dropdownTransitionClassNames}
+          unmountOnExit
+        >
           <SearchDropdown
             searchSuggestions={searchDataResults}
             onSuggestionClick={suggestionClickHandler}
@@ -190,7 +222,7 @@ export default function SearchBarContainer({
             currentFocus={currentFocus}
             error={error}
           />
-        )}
+        </CSSTransition>
       </form>
     </>
   );

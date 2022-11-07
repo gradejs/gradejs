@@ -5,6 +5,7 @@ type SearchState = {
   query: string;
   results: SearchSuggestion[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  open: boolean;
   error: null | string;
 };
 
@@ -12,6 +13,7 @@ const initialState: SearchState = {
   query: '',
   results: [],
   status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
+  open: false,
   error: null,
 };
 
@@ -38,6 +40,12 @@ const search = createSlice({
   name: 'search',
   initialState,
   reducers: {
+    openSearch: (state) => {
+      state.open = true;
+    },
+    closeSearch: (state) => {
+      state.open = false;
+    },
     resetSearch: () => initialState,
   },
   extraReducers(builder) {
@@ -59,4 +67,4 @@ const search = createSlice({
 });
 
 export const searchReducer = search.reducer;
-export const { resetSearch } = search.actions;
+export const { openSearch, closeSearch, resetSearch } = search.actions;

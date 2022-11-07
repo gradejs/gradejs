@@ -14,7 +14,7 @@ export default function Hero({ suggestions }: HeroProps) {
   return (
     <section className={styles.hero}>
       <div className={styles.headerWrapper}>
-        <DefaultHeader variant='light' />
+        <DefaultHeader showSearchOverlay={false} variant='light' />
       </div>
 
       <Container>

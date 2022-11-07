@@ -58,6 +58,7 @@ export function Layout({
             __html: html,
           }}
         />
+        <div id='modal-root' />
 
         <script
           type='text/javascript'
