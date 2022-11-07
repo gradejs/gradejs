@@ -32,7 +32,7 @@
 
 .overlayExitActive {
   opacity: 0;
-  transition: opacity $transition-duration ease;
+  transition: opacity $transition-duration $transition-timing-function;
 }
 
 .overlayExitDone {
@@ -40,8 +40,8 @@
 }
 
 .dropdownEnter {
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: translateY(-42px);
 }
 
 .dropdownEnterActive {
@@ -56,17 +56,5 @@
 }
 
 .dropdownExit {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.dropdownExitActive {
-  transform: translateY(20px);
-  opacity: 0;
-  transition: all $transition-duration ease;
-}
-
-.dropdownExitDone {
-  transform: translateY(0);
   opacity: 0;
 }

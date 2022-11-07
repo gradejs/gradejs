@@ -122,7 +122,7 @@
 
 .overlayExitActive {
   opacity: 0;
-  transition: opacity $transition-duration ease;
+  transition: opacity $transition-duration $transition-timing-function;
 }
 
 .overlayExitDone {

@@ -18,12 +18,11 @@
   color: $black;
   border: none;
   background: $gray-surface;
-  border-radius: 30px;
+  border-radius: 28px;
   outline: none;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  transition: border-radius $transition-duration $transition-timing-function;
 
   &::placeholder {
     color: $gray-text;
@@ -33,6 +32,14 @@
     padding: 15px 50px 15px 24px;
     font-size: 16px;
     line-height: 22px;
+  }
+
+  .suggestionsOpen & {
+    border-radius: 28px 28px 0 0;
+
+    @include mobile-and-tablet {
+      border-radius: 26px 26px 0 0;
+    }
   }
 }
 

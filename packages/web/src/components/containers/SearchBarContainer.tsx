@@ -36,8 +36,6 @@ const dropdownTransitionClassNames = {
   enterActive: styles.dropdownEnterActive,
   enterDone: styles.dropdownEnterDone,
   exit: styles.dropdownExit,
-  exitActive: styles.dropdownExitActive,
-  exitDone: styles.dropdownExitDone,
 };
 
 // TODO: Dedupe logic at Home component
