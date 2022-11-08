@@ -5,16 +5,13 @@ import Footer from '../../ui/Footer/Footer';
 import ShowcaseContainer from '../../containers/ShowcaseContainer';
 
 type Props = {
-  loading?: boolean;
-  onSubmit?: (site: string) => void;
   suggestions?: string[];
 };
 
-export default function Home({ suggestions, loading, onSubmit }: Props) {
-  // TODO: replace mock data with real one
+export default function Home({ suggestions }: Props) {
   return (
     <>
-      <Hero suggestions={suggestions} onSubmit={onSubmit} loading={loading} />
+      <Hero suggestions={suggestions} />
 
       <Container>
         <ShowcaseContainer />

@@ -186,7 +186,7 @@ const PackagePage = ({ packageInfo, usageLoading, onUsageMoreClick, loading = fa
         </div>
       </Modal>
 
-      <StickyDefaultHeader showSearch />
+      <StickyDefaultHeader showSearch searchQuery={packageName} />
 
       <div className={styles.packagePage}>
         <Container>

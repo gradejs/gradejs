@@ -4,6 +4,7 @@ import { scansReducer } from './slices/scans';
 import { showcaseReducer } from './slices/showcase';
 import { scanDisplayOptionsReducer } from './slices/scanDisplayOptions';
 import { packageReducer } from './slices/package';
+import { searchReducer } from './slices/search';
 
 export const createApplicationStore = (
   extraMiddleware: Middleware[] = [],
@@ -18,6 +19,7 @@ export const createApplicationStore = (
       scans: scansReducer,
       packageInfo: packageReducer,
       scanDisplayOptions: scanDisplayOptionsReducer,
+      search: searchReducer,
     },
     preloadedState,
   });

@@ -1,55 +1,74 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import styles from './SearchBar.module.scss';
 import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
 
 type Props = {
+  searchInputRef: React.Ref<HTMLInputElement>;
   size?: 'default' | 'large';
+  variant?: 'regular' | 'hero';
+  suggestionsOpen?: boolean;
   placeholder?: string;
   value: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
+  loading: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onFocus?: () => void;
+  onClear: () => void;
+  error: string;
 };
 
 export default function SearchBar({
+  searchInputRef,
   size = 'default',
+  variant = 'regular',
+  suggestionsOpen,
   placeholder = 'Start analyzing...',
   value,
+  loading,
   onChange,
-  onSubmit,
+  onKeyDown,
+  onFocus,
+  onClear,
+  error,
 }: Props) {
-  const changeHandler = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value);
-    },
-    [onChange]
-  );
-
-  const keyPressHandler = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        onSubmit();
-      }
-    },
-    [onSubmit]
-  );
-
   return (
-    <div className={clsx(styles.searchBar, styles[size])}>
+    <div
+      className={clsx(
+        styles.searchBar,
+        styles[size],
+        styles[variant],
+        suggestionsOpen && styles.suggestionsOpen,
+        error && styles.error
+      )}
+    >
       <input
+        ref={searchInputRef}
         type='text'
         className={styles.input}
         placeholder={placeholder}
         value={value}
-        onChange={changeHandler}
-        onKeyPress={keyPressHandler}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        onFocus={onFocus}
       />
-      {!!value && (
-        <button type='submit' className={styles.submit} onClick={onSubmit}>
-          {size === 'large' ? (
-            <Icon kind='arrow' width={17} height={30} stroke='#8E8AA0' />
+      {variant !== 'hero' ? (
+        <>
+          {value.length > 0 && !loading && (
+            <button type='button' className={styles.clear} onClick={onClear}>
+              <Icon kind='cross' width={24} height={24} className={styles.clearIcon} />
+            </button>
+          )}
+          {loading && <span className={styles.loader} />}
+        </>
+      ) : (
+        <button type='submit' className={styles.submit}>
+          {loading ? (
+            <span className={styles.loader} />
+          ) : size === 'large' ? (
+            <Icon kind='arrow' width={14} height={24} color='white' className={styles.submitIcon} />
           ) : (
-            <Icon kind='arrow' width={9} height={18} stroke='#8E8AA0' />
+            <Icon kind='arrow' width={9} height={18} color='white' className={styles.submitIcon} />
           )}
         </button>
       )}
