@@ -167,7 +167,7 @@ export default function SearchBarContainer({
   }
 
   const showSuggestions = inputValue.length > 0 && searchIsOpen;
-  const nonEmptyResults = searchDataResults.length > 0 && searchIsOpen;
+  const notEmptyResultsOrError = (searchDataResults.length > 0 || !!error) && searchIsOpen;
 
   return (
     <>
@@ -194,7 +194,7 @@ export default function SearchBarContainer({
           onFocus={focusHandler}
           onClear={clearHandler}
           loading={loading}
-          suggestionsOpen={nonEmptyResults}
+          suggestionsOpen={notEmptyResultsOrError}
           error={error}
         />
 

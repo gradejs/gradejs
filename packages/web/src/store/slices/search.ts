@@ -15,7 +15,6 @@ type SearchState = {
   results: SearchSuggestion[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   open: boolean;
-  error: null | string;
 };
 
 const initialState: SearchState = {
@@ -23,7 +22,6 @@ const initialState: SearchState = {
   results: [],
   status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed',
   open: false,
-  error: null,
 };
 
 export const fetchSearchData = createAsyncThunk('search/getData', async (searchInput: string) => {
@@ -71,7 +69,6 @@ const search = createSlice({
       })
       .addCase(fetchSearchData.rejected, (state) => {
         state.status = 'failed';
-        state.error = 'Validation error';
         state.results = [];
       });
   },
