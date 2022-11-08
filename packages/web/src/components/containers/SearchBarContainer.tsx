@@ -11,7 +11,6 @@ import { CSSTransition } from 'react-transition-group';
 import PortalModal from 'components/ui/ReactPortal/ReactPortal';
 import SearchBar from '../ui/SearchBar/SearchBar';
 import SearchDropdown from '../ui/SearchDropdown/SearchDropdown';
-import useOnClickOutside from '../../hooks/useClickOutside';
 import { Error } from '../layouts';
 
 type Props = {
@@ -50,7 +49,7 @@ export default function SearchBarContainer({
   const searchDataResults = useAppSelector(selectSearchResults);
   const searchIsOpen = useAppSelector(selectSearchOpen);
 
-  const searchContainerRef = useRef(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState(initialValue);
@@ -71,6 +70,14 @@ export default function SearchBarContainer({
     setInputValue(e.target.value);
   };
 
+  const handleSearchClose = () => {
+    dispatch(closeSearch());
+
+    if (searchInputRef.current !== null) {
+      searchInputRef.current.blur();
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       if (currentFocus >= searchDataResults.length) {
@@ -87,11 +94,13 @@ export default function SearchBarContainer({
     } else if (e.key === 'Enter') {
       if (currentFocus > -1) {
         e.preventDefault();
-        dispatch(closeSearch());
+        handleSearchClose();
 
         const { type, hostname, name } = searchDataResults[currentFocus];
         navigate(`/${type}/${hostname ? hostname : name}`);
       }
+    } else if (e.key === 'Escape') {
+      handleSearchClose();
     }
   };
 
@@ -107,15 +116,11 @@ export default function SearchBarContainer({
     }
   };
 
-  const handleSearchClose = () => {
-    dispatch(closeSearch());
-  };
-
   const submitHandler = useCallback(
     (e: React.SyntheticEvent) => {
       e.preventDefault();
       setSubmittedValue(inputValue);
-      dispatch(closeSearch());
+      handleSearchClose();
       dispatch(resetSearch());
 
       const trackCategory = variant === 'hero' ? 'HomePage' : 'SearchBar';
@@ -145,18 +150,6 @@ export default function SearchBarContainer({
     []
   );
 
-  const suggestionClickHandler = () => {
-    dispatch(closeSearch());
-  };
-
-  const clickOutsideHandler = () => {
-    if (searchIsOpen) {
-      dispatch(closeSearch());
-    }
-  };
-
-  useOnClickOutside(searchContainerRef, clickOutsideHandler);
-
   useEffect(() => {
     if (inputValue !== '' && inputValue !== initialValue) {
       getSearchResults(inputValue);
@@ -164,7 +157,7 @@ export default function SearchBarContainer({
 
     if (inputValue === '') {
       getSearchResults.cancel();
-      dispatch(closeSearch());
+      handleSearchClose();
       setError('');
     }
   }, [inputValue, dispatch]);
@@ -173,11 +166,14 @@ export default function SearchBarContainer({
     return <Error host={displayUrl} />;
   }
 
+  const showSuggestions = inputValue.length > 0 && searchIsOpen;
+  const nonEmptyResults = searchDataResults.length > 0 && searchIsOpen;
+
   return (
     <>
       <PortalModal wrapperId='modal-root'>
         <CSSTransition
-          in={inputValue.length > 0 && searchIsOpen}
+          in={showSuggestions}
           timeout={600}
           classNames={backdropTransitionClassNames}
           unmountOnExit
@@ -186,13 +182,9 @@ export default function SearchBarContainer({
         </CSSTransition>
       </PortalModal>
 
-      <form
-        autoComplete='off'
-        ref={searchContainerRef}
-        className={styles.searchBarContainer}
-        onSubmit={submitHandler}
-      >
+      <form autoComplete='off' className={styles.searchBarContainer} onSubmit={submitHandler}>
         <SearchBar
+          searchInputRef={searchInputRef}
           size={size}
           variant={variant}
           placeholder={placeholder}
@@ -202,19 +194,19 @@ export default function SearchBarContainer({
           onFocus={focusHandler}
           onClear={clearHandler}
           loading={loading}
-          suggestionsOpen={searchDataResults.length > 0 && searchIsOpen}
+          suggestionsOpen={nonEmptyResults}
           error={error}
         />
 
         <CSSTransition
-          in={inputValue.length > 0 && searchIsOpen}
+          in={showSuggestions}
           timeout={600}
           classNames={dropdownTransitionClassNames}
           unmountOnExit
         >
           <SearchDropdown
             searchSuggestions={searchDataResults}
-            onSuggestionClick={suggestionClickHandler}
+            onSuggestionClick={handleSearchClose}
             inputValue={highlight}
             currentFocus={currentFocus}
             error={error}

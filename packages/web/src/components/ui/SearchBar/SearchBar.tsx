@@ -4,6 +4,7 @@ import { Icon } from '../Icon/Icon';
 import clsx from 'clsx';
 
 type Props = {
+  searchInputRef: React.Ref<HTMLInputElement>;
   size?: 'default' | 'large';
   variant?: 'regular' | 'hero';
   suggestionsOpen?: boolean;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export default function SearchBar({
+  searchInputRef,
   size = 'default',
   variant = 'regular',
   suggestionsOpen,
@@ -41,6 +43,7 @@ export default function SearchBar({
       )}
     >
       <input
+        ref={searchInputRef}
         type='text'
         className={styles.input}
         placeholder={placeholder}
