@@ -130,16 +130,19 @@ export const appRouter = trpc
   .query('search', {
     input: z.string().min(1).max(50),
     async resolve({ input: searchQuery }) {
-      const { hostnames, packages } = await searchEntitiesByName(searchQuery);
+      const { scans, packages } = await searchEntitiesByName(searchQuery);
 
       const mappedPackages = packages.map((it) => ({
         type: 'package',
-        name: it.packageName,
+        name: it.name,
+        description: it.description,
       }));
 
-      const mappedHostnames = hostnames.map((it) => ({
-        type: 'hostname',
+      const mappedHostnames = scans.map((it) => ({
+        type: 'scan',
         hostname: it.hostname,
+        path: it.path,
+        packageCount: it.packageCount,
       }));
 
       return [...mappedHostnames, ...mappedPackages];

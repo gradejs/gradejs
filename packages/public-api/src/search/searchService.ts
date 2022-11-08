@@ -10,7 +10,7 @@ export async function searchEntitiesByName(namePartial: string) {
     .replace(ESCAPED_SEARCH_SYMBOLS_REGEXP, (match) => `\\${match}`);
 
   if (!filteredNamePartial.length) {
-    return { hostnames: [], packages: [] };
+    return { scans: [], packages: [] };
   }
 
   const packagePopularityViewRepo = getRepository(PackagePopularityView);
@@ -18,27 +18,39 @@ export async function searchEntitiesByName(namePartial: string) {
 
   const packageSearchQuery = packagePopularityViewRepo
     .createQueryBuilder('package')
-    .select('package.packageName')
+    .select('package.packageName', 'name')
+    .leftJoin('package.packageMetadata', 'packageMetadata')
+    .addSelect('packageMetadata.description', 'description')
     .where('package.packageName like :namePartial', { namePartial: `%${filteredNamePartial}%` })
     .orderBy('package.usageByHostnameCount', 'DESC')
     .limit(SEARCH_RESULT_PER_ENTITY_LIMIT)
-    .getMany();
+    .getRawMany<{ name: string; description: string }>();
 
-  const hostnameSearchQuery = hostnameRepo
+  const scanSearchQuery = hostnameRepo
     .createQueryBuilder('hostname')
-    .select('hostname.hostname')
+    .distinctOn(['hostname.hostname', 'hostname.globalRank'])
+    .select('hostname.hostname', 'hostname')
+    .innerJoin('hostname.webPages', 'webPage')
+    .innerJoin('webPage.scans', 'scan')
+    .addSelect('webPage.path', 'path')
+    .addSelect(
+      'jsonb_array_length(("scan"."scan_result"->>\'identifiedPackages\')::jsonb)',
+      'packageCount'
+    )
     .where('hostname.hostname like :namePartial', { namePartial: `%${filteredNamePartial}%` })
-    .orderBy('hostname.globalRank', 'DESC')
+    .addOrderBy('hostname.globalRank', 'DESC')
+    .addOrderBy('hostname.hostname', 'DESC')
+    .addOrderBy('scan.createdAt', 'DESC')
     .limit(SEARCH_RESULT_PER_ENTITY_LIMIT)
-    .getMany();
+    .getRawMany<{ hostname: string; path: string; packageCount: number }>();
 
-  const [packageSearchResults, hostnameSearchResults] = await Promise.all([
+  const [packageSearchResults, scanSearchResults] = await Promise.all([
     packageSearchQuery,
-    hostnameSearchQuery,
+    scanSearchQuery,
   ]);
 
   return {
-    hostnames: hostnameSearchResults,
+    scans: scanSearchResults,
     packages: packageSearchResults,
   };
 }

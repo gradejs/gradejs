@@ -72,8 +72,13 @@ describe('search / searchService', () => {
     const searchResults = await searchEntitiesByName('mock');
 
     expect(searchResults).toMatchObject({
-      hostnames: [{ hostname: 'test-mock.example.com' }],
-      packages: [{ packageName: 'mock-showcased-package' }],
+      scans: [{ hostname: 'test-mock.example.com', path: '/testpage', packageCount: 1 }],
+      packages: [
+        {
+          name: 'mock-showcased-package',
+          description: 'mock showcased package description',
+        },
+      ],
     });
   });
 });
