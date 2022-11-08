@@ -34,7 +34,6 @@ export function getPackageUsage(packageName: string, options: Options = {}) {
   const query = createQueryBuilder()
     .select('hostname.hostname', 'hostname')
     .addSelect('package_name', 'packageName')
-
     .from(
       (subQuery) =>
         subQuery
