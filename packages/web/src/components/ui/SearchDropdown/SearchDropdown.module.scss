@@ -117,7 +117,9 @@
 
 .arrowIcon {
   position: absolute;
-  top: 25px;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
   right: 29px;
   width: 24px;
   height: 24px;

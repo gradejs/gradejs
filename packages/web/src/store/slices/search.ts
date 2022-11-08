@@ -1,5 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { searchSuggestions, SearchSuggestion } from '../../mocks/SearchSuggestions';
+import { client } from '../../services/apiClient';
+
+export type SearchSuggestion = {
+  type: string;
+  hostname?: string;
+  name?: string;
+  packageCount: number | null;
+  path: string;
+  description?: string;
+};
 
 type SearchState = {
   query: string;
@@ -17,23 +26,8 @@ const initialState: SearchState = {
   error: null,
 };
 
-// TODO: just for the demo purposes
-const awaitTimeout = (delay: number) => {
-  // eslint-disable-next-line no-promise-executor-return
-  return new Promise((resolve) => setTimeout(resolve, delay));
-};
-
 export const fetchSearchData = createAsyncThunk('search/getData', async (searchInput: string) => {
-  // TODO: just for the demo purposes, remove mock request later
-  await awaitTimeout(300);
-  return {
-    query: searchInput,
-    results: searchSuggestions,
-  };
-
-  // TODO: uncomment to force error
-  // eslint-disable-next-line no-promise-executor-return
-  // return new Promise((resolve, reject) => reject(new Error(`${searchInput}: yep, error`)));
+  return client.query('search', searchInput);
 });
 
 const search = createSlice({
@@ -55,8 +49,25 @@ const search = createSlice({
       })
       .addCase(fetchSearchData.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.query = action.payload.query;
-        state.results = action.payload.results;
+        state.query = action.meta.arg;
+
+        if (action.payload.length) {
+          state.results = action.payload.map(
+            // @ts-expect-error
+            ({ type, hostname, name, packageCount, path, description }) => {
+              return {
+                type,
+                name,
+                hostname,
+                packageCount,
+                path,
+                description,
+              };
+            }
+          );
+        } else {
+          state.results = [];
+        }
       })
       .addCase(fetchSearchData.rejected, (state) => {
         state.status = 'failed';

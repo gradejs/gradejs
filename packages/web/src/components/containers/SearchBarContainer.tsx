@@ -12,7 +12,6 @@ import PortalModal from 'components/ui/ReactPortal/ReactPortal';
 import SearchBar from '../ui/SearchBar/SearchBar';
 import SearchDropdown from '../ui/SearchDropdown/SearchDropdown';
 import useOnClickOutside from '../../hooks/useClickOutside';
-import { SearchSuggestion } from '../../mocks/SearchSuggestions';
 import { Error } from '../layouts';
 
 type Props = {
@@ -90,8 +89,8 @@ export default function SearchBarContainer({
         e.preventDefault();
         dispatch(closeSearch());
 
-        const { type, title } = searchDataResults[currentFocus];
-        navigate(`/${type}/${title}`);
+        const { type, hostname, name } = searchDataResults[currentFocus];
+        navigate(`/${type}/${hostname ? hostname : name}`);
       }
     }
   };
@@ -146,8 +145,7 @@ export default function SearchBarContainer({
     []
   );
 
-  const suggestionClickHandler = (suggestion: SearchSuggestion) => {
-    setInputValue(suggestion.title);
+  const suggestionClickHandler = () => {
     dispatch(closeSearch());
   };
 
@@ -204,7 +202,7 @@ export default function SearchBarContainer({
           onFocus={focusHandler}
           onClear={clearHandler}
           loading={loading}
-          suggestionsOpen={searchIsOpen}
+          suggestionsOpen={searchDataResults.length > 0 && searchIsOpen}
           error={error}
         />
 

@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from './SearchDropdown.module.scss';
 import clsx from 'clsx';
-import { SearchSuggestion } from '../../../mocks/SearchSuggestions';
 import { Link } from 'react-router-dom';
 import { Icon } from '../Icon/Icon';
+import { SearchSuggestion } from '../../../store/slices/search';
+import { plural } from '../../../utils/helpers';
 
 type Props = {
   searchSuggestions: SearchSuggestion[];
-  onSuggestionClick: (suggestion: SearchSuggestion) => void;
+  onSuggestionClick: () => void;
   inputValue: string;
   currentFocus: number;
   error: string;
@@ -50,7 +51,8 @@ const SearchDropdown = ({
 
         {!error &&
           searchSuggestions.map((suggestion, index) => {
-            const { type, title, vulnerable, subtitle } = suggestion;
+            const { type, hostname, name, packageCount, description } = suggestion;
+            const title = hostname ? hostname : name;
 
             return (
               <Link
@@ -60,17 +62,22 @@ const SearchDropdown = ({
                   currentFocus === index && styles.suggestionActive
                 )}
                 to={`/${type}/${title}`}
-                onClick={() => onSuggestionClick(suggestion)}
+                onClick={() => onSuggestionClick()}
               >
                 <div className={styles.suggestionContent}>
                   <div className={styles.suggestionTitle}>
-                    {getHighlightedText(title, inputValue)}
-                    {vulnerable && (
-                      <Icon kind='bugOutlined' color='#212121' className={styles.suggestionIcon} />
-                    )}
+                    {title && getHighlightedText(title, inputValue)}
+                    {/* TODO: enable this if vulnerable state will be used */}
+                    {/*{vulnerable && (*/}
+                    {/*  <Icon kind='bugOutlined' color='#212121' className={styles.suggestionIcon} />*/}
+                    {/*)}*/}
                   </div>
                   <div className={styles.suggestionSubtitle}>
-                    {getHighlightedText(subtitle, inputValue)}
+                    {description ? (
+                      getHighlightedText(description, inputValue)
+                    ) : (
+                      <span>{plural(packageCount ?? 0, 'package', 'packages')}</span>
+                    )}
                   </div>
                 </div>
 
